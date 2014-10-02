@@ -10,6 +10,7 @@ import logging
 import datetime as dt
 
 __name__ = 'raw2l1'
+__author__ = 'Marc-Antoine Drouin'
 __version__ = '2.0.0'
 
 PROG_DESC = "Raw LIDAR data to netCDF converter"
@@ -28,6 +29,10 @@ def welcome_msg():
     print("")
     print("--------------------------------------------------")
     print(__name__)
+    print(" ___  __   _   _  ___ _   __  ")
+    print("| _ \/  \ | | | |(_  | | /  | ")
+    print("| v / /\ || 'V' | / /| |_`7 | ")
+    print("|_|_\_||_|!_/ \_!|___|___||_| ")
     print("")
     print("version: " + __version__)
     print("SIRTA IPSL/CNRS/EP 2014")
@@ -70,7 +75,7 @@ def init_args_parser():
         type=argparse.FileType('r'),
         help='Name or pattern of the file(s) to convert')
     parser.add_argument('output_file',
-        #type=argparse.FileType('w'),
+        type=argparse.FileType('w'),
         help='Name of the output file (.nc extension)')
 
     # logs related arguments
@@ -104,8 +109,6 @@ def get_input_args(argv):
     except argparse.ArgumentError, exc:
         print('\n', exc.argument)
         sys.exit(1)
-
-    print(parse_args)
 
     input_args = {}
     input_args['date'] = parse_args.date
@@ -161,18 +164,13 @@ def raw2l1(argv):
     welcome_msg()
 
     # Read imput arguments
-    in_args = get_input_args(argv)
-
-    print(in_args)
+    input_args = get_input_args(argv)
 
     # Start logger
-    logger = init_logger(in_args)
+    logger = init_logger(input_args)
+    logger.info('logs are saved in {!s}'.format(input_args['log']))
 
-    logger.debug('logs will be saved in {!s}'.format(in_args['log']))
-    logger.info('test info')
-    logger.warning('test warning')
-    logger.error('test error')
-    logger.critical('test critical')
+    logger.info("end of processing")
 
     sys.exit(0)
 
