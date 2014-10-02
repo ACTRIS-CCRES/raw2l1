@@ -6,6 +6,7 @@ from __future__ import print_function, division, absolute_import
 
 import sys
 import argparse
+import logging
 import datetime as dt
 
 __name__ = 'raw2l1'
@@ -14,6 +15,10 @@ __version__ = '2.0.0'
 PROG_DESC = "Raw LIDAR data to netCDF converter"
 
 DATE_FMT = "%Y%m%d"
+
+# logs
+LOG_FMT = '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+LOG_DATE_FMT = '%Y-%m-%d %H:%M:%S'
 
 def welcome_msg():
     """
@@ -62,16 +67,16 @@ def init_args_parser():
         type=argparse.FileType('r'),
         help='Name of the INI configuration file to use')
     parser.add_argument('input_file',
+        type=argparse.FileType('r'),
         help='Name or pattern of the file(s) to convert')
     parser.add_argument('output_file',
-        type=file,
+        #type=argparse.FileType('w'),
         help='Name of the output file (.nc extension)')
 
     # logs related arguments
     parser.add_argument('-log',
         required=False,
-        type=file,
-        default='logs/raw2l1_'+dt.datetime.now().strftime('%Y%m%d_%H%M%S')+'.log',
+        default='logs/raw2l1.log',
         help='File where logs will be saved')
     parser.add_argument('-log_level',
         required=False,
@@ -96,19 +101,56 @@ def get_input_args(argv):
 
     try:
         parse_args = parser.parse_args(argv)
-    except:
+    except argparse.ArgumentError, exc:
+        print('\n', exc.argument)
         sys.exit(1)
 
+    print(parse_args)
+
     input_args = {}
-    input_args.date = dt.datetime.strptime(parse_args.date, DATE_FMT)
-    input_args.conf = parse_args.conf_file
-    input_args.input = parse_args.input_file
-    input_args.output = parse_args.output_file
-    input_args.log_file = parse_args.log
-    input_args.log_lev = parse_args.log_level
-    input_args.verbose = parse_args.v
+    input_args['date'] = parse_args.date
+    input_args['conf'] = parse_args.conf_file
+    input_args['input'] = parse_args.input_file
+    input_args['output'] = parse_args.output_file
+    input_args['log'] = parse_args.log
+    input_args['log_level'] = parse_args.log_level
+    input_args['verbose'] = parse_args.v
 
     return input_args
+
+def init_logger(opt):
+    """
+    Configure the logger and start it
+    """
+
+    # level of log file
+    f_level = getattr(logging, opt['log_level'].upper(), None)
+    # level of terminal log
+    t_level = getattr(logging, opt['verbose'].upper(), None)
+
+    # configuration of log
+    logger = logging.getLogger(__name__)
+    logger.setLevel(f_level)
+
+    # create log file
+    fh = logging.FileHandler(opt['log'])
+    fh.setLevel(f_level)
+
+    # Configuration of logs in terminal
+    ch = logging.StreamHandler()
+    #ch.setLevel(t_level)
+    ch.setLevel(logging.DEBUG)
+
+    # Format of LOG
+    formatter = logging.Formatter(LOG_FMT, datefmt=LOG_DATE_FMT)
+    fh.setFormatter(formatter)
+    ch.setFormatter(formatter)
+
+    # add the handlers to logger
+    logger.addHandler(fh)
+    logger.addHandler(ch)
+
+    return logger
 
 
 def raw2l1(argv):
@@ -121,8 +163,18 @@ def raw2l1(argv):
     # Read imput arguments
     in_args = get_input_args(argv)
 
-
     print(in_args)
+
+    # Start logger
+    logger = init_logger(in_args)
+
+    logger.debug('logs will be saved in {!s}'.format(in_args['log']))
+    logger.info('test info')
+    logger.warning('test warning')
+    logger.error('test error')
+    logger.critical('test critical')
+
+    sys.exit(0)
 
 if __name__ == 'raw2l1':
     raw2l1(sys.argv[1:])
