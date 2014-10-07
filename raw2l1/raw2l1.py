@@ -9,10 +9,11 @@ import argparse
 import logging
 import datetime as dt
 import ConfigParser
+from tools import lidar_reader as lr
 
 __name__ = 'raw2l1'
 __author__ = 'Marc-Antoine Drouin'
-__version__ = '2.0.0b'
+__version__ = '2.0.0a'
 
 PROG_DESC = "Raw LIDAR data to netCDF converter"
 
@@ -212,8 +213,18 @@ def raw2l1(argv):
     conf = init_conf(input_args, logger)
     logger.info('reading configuration file: OK')
 
-    logger.info("end of processing")
+    # Add directory containing reader to path
+    logger.debug("adding "+conf.get('conf', 'reader_dir')+" to path")
+    sys.path.append(conf.get('conf', 'reader_dir'))
 
+    # Reading lidar data using user defined reader
+    logger.info("reading lidar data")
+    lidar_data = lr.RawDataReader(conf, logger)
+    lidar_data.read_data()
+    logger.debug("test output : "+repr(lidar_data.data))
+    logger.info("reading data successed")
+
+    logger.info("end of processing")
     sys.exit(0)
 
 if __name__ == 'raw2l1':
