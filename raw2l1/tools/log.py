@@ -28,7 +28,7 @@ def init(opt, name):
     # create log file
     #fh = logging.FileHandler(opt['log'])
     fh = logging.handlers.RotatingFileHandler(LOG_FILENAME,
-        maxBytes=1E5, backupCount=10)
+        maxBytes=1E6, backupCount=10)
     fh.setLevel(f_level)
 
     # Configuration of logs in terminal
