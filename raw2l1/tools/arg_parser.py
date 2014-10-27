@@ -41,7 +41,7 @@ def init_args_parser():
         type=argparse.FileType('r'),
         help='Name of the INI configuration file to use')
     parser.add_argument('input_file',
-        type=argparse.FileType('r'),
+        #type=argparse.FileType('r'),
         help='Name or pattern of the file(s) to convert')
     parser.add_argument('output_file',
         type=argparse.FileType('w'),
