@@ -96,7 +96,7 @@ def read_data(list_files, logger):
         logger.debug('reading layer')
         data['layer'] = raw_data.variables['layer'][:]
 
-        # read 1-d variables
+        # read scalar
         #---------------------------------------------------------------------
         logger.debug('reading zenith')
         data['zenith'] = raw_data.variables['zenith'][:]
@@ -110,6 +110,43 @@ def read_data(list_files, logger):
         data['latitude'] = raw_data.variables['latitude'][:]
         logger.debug('reading altitude')
         data['altitude'] = raw_data.variables['altitude'][:]
+        logger.debug('reading cloud height offset (cho)')
+        data['cho'] = raw_data.variables['cho'][:]
+        logger.debug('reading azimuth')
+        data['azimuth'] = raw_data.variables['azimuth'][:]
+
+        # Time dependant variables
+        #---------------------------------------------------------------------
+        logger.debug('reading vertical optical range (vor)')
+        data['vor'] = raw_data.variables['vor'][:]
+        logger.debug('reading vertical optical range error (voe)')
+        data['voe'] = raw_data.variables['voe'][:]
+        logger.debug('reading total cloud cover (tcc)')
+        data['tcc'] = raw_data.variables['tcc'][:]
+        logger.debug('reading state_optics')
+        data['state_optics'] = raw_data.variables['state_optics'][:]
+        logger.debug('reading state_laser')
+        data['state_laser'] = raw_data.variables['state_laser'][:]
+        logger.debug('reading state_detector')
+        data['state_detector'] = raw_data.variables['state_detector'][:]
+        logger.debug('reading sky condition index (sci)')
+        data['sci'] = raw_data.variables['sci'][:]
+        logger.debug('reading quality score for aerosol lyer in PBL')
+        data['pbs'] = raw_data.variables['pbs'][:]
+        logger.debug('reading nn1')
+        data['nn1'] = raw_data.variables['nn1'][:]
+        logger.debug('reading nn2')
+        data['nn2'] = raw_data.variables['nn1'][:]
+        logger.debug('reading nn3')
+        data['nn3'] = raw_data.variables['nn1'][:]
+        logger.debug('reading maximum detection height (mxd)')
+        data['mxd'] = raw_data.variables['mxd'][:]
+        logger.debug('reading life_time')
+        data['life_time'] = raw_data.variables['life_time'][:]
+        logger.debug('reading 31 bit service code (error_ext)')
+        data['error_ext'] = raw_data.variables['error_ext'][:]
+        logger.debug('reading base cloud cover (bcc)')
+        data['bcc'] = raw_data.variables['bcc'][:]
 
         # time dependant temperatures
         #---------------------------------------------------------------------
@@ -122,10 +159,18 @@ def read_data(list_files, logger):
         logger.debug('reading temp_det')
         data['temp_det'] = get_temp(raw_data.variables['temp_det'], logger)
 
-        # CBH
+        # time, layer dependant variables
         #---------------------------------------------------------------------
+        logger.debug('reading aerosol layer in pbl (pbl)')
+        data['pbl'] = raw_data.variables['pbl'][:]
         logger.debug('reading cbh')
         data['cbh'] = raw_data.variables['cbh'][:, :]
+        logger.debug('reading cloud depth (cdp)')
+        data['cdp'] = raw_data.variables['cdp'][:]
+        logger.debug('reading cloud depth variation (cde)')
+        data['cde'] = raw_data.variables['cde'][:]
+        logger.debug('reading cloud base height variation (cbe)')
+        data['cde'] = raw_data.variables['cde'][:]
 
         # calculate Pr²
         #---------------------------------------------------------------------
