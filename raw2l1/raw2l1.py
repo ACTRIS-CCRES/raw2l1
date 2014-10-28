@@ -14,6 +14,7 @@ __name__ = 'raw2l1'
 __author__ = 'Marc-Antoine Drouin'
 __version__ = '2.0.0a'
 
+
 def welcome_msg():
     """
     print a welcome message in the terminal
@@ -33,6 +34,7 @@ def welcome_msg():
     print("")
 
     return None
+
 
 def raw2l1(argv):
     """
@@ -54,14 +56,14 @@ def raw2l1(argv):
     logger.info('reading configuration file: OK')
 
     # Add directory containing reader to path
-    logger.debug("adding "+setting.get('conf', 'reader_dir')+" to path")
+    logger.debug("adding " + setting.get('conf', 'reader_dir') + " to path")
     sys.path.append(setting.get('conf', 'reader_dir'))
 
     # Reading lidar data using user defined reader
     logger.info("reading lidar data")
     lidar_data = lr.RawDataReader(setting, logger)
     lidar_data.read_data()
-    logger.debug("test output : "+repr(lidar_data.data))
+    #logger.debug("test output : "+repr(lidar_data.data))
     logger.info("reading data successed")
 
     logger.info("end of processing")
@@ -69,5 +71,3 @@ def raw2l1(argv):
 
 if __name__ == 'raw2l1':
     raw2l1(sys.argv[1:])
-
-

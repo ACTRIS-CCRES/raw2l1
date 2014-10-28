@@ -3,9 +3,10 @@
 
 from __future__ import print_function, division, absolute_import
 
-import os
 import sys
 from importlib import import_module
+
+READER_CONF = 'reader_conf'
 
 
 class RawDataReader:
@@ -14,6 +15,7 @@ class RawDataReader:
         self.logger = logger
         self.data_reader = conf.get
         self.reader_mod = self.__load_reader__()
+        self.reader_conf = self.__get_reader_conf__()
         self.data = {}
 
     def __load_reader__(self):
@@ -45,7 +47,23 @@ class RawDataReader:
 
         return reader_fcn
 
+    def __get_reader_conf__(self):
+        """
+        Check is configuration contains a [reader_conf] section
+        If one is found it is converted into a dictionnary
+        """
+
+        reader_conf = {}
+        if self.conf.has_section(READER_CONF):
+            self.logger.debug('reader_conf section found')
+            for key, value in self.conf.items(READER_CONF):
+                reader_conf[key] = value
+
+        return reader_conf
+
     def read_data(self):
 
         self.data = self.reader_mod(
-            [self.conf.get('conf', 'input')], self.logger)
+            [self.conf.get('conf', 'input')],
+            self.reader_conf,
+            self.logger)

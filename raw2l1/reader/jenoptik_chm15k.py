@@ -54,7 +54,7 @@ def get_temp(nc_obj, logger):
     return tmp
 
 
-def read_data(list_files, logger):
+def read_data(list_files, conf, logger):
     """
     Raw2L1 plugin to read raw data of Jenoptik CHM15K
     """
