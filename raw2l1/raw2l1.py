@@ -44,22 +44,27 @@ def raw2l1(argv):
     welcome_msg()
 
     # Read imput arguments
+    #-------------------------------------------------------------------------
     input_args = ag.get_input_args(argv)
 
     # Start logger
+    #-------------------------------------------------------------------------
     logger = log.init(input_args, 'raw2l1')
     logger.info('logs are saved in {!s}'.format(input_args['log']))
 
     # reading configuration file
+    #-------------------------------------------------------------------------
     logger.debug('reading configuration file {!s}'.format(input_args['conf'].name))
     setting = conf.init(input_args, logger)
     logger.info('reading configuration file: OK')
 
     # Add directory containing reader to path
+    #-------------------------------------------------------------------------
     logger.debug("adding " + setting.get('conf', 'reader_dir') + " to path")
     sys.path.append(setting.get('conf', 'reader_dir'))
 
     # Reading lidar data using user defined reader
+    #-------------------------------------------------------------------------
     logger.info("reading lidar data")
     lidar_data = lr.RawDataReader(setting, logger)
     lidar_data.read_data()
