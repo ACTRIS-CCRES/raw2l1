@@ -7,12 +7,14 @@ from __future__ import print_function, division, absolute_import
 import logging
 import logging.handlers
 import os
+import sys
 from tools import utils
 
-LOG_FMT = '%(asctime)s - %(name)s - %(levelname)-8s - %(message)s'
+LOG_FMT = '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
 LOG_DATE_FMT = '%Y-%m-%d %H:%M:%S'
 LOG_DIR = 'logs'
 LOG_FILENAME = 'raw2l1.log'
+
 
 def init(opt, name):
     """
@@ -22,7 +24,7 @@ def init(opt, name):
     # Check the logs directory
     dir_ok = utils.check_dir(LOG_DIR)
     if not dir_ok:
-        print("critical - "+LOG_DIR+" doesn't exist or is not writable")
+        print("critical - " + LOG_DIR + " doesn't exist or is not writable")
         print("quitting raw2l1")
         sys.exit(1)
 
@@ -39,7 +41,7 @@ def init(opt, name):
 
     # create log file
     fh = logging.handlers.RotatingFileHandler(filename,
-        maxBytes=1E6, backupCount=10)
+                                              maxBytes=1E6, backupCount=10)
     fh.setLevel(f_level)
 
     # Configuration of logs in terminal
