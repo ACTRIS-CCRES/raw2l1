@@ -60,7 +60,7 @@ def filter_conf_sections(conf):
     for elt in secs_to_rm:
         try:
             list_sec.remove(elt)
-        except:
+        except NameError:
             continue
 
     return list_sec
@@ -115,7 +115,7 @@ def create_netcdf_dim(conf, data, nc_id, logger):
         try:
             dim = conf.get(section, 'dim')
             name = conf.get(section, 'name')
-        except Exception, err:
+        except NameError, err:
             logger.debug(repr(err))
             continue
 
@@ -168,14 +168,16 @@ def add_data_to_var(nc_var, var_name, conf, data, logger):
         over_fname = get_overlap_filename(data_val)
         try:
             nc_var[:] = read_overlap(over_fname, logger)
-        except:
+        except IOError, err:
             logger.error("problem encountered while reading overlap file")
+            logger.error(repr(err))
     else:
         try:
             nc_var[:] = np.array(data_val, dtype=data_type)
-        except:
+        except IOError, err:
             logger.error("impossible to convert value to " +
                          repr(data_type) + "for variable " + var_name)
+            logger.error(repr(err))
 
     return None
 
@@ -236,7 +238,7 @@ def create_netcdf(conf, data, logger):
         nc_id = nc.Dataset(conf.get('conf', 'output'),
                            'w',
                            format=conf.get('conf', 'netcdf_format'))
-    except Exception, err:
+    except IOError, err:
         logger.critical("error trying to create the netCDF file")
         logger.critical(err)
         logger.critical("quitting raw2l1")
