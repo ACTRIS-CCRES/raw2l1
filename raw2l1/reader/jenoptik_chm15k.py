@@ -100,8 +100,8 @@ def read_data(list_files, conf, logger):
         #---------------------------------------------------------------------
         logger.debug('reading zenith')
         data['zenith'] = raw_data.variables['zenith'][:]
-        logger.debug('reading wavelength')
-        data['wavelength'] = raw_data.variables['wavelength'][:]
+        logger.debug('reading wavelength as l0_wavelength')
+        data['l0_wavelength'] = raw_data.variables['wavelength'][:]
         logger.debug('reading range_gate as range_resol')
         data['range_resol'] = raw_data.variables['range_gate'][:]
         logger.debug('reading longitude')

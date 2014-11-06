@@ -9,10 +9,12 @@ from tools import lidar_reader as lr
 from tools import arg_parser as ag
 from tools import log
 from tools import conf
+from tools import create_netcdf as cnc
 
-__name__ = 'raw2l1'
 __author__ = 'Marc-Antoine Drouin'
 __version__ = '2.0.0a'
+
+NAME = 'raw2l1'
 
 
 def welcome_msg():
@@ -20,18 +22,18 @@ def welcome_msg():
     print a welcome message in the terminal
     """
 
-    print("")
-    print("--------------------------------------------------")
-    print(__name__)
-    print(" ___  __   _   _  ___ _   __  ")
-    print("| _ \/  \ | | | |(_  | | /  | ")
-    print("| v / /\ || 'V' | / /| |_`7 | ")
-    print("|_|_\_||_|!_/ \_!|___|___||_| ")
-    print("")
-    print("version: " + __version__)
-    print("SIRTA IPSL/CNRS/EP 2014")
-    print("--------------------------------------------------")
-    print("")
+    print(r"")
+    print(r"--------------------------------------------------")
+    print(NAME)
+    print(r" ___  __   _   _  ___ _   __  ")
+    print(r"| _ \/  \ | | | |(_  | | /  | ")
+    print(r"| v / /\ || 'V' | / /| |_`7 | ")
+    print(r"|_|_\_||_|!_/ \_!|___|___||_| ")
+    print(r"")
+    print(r"version: " + __version__)
+    print(r"SIRTA IPSL/CNRS/EP 2014")
+    print(r"--------------------------------------------------")
+    print(r"")
 
     return None
 
@@ -71,8 +73,15 @@ def raw2l1(argv):
     #logger.debug("test output : "+repr(lidar_data.data))
     logger.info("reading data successed")
 
+    # write netCDF file
+    #-------------------------------------------------------------------------
+    logger.info("writing output file")
+    cnc.create_netcdf(setting, lidar_data.data, logger)
+
+    # end of the program
+    #-------------------------------------------------------------------------
     logger.info("end of processing")
     sys.exit(0)
 
-if __name__ == 'raw2l1':
+if __name__ == '__main__':
     raw2l1(sys.argv[1:])
