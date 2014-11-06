@@ -60,7 +60,7 @@ def filter_conf_sections(conf):
     for elt in secs_to_rm:
         try:
             list_sec.remove(elt)
-        except NameError:
+        except Exception:
             continue
 
     return list_sec
@@ -115,7 +115,7 @@ def create_netcdf_dim(conf, data, nc_id, logger):
         try:
             dim = conf.get(section, 'dim')
             name = conf.get(section, 'name')
-        except NameError, err:
+        except Exception, err:
             logger.debug(repr(err))
             continue
 
