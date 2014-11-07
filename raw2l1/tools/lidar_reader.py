@@ -64,6 +64,6 @@ class RawDataReader:
     def read_data(self):
 
         self.data = self.reader_mod(
-            [self.conf.get('conf', 'input')],
+            self.conf.get('conf', 'input'),
             self.reader_conf,
             self.logger)

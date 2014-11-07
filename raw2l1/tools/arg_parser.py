@@ -7,6 +7,9 @@ from __future__ import print_function, division, absolute_import
 import argparse
 import datetime as dt
 import sys
+import os
+import glob
+from tools.utils import check_dir
 
 PROG_DESC = "Raw LIDAR data to netCDF converter"
 DATE_FMT = "%Y%m%d"
@@ -24,6 +27,37 @@ def check_date_format(input_date):
         raise argparse.ArgumentTypeError(msg)
 
     return dt_date
+
+
+def check_input_files(input_files):
+    """
+    check if the input files exist and return a list of the input files found
+    """
+
+    list_files = glob.glob(input_files)
+
+    if len(list_files) == 0:
+        msg = "No input files found corresponding to the file pattern "
+        msg += input_files
+        raise argparse.ArgumentTypeError(msg)
+
+    return sorted(list_files)
+
+
+def check_output_dir(output_file):
+    """
+    check if the directory provided for the output file is writable
+    """
+
+    output_file = os.path.abspath(output_file)
+    out_dir = os.path.dirname(output_file)
+
+    if not check_dir(out_dir):
+        msg = "output directory " + out_dir
+        msg += " doesn't exist or is not writable"
+        raise argparse.ArgumentTypeError(msg)
+
+    return output_file
 
 
 def init_args_parser():
@@ -44,10 +78,10 @@ def init_args_parser():
                         type=argparse.FileType('r'),
                         help='Name of the INI configuration file to use')
     parser.add_argument('input_file',
-                        #type=argparse.FileType('r'),
+                        type=check_input_files,
                         help='Name or pattern of the file(s) to convert')
     parser.add_argument('output_file',
-                        #type=argparse.FileType('w'),
+                        type=check_output_dir,
                         help='Name of the output file (.nc extension)')
 
     # logs related arguments
