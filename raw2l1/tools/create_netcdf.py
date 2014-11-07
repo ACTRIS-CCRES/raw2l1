@@ -107,7 +107,7 @@ def create_netcdf_dim(conf, data, nc_id, logger):
         # process only section concerning the output file
         try:
             dim = conf.get(section, 'dim')
-            name = conf.get(section, 'name')
+            name = section
         except Exception, err:
             logger.debug(repr(err))
             continue
@@ -198,7 +198,7 @@ def create_netcdf_variables(conf, data, nc_id, logger):
     # loop only over sections concerning the netCDf file
     for section in filter_conf_sections(conf):
 
-        var_name = conf.get(section, 'name')
+        var_name = section
         dim = conf.get(section, 'dim')
         val_type = get_var_type(conf.get(section, 'type'))
 
