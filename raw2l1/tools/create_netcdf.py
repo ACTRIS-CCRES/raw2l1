@@ -202,7 +202,11 @@ def create_netcdf_variables(conf, data, nc_id, logger):
         dim = conf.get(section, 'dim')
         val_type = get_var_type(conf.get(section, 'type'))
 
-        nc_var = nc_id.createVariable(var_name, val_type, dim_to_tuple(dim))
+        if dim == 'none':
+            nc_var = nc_id.createVariable(var_name, val_type)
+        else:
+            nc_var = nc_id.createVariable(var_name, val_type,
+                                          dim_to_tuple(dim))
 
         # Add values to the variable
         if conf.has_option(var_name, 'value'):
