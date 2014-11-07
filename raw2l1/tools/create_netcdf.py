@@ -7,14 +7,7 @@ import netCDF4 as nc
 import sys
 import numpy as np
 from tools.read_overlap import read_overlap
-
-# raw2l1 configuration sections
-CONF_SECTIONS = ['conf', 'reader_conf', 'global']
-# netCDF special processing sections
-SPEC_SECTIONS = ['time']
-
-# Reserved attributes
-RESERV_ATTR = ['name', 'dim', 'value', 'type']
+from tools import common
 
 
 def dim_to_tuple(dim):
@@ -51,8 +44,8 @@ def filter_conf_sections(conf):
     the netCDF file and sections with special processing (time)
     """
 
-    secs_to_rm = CONF_SECTIONS
-    for sec in SPEC_SECTIONS:
+    secs_to_rm = common.CONF_SECTIONS
+    for sec in common.SPEC_SECTIONS:
         secs_to_rm.append(sec)
 
     list_sec = conf.sections()
@@ -119,7 +112,7 @@ def create_netcdf_dim(conf, data, nc_id, logger):
             logger.debug(repr(err))
             continue
 
-        if section not in CONF_SECTIONS and name == dim:
+        if section not in common.CONF_SECTIONS and name == dim:
 
             logger.debug("dimension found: " + section)
             # get dimension of data:
@@ -189,7 +182,7 @@ def add_attr_to_var(nc_var, conf, section, logger):
 
     logger.debug("adding attributes to " + section + "variable")
     for option, value in conf.items(section):
-        if option not in RESERV_ATTR:
+        if option not in common.RESERV_ATTR:
             logger.debug("adding " + option + " attribute")
             setattr(nc_var, option, value)
 
