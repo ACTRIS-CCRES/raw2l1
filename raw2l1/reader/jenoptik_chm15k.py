@@ -330,6 +330,8 @@ def calc_pr2(data, soft_vers, logger):
         # find a way to pass the overlap
         logger.debug("P = (beta_raw/r2*ovl*p_calc*scaling+base)" +
                      "*laser_pulses*range_scale")
+        # Warning: For this type of file we do not correct the overlap function
+        # as it is not available in the netCDf file
         p = ((
             np.transpose(data['beta_raw'] / np.square(data['range']))
             * data['p_calc'] * data['scaling']
