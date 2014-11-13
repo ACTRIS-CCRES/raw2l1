@@ -36,6 +36,17 @@ RANGE_GATES = {
     4: 770,
     5: -9,
 }
+
+# line of data according to data message type
+STATE_MSG_LINE = {
+    1: 3,
+    2: 4,
+}
+RCS_MSG_LINE = {
+    1: 4,
+    2: 5,
+}
+
 # Fixed variables dimensions
 LAYER_DIM = 3
 
@@ -299,12 +310,7 @@ def get_state_line_nb_in_msg(msg_type):
     line number in data message containing ceilometer state
     """
 
-    if msg_type == 1:
-        line_to_read = 3
-    else:
-        line_to_read = 4
-
-    return line_to_read
+    return STATE_MSG_LINE[msg_type]
 
 
 def get_rcs_line_nb_in_msg(msg_type):
@@ -313,12 +319,7 @@ def get_rcs_line_nb_in_msg(msg_type):
     line number in data message containing ceilometer state
     """
 
-    if msg_type == 1:
-        line_to_read = 4
-    else:
-        line_to_read = 5
-
-    return line_to_read
+    return RCS_MSG_LINE[msg_type]
 
 
 def read_scalar_vars(data, msg, msg_type, logger):
