@@ -38,6 +38,15 @@ def get_overlap_filename(option):
     return option.split(',')[1].strip(' ')
 
 
+def get_data_key(option):
+    """
+    Extract key name of data dictionnary which value will be written in
+    the netCDF variable
+    """
+
+    return option.split(',')[1].strip(' ')
+
+
 def filter_conf_sections(conf):
     """
     Remove unneeded sections of configuration file for the creation of
@@ -117,7 +126,7 @@ def create_netcdf_dim(conf, data, nc_id, logger):
             logger.debug("dimension found: " + section)
             # get dimension of data:
 
-            if conf.get(section, 'value') == 'data':
+            if 'data' in conf.get(section, 'value'):
                 nc_id.createDimension(dim,
                                       data[dim].size)
             else:
@@ -155,8 +164,8 @@ def add_data_to_var(nc_var, var_name, conf, data, logger):
     data_type = get_var_type(conf.get(var_name, 'type'))
 
     logger.debug("adding data to " + var_name)
-    if data_val == 'data':
-        nc_var[:] = data[var_name]
+    if 'data' in data_val:
+        nc_var[:] = data[get_data_key(data_val)]
     elif 'overlap' in data_val:
         over_fname = get_overlap_filename(data_val)
         try:
