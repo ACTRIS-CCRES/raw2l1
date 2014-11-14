@@ -18,7 +18,10 @@ import os
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
-#sys.path.insert(0, os.path.abspath('.'))
+sys.path.insert(0, os.path.abspath('.'))
+sys.path.append(os.path.abspath('../../.'))
+sys.path.append(os.path.abspath('../../reader'))
+sys.path.append(os.path.abspath('../../tools'))
 
 # -- General configuration ------------------------------------------------
 
@@ -49,7 +52,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'Raw2L1'
-copyright = u'2014, Marc-Antoine Drouin'
+copyright = u'2014, SIRTA'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -122,7 +125,7 @@ html_theme = 'default'
 
 # The name of an image file (relative to this directory) to place at the top
 # of the sidebar.
-#html_logo = None
+html_logo = 'images/Logo_SIRTA_grandformat.png'
 
 # The name of an image file (within the static path) to use as favicon of the
 # docs.  This file should be a Windows icon file (.ico) being 16x16 or 32x32
@@ -145,7 +148,7 @@ html_static_path = ['_static']
 
 # If true, SmartyPants will be used to convert quotes and dashes to
 # typographically correct entities.
-#html_use_smartypants = True
+html_use_smartypants = True
 
 # Custom sidebar templates, maps document names to template names.
 #html_sidebars = {}
@@ -167,10 +170,10 @@ html_static_path = ['_static']
 #html_show_sourcelink = True
 
 # If true, "Created using Sphinx" is shown in the HTML footer. Default is True.
-#html_show_sphinx = True
+html_show_sphinx = True
 
 # If true, "(C) Copyright ..." is shown in the HTML footer. Default is True.
-#html_show_copyright = True
+html_show_copyright = True
 
 # If true, an OpenSearch description file will be output, and all pages will
 # contain a <link> tag referring to it.  The value of this option must be the
@@ -246,7 +249,7 @@ man_pages = [
 #  dir menu entry, description, category)
 texinfo_documents = [
   ('index', 'Raw2L1', u'Raw2L1 Documentation',
-   u'Marc-Antoine Drouin', 'Raw2L1', 'One line description of project.',
+   u'Marc-Antoine Drouin', 'Raw2L1', 'Lidar raw data converter',
    'Miscellaneous'),
 ]
 
@@ -268,8 +271,8 @@ texinfo_documents = [
 # Bibliographic Dublin Core info.
 epub_title = u'Raw2L1'
 epub_author = u'Marc-Antoine Drouin'
-epub_publisher = u'Marc-Antoine Drouin'
-epub_copyright = u'2014, Marc-Antoine Drouin'
+epub_publisher = u'SIRTA'
+epub_copyright = u'2014, SIRTA'
 
 # The basename for the epub file. It defaults to the project name.
 #epub_basename = u'Raw2L1'

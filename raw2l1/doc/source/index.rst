@@ -3,13 +3,24 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to Raw2L1's documentation!
-==================================
+Raw2L1
+======
 
+Raw2L1 is a tool to made easy the use of LIDAR data. It is designed to convert any raw LIDAR data into L1 netCDF files. At the moment Raw2L1 is able to process raw data of the model below
+
+* Jenoptik CHM15K nimbus
+* Vaisala CL31
+* Vaisala CL51
+      
 Contents:
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 1
+
+   Prerequisites <prerequisites>
+   Running Raw2L1 <running>
+   Readers <readers>
+
 
 
 
