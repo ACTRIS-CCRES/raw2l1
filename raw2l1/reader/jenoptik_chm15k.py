@@ -9,7 +9,7 @@ import sys
 
 # brand and model of the LIDAR
 BRAND = 'jenoptik'
-MODEL = 'CHM15K'
+MODEL = 'CHM15K nimbus'
 
 
 def get_soft_version(str_version):
