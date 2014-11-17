@@ -123,8 +123,9 @@ else:
     html_theme_options = {
         "navbar_fixed_top": "true",
         "navbar_site_name": "Contents",
-        'bootstrap_version': '3',
-        'source_link_position': 'footer',
+        'bootstrap_version': "3",
+        'source_link_position': "footer",
+        'bootswatch_theme': "flatly",
     }
 
 # The theme to use for HTML and HTML Help pages.  See the documentation for
