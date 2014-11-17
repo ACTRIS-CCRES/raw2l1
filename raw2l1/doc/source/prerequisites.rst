@@ -12,8 +12,8 @@ listed below
 Some additional modules can be required by raw LIDAR data reader modules. 
 Modules required by reader will be listed in their own doc pages.
 
-Installing Python
------------------
+Installing Python (Windows, Linux, Mac)
+---------------------------------------
 
 If Python is not installed on your computer (whatever is your Operating system, the easiest way is to install the `canopy`_ python distribution. 
 Canopy is distribution dedicated to scientific computing and comes with 
@@ -25,7 +25,7 @@ free licences for academic user. Follow this `link
 <https://store.enthought.com/#canopy-academic>`_ for more informations.
 
 On linux (with admin rights)
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+----------------------------
 
 Most of the time, you should have a version of python install but some 
 packages could be missing.
@@ -46,7 +46,7 @@ on debian family distributions (Ubuntu, Mint...):
 	sudo apt-get install python numpy netcdf4-python
 
 On MAC
-^^^^^^
+------
 
 You need to first install `Macports <https://www.macports.org/>`_ which 
 is a package manager for MacOS. Once its done you can execute the command 
