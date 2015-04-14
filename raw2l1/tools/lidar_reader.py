@@ -9,7 +9,7 @@ from importlib import import_module
 READER_CONF = 'reader_conf'
 
 
-class RawDataReader:
+class RawDataReader(object):
     def __init__(self, conf, logger):
         self.conf = conf
         self.logger = logger

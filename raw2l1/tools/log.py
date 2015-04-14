@@ -40,22 +40,24 @@ def init(opt, name):
     logger.setLevel(f_level)
 
     # create log file
-    fh = logging.handlers.RotatingFileHandler(filename,
-                                              maxBytes=1E6, backupCount=10)
-    fh.setLevel(f_level)
+    f_handler = logging.handlers.RotatingFileHandler(
+        filename,
+        maxBytes=1E6,
+        backupCount=10)
+    f_handler.setLevel(f_level)
 
     # Configuration of logs in terminal
-    ch = logging.StreamHandler()
-    ch.setLevel(t_level)
-    ch.setLevel(logging.DEBUG)
+    t_handler = logging.StreamHandler()
+    t_handler.setLevel(t_level)
+    t_handler.setLevel(logging.DEBUG)
 
     # Format of LOG
     formatter = logging.Formatter(LOG_FMT, datefmt=LOG_DATE_FMT)
-    fh.setFormatter(formatter)
-    ch.setFormatter(formatter)
+    f_handler.setFormatter(formatter)
+    t_handler.setFormatter(formatter)
 
     # add the handlers to logger
-    logger.addHandler(fh)
-    logger.addHandler(ch)
+    logger.addHandler(f_handler)
+    logger.addHandler(t_handler)
 
     return logger

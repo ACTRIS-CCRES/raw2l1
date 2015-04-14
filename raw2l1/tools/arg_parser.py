@@ -13,6 +13,7 @@ from tools.utils import check_dir
 
 PROG_DESC = "Raw LIDAR data to netCDF converter"
 DATE_FMT = "%Y%m%d"
+LOG_LEVEL = ['debug', 'info', 'warning', 'error', 'critical']
 
 
 def check_date_format(input_date):
@@ -65,8 +66,6 @@ def init_args_parser():
     Configure the argument parser to read and do basic check on input
     arguments
     """
-
-    LOG_LEVEL = ['debug', 'info', 'warning', 'error', 'critical']
 
     parser = argparse.ArgumentParser(description=PROG_DESC)
 

@@ -272,33 +272,33 @@ def init_data(data, data_dim, logger):
     """
 
     # Dimension variables
-    #-------------------------------------------------------------------------
+    # -------------------------------------------------------------------------
     data['time'] = np.ones((data_dim['time'],),
                            dtype=np.dtype(dt.datetime)) * np.nan
     data['layer'] = np.array([x + 1 for x in xrange(LAYER_DIM)])
 
     # Time dependant variables
-    #-------------------------------------------------------------------------
+    # -------------------------------------------------------------------------
     data['scale'] = np.ones((data_dim['time'],),
                             dtype=np.float32) * MISSING_FLT
     data['laser_temp'] = np.ones((data_dim['time'],),
                                  dtype=np.float32) * MISSING_FLT
     data['laser_energy'] = np.ones((data_dim['time'],),
                                    dtype=np.float32) * MISSING_FLT
-    data['bckgrd_rcs_0'] = np.ones((data_dim['time']),
+    data['bckgrd_rcs_0'] = np.ones((data_dim['time'],),
                                    dtype=np.float32) * MISSING_FLT
-    data['window_transmission'] = np.ones((data_dim['time']),
+    data['window_transmission'] = np.ones((data_dim['time'],),
                                           dtype=np.float32) * MISSING_FLT
-    data['integrated_rcs_0'] = np.ones((data_dim['time']),
+    data['integrated_rcs_0'] = np.ones((data_dim['time'],),
                                        dtype=np.float32) * MISSING_FLT
 
     # Time, layer dependant variables
-    #-------------------------------------------------------------------------
+    # -------------------------------------------------------------------------
     data['cbh'] = np.ones((data_dim['time'], LAYER_DIM),
                           dtype=np.float32) * MISSING_FLT
 
     # Time, range dependent variables
-    #-------------------------------------------------------------------------
+    # -------------------------------------------------------------------------
     data['rcs_0'] = np.ones((data_dim['time'], data_dim['range']),
                             dtype=np.float32) * MISSING_FLT
 

@@ -101,41 +101,41 @@ def init_data(vars_dim, logger):
     data = {}
 
     # dimensions of the output netCDf file
-    #-------------------------------------------------------------------------
-    data['time'] = np.empty((vars_dim['time']), dtype=np.dtype(dt.datetime))
-    data['range'] = np.empty((vars_dim['range']), dtype=np.float32)
-    data['layer'] = np.empty((vars_dim['layer']), dtype=np.int16)
+    # -------------------------------------------------------------------------
+    data['time'] = np.empty((vars_dim['time'],), dtype=np.dtype(dt.datetime))
+    data['range'] = np.empty((vars_dim['range'],), dtype=np.float32)
+    data['layer'] = np.empty((vars_dim['layer'],), dtype=np.int16)
 
     # Time dependent variables
-    #-------------------------------------------------------------------------
-    data['vor'] = np.empty((vars_dim['time']), dtype=np.int16)
-    data['voe'] = np.empty((vars_dim['time']), dtype=np.int16)
-    data['tcc'] = np.empty((vars_dim['time']), dtype=np.int8)
-    data['stddev'] = np.empty((vars_dim['time']), dtype=np.float32)
-    data['state_optics'] = np.empty((vars_dim['time']), dtype=np.int8)
-    data['state_laser'] = np.empty((vars_dim['time']), dtype=np.int8)
-    data['detector'] = np.empty((vars_dim['time']), dtype=np.int8)
-    data['sci'] = np.empty((vars_dim['time']), dtype=np.int8)
-    data['nn1'] = np.empty((vars_dim['time']), dtype=np.int16)
-    data['nn2'] = np.empty((vars_dim['time']), dtype=np.int16)
-    data['nn3'] = np.empty((vars_dim['time']), dtype=np.int16)
-    data['mxd'] = np.empty((vars_dim['time']), dtype=np.int16)
-    data['life_time'] = np.empty((vars_dim['time']), dtype=np.int32)
-    data['error_ext'] = np.empty((vars_dim['time']), dtype=np.int32)
-    data['temp_lom'] = np.empty((vars_dim['time']), dtype=np.int16)
-    data['temp_int'] = np.empty((vars_dim['time']), dtype=np.int16)
-    data['temp_ext'] = np.empty((vars_dim['time']), dtype=np.int16)
-    data['temp_det'] = np.empty((vars_dim['time']), dtype=np.int16)
-    data['life_time'] = np.empty((vars_dim['time']), dtype=np.int32)
-    data['laser_pulses'] = np.empty((vars_dim['time']), dtype=np.int32)
-    data['error_ext'] = np.empty((vars_dim['time']), dtype=np.int32)
-    data['bcc'] = np.empty((vars_dim['time']), dtype=np.int8)
-    data['bckgrd_rcs_0'] = np.empty((vars_dim['time']), dtype=np.float32)
-    data['average_time'] = np.empty((vars_dim['time']), dtype=np.int32)
-    data['p_calc'] = np.empty((vars_dim['time']), dtype=np.int16)
+    # -------------------------------------------------------------------------
+    data['vor'] = np.empty((vars_dim['time'],), dtype=np.int16)
+    data['voe'] = np.empty((vars_dim['time'],), dtype=np.int16)
+    data['tcc'] = np.empty((vars_dim['time'],), dtype=np.int8)
+    data['stddev'] = np.empty((vars_dim['time'],), dtype=np.float32)
+    data['state_optics'] = np.empty((vars_dim['time'],), dtype=np.int8)
+    data['state_laser'] = np.empty((vars_dim['time'],), dtype=np.int8)
+    data['detector'] = np.empty((vars_dim['time'],), dtype=np.int8)
+    data['sci'] = np.empty((vars_dim['time'],), dtype=np.int8)
+    data['nn1'] = np.empty((vars_dim['time'],), dtype=np.int16)
+    data['nn2'] = np.empty((vars_dim['time'],), dtype=np.int16)
+    data['nn3'] = np.empty((vars_dim['time'],), dtype=np.int16)
+    data['mxd'] = np.empty((vars_dim['time'],), dtype=np.int16)
+    data['life_time'] = np.empty((vars_dim['time'],), dtype=np.int32)
+    data['error_ext'] = np.empty((vars_dim['time'],), dtype=np.int32)
+    data['temp_lom'] = np.empty((vars_dim['time'],), dtype=np.int16)
+    data['temp_int'] = np.empty((vars_dim['time'],), dtype=np.int16)
+    data['temp_ext'] = np.empty((vars_dim['time'],), dtype=np.int16)
+    data['temp_det'] = np.empty((vars_dim['time'],), dtype=np.int16)
+    data['life_time'] = np.empty((vars_dim['time'],), dtype=np.int32)
+    data['laser_pulses'] = np.empty((vars_dim['time'],), dtype=np.int32)
+    data['error_ext'] = np.empty((vars_dim['time'],), dtype=np.int32)
+    data['bcc'] = np.empty((vars_dim['time'],), dtype=np.int8)
+    data['bckgrd_rcs_0'] = np.empty((vars_dim['time'],), dtype=np.float32)
+    data['average_time'] = np.empty((vars_dim['time'],), dtype=np.int32)
+    data['p_calc'] = np.empty((vars_dim['time'],), dtype=np.int16)
 
     # Time, layer dependent variables
-    #-------------------------------------------------------------------------
+    # -------------------------------------------------------------------------
     data['pbs'] = np.empty((vars_dim['time'], vars_dim['layer']),
                            dtype=np.int8)
     data['pbl'] = np.empty((vars_dim['time'], vars_dim['layer']),
@@ -150,7 +150,7 @@ def init_data(vars_dim, logger):
                            dtype=np.int16)
 
     # Time, range dependent variables
-    #-------------------------------------------------------------------------
+    # -------------------------------------------------------------------------
     data['beta_raw'] = np.empty((vars_dim['time'], vars_dim['range']),
                                 dtype=np.float32)
     data['rcs_0'] = np.empty((vars_dim['time'], vars_dim['range']),
@@ -235,7 +235,7 @@ def read_timedep_vars(data, nc_id, soft_vers, time_ind, time_size, logger):
     ind_e = time_ind + time_size
 
     # time dependent variables
-    #---------------------------------------------------------------------
+    # ---------------------------------------------------------------------
     logger.debug('reading vertical optical range (vor)')
     data['vor'][ind_b:ind_e] = nc_id.variables['vor'][:]
     logger.debug('reading vertical optical range error (voe)')
@@ -284,7 +284,7 @@ def read_timedep_vars(data, nc_id, soft_vers, time_ind, time_size, logger):
                                              logger)
 
     # 2d time dependent variables
-    #---------------------------------------------------------------------
+    # ---------------------------------------------------------------------
     logger.debug('reading quality score for aerosol layer in PBL')
     data['pbs'][ind_b:ind_e, :] = nc_id.variables['pbs'][:]
     logger.debug('reading aerosol layer in pbl (pbl)')
@@ -324,21 +324,21 @@ def calc_pr2(data, soft_vers, logger):
     logger.debug('calculing Pr² using:')
     if soft_vers < 0.7:
         logger.debug('P = (beta_raw*stddev+base)*laser_pulses')
-        p = ((data['beta_raw'].T * data['stddev'] + data['bckgrd_rcs_0']) *
-             data['laser_pulses'])
+        p_raw = (
+            (data['beta_raw'].T * data['stddev'] + data['bckgrd_rcs_0']) *
+            data['laser_pulses'])
     else:
         # find a way to pass the overlap
         logger.debug("P = (beta_raw/r2*ovl*p_calc*scaling+base)" +
                      "*laser_pulses*range_scale")
         # Warning: For this type of file we do not correct the overlap function
         # as it is not available in the netCDf file
-        p = ((
+        p_raw = ((
             np.transpose(data['beta_raw'] / np.square(data['range']))
             * data['p_calc'] * data['scaling']
-            + data['bckgrd_rcs_0'])
-            * data['laser_pulses'])
+            + data['bckgrd_rcs_0']) * data['laser_pulses'])
 
-    data['rcs_0'] = p.T * np.square(data['range'])
+    data['rcs_0'] = p_raw.T * np.square(data['range'])
 
     return data
 
@@ -372,7 +372,6 @@ def read_data(list_files, conf, logger):
             nb_files_read += 1
         except:
             logger.error('unable to load ' + ifile + ' trying next one')
-            pass
 
         nb_files += 1
         logger.debug('reading %02d: ' % (nb_files) + ifile)
@@ -385,17 +384,17 @@ def read_data(list_files, conf, logger):
             logger.info("software version: %7.4f" % soft_vers)
 
             # read dimensions
-            #-----------------------------------------------------------------
+            # -----------------------------------------------------------------
             logger.info("reading dimension variables")
             time_size, data = read_dim_vars(data, raw_data, logger)
 
             # read scalar
-            #-----------------------------------------------------------------
+            # -----------------------------------------------------------------
             logger.info("reading scalar variables")
             data = read_scalar_vars(data, raw_data, soft_vers, logger)
 
         # Time dependant variables
-        #---------------------------------------------------------------------
+        # ---------------------------------------------------------------------
         logger.info("reading time dependant variables for file %02d" %
                     nb_files_read)
         if nb_files_read > 1:
@@ -406,13 +405,13 @@ def read_data(list_files, conf, logger):
         time_ind += time_size
 
         # Close NetCDF file
-        #---------------------------------------------------------------------
+        # ---------------------------------------------------------------------
         raw_data.close()
 
     logger.info("reading of files: done")
 
     # calculate Pr²
-    #---------------------------------------------------------------------
+    # ---------------------------------------------------------------------
     logger.info("calculating Pr²")
     data = calc_pr2(data, soft_vers, logger)
 
