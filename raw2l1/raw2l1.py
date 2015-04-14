@@ -31,7 +31,7 @@ def welcome_msg():
     print(r"|_|_\_||_|!_/ \_!|___|___||_| ")
     print(r"")
     print(r"version: " + __version__)
-    print(r"SIRTA IPSL/CNRS/EP 2014")
+    print(r"SIRTA IPSL/CNRS/EP 2014-2015")
     print(r"--------------------------------------------------")
     print(r"")
 
@@ -46,40 +46,40 @@ def raw2l1(argv):
     welcome_msg()
 
     # Read imput arguments
-    #-------------------------------------------------------------------------
+    # -------------------------------------------------------------------------
     input_args = ag.get_input_args(argv)
 
     # Start logger
-    #-------------------------------------------------------------------------
+    # -------------------------------------------------------------------------
     logger = log.init(input_args, 'raw2l1')
     logger.info('logs are saved in {!s}'.format(input_args['log']))
 
     # reading configuration file
-    #-------------------------------------------------------------------------
+    # -------------------------------------------------------------------------
     logger.debug('reading configuration file ' + input_args['conf'].name)
     setting = conf.init(input_args, logger)
     logger.info('reading configuration file: OK')
 
     # Add directory containing reader to path
-    #-------------------------------------------------------------------------
+    # -------------------------------------------------------------------------
     logger.debug("adding " + setting.get('conf', 'reader_dir') + " to path")
     sys.path.append(setting.get('conf', 'reader_dir'))
 
     # Reading lidar data using user defined reader
-    #-------------------------------------------------------------------------
+    # -------------------------------------------------------------------------
     logger.info("reading lidar data")
     lidar_data = lr.RawDataReader(setting, logger)
     lidar_data.read_data()
-    #logger.debug("test output : "+repr(lidar_data.data))
+    # logger.debug("test output : "+repr(lidar_data.data))
     logger.info("reading data successed")
 
     # write netCDF file
-    #-------------------------------------------------------------------------
+    # -------------------------------------------------------------------------
     logger.info("writing output file")
     cnc.create_netcdf(setting, lidar_data.data, logger)
 
     # end of the program
-    #-------------------------------------------------------------------------
+    # -------------------------------------------------------------------------
     logger.info("end of processing")
     sys.exit(0)
 
