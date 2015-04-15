@@ -10,6 +10,17 @@ import ConfigParser
 from tools.read_overlap import read_overlap
 from tools import common
 
+KEY_READERDATA = '$reader_data$'
+KEY_OVERLAP = '$overlap$'
+KEY_NODIM = '$none$'
+KEYS_VALTYPE = {
+    '$integer$': np.int32,
+    '$long$': np.int64,
+    '$float$': np.float32,
+    '$double$': np.float64,
+    'default': np.float64,
+}
+
 
 def dim_to_tuple(dim):
     """
@@ -70,18 +81,21 @@ def filter_conf_sections(conf, logger):
     return list_sec
 
 
-def get_var_type(type_str):
+def get_var_type(type_str, logger):
     """
     Get numpy type based on type given conf file
     """
 
-    val_type = {}
-    val_type['integer'] = np.int32
-    val_type['long'] = np.int64
-    val_type['float'] = np.float32
-    val_type['double'] = np.float64
+    try:
+        val_type = KEYS_VALTYPE[type_str]
+    except KeyError:
+        msg = (
+            "Type of data '" + type_str + "' unknown using default. " +
+            "Check your configuration file")
+        logger.error(msg)
+        val_type = np.float64
 
-    return val_type[type_str]
+    return val_type
 
 
 def create_netcdf_global(conf, nc_id, logger):
@@ -128,7 +142,7 @@ def create_netcdf_dim(conf, data, nc_id, logger):
             logger.debug("dimension found: " + section)
             # get dimension of data:
 
-            if 'data' in conf.get(section, 'value'):
+            if KEY_READERDATA in conf.get(section, 'value'):
                 nc_id.createDimension(dim,
                                       data[dim].size)
             else:
@@ -144,7 +158,7 @@ def create_netcdf_time_var(conf, data, nc_id, logger):
 
     units = conf.get('time', 'units')
     calendar = conf.get('time', 'calendar')
-    val_type = get_var_type(conf.get('time', 'type'))
+    val_type = get_var_type(conf.get('time', 'type'), logger)
 
     nc_var = nc_id.createVariable('time', val_type, ('time',))
 
@@ -163,12 +177,12 @@ def add_data_to_var(nc_var, var_name, conf, data, logger):
     """
 
     data_val = conf.get(var_name, 'value')
-    data_type = get_var_type(conf.get(var_name, 'type'))
+    data_type = get_var_type(conf.get(var_name, 'type'), logger)
 
     logger.debug("adding data to " + var_name)
-    if 'data' in data_val:
+    if KEY_READERDATA in data_val:
         nc_var[:] = data[get_data_key(data_val)]
-    elif 'overlap' in data_val:
+    elif KEY_OVERLAP in data_val:
         over_fname = get_overlap_filename(data_val)
         try:
             nc_var[:] = read_overlap(over_fname, logger)
@@ -211,9 +225,9 @@ def create_netcdf_variables(conf, data, nc_id, logger):
 
         var_name = section
         dim = conf.get(section, 'dim')
-        val_type = get_var_type(conf.get(section, 'type'))
+        val_type = get_var_type(conf.get(section, 'type'), logger)
 
-        if dim == 'none':
+        if dim == KEY_NODIM:
             nc_var = nc_id.createVariable(var_name, val_type)
         else:
             nc_var = nc_id.createVariable(var_name, val_type,
