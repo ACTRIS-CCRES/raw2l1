@@ -6,6 +6,7 @@ from __future__ import print_function, division, absolute_import
 import netCDF4 as nc
 import sys
 import numpy as np
+import ConfigParser
 from tools.read_overlap import read_overlap
 from tools import common
 
@@ -47,22 +48,23 @@ def get_data_key(option):
     return option.split(',')[1].strip(' ')
 
 
-def filter_conf_sections(conf):
+def filter_conf_sections(conf, logger):
     """
     Remove unneeded sections of configuration file for the creation of
     the netCDF file and sections with special processing (time)
     """
 
-    secs_to_rm = common.CONF_SECTIONS
+    sections_to_rm = common.CONF_SECTIONS
     for sec in common.SPEC_SECTIONS:
-        secs_to_rm.append(sec)
+        sections_to_rm.append(sec)
 
     list_sec = conf.sections()
 
-    for elt in secs_to_rm:
+    for elt in sections_to_rm:
         try:
             list_sec.remove(elt)
-        except Exception:
+        except ValueError, err:
+            logger.warning(repr(elt) + ' ' + repr(err))
             continue
 
     return list_sec
@@ -111,14 +113,14 @@ def create_netcdf_dim(conf, data, nc_id, logger):
     """
 
     # loop only over section concerning the netCDf file
-    for section in filter_conf_sections(conf):
+    for section in filter_conf_sections(conf, logger):
 
         # process only section concerning the output file
         try:
             dim = conf.get(section, 'dim')
             name = section
-        except Exception, err:
-            logger.debug(repr(err))
+        except ConfigParser.NoSectionError, err:
+            logger.warning(repr(err))
             continue
 
         if section not in common.CONF_SECTIONS and name == dim:
@@ -205,7 +207,7 @@ def create_netcdf_variables(conf, data, nc_id, logger):
     """
 
     # loop only over sections concerning the netCDf file
-    for section in filter_conf_sections(conf):
+    for section in filter_conf_sections(conf, logger):
 
         var_name = section
         dim = conf.get(section, 'dim')
@@ -238,7 +240,7 @@ def create_netcdf(conf, data, logger):
     status = 0
 
     # open netCDF file
-    #-------------------------------------------------------------------------
+    # -------------------------------------------------------------------------
     logger.info("create netCDF file " + conf.get('conf', 'output'))
     try:
         nc_id = nc.Dataset(conf.get('conf', 'output'),
@@ -251,18 +253,18 @@ def create_netcdf(conf, data, logger):
         sys.exit(1)
 
     # write global attributes in netCDF file
-    #-------------------------------------------------------------------------
+    # -------------------------------------------------------------------------
     logger.info("adding global attributes")
     create_netcdf_global(conf, nc_id, logger)
 
     # write dimension of the netCDF file
-    #-------------------------------------------------------------------------
+    # -------------------------------------------------------------------------
     logger.info("creating dimensions")
     create_netcdf_time_dim(nc_id, logger)
     create_netcdf_dim(conf, data, nc_id, logger)
 
     # write variables in netCDf file
-    #-------------------------------------------------------------------------
+    # -------------------------------------------------------------------------
     logger.info("creating variables")
     logger.debug("creating time variable")
     create_netcdf_time_var(conf, data, nc_id, logger)
