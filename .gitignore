@@ -3,3 +3,4 @@ raw2l1/doc/build/
 raw2l1.sublime-workspace
 .sonar/
 raw2l1/.coverage
+.reports/
