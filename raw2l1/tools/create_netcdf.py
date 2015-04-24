@@ -143,8 +143,13 @@ def create_netcdf_dim(conf, data, nc_id, logger):
             # get dimension of data:
 
             if KEY_READERDATA in conf.get(section, 'value'):
-                nc_id.createDimension(dim,
-                                      data[dim].size)
+                try:
+                    nc_id.createDimension(dim,
+                                          data[dim].size)
+                except:
+                    val_key = get_data_key(conf.get(section, 'value'))
+                    nc_id.createDimension(dim,
+                                          data[val_key].size)
             else:
                 nc_id.createDimension(dim, 1)
 
@@ -224,8 +229,11 @@ def create_netcdf_variables(conf, data, nc_id, logger):
     for section in filter_conf_sections(conf, logger):
 
         var_name = section
+        logger.debug("variable " + var_name)
         dim = conf.get(section, 'dim')
+        logger.debug("dimension " + dim)
         val_type = get_var_type(conf.get(section, 'type'), logger)
+        logger.debug("type " + repr(val_type))
 
         if dim == KEY_NODIM:
             nc_var = nc_id.createVariable(var_name, val_type)
