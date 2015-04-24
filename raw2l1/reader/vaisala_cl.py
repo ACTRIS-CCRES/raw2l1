@@ -9,7 +9,7 @@ from tools.utils import chomp
 
 # brand and model of the LIDAR
 BRAND = 'vaisala'
-MODEL = 'CL51'
+MODEL = 'CL31 & CL51'
 
 # Parameters
 FMT_DATE = "-%Y-%m-%d %H:%M:%S"
@@ -52,7 +52,8 @@ RCS_MSG_LINE = {
 }
 
 # Fixed variables dimensions
-LAYER_DIM = 5
+CBH_DIM = 3
+CLH_DIM = 5
 
 # MISSING/FILLING values
 MISSING_INT = -9
@@ -252,6 +253,10 @@ def get_acq_conf(filename, data, data_dim, logger):
         if range_ok and msg_ok:
             break
 
+    # Read instrument/sofware id
+    data['instrument_id'] = conf_msg[1:4]
+    data['software_id'] = conf_msg[4:7]
+
     # if we are not able to read range in the file
     if not range_ok:
         logger.critical("Impossible to read range configuration in " +
@@ -275,7 +280,8 @@ def init_data(data, data_dim, logger):
     # -------------------------------------------------------------------------
     data['time'] = np.ones((data_dim['time'],),
                            dtype=np.dtype(dt.datetime)) * np.nan
-    data['layer'] = np.array([x + 1 for x in xrange(LAYER_DIM)])
+    data['cbh_layer'] = np.array([x + 1 for x in xrange(CBH_DIM)])
+    data['clh_layer'] = np.array([x + 1 for x in xrange(CLH_DIM)])
 
     # Time dependant variables
     # -------------------------------------------------------------------------
@@ -294,8 +300,12 @@ def init_data(data, data_dim, logger):
 
     # Time, layer dependant variables
     # -------------------------------------------------------------------------
-    data['cbh'] = np.ones((data_dim['time'], LAYER_DIM),
+    data['cbh'] = np.ones((data_dim['time'], CBH_DIM),
                           dtype=np.float32) * MISSING_FLT
+    data['clh'] = np.ones((data_dim['time'], CLH_DIM),
+                          dtype=np.float32) * MISSING_FLT
+    data['cloud_amount'] = np.ones((data_dim['time'], CLH_DIM),
+                                   dtype=np.int) * MISSING_INT
 
     # Time, range dependent variables
     # -------------------------------------------------------------------------
@@ -352,9 +362,9 @@ def read_time_dep_vars(data, ind, msg, msg_type, logger):
     return data
 
 
-def read_cbh_msg_1(data, ind, msg, logger):
+def read_cbh_msg(data, ind, msg, logger):
     """
-    extract CBH if CL51 is configure to use message type 1
+    extract CBH
     """
 
     # get the number of cloud layer
@@ -377,9 +387,9 @@ def read_cbh_msg_1(data, ind, msg, logger):
     return data
 
 
-def read_cbh_msg_2(data, ind, msg, logger):
+def read_clh_msg(data, ind, msg, logger):
     """
-    extract CBH if CL51 is configure to use message type 2
+    extract CLH
     """
 
     # get the number of cloud layer
@@ -387,10 +397,11 @@ def read_cbh_msg_2(data, ind, msg, logger):
     cld_detect = [int(x) for x in cld_line.split()[0::2]]
     cld_alt = cld_line.split()[1::2]
 
-    for i_alt in xrange(LAYER_DIM):
+    for i_alt in xrange(CLH_DIM):
         if cld_detect[i_alt] >= 1 and cld_detect[i_alt] <= 8:
-            data['cbh'][ind][i_alt] = (np.float(cld_alt[i_alt]) *
+            data['clh'][ind][i_alt] = (np.float(cld_alt[i_alt]) *
                                        CBH_ALT_FACTOR)
+            data['cloud_amount'] = cld_detect[i_alt]
 
     return data
 
@@ -401,10 +412,9 @@ def read_cbh_vars(data, ind, msg, logger):
     """
 
     # reading of CBH depends on the kind of data message type
-    if data['msg_type'] == 1:
-        data = read_cbh_msg_1(data, ind, msg, logger)
-    elif data['msg_type'] == 2:
-        data = read_cbh_msg_2(data, ind, msg, logger)
+    data = read_cbh_msg(data, ind, msg, logger)
+    if data['msg_type'] == 2:
+        data = read_clh_msg(data, ind, msg, logger)
 
     return data
 
@@ -489,7 +499,7 @@ def read_data(list_files, conf, logger):
     """
 
     # analyse file to read to determine the size of the time variable
-    #-------------------------------------------------------------------------
+    # -------------------------------------------------------------------------
     data = {}
     data_dim = {}
     logger.info("analysing input files to get the configuration")
@@ -503,7 +513,7 @@ def read_data(list_files, conf, logger):
     data = init_data(data, data_dim, logger)
 
     # Reading all the data
-    #-------------------------------------------------------------------------
+    # -------------------------------------------------------------------------
     logger.info("reading files")
     time_ind = 0
     nb_files_read = 0
@@ -519,5 +529,7 @@ def read_data(list_files, conf, logger):
 
         # reading data in the file
         time_ind, data = read_vars(lines, data, time_ind, logger)
+
+    print(data.keys())
 
     return data
