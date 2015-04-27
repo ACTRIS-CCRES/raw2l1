@@ -98,14 +98,23 @@ def get_var_type(type_str, logger):
     return val_type
 
 
-def create_netcdf_global(conf, nc_id, logger):
+def create_netcdf_global(conf, nc_id, data, logger):
     """
     Create the global attribute of the netCDF file
     """
 
     for attr, value in conf.items('global'):
-        logger.debug("adding " + attr)
-        setattr(nc_id, attr, value)
+        if KEY_READERDATA in value:
+            reader_key = get_data_key(value)
+            try:
+                setattr(nc_id, attr, data[reader_key])
+                logger.debug("adding %s" % attr)
+            except KeyError:
+                mess = "no key %s in data read. Global var %s will be ignore."
+                logger.error(mess % (reader_key, attr))
+        else:
+            setattr(nc_id, attr, value)
+            logger.debug("adding %s" % attr)
 
     return None
 
@@ -197,7 +206,7 @@ def add_data_to_var(nc_var, var_name, conf, data, logger):
     else:
         try:
             nc_var[:] = np.array(data_val, dtype=data_type)
-        except IOError, err:
+        except ValueError, err:
             logger.error("impossible to convert value to " +
                          repr(data_type) + "for variable " + var_name)
             logger.error(repr(err))
@@ -210,10 +219,10 @@ def add_attr_to_var(nc_var, conf, section, logger):
     add attribute to the variable of the netCDF file
     """
 
-    logger.debug("adding attributes to " + section + "variable")
+    logger.debug("adding attributes to %s variable" % section)
     for option, value in conf.items(section):
         if option not in common.RESERV_ATTR:
-            logger.debug("adding " + option + " attribute")
+            logger.debug("adding %s attribute" % option)
             setattr(nc_var, option, value)
 
     return None
@@ -277,7 +286,7 @@ def create_netcdf(conf, data, logger):
     # write global attributes in netCDF file
     # -------------------------------------------------------------------------
     logger.info("adding global attributes")
-    create_netcdf_global(conf, nc_id, logger)
+    create_netcdf_global(conf, nc_id, data, logger)
 
     # write dimension of the netCDF file
     # -------------------------------------------------------------------------
