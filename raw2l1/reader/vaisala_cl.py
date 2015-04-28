@@ -64,6 +64,7 @@ RCS_BYTES_SIZE = 5
 RCS_FACTOR = 1e-8
 DEG_TO_K = 273.15
 CBH_ALT_FACTOR = 10.
+SUM_BCKSCATTER_FACTOR = 1.E-4
 
 
 def get_file_lines(filename, logger):
@@ -311,6 +312,8 @@ def init_data(data, data_dim, logger):
     # -------------------------------------------------------------------------
     data['rcs_0'] = np.ones((data_dim['time'], data_dim['range']),
                             dtype=np.float32) * MISSING_FLT
+    data['pr2'] = np.ones((data_dim['time'], data_dim['range']),
+                          dtype=np.float32) * MISSING_FLT
 
     return data
 
@@ -357,7 +360,7 @@ def read_time_dep_vars(data, ind, msg, msg_type, logger):
     data['laser_temp'][ind] = np.float(params[4])
     data['window_transmission'][ind] = np.float(params[5])
     data['bckgrd_rcs_0'][ind] = np.float(params[7])
-    data['integrated_rcs_0'][ind] = np.float(params[9]) * 1.E-4
+    data['integrated_rcs_0'][ind] = np.float(params[9]) * SUM_BCKSCATTER_FACTOR
 
     return data
 
@@ -434,7 +437,7 @@ def read_rcs_var(data, ind, msg, logger):
     tmp = [int(rcs_line[s * RCS_BYTES_SIZE:s * RCS_BYTES_SIZE +
                RCS_BYTES_SIZE], 16) for s in range(rcs_size)]
 
-    data['rcs_0'][ind][:] = np.array(tmp, dtype=np.float32) * RCS_FACTOR
+    data['rcs_0'][ind][:] = np.array(tmp, dtype=np.float32)
 
     return data
 
@@ -479,7 +482,7 @@ def read_vars(lines, data, time_ind, logger):
                                   data['msg_type'], logger)
 
         # read CBH
-        logger.debug("reading cbh")
+        logger.debug("reading cbh/clh")
         data = read_cbh_vars(data, time_ind, msg, logger)
 
         # read rcs
@@ -530,6 +533,8 @@ def read_data(list_files, conf, logger):
         # reading data in the file
         time_ind, data = read_vars(lines, data, time_ind, logger)
 
-    print(data.keys())
+    # Final calculation on whole profiles
+    # -------------------------------------------------------------------------
+    data['pr2'] = data['rcs_0']*RCS_FACTOR*data['range']
 
     return data
