@@ -195,7 +195,13 @@ def add_data_to_var(nc_var, var_name, conf, data, logger):
 
     logger.debug("adding data to " + var_name)
     if KEY_READERDATA in data_val:
-        nc_var[:] = data[get_data_key(data_val)]
+        try:
+            data_key = get_data_key(data_val)
+            nc_var[:] = data[data_key]
+        except KeyError:
+            mess = "key %s does not exist in read data. Exiting program"
+            logger.critical(mess % data_key)
+            sys.exit(1)
     elif KEY_OVERLAP in data_val:
         over_fname = get_overlap_filename(data_val)
         try:
