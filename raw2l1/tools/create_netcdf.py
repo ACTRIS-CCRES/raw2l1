@@ -5,6 +5,7 @@ from __future__ import print_function, division, absolute_import
 
 import netCDF4 as nc
 import sys
+import datetime as dt
 import numpy as np
 import ConfigParser
 from tools.read_overlap import read_overlap
@@ -113,8 +114,19 @@ def create_netcdf_global(conf, nc_id, data, logger):
                 mess = "no key %s in data read. Global var %s will be ignore."
                 logger.error(mess % (reader_key, attr))
         else:
+            if attr == 'history':
+                value = ('created the ' +
+                         dt.datetime.today().strftime('%Y-%m-%d') +
+                         ' ' + value)
+
             setattr(nc_id, attr, value)
             logger.debug("adding %s" % attr)
+
+    # Add year, month day for STRAT compatibility
+    dt_date = conf.get('conf', 'date')
+    setattr(nc_id, 'year', dt_date.strftime('%Y'))
+    setattr(nc_id, 'month', dt_date.strftime('%m'))
+    setattr(nc_id, 'day', dt_date.strftime('%d'))
 
     return None
 
