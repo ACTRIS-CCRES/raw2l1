@@ -15,6 +15,7 @@ KEY_READERDATA = '$reader_data$'
 KEY_OVERLAP = '$overlap$'
 KEY_NODIM = '$none$'
 KEYS_VALTYPE = {
+    '$short$': np.int16,
     '$integer$': np.int32,
     '$long$': np.int64,
     '$float$': np.float32,
@@ -240,6 +241,22 @@ def add_attr_to_var(nc_var, conf, section, logger):
     logger.debug("adding attributes to %s variable" % section)
     for option, value in conf.items(section):
         if option not in common.RESERV_ATTR:
+
+            # special case for missing value
+            if option == "missing_value":
+                try:
+                    data_type = get_var_type(conf.get(section, 'type'),
+                                             logger)
+                    value = np.array(value, dtype=data_type)
+                except ValueError:
+                    mess = ("impossible to convert missing_value %s. " +
+                            "Using nan or -9 depending on type")
+                    logger.error(mess % repr(value))
+                    if data_type == np.float32 or data_type == np.float64:
+                        value = np.nan
+                    else:
+                        value = -9
+
             logger.debug("adding %s attribute" % option)
             setattr(nc_var, option, value)
 
@@ -273,7 +290,7 @@ def create_netcdf_variables(conf, data, nc_id, logger):
             add_data_to_var(nc_var, var_name, conf, data, logger)
         else:
             logger.error("No value option found for " + var_name)
-            logger.error("your configuration file might contains erros")
+            logger.error("your configuration file might contains errors")
 
         # add attributes to the variable
         add_attr_to_var(nc_var, conf, section, logger)
