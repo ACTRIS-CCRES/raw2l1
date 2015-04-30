@@ -27,6 +27,7 @@ def init(input_args, logger):
     """
 
     conf = ConfigParser.RawConfigParser()
+    conf.optionxform = str
     conf.read(input_args['conf'].name)
 
     # TODO: Add a function to check available values once format is fixed
