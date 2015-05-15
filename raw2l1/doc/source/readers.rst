@@ -1,6 +1,5 @@
 Readers
 =======
 
-.. automodule:: jenoptik_chm15k
-.. automodule:: vaisala_cl31
-.. automodule:: vaisala_cl51
+.. automodule:: lufft_chm15k_nimbus
+.. automodule:: vaisala_cl
