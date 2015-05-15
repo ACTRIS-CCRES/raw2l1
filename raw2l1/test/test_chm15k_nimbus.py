@@ -108,6 +108,25 @@ class TestChm15k(unittest.TestCase):
 
         self.assertEqual(resp, 0)
 
+    def test_chm15k_sirta(self):
+
+        date = '20150427'
+        test_ifile = self.IN_DIR + '20150427_SIRTA_CHM150101_000.nc'
+        test_ofile = TEST_OUT_DIR + 'test_chm15k_20150427_sirta.nc'
+        test_cfile = CONF_DIR + 'conf_lufft_chm15k_nimbus.ini'
+
+        resp = subprocess.check_call([
+            MAIN_DIR + PRGM,
+            date,
+            test_cfile,
+            test_ifile,
+            test_ofile,
+            '-log_level',
+            'debug'
+        ])
+
+        self.assertEqual(resp, 0)
+
 
 if __name__ == '__main__':
     unittest.main()

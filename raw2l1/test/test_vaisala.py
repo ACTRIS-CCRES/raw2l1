@@ -22,7 +22,7 @@ class TestVaisalaCL31(unittest.TestCase):
 
         date = '20141030'
         test_ifile = (
-            self.IN_DIR + 'cl31_0a_z1R5mF3s_v01_20141030_000002_61.asc'
+            self.IN_DIR + 'cl31_0a_z1R5mF3s_v01_20141030_*.asc'
         )
         test_ofile = TEST_OUT_DIR + 'test_cl31_20141030_000002.nc'
 
