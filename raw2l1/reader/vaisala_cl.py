@@ -302,11 +302,11 @@ def init_data(data, data_dim, logger):
     # Time, layer dependant variables
     # -------------------------------------------------------------------------
     data['cbh'] = np.ones((data_dim['time'], CBH_DIM),
-                          dtype=np.float32) * MISSING_FLT
+                          dtype=np.int32) * MISSING_INT
     data['clh'] = np.ones((data_dim['time'], CLH_DIM),
-                          dtype=np.float32) * MISSING_FLT
+                          dtype=np.int32) * MISSING_INT
     data['cloud_amount'] = np.ones((data_dim['time'], CLH_DIM),
-                                   dtype=np.int) * MISSING_INT
+                                   dtype=np.int16) * MISSING_INT
 
     # Time, range dependent variables
     # -------------------------------------------------------------------------
@@ -357,7 +357,7 @@ def read_time_dep_vars(data, ind, msg, msg_type, logger):
 
     data['scale'][ind] = np.float(params[0])
     data['laser_energy'][ind] = np.float(params[3])
-    data['laser_temp'][ind] = np.float(params[4])
+    data['laser_temp'][ind] = np.float(params[4]) + DEG_TO_K
     data['window_transmission'][ind] = np.float(params[5])
     data['bckgrd_rcs_0'][ind] = np.float(params[7])
     data['integrated_rcs_0'][ind] = np.float(params[9]) * SUM_BCKSCATTER_FACTOR

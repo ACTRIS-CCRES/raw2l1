@@ -8,6 +8,7 @@ import sys
 import datetime as dt
 import numpy as np
 import ConfigParser
+from ast import literal_eval
 from tools.read_overlap import read_overlap
 from tools import common
 
@@ -100,6 +101,21 @@ def get_var_type(type_str, logger):
     return val_type
 
 
+def convert_attribute(value, logger):
+    """
+    Try to convert an attribute read in configuration into a python variable
+    """
+
+    try:
+        value = literal_eval(value)
+        msg = "converting attribute to %s"
+        logger.debug(msg % type(value))
+    except (ValueError, SyntaxError):
+        pass
+
+    return value
+
+
 def create_netcdf_global(conf, nc_id, data, logger):
     """
     Create the global attribute of the netCDF file
@@ -125,9 +141,9 @@ def create_netcdf_global(conf, nc_id, data, logger):
 
     # Add year, month day for STRAT compatibility
     dt_date = conf.get('conf', 'date')
-    setattr(nc_id, 'year', dt_date.strftime('%Y'))
-    setattr(nc_id, 'month', dt_date.strftime('%m'))
-    setattr(nc_id, 'day', dt_date.strftime('%d'))
+    setattr(nc_id, 'year', int(dt_date.strftime('%Y')))
+    setattr(nc_id, 'month', int(dt_date.strftime('%m')))
+    setattr(nc_id, 'day', int(dt_date.strftime('%d')))
 
     return None
 
@@ -243,10 +259,9 @@ def add_attr_to_var(nc_var, conf, section, logger):
         if option not in common.RESERV_ATTR:
 
             # special case for missing value
+            data_type = get_var_type(conf.get(section, 'type'), logger)
             if option == "missing_value":
                 try:
-                    data_type = get_var_type(conf.get(section, 'type'),
-                                             logger)
                     value = np.array(value, dtype=data_type)
                 except ValueError:
                     mess = ("impossible to convert missing_value %s. " +
@@ -257,7 +272,16 @@ def add_attr_to_var(nc_var, conf, section, logger):
                     else:
                         value = -9
 
-            logger.debug("adding %s attribute" % option)
+            elif option == "flag_values":
+                value = convert_attribute(value, logger)
+                if not isinstance(value, str):
+                    value = np.array(value, dtype=data_type)
+
+            # attributes we don't know if they are string
+            if option not in common.STRING_ATTR:
+                value = convert_attribute(value, logger)
+
+            logger.debug("adding %s attribute %s" % (option, repr(value)))
             setattr(nc_var, option, value)
 
     return None

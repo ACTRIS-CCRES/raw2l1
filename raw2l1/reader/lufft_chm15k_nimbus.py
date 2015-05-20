@@ -100,6 +100,12 @@ def init_data(vars_dim, logger):
 
     data = {}
 
+    # instrument characteristics
+    # -------------------------------------------------------------------------
+    data['firmware_version'] = ""
+    data['instrument_id'] = ""
+    data['scaling'] = np.nan
+
     # dimensions of the output netCDf file
     # -------------------------------------------------------------------------
     data['time'] = np.empty((vars_dim['time'],), dtype=np.dtype(dt.datetime))
@@ -114,7 +120,7 @@ def init_data(vars_dim, logger):
     data['stddev'] = np.empty((vars_dim['time'],), dtype=np.float32)
     data['state_optics'] = np.empty((vars_dim['time'],), dtype=np.int8)
     data['state_laser'] = np.empty((vars_dim['time'],), dtype=np.int8)
-    data['detector'] = np.empty((vars_dim['time'],), dtype=np.int8)
+    data['state_detector'] = np.empty((vars_dim['time'],), dtype=np.int8)
     data['sci'] = np.empty((vars_dim['time'],), dtype=np.int8)
     data['nn1'] = np.empty((vars_dim['time'],), dtype=np.int16)
     data['nn2'] = np.empty((vars_dim['time'],), dtype=np.int16)
@@ -126,7 +132,6 @@ def init_data(vars_dim, logger):
     data['temp_int'] = np.empty((vars_dim['time'],), dtype=np.int16)
     data['temp_ext'] = np.empty((vars_dim['time'],), dtype=np.int16)
     data['temp_det'] = np.empty((vars_dim['time'],), dtype=np.int16)
-    data['life_time'] = np.empty((vars_dim['time'],), dtype=np.int32)
     data['laser_pulses'] = np.empty((vars_dim['time'],), dtype=np.int32)
     data['error_ext'] = np.empty((vars_dim['time'],), dtype=np.int32)
     data['bcc'] = np.empty((vars_dim['time'],), dtype=np.int8)
@@ -247,7 +252,7 @@ def read_timedep_vars(data, nc_id, soft_vers, time_ind, time_size, logger):
     logger.debug('reading state_laser')
     data['state_laser'][ind_b:ind_e] = nc_id.variables['state_laser'][:]
     logger.debug('reading state_detector')
-    data['detector'][ind_b:ind_e] = nc_id.variables['state_detector'][:]
+    data['state_detector'][ind_b:ind_e] = nc_id.variables['state_detector'][:]
     logger.debug('reading sky condition index (sci)')
     data['sci'][ind_b:ind_e] = nc_id.variables['sci'][:]
     logger.debug('reading nn1')
@@ -381,6 +386,8 @@ def read_data(list_files, conf, logger):
             # get Jenoptik software version to know the method to use
             # to calculate P
             soft_vers = get_soft_version(raw_data.software_version)
+            data['firmware_version'] = soft_vers
+            data['instrument_id'] = raw_data.serlom
             logger.info("software version: %7.4f" % soft_vers)
 
             # read dimensions
