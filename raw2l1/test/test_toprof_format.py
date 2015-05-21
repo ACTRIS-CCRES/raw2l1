@@ -38,56 +38,56 @@ class TestChm15kToprof(unittest.TestCase):
         self.assertEqual(resp, 0)
 
 
-# class TestVaisalaCL31(unittest.TestCase):
+class TestVaisalaCL31Toprof(unittest.TestCase):
 
-#     IN_DIR = TEST_IN_DIR + 'vaisala_cl31' + os.sep
-#     conf_file = CONF_DIR + 'conf_vaisala_cl31_toprof.ini'
+    IN_DIR = TEST_IN_DIR + 'vaisala_cl31' + os.sep
+    conf_file = CONF_DIR + 'conf_vaisala_cl31_toprof.ini'
 
-#     def test_cl31_onehour_file(self):
+    def test_cl31_onehour_file(self):
 
-#         date = '20141030'
-#         test_ifile = (
-#             self.IN_DIR + 'cl31_0a_z1R5mF3s_v01_20141030_*.asc'
-#         )
-#         test_ofile = TEST_OUT_DIR + 'test_cl31_20141030_toprof.nc'
+        date = '20141030'
+        test_ifile = (
+            self.IN_DIR + 'cl31_0a_z1R5mF3s_v01_20141030_*.asc'
+        )
+        test_ofile = TEST_OUT_DIR + 'test_cl31_20141030_toprof.nc'
 
-#         resp = subprocess.check_call([
-#             MAIN_DIR + PRGM,
-#             date,
-#             self.conf_file,
-#             test_ifile,
-#             test_ofile,
-#             '-log_level',
-#             'debug'
-#         ])
+        resp = subprocess.check_call([
+            MAIN_DIR + PRGM,
+            date,
+            self.conf_file,
+            test_ifile,
+            test_ofile,
+            '-log_level',
+            'debug'
+        ])
 
-#         self.assertEqual(resp, 0, 'CL31 one hour file')
+        self.assertEqual(resp, 0, 'CL31 one hour file')
 
 
-# class TestVaisalaCL51(unittest.TestCase):
+class TestVaisalaCL51Toprof(unittest.TestCase):
 
-#     IN_DIR = TEST_IN_DIR + 'vaisala_cl51' + os.sep
-#     conf_file = CONF_DIR + 'conf_vaisala_cl51_toprof.ini'
+    IN_DIR = TEST_IN_DIR + 'vaisala_cl51' + os.sep
+    conf_file = CONF_DIR + 'conf_vaisala_cl51_toprof.ini'
 
-#     def test_cl51_oneday_file(self):
+    def test_cl51_oneday_file(self):
 
-#         date = '20140901'
-#         test_ifile = (
-#             self.IN_DIR + 'h4090100.dat'
-#         )
-#         test_ofile = TEST_OUT_DIR + 'test_cl51_20140901_toprof.nc'
+        date = '20140901'
+        test_ifile = (
+            self.IN_DIR + 'h4090100.dat'
+        )
+        test_ofile = TEST_OUT_DIR + 'test_cl51_20140901_toprof.nc'
 
-#         resp = subprocess.check_call([
-#             MAIN_DIR + PRGM,
-#             date,
-#             self.conf_file,
-#             test_ifile,
-#             test_ofile,
-#             '-log_level',
-#             'debug'
-#         ])
+        resp = subprocess.check_call([
+            MAIN_DIR + PRGM,
+            date,
+            self.conf_file,
+            test_ifile,
+            test_ofile,
+            '-log_level',
+            'debug'
+        ])
 
-#         self.assertEqual(resp, 0, 'CL51 one hour file')
+        self.assertEqual(resp, 0, 'CL51 one hour file')
 
 if __name__ == '__main__':
     unittest.main()
