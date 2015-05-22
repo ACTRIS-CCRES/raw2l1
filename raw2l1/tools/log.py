@@ -22,13 +22,15 @@ def init(opt, name):
     """
 
     # Check the logs directory
-    dir_ok = utils.check_dir(LOG_DIR)
+    log_dir = os.path.dirname(os.path.abspath(opt['log']))
+    log_file = os.path.basename(opt['log'])
+    dir_ok = utils.check_dir(log_dir)
     if not dir_ok:
-        print("critical - " + LOG_DIR + " doesn't exist or is not writable")
+        print("critical - " + log_dir + " doesn't exist or is not writable")
         print("quitting raw2l1")
         sys.exit(1)
 
-    filename = os.path.join(LOG_DIR, LOG_FILENAME)
+    filename = os.path.join(log_dir, log_file)
 
     # level of log file
     f_level = getattr(logging, opt['log_level'].upper(), None)
