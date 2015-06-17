@@ -18,7 +18,7 @@ class TestCampbellScientificCS135(unittest.TestCase):
     IN_DIR = TEST_IN_DIR + 'campbell_cs135' + os.sep
     conf_file = CONF_DIR + 'conf_campbell_cs135_toprof.ini'
 
-    def test_cl31_onehour_file(self):
+    def test_cs135_dummy_file(self):
 
         date = '20141030'
         test_ifile = (

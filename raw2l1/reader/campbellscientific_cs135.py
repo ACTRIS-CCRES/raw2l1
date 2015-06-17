@@ -7,6 +7,7 @@ import datetime as dt
 import sys
 import ConfigParser
 from tools.utils import chomp
+import netCDF4 as nc
 
 # brand and model of the LIDAR
 BRAND = 'campbell scientific'
@@ -164,9 +165,6 @@ def init_data(time_dim, logger):
     data['rcs_0'] = np.ones(
         (time_dim, RANGE_DIM), dtype=np.float) * MISSING_FLOAT
 
-    print(type(data['alarm']))
-    print(data['alarm'].shape)
-
     return data
 
 
@@ -190,9 +188,7 @@ def read_cbh(line, data, ind, logger):
     """
 
     elts = line.split()
-    print(elts)
-    print(data['alarm'].shape)
-    print(elts[0], elts[0][1])
+
     nlayers = int(elts[0][0])
     data['alarm'][ind] = elts[0][1]
     data['window_transmission'][ind] = np.int(elts[1])
@@ -245,11 +241,17 @@ def read_profile(line, data, ind, logger):
     read profile data line (2048 x 5 bytes) 20-bit HEX ASCII
     """
 
-    tmp = [
+    tmp = np.array([
         int(
             line[s * RCS_BYTES_SIZE:s * RCS_BYTES_SIZE + RCS_BYTES_SIZE], 16
         ) for s in xrange(RANGE_DIM)
-    ]
+    ])
+
+    # Each sample is coded with a 20-bit HEX ASCII character set
+    # msb nibble and bit first, 2's complement
+    corr_2s_needed = (tmp > 2**19)
+    if any(corr_2s_needed):
+        tmp[corr_2s_needed] = - (2**20 - tmp[corr_2s_needed])
 
     data['rcs_0'][ind, :] = np.array(tmp, dtype=np.float32)[:]
 
