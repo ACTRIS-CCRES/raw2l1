@@ -5,6 +5,7 @@ from __future__ import print_function, absolute_import, division
 import numpy as np
 import datetime as dt
 import sys
+import re
 from tools.utils import chomp
 
 # brand and model of the LIDAR
@@ -14,6 +15,7 @@ MODEL = 'CL31 & CL51'
 # Parameters
 FMT_DATE = "-%Y-%m-%d %H:%M:%S"
 FILE_HEADERS = ["-Ceilometer Logfile", "-File created:"]
+CONF_MSG_REGEX = r'CL.\d{5}'
 MSG_NB_LINES = {
     1: 6,
     2: 7,
@@ -109,12 +111,27 @@ def count_msg_to_read(list_files, logger):
     return n_data_msg
 
 
+def get_conf_msg(line, logger):
+    """
+    Extract conf message
+    """
+
+    conf_str = re.search(CONF_MSG_REGEX, line)
+    if conf_str is not None:
+        conf_msg = conf_str.group()
+        logger.debug("conf message %s" % conf_msg)
+    else:
+        conf_msg = None
+
+    return conf_msg
+
+
 def get_range_resol(conf_msg, logger):
     """
     Extract vertical range resolution from configuration message line
     """
     try:
-        int_coding = int(conf_msg[8:9])
+        int_coding = int(conf_msg[7:8])
         range_resol = RANGE_RESOL[int_coding]
         logger.debug("range resolution: %d m" % range_resol)
     except Exception, err:
@@ -130,7 +147,7 @@ def get_range_ngates(conf_msg, logger):
     """
 
     try:
-        int_coding = int(conf_msg[8:9])
+        int_coding = int(conf_msg[7:8])
         range_ngates = RANGE_GATES[int_coding]
         logger.debug("number of vertical gates: %d" % range_ngates)
     except Exception, err:
@@ -147,7 +164,7 @@ def get_msg_type(conf_msg, logger):
     message of type 1 or 2 (without or with sky state)
     """
 
-    msg_type = int(conf_msg[7:8])
+    msg_type = int(conf_msg[6:7])
 
     if msg_type == 1:
         logger.info("file contains messages of type 1 (without sky state)")
@@ -233,10 +250,13 @@ def get_acq_conf(filename, data, data_dim, logger):
 
         try:
             dt.datetime.strptime(lines[i_line], FMT_DATE)
-            conf_msg = lines[i_line + 1]
         except:
             conf_msg = None
             i_line += 1
+            continue
+
+        conf_msg = get_conf_msg(lines[i_line + 1], logger)
+        if conf_msg is None:
             continue
 
         data_dim['range'] = get_range_ngates(conf_msg, logger)
@@ -255,8 +275,9 @@ def get_acq_conf(filename, data, data_dim, logger):
             break
 
     # Read instrument/sofware id
-    data['instrument_id'] = conf_msg[1:4]
-    data['software_id'] = conf_msg[4:7]
+    print(conf_msg)
+    data['instrument_id'] = conf_msg[0:3]
+    data['software_id'] = conf_msg[3:6]
 
     # if we are not able to read range in the file
     if not range_ok:
@@ -353,6 +374,7 @@ def read_time_dep_vars(data, ind, msg, msg_type, logger):
     """
 
     line_to_read = get_state_line_nb_in_msg(data['msg_type'])
+    print(line_to_read, data['msg_type'])
     params = msg[line_to_read].split()
 
     data['scale'][ind] = np.float(params[0])
@@ -395,16 +417,16 @@ def read_clh_msg(data, ind, msg, logger):
     extract CLH
     """
 
-    # get the number of cloud layer
-    cld_line = msg[3]
-    cld_detect = [int(x) for x in cld_line.split()[0::2]]
-    cld_alt = cld_line.split()[1::2]
+    line = msg[3]
+    elts = line.strip().split()
 
-    for i_alt in xrange(CLH_DIM):
-        if cld_detect[i_alt] >= 1 and cld_detect[i_alt] <= 8:
-            data['clh'][ind][i_alt] = (np.float(cld_alt[i_alt]) *
-                                       CBH_ALT_FACTOR)
-            data['cloud_amount'] = cld_detect[i_alt]
+    data['cloud_amount'][ind] = np.array(elts[0::2], dtype=np.int)
+
+    tmp = elts[1::2]
+
+    for level, ca in enumerate(elts[0::2]):
+        if 1 <= ca <= 8:
+            data['clh'][ind, level] = tmp[level] * CBH_ALT_FACTOR
 
     return data
 
@@ -541,6 +563,6 @@ def read_data(list_files, conf, logger):
 
     # Final calculation on whole profiles
     # -------------------------------------------------------------------------
-    data['pr2'] = data['rcs_0']*RCS_FACTOR*data['range']
+    data['pr2'] = data['rcs_0']*RCS_FACTOR*data['range']**2
 
     return data

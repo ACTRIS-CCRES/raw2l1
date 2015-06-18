@@ -5,13 +5,15 @@ from __future__ import print_function, absolute_import, division
 import numpy as np
 import datetime as dt
 import sys
+import re
 import ConfigParser
 from tools.utils import chomp
-import netCDF4 as nc
 
 # brand and model of the LIDAR
 BRAND = 'campbell scientific'
 MODEL = 'CS135'
+
+CONF_MSG_REGEX = r'CS.\d{6}'
 
 MISSING_INT = -9
 MISSING_FLOAT = np.nan
@@ -174,11 +176,19 @@ def read_header(line, data, logger):
     ex: \x01CS0008006\x02
     """
 
-    data['instrument_id'] = line[1:4]
-    data['os'] = line[4:7]
-    data['msg_type'] = int(line[7:10])
+    msg_found = False
 
-    return data
+    # get conf string
+    conf_str = re.search(CONF_MSG_REGEX, line)
+    if conf_str is not None:
+        msg_found = True
+        conf_msg = conf_str.group()
+        logger.debug("header message %s" % conf_msg)
+        data['instrument_id'] = conf_msg[0:3]
+        data['os'] = conf_msg[3:6]
+        data['msg_type'] = int(conf_msg[6:9])
+
+    return msg_found, data
 
 
 def read_cbh(line, data, ind, logger):
@@ -335,9 +345,10 @@ def get_msg_type(list_files, date_fmt, logger):
             except ValueError:
                 continue
 
-            msg_type = read_header(lines[i+1], tmp, logger)['msg_type']
+            msg_found, tmp = read_header(lines[i+1], tmp, logger)
+            msg_type = tmp['msg_type']
 
-            if is_msg_type_ok(msg_type, logger):
+            if msg_found and is_msg_type_ok(msg_type, logger):
                 msg_type_found = True
                 break
 

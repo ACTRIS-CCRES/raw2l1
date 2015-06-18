@@ -39,6 +39,32 @@ class TestVaisalaCL31(unittest.TestCase):
         self.assertEqual(resp, 0, 'CL31 one hour file')
 
 
+class TestVaisalaMsg2(unittest.TestCase):
+
+    IN_DIR = TEST_IN_DIR + 'vaisala_cl' + os.sep
+    conf_file = CONF_DIR + 'conf_vaisala_cl31.ini'
+
+    def test_cl_msg2(self):
+
+        date = '20150617'
+        test_ifile = (
+            self.IN_DIR + 'vaisala_cl_msg2.txt'
+        )
+        test_ofile = TEST_OUT_DIR + 'test_cl31_20150617_000000.nc'
+
+        resp = subprocess.check_call([
+            MAIN_DIR + PRGM,
+            date,
+            self.conf_file,
+            test_ifile,
+            test_ofile,
+            '-log_level',
+            'debug'
+        ])
+
+        self.assertEqual(resp, 0, 'CL31 one hour file')
+
+
 class TestVaisalaCL51(unittest.TestCase):
 
     IN_DIR = TEST_IN_DIR + 'vaisala_cl51' + os.sep
