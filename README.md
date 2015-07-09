@@ -1,5 +1,8 @@
 ## changelog
 
+* v2.0.4b
+    + improve reader robustness of header reading for vaisala and cambell scientific readers
+
 * v2.0.3b
     + add reader for Campbell Scientific CS135
     + correct problem with vaisala and campbell HEXA profile decoding

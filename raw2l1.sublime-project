@@ -19,7 +19,14 @@
 	{
 		"python_interpreter": "/home/madrouin/.local/src/anaconda/envs/raw2l1/bin/python",
 		"tab_size": 4,
-		"translate_tabs_to_spaces": true
+		"translate_tabs_to_spaces": true,
+		"ignored_packages":
+		[
+			"RestructuredText",
+			"Vintage",
+			"CSS3",
+			"Djaneiro"
+		],
 	}
 }
 
