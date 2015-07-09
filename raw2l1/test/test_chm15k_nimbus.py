@@ -113,7 +113,7 @@ class TestChm15k(unittest.TestCase):
         date = '20150427'
         test_ifile = self.IN_DIR + '20150427_SIRTA_CHM150101_000.nc'
         test_ofile = TEST_OUT_DIR + 'test_chm15k_20150427_sirta.nc'
-        test_cfile = CONF_DIR + 'conf_lufft_chm15k_nimbus.ini'
+        test_cfile = CONF_DIR + 'conf_lufft_chm15k-nimbus_toprof.ini'
 
         resp = subprocess.check_call([
             MAIN_DIR + PRGM,
