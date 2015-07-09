@@ -20,6 +20,9 @@
 		"python_interpreter": "/home/madrouin/.local/src/anaconda/envs/raw2l1/bin/python",
 		"tab_size": 4,
 		"translate_tabs_to_spaces": true,
+		"pep8_max_line_length": 120,
+    	"suppress_word_completions": true,
+    	"suppress_explicit_completions": true,
 		"ignored_packages":
 		[
 			"RestructuredText",
