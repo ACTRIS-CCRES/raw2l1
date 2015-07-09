@@ -3,8 +3,10 @@
 
 # raw2l1 configuration sections
 CONF_SECTIONS = ['conf', 'reader_conf', 'global']
+
 # netCDF special processing sections
 SPEC_SECTIONS = ['time']
+
 # Reserved attributes
 RESERV_ATTR = [
     'name',
@@ -21,3 +23,12 @@ STRING_ATTR = [
     'standard_name',
     'comment',
 ]
+
+CONF_OPTIONS = [
+    'reader_dir',
+    'reader',
+    'netcdf_format',
+]
+
+# authorized netCDF format
+ALLOW_NETCDF_FMT = ['NETCDF3_CLASSIC', 'NETCDF4']

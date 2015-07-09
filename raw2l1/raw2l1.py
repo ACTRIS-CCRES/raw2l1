@@ -9,6 +9,7 @@ from tools import lidar_reader as lr
 from tools import arg_parser as ag
 from tools import log
 from tools import conf
+from tools.check_conf import check_conf
 from tools import create_netcdf as cnc
 
 __author__ = 'Marc-Antoine Drouin'
@@ -60,6 +61,10 @@ def raw2l1(argv):
     setting = conf.init(input_args, logger)
     logger.info('reading configuration file: OK')
 
+    # check configuration file
+    logger.debug('checking configuration file')
+    setting = check_conf(setting, logger)
+
     # Add directory containing reader to path
     # -------------------------------------------------------------------------
     logger.debug("adding " + setting.get('conf', 'reader_dir') + " to path")
@@ -70,7 +75,6 @@ def raw2l1(argv):
     logger.info("reading lidar data")
     lidar_data = lr.RawDataReader(setting, logger)
     lidar_data.read_data()
-    # logger.debug("test output : "+repr(lidar_data.data))
     logger.info("reading data successed")
 
     # write netCDF file
