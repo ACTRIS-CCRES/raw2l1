@@ -275,7 +275,6 @@ def get_acq_conf(filename, data, data_dim, logger):
             break
 
     # Read instrument/sofware id
-    print(conf_msg)
     data['instrument_id'] = conf_msg[0:3]
     data['software_id'] = conf_msg[3:6]
 
@@ -374,7 +373,6 @@ def read_time_dep_vars(data, ind, msg, msg_type, logger):
     """
 
     line_to_read = get_state_line_nb_in_msg(data['msg_type'])
-    print(line_to_read, data['msg_type'])
     params = msg[line_to_read].split()
 
     data['scale'][ind] = np.float(params[0])
