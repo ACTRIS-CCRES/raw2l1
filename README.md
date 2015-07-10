@@ -1,5 +1,10 @@
 ## changelog
 
+* v2.0.5b
+    + add option to use compression with netCDF4 file format
+    + correct bug in one lufft CHM15k test preventing it from being run
+    + first test with CS135 to integrate string variables. Only works with netCDF4 files
+
 * v2.0.4b
     + improve reader robustness of header reading for vaisala and cambell scientific readers
 
