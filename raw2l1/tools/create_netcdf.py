@@ -21,6 +21,7 @@ KEYS_VALTYPE = {
     '$long$': np.int64,
     '$float$': np.float32,
     '$double$': np.float64,
+    '$string$': 'string',
     'default': np.float64,
 }
 
@@ -223,14 +224,26 @@ def add_data_to_var(nc_var, var_name, conf, data, logger):
     data_type = get_var_type(conf.get(var_name, 'type'), logger)
 
     logger.debug("adding data to " + var_name)
+    logger.debug(str(data_type))
+    logger.debug(conf.get('conf', 'netcdf_format'))
     if KEY_READERDATA in data_val:
-        try:
-            data_key = get_data_key(data_val)
-            nc_var[:] = data[data_key]
-        except KeyError:
-            mess = "key %s does not exist in read data. Exiting program"
-            logger.critical(mess % data_key)
-            sys.exit(1)
+
+        # prevent problem with netCDF3 and strings
+        if (data_type == 'string' and
+           conf.get('conf', 'netcdf_format') == 'NETCDF3_CLASSIC'):
+            logger.error(
+                "Raw2l1 is not able to manage string " +
+                "variables with netCDF3. " +
+                "You should use NETCDF4 option"
+            )
+        else:
+            try:
+                data_key = get_data_key(data_val)
+                nc_var[:] = data[data_key]
+            except KeyError:
+                mess = "key %s does not exist in read data. Exiting program"
+                logger.critical(mess % data_key)
+                sys.exit(1)
     elif KEY_OVERLAP in data_val:
         over_fname = get_overlap_filename(data_val)
         try:
@@ -293,6 +306,15 @@ def create_netcdf_variables(conf, data, nc_id, logger):
     the configuration file
     """
 
+    # define variable in case user chose compression:
+    if conf.get('conf', 'netcdf_format') == 'NETCDF4':
+
+        comp = conf.get('conf', 'netcdf4_compression')
+        comp_level = conf.getint('conf', 'netcdf4_compression_level')
+    else:
+        comp = False
+        comp_level = 0
+
     # loop only over sections concerning the netCDf file
     for section in filter_conf_sections(conf, logger):
 
@@ -303,11 +325,39 @@ def create_netcdf_variables(conf, data, nc_id, logger):
         val_type = get_var_type(conf.get(section, 'type'), logger)
         logger.debug("type " + repr(val_type))
 
+        # case of string variable:
+        # we have to get the precise type of data from the read variable
+        if (val_type == 'string' and
+           conf.get('conf', 'netcdf_format') == 'NETCDF3_CLASSIC'):
+            logger.error()
+        elif val_type == 'string':
+            if var_name not in data.keys():
+                tmp_var_name = get_data_key(conf.get(var_name, 'value'))
+            else:
+                tmp_var_name = var_name
+
+            try:
+                val_type = data[tmp_var_name].dtype
+            except:
+                msg = "impossible to determine size of string for %s"
+                logger.critical(msg % var_name)
+                sys.exit(1)
+
         if dim == KEY_NODIM:
-            nc_var = nc_id.createVariable(var_name, val_type)
+            nc_var = nc_id.createVariable(
+                var_name,
+                val_type,
+                zlib=comp,
+                complevel=comp_level
+            )
         else:
-            nc_var = nc_id.createVariable(var_name, val_type,
-                                          dim_to_tuple(dim))
+            nc_var = nc_id.createVariable(
+                var_name,
+                val_type,
+                dim_to_tuple(dim),
+                zlib=comp,
+                complevel=comp_level
+            )
 
         # Add values to the variable
         if conf.has_option(var_name, 'value'):

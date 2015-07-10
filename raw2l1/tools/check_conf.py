@@ -33,6 +33,40 @@ def check_required_sections(conf, logger):
     return True
 
 
+def check_nc4_compression_option(conf, section, logger):
+    """
+    check options and values for netCDF4 compression
+    """
+
+    # check if compression option is present
+    opt = 'netcdf4_compression'
+    if not conf.has_option(conf, opt):
+        conf.set(section, opt, 'false')
+
+    # check compression value
+    val = conf.get(section, opt)
+    if val not in common.ALLOW_NC4_COMP:
+        logger.error(
+            "authorized values for %s option in %s section is %s. Option set to false" % (
+                opt, section, repr(common.ALLOW_NC4_COMP)))
+        conf.set(opt, section, 'false')
+
+    # check if compression level is present
+    opt = 'netcdf4_compression_level'
+    err_msg = "authorized value for %s option in %s section are %s. Option set to 4"
+    if not conf.has_option(section, opt):
+        conf.set(section, opt, '4')
+
+    # check compression level value
+    try:
+        val = conf.getint(section, opt)
+    except ValueError:
+        logger.error(err_msg % (opt, section, repr(common.ALLOW_NC4_COMP_LEVEL)))
+
+    if val not in common.ALLOW_NC4_COMP_LEVEL:
+        logger.error(err_msg % (opt, section, repr(common.ALLOW_NC4_COMP_LEVEL)))
+
+
 def check_conf_options(conf, logger):
     """
     check that conf section has required options
@@ -47,9 +81,13 @@ def check_conf_options(conf, logger):
 
     # check netcdf format
     option = 'netcdf_format'
-    if conf.get(section, option) not in common.ALLOW_NETCDF_FMT:
-        logger.critical("allow netCDF format ar : %s" % repr(common.ALLOW_NETCDF_FMT))
+    if conf.get(section, option) not in common.ALLOW_NC_FMT:
+        logger.critical("allow netCDF format ar : %s" % repr(common.ALLOW_NC_FMT))
         return False
+
+    # if format is NETCDF4 check compression option
+    if conf.get(section, 'netcdf_format') == 'NETCDF4':
+        check_nc4_compression_option(conf, section, logger)
 
     return True
 
