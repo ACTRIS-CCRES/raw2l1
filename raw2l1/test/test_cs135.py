@@ -37,3 +37,55 @@ class TestCampbellScientificCS135(unittest.TestCase):
         ])
 
         self.assertEqual(resp, 0, 'CS135 ')
+
+
+class TestCampbellScientificCS135ModeCL31(unittest.TestCase):
+
+    IN_DIR = TEST_IN_DIR + 'campbell_cs135' + os.sep
+    conf_file = IN_DIR + 'conf_cs135-cl31_toprof.ini'
+
+    def test_cs135_dummy_file(self):
+
+        date = '20150703'
+        test_ifile = (
+            self.IN_DIR + '15070300.DAT'
+        )
+        test_ofile = TEST_OUT_DIR + 'test_cs135_20150703_000000.nc'
+
+        resp = subprocess.check_call([
+            MAIN_DIR + PRGM,
+            date,
+            self.conf_file,
+            test_ifile,
+            test_ofile,
+            '-log_level',
+            'debug'
+        ])
+
+        self.assertEqual(resp, 0, 'CS135 ')
+
+
+class TestCampbellScientificCS135RealFile(unittest.TestCase):
+
+    IN_DIR = TEST_IN_DIR + 'campbell_cs135' + os.sep
+    conf_file = IN_DIR + 'conf_campbell_cs135_toprof_netcdf4.ini'
+
+    def test_cs135_dummy_file(self):
+
+        date = '20150903'
+        test_ifile = (
+            self.IN_DIR + 'CS2_20150903.bin'
+        )
+        test_ofile = TEST_OUT_DIR + 'test_cs135_20150903_000000.nc'
+
+        resp = subprocess.check_call([
+            MAIN_DIR + PRGM,
+            date,
+            self.conf_file,
+            test_ifile,
+            test_ofile,
+            '-log_level',
+            'debug'
+        ])
+
+        self.assertEqual(resp, 0, 'CS135 ')

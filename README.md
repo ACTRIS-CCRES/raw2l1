@@ -1,5 +1,8 @@
 ## changelog
 
+* v2.0.6b
+    + correct bug in campbell reader creating an infinite loop when the timestamp is not just the line after the first message
+
 * v2.0.5b
     + add option to use compression with netCDF4 file format
     + correct bug in one lufft CHM15k test preventing it from being run

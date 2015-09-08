@@ -398,9 +398,13 @@ def read_msg_004(msg, data, ind, logger):
     """
 
     data = read_cbh(msg[1], data, ind, logger)
+    logger.debug("cbh read")
     data = read_sky_condition(msg[2], data, ind, logger)
+    logger.debug("sky condition read")
     data = read_laser(msg[3], data, ind, logger)
+    logger.debug("laser read")
     data = read_profile(msg[4], data, ind, logger)
+    logger.debug("profile read")
 
     return data
 
@@ -453,7 +457,9 @@ def read_data(list_files, conf, logger):
         list_files, t_stamp_fmt, logger)
 
     msg_type = get_msg_type(list_files, t_stamp_fmt, logger)
+    logger.debug("message type : %d" % (msg_type))
     msg_len = MSG_TYPE_LINES[msg_type]
+    logger.debug("message len : %d" % (msg_len))
 
     # initialize dict containing data
     logger.debug("initializing data arrays")
@@ -465,14 +471,18 @@ def read_data(list_files, conf, logger):
 
         logger.debug("reading file %02d" % (file_nb+1))
         lines = get_file_lines(filename, logger)
+        logger.debug("number of lines : %d" % len(lines))
 
         i_line = 0
         while i_line < len(lines):
+
+            logger.debug("i_line : %d" % (i_line))
 
             try:
                 timestamp = dt.datetime.strptime(
                     lines[i_line], t_stamp_fmt)
             except ValueError:
+                i_line += 1
                 continue
 
             logger.debug("reading timestep: %s" % repr(timestamp))
@@ -482,6 +492,7 @@ def read_data(list_files, conf, logger):
             data['time'][time_ind] = timestamp
             msg = lines[i_line+1: i_line+msg_len+1]
             data = MSG_TYPE_READER[msg_type](msg, data, time_ind, logger)
+            logger.debug("message read")
 
             # incrementing line number and timestep
             i_line += MSG_TYPE_LINES[msg_type]+1
