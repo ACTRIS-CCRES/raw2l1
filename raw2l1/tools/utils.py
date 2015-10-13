@@ -19,4 +19,4 @@ def chomp(text_list):
     """
     Implement kind of an equivalent of perl chomp function
     """
-    return [x.rstrip('\r\n') for x in text_list]
+    return [x.strip() for x in text_list]

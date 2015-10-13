@@ -103,7 +103,7 @@ def count_msg_to_read(list_files, logger):
             try:
                 dt.datetime.strptime(line, FMT_DATE)
                 n_data_msg += 1
-            except:
+            except ValueError:
                 continue
 
     logger.info("%d data messages to read" % n_data_msg)
@@ -245,6 +245,8 @@ def get_acq_conf(filename, data, data_dim, logger):
     range_ok = False
     msg_ok = False
 
+    logger.debug(n_lines)
+
     conf_msg = None
     while i_line <= n_lines:
 
@@ -255,6 +257,7 @@ def get_acq_conf(filename, data, data_dim, logger):
             i_line += 1
             continue
 
+        print(conf_msg)
         conf_msg = get_conf_msg(lines[i_line + 1], logger)
         if conf_msg is None:
             continue
