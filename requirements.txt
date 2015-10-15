@@ -1,0 +1,12 @@
+# require to run raw2l1
+numpy
+netCDF4
+# require to run test
+pytest
+nose
+coverage
+pylint
+# require for documentation
+Sphinx
+sphinx-bootstrap-theme
+sphinx-rtd-theme
