@@ -131,6 +131,8 @@ def create_netcdf_global(conf, nc_id, data, logger):
             except KeyError:
                 mess = "no key %s in data read. Global var %s will be ignore."
                 logger.error(mess % (reader_key, attr))
+        elif attr == 'add_date':
+            pass
         else:
             if attr == 'history':
                 value = ('created the ' +
@@ -141,10 +143,15 @@ def create_netcdf_global(conf, nc_id, data, logger):
             logger.debug("adding %s" % attr)
 
     # Add year, month day for STRAT compatibility
-    dt_date = conf.get('conf', 'date')
-    setattr(nc_id, 'year', int(dt_date.strftime('%Y')))
-    setattr(nc_id, 'month', int(dt_date.strftime('%m')))
-    setattr(nc_id, 'day', int(dt_date.strftime('%d')))
+    add_date = False
+    if conf.has_option('global', 'add_date'):
+        add_date = conf.get_boolean('global', 'add_date')
+
+    if add_date:
+        dt_date = conf.get('conf', 'date')
+        setattr(nc_id, 'year', int(dt_date.strftime('%Y')))
+        setattr(nc_id, 'month', int(dt_date.strftime('%m')))
+        setattr(nc_id, 'day', int(dt_date.strftime('%d')))
 
     return None
 
@@ -181,7 +188,13 @@ def create_netcdf_dim(conf, data, nc_id, logger):
             logger.debug("dimension found: " + section)
             # get dimension of data:
 
-            if KEY_READERDATA in conf.get(section, 'value'):
+            # case where dimensions have no values
+            if conf.has_option(section, 'size'):
+                dim_size = conf.get(section, 'size')
+                nc_id.createDimension(dim,
+                                      int(dim_size))
+
+            elif KEY_READERDATA in conf.get(section, 'value'):
                 try:
                     nc_id.createDimension(dim,
                                           data[dim].size)
@@ -271,9 +284,9 @@ def add_attr_to_var(nc_var, conf, section, logger):
     for option, value in conf.items(section):
         if option not in common.RESERV_ATTR:
 
-            # special case for missing value
+            # special case for missing value and _FillValue
             data_type = get_var_type(conf.get(section, 'type'), logger)
-            if option == "missing_value":
+            if option == "missing_value" or option == "_FillValue":
                 try:
                     value = np.array(value, dtype=data_type)
                 except ValueError:
@@ -285,7 +298,7 @@ def add_attr_to_var(nc_var, conf, section, logger):
                     else:
                         value = -9
 
-            elif option == "flag_values":
+            elif option == "flag_values" or option == 'flag_masks':
                 value = convert_attribute(value, logger)
                 if not isinstance(value, str):
                     value = np.array(value, dtype=data_type)
@@ -322,8 +335,20 @@ def create_netcdf_variables(conf, data, nc_id, logger):
         logger.debug("variable " + var_name)
         dim = conf.get(section, 'dim')
         logger.debug("dimension " + dim)
-        val_type = get_var_type(conf.get(section, 'type'), logger)
-        logger.debug("type " + repr(val_type))
+
+        # if variable has no type is it only a dimension
+        # so we don't create the variable
+        try:
+            val_type = get_var_type(conf.get(section, 'type'), logger)
+            logger.debug("type " + repr(val_type))
+        except ConfigParser.NoOptionError:
+            continue
+
+        # check if fill value is defined
+        if conf.has_option(section, '_FillValue'):
+            fill_value = conf.get(section, '_FillValue')
+        else:
+            fill_value = None
 
         # case of string variable:
         # we have to get the precise type of data from the read variable
@@ -348,7 +373,8 @@ def create_netcdf_variables(conf, data, nc_id, logger):
                 var_name,
                 val_type,
                 zlib=comp,
-                complevel=comp_level
+                complevel=comp_level,
+                fill_value=fill_value
             )
         else:
             nc_var = nc_id.createVariable(
@@ -356,7 +382,8 @@ def create_netcdf_variables(conf, data, nc_id, logger):
                 val_type,
                 dim_to_tuple(dim),
                 zlib=comp,
-                complevel=comp_level
+                complevel=comp_level,
+                fill_value=fill_value
             )
 
         # Add values to the variable
