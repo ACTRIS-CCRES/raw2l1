@@ -266,7 +266,9 @@ def add_data_to_var(nc_var, var_name, conf, data, logger):
             logger.error(repr(err))
     else:
         try:
-            nc_var[:] = np.array(data_val, dtype=data_type)
+            data_val = convert_attribute(data_val, logger)
+            if not isinstance(data_val, str):
+                nc_var[:] = np.array(data_val, dtype=data_type)
         except ValueError, err:
             logger.error("impossible to convert value to " +
                          repr(data_type) + "for variable " + var_name)
