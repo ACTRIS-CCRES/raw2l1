@@ -56,8 +56,7 @@ def init_data(vars_dim, logger):
                          dtype=np.float32) * FLT_MISSING_VALUE
     data['ta_offset'] = np.ones((vars_dim['time'], vars_dim['alt']),
                                 dtype=np.float32)
-    data['ta_err'] = np.ones((vars_dim['alt'], vars_dim['n_ret']),
-                             dtype=np.float32) * FLT_MISSING_VALUE
+    data['ta_err'] = np.ones((vars_dim['alt'],), dtype=np.float32) * FLT_MISSING_VALUE
     data['flag'] = np.zeros((vars_dim['time'],), dtype=np.int16)
     data['rain_flag'] = np.zeros((vars_dim['time'],), dtype=np.int16)
 
@@ -84,8 +83,6 @@ def read_data(list_files, conf, logger):
 
     # get variables size
     vars_dim = get_data_size(list_files, logger)
-    # add size of n_ret from config file
-    vars_dim['n_ret'] = int(conf['n_ret'])
 
     # Initialize data
     data = init_data(vars_dim, logger)
