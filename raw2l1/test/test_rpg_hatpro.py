@@ -93,6 +93,25 @@ class TestRunHatPro(unittest.TestCase):
 
         self.assertEqual(resp, 0)
 
+    def test_rpg_hatpro_prw_toprof(self):
+
+        date = '20150930'
+        test_ifile = self.IN_DIR + 'hatpro_0a_z1Imwrad-IWV_v01_20150930_000307_1436.nc'
+        test_ofile = TEST_OUT_DIR + 'sups_sir_mwr00_l2_prw_v01_20130901000307.nc'
+        test_cfile = CONF_DIR + 'conf_rpg_hatpro_l2-prw_toprof_netcdf4.ini'
+
+        resp = subprocess.check_call([
+            MAIN_DIR + PRGM,
+            date,
+            test_cfile,
+            test_ifile,
+            test_ofile,
+            '-log_level',
+            'debug'
+        ])
+
+        self.assertEqual(resp, 0)
+
 
 if __name__ == '__main__':
     unittest.main()
