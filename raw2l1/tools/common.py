@@ -14,6 +14,8 @@ RESERV_ATTR = [
     'value',
     'type',
     'value',
+    'size',
+    '_FillValue',
 ]
 
 STRING_ATTR = [
