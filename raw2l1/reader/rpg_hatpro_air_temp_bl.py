@@ -24,6 +24,8 @@ INT_MISSING_VALUE = -9
 def get_data_size(list_files, logger):
     """based on all files to read determine the size of the data"""
 
+    logger.debug("Determining dimensions of data")
+
     dim = {}
     dim['time'] = 0
     dim['alt'] = 0
@@ -91,6 +93,8 @@ def read_data(list_files, conf, logger):
     time_ind = 0
     for i, f in enumerate(list_files):
 
+        logger.debug("reading file : {}".format(f))
+
         nc_id = nc.Dataset(f, 'r')
 
         time_size, time = read_time(nc_id, logger)
@@ -98,6 +102,8 @@ def read_data(list_files, conf, logger):
         # determining index of data
         ind_s = time_ind
         ind_e = time_ind + time_size
+
+        logger.debug("storing data from index {} to {}".format(ind_s, ind_e))
 
         if i == 0:
             data['height'] = nc_id.variables[ALT_VAR][:]
@@ -107,6 +113,8 @@ def read_data(list_files, conf, logger):
         data['rain_flag'][ind_s:ind_e] = nc_id.variables['rain_flag'][:]
 
         nc_id.close()
+
+        time_ind += time_size
 
     # produce time_bounds variable
     time_units = conf['time_units']

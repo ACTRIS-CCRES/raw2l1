@@ -130,6 +130,8 @@ def read_data(list_files, conf, logger):
 
         nc_id.close()
 
+        time_ind += time_size
+
     # produce time_bounds variable
     time_units = conf['time_units']
     integ_time = conf['integration_time']
