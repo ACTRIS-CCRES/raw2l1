@@ -5,7 +5,7 @@
 from __future__ import print_function, division, absolute_import
 
 import logging
-import logging.handlers
+import logging.config
 import os
 import sys
 from tools import utils
@@ -31,35 +31,45 @@ def init(opt, name):
         sys.exit(1)
 
     filename = os.path.join(log_dir, log_file)
+    print('debug file : {}'.format(filename))
+    print('console debug level : {}'.format(opt['verbose'].upper()))
+    print('file debug level : {}'.format(opt['log_level'].upper()))
 
-    # level of log file
-    f_level = getattr(logging, opt['log_level'].upper(), None)
-    # level of terminal log
-    t_level = getattr(logging, opt['verbose'].upper(), None)
+    log_dict = {
+        "version": 1,
+        "disable_existing_loggers": False,
+        "formatters": {
+            "simple": {
+                "datefmt": LOG_DATE_FMT,
+                "format": LOG_FMT,
+            }
+        },
 
-    # configuration of log
+        "handlers": {
+            "console": {
+                "class": "logging.StreamHandler",
+                "level": opt['verbose'].upper(),
+                "formatter": "simple",
+                "stream": "ext://sys.stdout"
+            },
+            "file_handler": {
+                "class": "logging.handlers.RotatingFileHandler",
+                "level": opt['log_level'].upper(),
+                "formatter": "simple",
+                "filename": filename,
+                "maxBytes": 10485760,
+                "backupCount": 10,
+                "encoding": "utf8"
+            }
+        },
+
+        "root": {
+            "level": 'DEBUG',
+            "handlers": ["console", "file_handler"]
+        }
+    }
+
     logger = logging.getLogger(name)
-    logger.setLevel(f_level)
-
-    # create log file
-    f_handler = logging.handlers.RotatingFileHandler(
-        filename,
-        maxBytes=1E6,
-        backupCount=10)
-    f_handler.setLevel(f_level)
-
-    # Configuration of logs in terminal
-    t_handler = logging.StreamHandler()
-    t_handler.setLevel(t_level)
-    t_handler.setLevel(logging.DEBUG)
-
-    # Format of LOG
-    formatter = logging.Formatter(LOG_FMT, datefmt=LOG_DATE_FMT)
-    f_handler.setFormatter(formatter)
-    t_handler.setFormatter(formatter)
-
-    # add the handlers to logger
-    logger.addHandler(f_handler)
-    logger.addHandler(t_handler)
+    logging.config.dictConfig(log_dict)
 
     return logger
