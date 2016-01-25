@@ -92,11 +92,14 @@ def get_temp(nc_obj, logger):
     return tmp
 
 
-def init_data(vars_dim, logger):
+def init_data(vars_dim, conf, logger):
     """
     based on the analysing of the file to read initialize the np.array of
     the output data dictionnary
     """
+
+    missing_int = conf['missing_int']
+    missing_float = conf['missing_float']
 
     data = {}
 
@@ -109,57 +112,83 @@ def init_data(vars_dim, logger):
     # dimensions of the output netCDf file
     # -------------------------------------------------------------------------
     data['time'] = np.empty((vars_dim['time'],), dtype=np.dtype(dt.datetime))
-    data['range'] = np.empty((vars_dim['range'],), dtype=np.float32)
-    data['layer'] = np.empty((vars_dim['layer'],), dtype=np.int16)
+    data['range'] = np.ones((vars_dim['range'],),
+                            dtype=np.float32) * missing_float
+    data['layer'] = np.ones((vars_dim['layer'],),
+                            dtype=np.int16) * missing_int
 
     # Time dependent variables
     # -------------------------------------------------------------------------
-    data['vor'] = np.empty((vars_dim['time'],), dtype=np.int16)
-    data['voe'] = np.empty((vars_dim['time'],), dtype=np.int16)
-    data['tcc'] = np.empty((vars_dim['time'],), dtype=np.int8)
-    data['stddev'] = np.empty((vars_dim['time'],), dtype=np.float32)
-    data['state_optics'] = np.empty((vars_dim['time'],), dtype=np.int8)
-    data['state_laser'] = np.empty((vars_dim['time'],), dtype=np.int8)
-    data['state_detector'] = np.empty((vars_dim['time'],), dtype=np.int8)
-    data['sci'] = np.empty((vars_dim['time'],), dtype=np.int8)
-    data['nn1'] = np.empty((vars_dim['time'],), dtype=np.int16)
-    data['nn2'] = np.empty((vars_dim['time'],), dtype=np.int16)
-    data['nn3'] = np.empty((vars_dim['time'],), dtype=np.int16)
-    data['mxd'] = np.empty((vars_dim['time'],), dtype=np.int16)
-    data['life_time'] = np.empty((vars_dim['time'],), dtype=np.int32)
-    data['error_ext'] = np.empty((vars_dim['time'],), dtype=np.int32)
-    data['temp_lom'] = np.empty((vars_dim['time'],), dtype=np.int16)
-    data['temp_int'] = np.empty((vars_dim['time'],), dtype=np.int16)
-    data['temp_ext'] = np.empty((vars_dim['time'],), dtype=np.int16)
-    data['temp_det'] = np.empty((vars_dim['time'],), dtype=np.int16)
-    data['laser_pulses'] = np.empty((vars_dim['time'],), dtype=np.int32)
-    data['error_ext'] = np.empty((vars_dim['time'],), dtype=np.int32)
-    data['bcc'] = np.empty((vars_dim['time'],), dtype=np.int8)
-    data['bckgrd_rcs_0'] = np.empty((vars_dim['time'],), dtype=np.float32)
-    data['average_time'] = np.empty((vars_dim['time'],), dtype=np.int32)
-    data['p_calc'] = np.empty((vars_dim['time'],), dtype=np.int16)
+    data['vor'] = np.ones((vars_dim['time'],),
+                          dtype=np.int16) * missing_int
+    data['voe'] = np.ones((vars_dim['time'],),
+                          dtype=np.int16) * missing_int
+    data['tcc'] = np.ones((vars_dim['time'],),
+                          dtype=np.int8) * missing_int
+    data['stddev'] = np.ones((vars_dim['time'],),
+                             dtype=np.float32) * missing_float
+    data['state_optics'] = np.ones((vars_dim['time'],),
+                                   dtype=np.int8) * missing_int
+    data['state_laser'] = np.ones((vars_dim['time'],),
+                                  dtype=np.int8) * missing_int
+    data['state_detector'] = np.ones((vars_dim['time'],),
+                                     dtype=np.int8) * missing_int
+    data['sci'] = np.ones((vars_dim['time'],),
+                          dtype=np.int8) * missing_int
+    data['nn1'] = np.ones((vars_dim['time'],),
+                          dtype=np.int16) * missing_int
+    data['nn2'] = np.ones((vars_dim['time'],),
+                          dtype=np.int16) * missing_int
+    data['nn3'] = np.ones((vars_dim['time'],),
+                          dtype=np.int16) * missing_int
+    data['mxd'] = np.ones((vars_dim['time'],),
+                          dtype=np.int16) * missing_int
+    data['life_time'] = np.ones((vars_dim['time'],),
+                                dtype=np.int32) * missing_int
+    data['error_ext'] = np.ones((vars_dim['time'],),
+                                dtype=np.int32) * missing_int
+    data['temp_lom'] = np.ones((vars_dim['time'],),
+                               dtype=np.int16) * missing_int
+    data['temp_int'] = np.ones((vars_dim['time'],),
+                               dtype=np.int16) * missing_int
+    data['temp_ext'] = np.ones((vars_dim['time'],),
+                               dtype=np.int16) * missing_int
+    data['temp_det'] = np.ones((vars_dim['time'],),
+                               dtype=np.int16) * missing_int
+    data['laser_pulses'] = np.ones((vars_dim['time'],),
+                                   dtype=np.int32) * missing_int
+    data['error_ext'] = np.ones((vars_dim['time'],),
+                                dtype=np.int32) * missing_int
+    data['bcc'] = np.ones((vars_dim['time'],),
+                          dtype=np.int8) * missing_int
+    data['bckgrd_rcs_0'] = np.ones((vars_dim['time'],),
+                                   dtype=np.float32) * missing_float
+    data['average_time'] = np.ones((vars_dim['time'],),
+                                   dtype=np.int32) * missing_int
+    data['p_calc'] = np.ones((vars_dim['time'],),
+                             dtype=np.int16) * missing_int
 
     # Time, layer dependent variables
     # -------------------------------------------------------------------------
-    data['pbs'] = np.empty((vars_dim['time'], vars_dim['layer']),
-                           dtype=np.int8)
-    data['pbl'] = np.empty((vars_dim['time'], vars_dim['layer']),
-                           dtype=np.int16)
-    data['cdp'] = np.empty((vars_dim['time'], vars_dim['layer']),
-                           dtype=np.int16)
-    data['cde'] = np.empty((vars_dim['time'], vars_dim['layer']),
-                           dtype=np.int16)
-    data['cbh'] = np.empty((vars_dim['time'], vars_dim['layer']),
-                           dtype=np.int16)
-    data['cbe'] = np.empty((vars_dim['time'], vars_dim['layer']),
-                           dtype=np.int16)
+    data['pbs'] = np.ones((vars_dim['time'], vars_dim['layer']),
+                          dtype=np.int8) * missing_int
+    data['pbl'] = np.ones((vars_dim['time'], vars_dim['layer']),
+                          dtype=np.int16) * missing_int
+    data['cdp'] = np.ones((vars_dim['time'], vars_dim['layer']),
+                          dtype=np.int16) * missing_int
+    data['cde'] = np.ones((vars_dim['time'], vars_dim['layer']),
+                          dtype=np.int16) * missing_int
+    data['cbh'] = np.ones((vars_dim['time'], vars_dim['layer']),
+                          dtype=np.int16) * missing_int
+    data['cbe'] = np.ones((vars_dim['time'], vars_dim['layer']),
+                          dtype=np.int16) * missing_int
 
     # Time, range dependent variables
     # -------------------------------------------------------------------------
-    data['beta_raw'] = np.empty((vars_dim['time'], vars_dim['range']),
-                                dtype=np.float32)
-    data['rcs_0'] = np.empty((vars_dim['time'], vars_dim['range']),
-                             dtype=np.float32)
+    data['beta_raw'] = np.ones((vars_dim['time'], vars_dim['range']),
+                               dtype=np.float32) * missing_float
+    data['rcs_0'] = np.ones((vars_dim['time'], vars_dim['range']),
+                            dtype=np.float32) * missing_float
 
     return data
 
@@ -326,7 +355,7 @@ def calc_pr2(data, soft_vers, logger):
     """
 
     # Pr²
-    logger.debug('calculing Pr² using:')
+    logger.debug('calculing Pr2 using:')
     if soft_vers < 0.7:
         logger.debug('P = (beta_raw*stddev+base)*laser_pulses')
         p_raw = (
@@ -338,10 +367,9 @@ def calc_pr2(data, soft_vers, logger):
                      "*laser_pulses*range_scale")
         # Warning: For this type of file we do not correct the overlap function
         # as it is not available in the netCDf file
-        p_raw = ((
-            np.transpose(data['beta_raw'] / np.square(data['range']))
-            * data['p_calc'] * data['scaling']
-            + data['bckgrd_rcs_0']) * data['laser_pulses'])
+        p_raw = ((np.transpose(data['beta_raw'] / np.square(data['range'])) *
+                 data['p_calc'] * data['scaling'] +
+                 data['bckgrd_rcs_0']) * data['laser_pulses'])
 
     data['rcs_0'] = p_raw.T * np.square(data['range'])
 
@@ -363,7 +391,7 @@ def read_data(list_files, conf, logger):
     for dim, size in vars_dim.items():
         logger.debug(dim + ': ' + str(size))
     logger.info("initializing data output array")
-    data = init_data(vars_dim, logger)
+    data = init_data(vars_dim, conf, logger)
 
     nb_files = 0
     nb_files_read = 0
@@ -417,9 +445,9 @@ def read_data(list_files, conf, logger):
 
     logger.info("reading of files: done")
 
-    # calculate Pr²
+    # calculate Pr2
     # ---------------------------------------------------------------------
-    logger.info("calculating Pr²")
+    logger.info("calculating Pr2")
     data = calc_pr2(data, soft_vers, logger)
 
     if nb_files_read == 0:

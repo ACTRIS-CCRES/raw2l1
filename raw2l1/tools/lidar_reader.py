@@ -6,7 +6,13 @@ from __future__ import print_function, division, absolute_import
 import sys
 from importlib import import_module
 
+import numpy as np
+
+from . import common
+
 READER_CONF = 'reader_conf'
+MISSING_FLOAT_KEY = 'missing_float'
+MISSING_INT_KEY = 'missing_int'
 
 
 class RawDataReader(object):
@@ -15,7 +21,7 @@ class RawDataReader(object):
         self.logger = logger
         self.data_reader = conf.get
         self.reader_mod = self.__load_reader__()
-        self.reader_conf = self.__get_reader_conf__()
+        self.reader_conf = self.__get_reader_conf__(logger)
         self.data = {}
 
     def __load_reader__(self):
@@ -47,7 +53,7 @@ class RawDataReader(object):
 
         return reader_fcn
 
-    def __get_reader_conf__(self):
+    def __get_reader_conf__(self, logger):
         """
         Check is configuration contains a [reader_conf] section
         If one is found it is converted into a dictionnary
@@ -58,6 +64,21 @@ class RawDataReader(object):
             self.logger.debug('reader_conf section found')
             for key, value in self.conf.items(READER_CONF):
                 reader_conf[key] = value
+
+        # define missing values if they are not define in reader_conf section
+        if MISSING_INT_KEY not in reader_conf:
+            logger.info("""no {} option define in {} section.
+                        Using default value : {}""".format(MISSING_INT_KEY, READER_CONF, common.MISSING_INTEGER))
+            reader_conf[MISSING_INT_KEY] = common.MISSING_INTEGER
+        else:
+            reader_conf[MISSING_INT_KEY] = np.int(self.conf.get(READER_CONF, MISSING_INT_KEY))
+
+        if MISSING_FLOAT_KEY not in reader_conf:
+            logger.info("""no {} option define in {} section.
+                        Using default value : {}""".format(MISSING_INT_KEY, READER_CONF, common.MISSING_INTEGER))
+            reader_conf[MISSING_FLOAT_KEY] = common.MISSING_FLOAT
+        else:
+            reader_conf[MISSING_FLOAT_KEY] = np.float(self.conf.get(READER_CONF, MISSING_FLOAT_KEY))
 
         return reader_conf
 

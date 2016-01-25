@@ -15,9 +15,6 @@ MODEL = 'CS135'
 
 CONF_MSG_REGEX = r'CS.\d{6}'
 
-MISSING_INT = -9
-MISSING_FLOAT = np.nan
-
 MSG_TYPE_PROF = [2, 4, 6]
 MSG_TYPE_NOPROF = [1, 3, 5]
 MSG_TYPE_LINES = {
@@ -109,10 +106,13 @@ def count_msg_to_read(list_files, date_fmt, logger):
     return n_data_msg
 
 
-def init_data(time_dim, logger):
+def init_data(time_dim, conf, logger):
     """
     Initialize the arraies in data dict where data are read
     """
+
+    missing_int = conf['missing_int']
+    missing_float = conf['missing_float']
 
     data = {}
 
@@ -133,39 +133,39 @@ def init_data(time_dim, logger):
 
     # 1dim variables
     data['scale'] = np.ones(
-        (time_dim,), dtype=np.int) * MISSING_INT
+        (time_dim,), dtype=np.int) * missing_int
     data['laser_energy'] = np.ones(
-        (time_dim,), dtype=np.int) * MISSING_INT
+        (time_dim,), dtype=np.int) * missing_int
     data['laser_temp'] = np.ones(
-        (time_dim,), dtype=np.float) * MISSING_FLOAT
+        (time_dim,), dtype=np.float) * missing_float
     data['tilt_angle'] = np.ones(
-        (time_dim,), dtype=np.int) * MISSING_INT
+        (time_dim,), dtype=np.int) * missing_int
     data['bckgrd_rcs_0'] = np.ones(
-        (time_dim,), dtype=np.float) * MISSING_FLOAT
+        (time_dim,), dtype=np.float) * missing_float
     data['laser_pulse'] = np.ones(
-        (time_dim,), dtype=np.float) * MISSING_FLOAT
+        (time_dim,), dtype=np.float) * missing_float
     data['sample_rate'] = np.ones(
-        (time_dim,), dtype=np.int) * MISSING_INT
+        (time_dim,), dtype=np.int) * missing_int
     data['integrated_rcs_0'] = np.ones(
-        (time_dim,), dtype=np.float) * MISSING_FLOAT
+        (time_dim,), dtype=np.float) * missing_float
     data['window_transmission'] = np.ones(
-        (time_dim,), dtype=np.int) * MISSING_INT
+        (time_dim,), dtype=np.int) * missing_int
     data['alarm'] = np.ndarray((time_dim,), dtype='S1')
     data['info_flags'] = np.ndarray((time_dim,), dtype='S12')
 
     # 2dim variables
     data['cbh'] = np.ones(
-        (time_dim, CBH_DIM), dtype=np.int) * MISSING_INT
+        (time_dim, CBH_DIM), dtype=np.int) * missing_int
     data['clh'] = np.ones(
-        (time_dim, CLH_DIM), dtype=np.int) * MISSING_INT
+        (time_dim, CLH_DIM), dtype=np.int) * missing_int
     data['cloud_amount'] = np.ones(
-        (time_dim, CLH_DIM), dtype=np.int) * MISSING_INT
+        (time_dim, CLH_DIM), dtype=np.int) * missing_int
     data['mlh'] = np.ones(
-        (time_dim, MLH_DIM), dtype=np.int) * MISSING_INT
+        (time_dim, MLH_DIM), dtype=np.int) * missing_int
     data['mlh_qf'] = np.ones(
-        (time_dim, MLH_DIM), dtype=np.int) * MISSING_INT
+        (time_dim, MLH_DIM), dtype=np.int) * missing_int
     data['rcs_0'] = np.ones(
-        (time_dim, RANGE_DIM), dtype=np.float) * MISSING_FLOAT
+        (time_dim, RANGE_DIM), dtype=np.float) * missing_float
 
     return data
 
@@ -463,7 +463,7 @@ def read_data(list_files, conf, logger):
 
     # initialize dict containing data
     logger.debug("initializing data arrays")
-    data = init_data(time_dim, logger)
+    data = init_data(time_dim, conf, logger)
 
     # loop over the list of files
     time_ind = 0

@@ -57,10 +57,6 @@ RCS_MSG_LINE = {
 CBH_DIM = 3
 CLH_DIM = 5
 
-# MISSING/FILLING values
-MISSING_INT = -9
-MISSING_FLT = np.nan
-
 # constant
 RCS_BYTES_SIZE = 5
 RCS_FACTOR = 1e-8
@@ -295,10 +291,14 @@ def get_acq_conf(filename, data, data_dim, logger):
     return data, data_dim
 
 
-def init_data(data, data_dim, logger):
+def init_data(data, data_dim, conf, logger):
     """
     declare size of the numpy arraies and initialiase it
     """
+
+    # get missing values
+    missing_int = conf['missing_int']
+    missing_float = conf['missing_float']
 
     # Dimension variables
     # -------------------------------------------------------------------------
@@ -310,33 +310,33 @@ def init_data(data, data_dim, logger):
     # Time dependant variables
     # -------------------------------------------------------------------------
     data['scale'] = np.ones((data_dim['time'],),
-                            dtype=np.float32) * MISSING_FLT
+                            dtype=np.float32) * missing_float
     data['laser_temp'] = np.ones((data_dim['time'],),
-                                 dtype=np.float32) * MISSING_FLT
+                                 dtype=np.float32) * missing_float
     data['laser_energy'] = np.ones((data_dim['time'],),
-                                   dtype=np.float32) * MISSING_FLT
+                                   dtype=np.float32) * missing_float
     data['bckgrd_rcs_0'] = np.ones((data_dim['time'],),
-                                   dtype=np.float32) * MISSING_FLT
+                                   dtype=np.float32) * missing_float
     data['window_transmission'] = np.ones((data_dim['time'],),
-                                          dtype=np.float32) * MISSING_FLT
+                                          dtype=np.float32) * missing_float
     data['integrated_rcs_0'] = np.ones((data_dim['time'],),
-                                       dtype=np.float32) * MISSING_FLT
+                                       dtype=np.float32) * missing_float
 
     # Time, layer dependant variables
     # -------------------------------------------------------------------------
     data['cbh'] = np.ones((data_dim['time'], CBH_DIM),
-                          dtype=np.int32) * MISSING_INT
+                          dtype=np.int32) * missing_int
     data['clh'] = np.ones((data_dim['time'], CLH_DIM),
-                          dtype=np.int32) * MISSING_INT
+                          dtype=np.int32) * missing_int
     data['cloud_amount'] = np.ones((data_dim['time'], CLH_DIM),
-                                   dtype=np.int16) * MISSING_INT
+                                   dtype=np.int16) * missing_int
 
     # Time, range dependent variables
     # -------------------------------------------------------------------------
     data['rcs_0'] = np.ones((data_dim['time'], data_dim['range']),
-                            dtype=np.float32) * MISSING_FLT
+                            dtype=np.float32) * missing_float
     data['pr2'] = np.ones((data_dim['time'], data_dim['range']),
-                          dtype=np.float32) * MISSING_FLT
+                          dtype=np.float32) * missing_float
 
     return data
 
@@ -542,7 +542,7 @@ def read_data(list_files, conf, logger):
     data, data_dim = get_acq_conf(list_files[0], data, data_dim, logger)
 
     logger.info("initialising data arraies")
-    data = init_data(data, data_dim, logger)
+    data = init_data(data, data_dim, conf, logger)
 
     # Reading all the data
     # -------------------------------------------------------------------------
