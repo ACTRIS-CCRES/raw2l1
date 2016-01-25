@@ -319,8 +319,12 @@ def init_data(data, data_dim, conf, logger):
                                    dtype=np.float32) * missing_float
     data['window_transmission'] = np.ones((data_dim['time'],),
                                           dtype=np.float32) * missing_float
+    data['tilt_angle'] = np.ones((data_dim['time'],),
+                                 dtype=np.float32) * missing_float
     data['integrated_rcs_0'] = np.ones((data_dim['time'],),
                                        dtype=np.float32) * missing_float
+    data['alarm'] = np.ndarray((data_dim['time'],), dtype='S1')
+    data['info_flags'] = np.ndarray((data_dim['time'],), dtype='S12')
 
     # Time, layer dependant variables
     # -------------------------------------------------------------------------
@@ -373,6 +377,7 @@ def read_scalar_vars(data, msg, msg_type, logger):
 def read_time_dep_vars(data, ind, msg, msg_type, logger):
     """
     read time only dependent variables
+    ex: 00100 10 0770 098 +34 099 12 621 L0112HN15 139↵
     """
 
     line_to_read = get_state_line_nb_in_msg(data['msg_type'])
@@ -382,6 +387,7 @@ def read_time_dep_vars(data, ind, msg, msg_type, logger):
     data['laser_energy'][ind] = np.float(params[3])
     data['laser_temp'][ind] = np.float(params[4]) + DEG_TO_K
     data['window_transmission'][ind] = np.float(params[5])
+    data['tilt_angle'][ind] = np.float(params[6])
     data['bckgrd_rcs_0'][ind] = np.float(params[7])
     data['integrated_rcs_0'][ind] = np.float(params[9]) * SUM_BCKSCATTER_FACTOR
 
@@ -391,24 +397,30 @@ def read_time_dep_vars(data, ind, msg, msg_type, logger):
 def read_cbh_msg(data, ind, msg, logger):
     """
     extract CBH
+    ex: 30 01230 12340 23450 FEDCBA987654↵
     """
 
+    elts = msg[2].split()
+
     # get the number of cloud layer
-    if msg[2][0] == '/':
+    if elts[0][0] == '/':
         logger.warning("cloud data missing for message %d" % ind)
         return data
     else:
-        layer_detected = int(msg[2][0])
+        nlayers = int(elts[0][0])
 
-    # get the altitude in the file
-    cld_alt = msg[2].split(' ')[1:4]
+    data['alarm'][ind] = elts[0][1]
 
-    if layer_detected > 0 and layer_detected <= 4:
-        data['cbh'][ind, 0] = np.float(cld_alt[0])
-    if layer_detected > 1 and layer_detected <= 4:
-        data['cbh'][ind, 1] = np.float(cld_alt[1])
-    if layer_detected == 3:
-        data['cbh'][ind, 2] = np.float(cld_alt[2])
+    # number of CBH depends on nlayers value
+    if 1 <= nlayers <= 4:
+        data['cbh'][ind, 0] = np.float(elts[1])
+    if 2 <= nlayers <= 4:
+        data['cbh'][ind, 1] = np.float(elts[2])
+    if 3 <= nlayers <= 4:
+        data['cbh'][ind, 2] = np.float(elts[3])
+
+    # flags
+    data['info_flags'][ind] = elts[4]
 
     return data
 
@@ -498,12 +510,6 @@ def read_vars(lines, data, time_ind, logger):
 
         msg = lines[i_line:i_line + msg_n_lines]
         logger.debug("processing data message %d" % (time_ind + 1))
-
-        # read scalar variables (one time)
-        if time_ind == 0:
-            logger.debug("reading tilt angle")
-            data['tilt_angle'] = read_scalar_vars(data, msg,
-                                                  data['msg_type'], logger)
 
         # read time only dependent variables
         logger.debug("reading time only dependent variables")

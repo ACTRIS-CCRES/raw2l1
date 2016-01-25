@@ -42,7 +42,7 @@ class TestVaisalaCL31(unittest.TestCase):
 class TestVaisalaMsg2(unittest.TestCase):
 
     IN_DIR = TEST_IN_DIR + 'vaisala_cl' + os.sep
-    conf_file = CONF_DIR + 'conf_vaisala_cl31.ini'
+    conf_file = CONF_DIR + 'conf_vaisala_cl31_toprof_netcdf4.ini'
 
     def test_cl_msg2(self):
 
