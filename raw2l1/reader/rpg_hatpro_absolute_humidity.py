@@ -121,7 +121,7 @@ def read_data(list_files, conf, logger):
     data['time_bnds'][:, 1] = nc.date2num(tmp, units=time_units)
 
     # convert units of abolute humidity from g.m-3 to kg.m-3
-    data['hua'] = data['hua'] * 1000.
+    data['hua'] = data['hua'] / 1000.
 
     # quality flags
     rain_filter = data['rain_flag'] == 1
