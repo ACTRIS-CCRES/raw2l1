@@ -50,7 +50,7 @@ def get_vars_dim(list_files, logger):
             nc_id = nc.Dataset(ifile, 'r')
             f_count += 1
         except:
-            logger.error("error trying to open " + ifile)
+            logger.error("109 error trying to open '{}'".format(ifile))
             continue
 
         if f_count == 1:
@@ -404,7 +404,7 @@ def read_data(list_files, conf, logger):
             raw_data = nc.Dataset(ifile, 'r')
             nb_files_read += 1
         except:
-            logger.error('unable to load ' + ifile + ' trying next one')
+            logger.error('109 unable to load ' + ifile + ' trying next one')
 
         nb_files += 1
         logger.debug('reading %02d: ' % (nb_files) + ifile)
@@ -451,7 +451,8 @@ def read_data(list_files, conf, logger):
     data = calc_pr2(data, soft_vers, logger)
 
     if nb_files_read == 0:
-        logger.critical('No file could be read')
+        for f in list_files:
+            logger.critical("109 Tried to read '{}'. No file could be read".format(f))
         sys.exit(1)
     else:
         return data
