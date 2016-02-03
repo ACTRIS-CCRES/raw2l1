@@ -13,7 +13,7 @@ def check_list_options(conf, section, list_opts, logger):
     for opt in list_opts:
         if not conf.has_option(section, opt):
             logger.critical(
-                "%s option is missing in %s" % (opt, section))
+                "107 %s option is missing in %s" % (opt, section))
             return False
 
     return True
@@ -27,7 +27,7 @@ def check_required_sections(conf, logger):
     logger.debug("checking required configuration sections")
     for section in common.CONF_SECTIONS:
         if not conf.has_section(section):
-            logger.critical("%s section is missing in configuration file")
+            logger.critical("107 %s section is missing in configuration file")
             return False
 
     return True
@@ -38,6 +38,9 @@ def check_nc4_compression_option(conf, section, logger):
     check options and values for netCDF4 compression
     """
 
+    # get name of the config file in case of error/warning
+    conf_file = conf.get('conf', 'conf')
+
     # check if compression option is present
     opt = 'netcdf4_compression'
     if not conf.has_option(conf, opt):
@@ -46,14 +49,15 @@ def check_nc4_compression_option(conf, section, logger):
     # check compression value
     val = conf.get(section, opt)
     if val not in common.ALLOW_NC4_COMP:
-        logger.error(
-            "authorized values for %s option in %s section is %s. Option set to false" % (
-                opt, section, repr(common.ALLOW_NC4_COMP)))
+
+        msg = "107 Error Reading config file '" + conf_file + "'"
+        msg += " authorized values for %s option in %s section is %s. Option set to false"
+        logger.error(msg % (opt, section, repr(common.ALLOW_NC4_COMP)))
         conf.set(opt, section, 'false')
 
     # check if compression level is present
     opt = 'netcdf4_compression_level'
-    err_msg = "authorized value for %s option in %s section are %s. Option set to 4"
+    err_msg = "107 Error Reading config file '%s'authorized value for %s option in %s section are %s. Option set to 4"
     if not conf.has_option(section, opt):
         conf.set(section, opt, '4')
 
@@ -61,10 +65,10 @@ def check_nc4_compression_option(conf, section, logger):
     try:
         val = conf.getint(section, opt)
     except ValueError:
-        logger.error(err_msg % (opt, section, repr(common.ALLOW_NC4_COMP_LEVEL)))
+        logger.error(err_msg % (conf_file, opt, section, repr(common.ALLOW_NC4_COMP_LEVEL)))
 
     if val not in common.ALLOW_NC4_COMP_LEVEL:
-        logger.error(err_msg % (opt, section, repr(common.ALLOW_NC4_COMP_LEVEL)))
+        logger.error(err_msg % (conf_file, opt, section, repr(common.ALLOW_NC4_COMP_LEVEL)))
 
 
 def check_conf_options(conf, logger):
@@ -82,7 +86,7 @@ def check_conf_options(conf, logger):
     # check netcdf format
     option = 'netcdf_format'
     if conf.get(section, option) not in common.ALLOW_NC_FMT:
-        logger.critical("allow netCDF format ar : %s" % repr(common.ALLOW_NC_FMT))
+        logger.critical("107 allow netCDF format are : %s" % repr(common.ALLOW_NC_FMT))
         return False
 
     # if format is NETCDF4 check compression option
