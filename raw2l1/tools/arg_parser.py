@@ -9,6 +9,7 @@ import datetime as dt
 import sys
 import os
 import glob
+from itertools import chain
 from tools.utils import check_dir
 
 PROG_DESC = "Raw LIDAR data to netCDF converter"
@@ -34,6 +35,8 @@ def check_input_files(input_files):
     """
     check if the input files exist and return a list of the input files found
     """
+
+    print(input_files)
 
     list_files = glob.glob(input_files)
 
@@ -78,6 +81,7 @@ def init_args_parser():
                         help='Name of the INI configuration file to use')
     parser.add_argument('input_file',
                         type=check_input_files,
+                        nargs='*',
                         help='Name or pattern of the file(s) to convert')
     parser.add_argument('output_file',
                         type=check_output_dir,
@@ -119,7 +123,7 @@ def get_input_args(argv):
     input_args = {}
     input_args['date'] = parse_args.date
     input_args['conf'] = parse_args.conf_file
-    input_args['input'] = parse_args.input_file
+    input_args['input'] = [f for f in chain.from_iterable(parse_args.input_file)]
     input_args['output'] = parse_args.output_file
     input_args['log'] = parse_args.log
     input_args['log_level'] = parse_args.log_level
