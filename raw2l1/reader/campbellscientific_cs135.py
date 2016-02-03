@@ -54,10 +54,10 @@ def check_input(conf, logger):
     try:
         timestamp_fmt = conf['timestamp_fmt']
     except ConfigParser.NoSectionError:
-        logger.critical("configuration file MUST have a reader_conf section")
+        logger.critical("101 configuration file MUST have a reader_conf section")
         sys.exit(2)
     except ConfigParser.NoOptionError:
-        logger.critical("reader_conf section MUST have a timestamp_fmt option")
+        logger.critical("101 reader_conf section MUST have a timestamp_fmt option")
         sys.exit(2)
 
     logger.info("using timestamp format: %s" % timestamp_fmt)
@@ -76,7 +76,7 @@ def get_file_lines(filename, logger):
             logger.debug("reading " + filename)
             lines = chomp(f_id.readlines())
     except:
-        logger.error("Impossible to open file " + filename)
+        logger.error("109 Impossible to open file " + filename)
         return None
 
     return lines
@@ -306,26 +306,26 @@ def read_mlh(line, data, ind, logger):
     return data
 
 
-def is_msg_type_ok(msg_type, logger):
+def is_msg_type_ok(msg_type, filename, logger):
     """
     check type of message to read
     """
 
     if (101 <= msg_type <= 112):
         logger.error(
-            "unable to read these data messages. " +
+            "102 unable to read these data messages in '{}'. ".format(filename) +
             "You should able to read it with vaisala CL51 reader")
         return False
     elif (113 <= msg_type <= 114):
         logger.error(
-            "unable to read these data messages. " +
+            "102 unable to read these data messages in '{}'. ".format(filename) +
             "You should able to read it with vaisala CL51 reader")
         return False
     elif (1 <= msg_type <= 6):
         return True
     else:
         logger.critical(
-            "data message type unknown")
+            "103 data message type unknown in '{}'".format(filename))
 
 
 def get_msg_type(list_files, date_fmt, logger):
@@ -348,14 +348,16 @@ def get_msg_type(list_files, date_fmt, logger):
             msg_found, tmp = read_header(lines[i+1], tmp, logger)
             msg_type = tmp['msg_type']
 
-            if msg_found and is_msg_type_ok(msg_type, logger):
+            if msg_found and is_msg_type_ok(msg_type, f, logger):
                 msg_type_found = True
                 break
+
+        logger.error("106 impossible to determine data messages type in '{}'".format(f))
 
     if msg_type_found:
         return msg_type
     else:
-        logger.critical("impossible to determine data messages type")
+        logger.critical("106 impossible to determine data messages type in any input file")
         sys.exit(2)
 
 

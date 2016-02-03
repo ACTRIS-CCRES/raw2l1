@@ -76,7 +76,7 @@ def get_file_lines(filename, logger):
             logger.debug("reading " + filename)
             lines = chomp(f_id.readlines())
     except:
-        logger.error("Impossible to open file " + filename)
+        logger.error("109 Impossible to open file " + filename)
         return None
 
     return lines
@@ -131,7 +131,7 @@ def get_range_resol(conf_msg, logger):
         range_resol = RANGE_RESOL[int_coding]
         logger.debug("range resolution: %d m" % range_resol)
     except Exception, err:
-        logger.warning("Problem reading range resolution: " + repr(err))
+        logger.warning("105 Problem reading range resolution: " + repr(err))
         return None
 
     return range_resol
@@ -147,14 +147,14 @@ def get_range_ngates(conf_msg, logger):
         range_ngates = RANGE_GATES[int_coding]
         logger.debug("number of vertical gates: %d" % range_ngates)
     except Exception, err:
-        logger.warning("Problem reading number of vertical gates " +
+        logger.warning("105 Problem reading number of vertical gates " +
                        repr(err))
         return None
 
     return range_ngates
 
 
-def get_msg_type(conf_msg, logger):
+def get_msg_type(conf_msg, filename, logger):
     """
     Extract from acquisition configuration line if the file contains
     message of type 1 or 2 (without or with sky state)
@@ -167,7 +167,7 @@ def get_msg_type(conf_msg, logger):
     elif msg_type == 2:
         logger.info("file contains messages of type 2 (with sky state)")
     else:
-        logger.error("problem determining type of message")
+        logger.error("106 problem determining type of message '{}'".format(filename))
         msg_type = None
 
     return msg_type
@@ -192,21 +192,21 @@ def calc_range(resol, n_gates):
     return range_vect * np.float(resol) + np.float(resol / 2)
 
 
-def check_range(data, data_dim, logger):
+def check_range(data, data_dim, filename, logger):
     """
     check we determining range was a success
     """
 
     # Test if the msg contains retrodiffusion profiles
     if data_dim['range'] == -9 or data['range_resol'] == -9:
-        logger.error("according to the configuration read " +
-                     "the file doesn't contains retrodiffusion " +
+        logger.error("101 according to the configuration read " +
+                     "the file {} doesn't contains retrodiffusion ".format(filename) +
                      "profiles. Trying next message")
         range_ok = False
         # Test if we manage to read resol anf number of gates
     elif data_dim['range'] is None or data['range_resol'] is None:
-        logger.error("problem encountered reading range configuration." +
-                     " Trying next message")
+        logger.error("101 problem encountered reading range configuration." +
+                     " from {} Trying next message".format(filename))
         range_ok = False
     else:
         range_ok = True
@@ -262,12 +262,12 @@ def get_acq_conf(filename, data, data_dim, logger):
         data['range_resol'] = get_range_resol(conf_msg, logger)
 
         # check if reading of range was a success
-        range_ok = check_range(data, data_dim, logger)
+        range_ok = check_range(data, data_dim, filename, logger)
         if range_ok:
             data['range'] = calc_range(data['range_resol'], data_dim['range'])
 
         # Check if reading of message type is a success
-        data['msg_type'] = get_msg_type(conf_msg, logger)
+        data['msg_type'] = get_msg_type(conf_msg, filename, logger)
         msg_ok, data = check_msg_type(data, logger)
 
         if range_ok and msg_ok:
@@ -279,13 +279,13 @@ def get_acq_conf(filename, data, data_dim, logger):
 
     # if we are not able to read range in the file
     if not range_ok:
-        logger.critical("Impossible to read range configuration in " +
-                        filename + ". Stopping Raw2L1")
+        logger.critical("107 Impossible to read range configuration in '" +
+                        filename + "'. Stopping Raw2L1")
         sys.exit(1)
 
     if not msg_ok:
-        logger.critical("impossible to determine type of message in " +
-                        filename + ". Stopping Raw2L1")
+        logger.critical("106 impossible to determine type of message in '" +
+                        filename + "'. Stopping Raw2L1")
         sys.exit(1)
 
     return data, data_dim
@@ -404,7 +404,7 @@ def read_cbh_msg(data, ind, msg, logger):
 
     # get the number of cloud layer
     if elts[0][0] == '/':
-        logger.warning("cloud data missing for message %d" % ind)
+        logger.warning("105 cloud data missing for message %d" % ind)
         return data
     else:
         nlayers = int(elts[0][0])
@@ -560,7 +560,7 @@ def read_data(list_files, conf, logger):
         # try reading the file
         lines = get_file_lines(ifile, logger)
         if lines is None:
-            logger.warning("trying next file")
+            logger.warning("102 No data found in the file '{}'trying next file".format(ifile))
             continue
 
         nb_files_read += 1

@@ -33,9 +33,9 @@ class RawDataReader(object):
         try:
             reader_mod = import_module(
                 reader_dir + "." + self.conf.get('conf', 'reader'))
-        except ImportError, err:
-            self.logger.critical("unable to load lidar data reader")
-            self.logger.critical(err)
+        except ImportError as err:
+            msg = '107 unable to load lidar data reader '
+            self.logger.critical(msg, err)
             self.logger.critical("quitting raw2l1")
             sys.exit(1)
 
@@ -44,9 +44,9 @@ class RawDataReader(object):
         self.logger.info("loading read_data function from " + reader_name)
         try:
             reader_fcn = getattr(reader_mod, 'read_data')
-        except AttributeError, err:
-            self.logger.critical("unable find read_data function")
-            self.logger.critical(err)
+        except AttributeError as err:
+            msg = '107 unable find read_data function '
+            self.logger.critical(msg, err)
             self.logger.critical("quitting raw2l1")
             sys.exit(1)
         self.logger.info("loading read_data function : success")
