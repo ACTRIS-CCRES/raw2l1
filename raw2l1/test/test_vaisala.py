@@ -64,6 +64,26 @@ class TestVaisalaMsg2(unittest.TestCase):
 
         self.assertEqual(resp, 0, 'CL31 one hour file')
 
+    def test_cl_scale_error(self):
+
+        date = '20150617'
+        test_ifile = (
+            self.IN_DIR + 'vaisala_cl_scale_error.txt'
+        )
+        test_ofile = TEST_OUT_DIR + 'test_cl31-scale-error_20150617_000000.nc'
+
+        resp = subprocess.check_call([
+            MAIN_DIR + PRGM,
+            date,
+            self.conf_file,
+            test_ifile,
+            test_ofile,
+            '-log_level',
+            'debug'
+        ])
+
+        self.assertEqual(resp, 0, 'CL31 one hour file')
+
 
 class TestVaisalaCL51(unittest.TestCase):
 

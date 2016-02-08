@@ -6,7 +6,7 @@ import numpy as np
 import datetime as dt
 import sys
 import re
-from tools.utils import chomp
+from tools.utils import chomp, to_bool
 
 # brand and model of the LIDAR
 BRAND = 'vaisala'
@@ -65,6 +65,7 @@ FEET_TO_METERS = 0.3048
 CLH_ALT_METERS_FACTOR = 10.
 CLH_ALT_FEET_FACTOR = 100.
 SUM_BCKSCATTER_FACTOR = 1.E-4
+OK_SCALE_VALUE = 100.
 
 # hexadecimal encoding of internal message, warning and error
 ERR_HEX_MSG = [
@@ -164,6 +165,22 @@ def get_conversion_coeff(are_units_meters):
         coeff = FEET_TO_METERS
 
     return coeff
+
+
+def check_scale_value(data, conf, ind, f_name, logger):
+    """
+    check scale value. If value is not 100%, message is voided.
+    """
+
+    msg = "101 Instrument Calibration Issues in '{}'. "
+    msg += "Values for {:%Y-%m-%d %H:%M:%S} will be replaced by missing value"
+
+    if data['scale'][ind] != OK_SCALE_VALUE:
+        logger.warning(msg.format(f_name, data['time'][ind]))
+
+        if conf['check_scale']:
+            data['rcs_0'][ind, :] = conf['missing_float']
+            data['pr2'][ind, :] = conf['missing_float']
 
 
 def get_file_lines(filename, logger):
@@ -354,7 +371,6 @@ def get_acq_conf(filename, data, data_dim, logger):
             i_line += 1
             continue
 
-        print(conf_msg)
         conf_msg = get_conf_msg(lines[i_line + 1], logger)
         if conf_msg is None:
             continue
@@ -597,7 +613,7 @@ def read_rcs_var(data, ind, msg, logger):
     return data
 
 
-def read_vars(lines, data, time_ind, logger):
+def read_vars(lines, data, conf, time_ind, f_name, logger):
     """
     read all available variables in one file
     """
@@ -638,6 +654,9 @@ def read_vars(lines, data, time_ind, logger):
         logger.debug("reading rcs")
         data = read_rcs_var(data, time_ind, msg, logger)
 
+        # check scale value if needed
+        check_scale_value(data, conf, time_ind, f_name, logger)
+
         # Add number of line of a message to lines counter
         i_line += msg_n_lines
         time_ind += 1
@@ -657,11 +676,18 @@ def read_data(list_files, conf, logger):
     logger.info("analysing input files to get the configuration")
     data_dim['time'] = count_msg_to_read(list_files, logger)
 
+    # checking conf parameters
+    # -------------------------------------------------------------------------
+    try:
+        conf['check_scale'] = to_bool(conf['check_scale'])
+    except ValueError:
+        conf['check_scale'] = False
+
     # Get range and vertical resolution from first file
     logger.info("analyzing first file to determine acquisition configuration")
     data, data_dim = get_acq_conf(list_files[0], data, data_dim, logger)
 
-    logger.info("initialising data arraies")
+    logger.info("initialising data arrays")
     data = init_data(data, data_dim, conf, logger)
 
     # Reading all the data
@@ -680,7 +706,7 @@ def read_data(list_files, conf, logger):
         nb_files_read += 1
 
         # reading data in the file
-        time_ind, data = read_vars(lines, data, time_ind, logger)
+        time_ind, data = read_vars(lines, data, conf, time_ind, ifile, logger)
 
     # Final calculation on whole profiles
     # -------------------------------------------------------------------------
