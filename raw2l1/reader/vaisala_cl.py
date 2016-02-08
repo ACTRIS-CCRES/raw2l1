@@ -61,8 +61,109 @@ CLH_DIM = 5
 RCS_BYTES_SIZE = 5
 RCS_FACTOR = 1e-8
 DEG_TO_K = 273.15
-CBH_ALT_FACTOR = 10.
+FEET_TO_METERS = 0.3048
+CLH_ALT_METERS_FACTOR = 10.
+CLH_ALT_FEET_FACTOR = 100.
 SUM_BCKSCATTER_FACTOR = 1.E-4
+
+# hexadecimal encoding of internal message, warning and error
+ERR_HEX_MSG = [
+    {'hex': 0x000000000001, 'level': 'STATUS', 'msg': 'undefined'},
+    {'hex': 0x000000000002, 'level': 'STATUS', 'msg': 'undefined'},
+    {'hex': 0x000000000004, 'level': 'STATUS', 'msg': 'undefined'},
+    {'hex': 0x000000000008, 'level': 'STATUS', 'msg': 'undefined'},
+    {'hex': 0x000000000010, 'level': 'STATUS', 'msg': 'undefined'},
+    {'hex': 0x000000000020, 'level': 'STATUS', 'msg': 'Polling mode is on'},
+    {'hex': 0x000000000040, 'level': 'STATUS', 'msg': 'Manual blower control'},
+    {'hex': 0x000000000080, 'level': 'STATUS', 'msg': 'Units are meters if on, else feet'},
+    {'hex': 0x000000000100, 'level': 'STATUS', 'msg': 'undefined'},
+    {'hex': 0x000000000200, 'level': 'STATUS', 'msg': 'Manual data acquisition settings are effective'},
+    {'hex': 0x000000000400, 'level': 'STATUS', 'msg': 'Self test in progress'},
+    {'hex': 0x000000000800, 'level': 'STATUS', 'msg': 'Standby mode is on'},
+    {'hex': 0x000000001000, 'level': 'STATUS', 'msg': 'Working from battery'},
+    {'hex': 0x000000002000, 'level': 'STATUS', 'msg': 'Internal heater is on'},
+    {'hex': 0x000000004000, 'level': 'STATUS', 'msg': 'Blower heater is on'},
+    {'hex': 0x000000008000, 'level': 'STATUS', 'msg': 'Blower is on'},
+    {'hex': 0x000000010000, 'level': 'WARNING', 'msg': 'undefined'},
+    {'hex': 0x000000020000, 'level': 'WARNING', 'msg': 'Tilt angle > 45 degrees warning'},
+    {'hex': 0x000000040000, 'level': 'WARNING', 'msg': 'Receiver warning'},
+    {'hex': 0x000000080000, 'level': 'WARNING', 'msg': 'Laser monitor failure'},
+    {'hex': 0x000000100000, 'level': 'WARNING', 'msg': 'Battery failure'},
+    {'hex': 0x000000200000, 'level': 'WARNING', 'msg': 'Ceilometer engine board failure'},
+    {'hex': 0x000000400000, 'level': 'WARNING', 'msg': 'High background radiance'},
+    {'hex': 0x000000800000, 'level': 'WARNING', 'msg': 'Heater fault'},
+    {'hex': 0x000001000000, 'level': 'WARNING', 'msg': 'Humidity sensor failure'},
+    {'hex': 0x000002000000, 'level': 'WARNING', 'msg': 'undefined'},
+    {'hex': 0x000004000000, 'level': 'WARNING', 'msg': 'Blower failure'},
+    {'hex': 0x000008000000, 'level': 'WARNING', 'msg': 'undefined'},
+    {'hex': 0x000010000000, 'level': 'WARNING', 'msg': 'High humidity'},
+    {'hex': 0x000020000000, 'level': 'WARNING', 'msg': 'Transmitter expires'},
+    {'hex': 0x000040000000, 'level': 'WARNING', 'msg': 'Battery voltage low'},
+    {'hex': 0x000080000000, 'level': 'WARNING', 'msg': 'Window contamination'},
+    {'hex': 0x000100000000, 'level': 'ALARM', 'msg': 'Ceilometer engine board failure'},
+    {'hex': 0x000200000000, 'level': 'ALARM', 'msg': 'Coaxial cable failure'},
+    {'hex': 0x000400000000, 'level': 'ALARM', 'msg': 'undefined'},
+    {'hex': 0x000800000000, 'level': 'ALARM', 'msg': 'undefined'},
+    {'hex': 0x001000000000, 'level': 'ALARM', 'msg': 'undefined'},
+    {'hex': 0x002000000000, 'level': 'ALARM', 'msg': 'undefined'},
+    {'hex': 0x004000000000, 'level': 'ALARM', 'msg': 'undefined'},
+    {'hex': 0x008000000000, 'level': 'ALARM', 'msg': 'undefined'},
+    {'hex': 0x010000000000, 'level': 'ALARM', 'msg': 'Receiver saturation'},
+    {'hex': 0x020000000000, 'level': 'ALARM', 'msg': 'Light path obstruction'},
+    {'hex': 0x040000000000, 'level': 'ALARM', 'msg': 'Memory error'},
+    {'hex': 0x080000000000, 'level': 'ALARM', 'msg': 'undefined'},
+    {'hex': 0x100000000000, 'level': 'ALARM', 'msg': 'Voltage failure'},
+    {'hex': 0x200000000000, 'level': 'ALARM', 'msg': 'Receiver failure'},
+    {'hex': 0x400000000000, 'level': 'ALARM', 'msg': 'Transmitter failure'},
+    {'hex': 0x800000000000, 'level': 'ALARM', 'msg': 'Transmitter shut-off'},
+]
+
+
+def get_error_index(err_msg, logger):
+    """
+    based on error error message read in file. return all indexes of related msg and level
+    """
+
+    err_ind = []
+    err_int = int(err_msg, 16)
+    for i, d in enumerate(ERR_HEX_MSG):
+        if bool(err_int & d['hex']):
+            err_ind.append(i)
+
+            if ERR_HEX_MSG[i]['level'] == 'STATUS':
+                logger.info(ERR_HEX_MSG[i]['msg'])
+            elif ERR_HEX_MSG[i]['level'] == 'WARNING':
+                logger.warning(ERR_HEX_MSG[i]['msg'])
+            elif ERR_HEX_MSG[i]['level'] == 'ALARM':
+                logger.error(ERR_HEX_MSG[i]['msg'])
+
+    return err_ind
+
+
+def are_units_meters(err_msg, logger):
+    """
+    based on status message, determine what are the units of CLH and CBH
+    """
+
+    err_ind = get_error_index(err_msg, logger)
+
+    for i in err_ind:
+        if ERR_HEX_MSG[i]['msg'] == 'Units are meters if on, else feet':
+            return False
+
+    return True
+
+
+def get_conversion_coeff(are_units_meters):
+    """
+    based on the status message return the coefficient to convert feet to meters
+    """
+
+    coeff = 1.
+    if not are_units_meters:
+        coeff = FEET_TO_METERS
+
+    return coeff
 
 
 def get_file_lines(filename, logger):
@@ -342,6 +443,11 @@ def init_data(data, data_dim, conf, logger):
     data['pr2'] = np.ones((data_dim['time'], data_dim['range']),
                           dtype=np.float32) * missing_float
 
+    # Special variable to store for each message the unit of CBH and CLH
+    # -------------------------------------------------------------------------
+    data['are_unit_meter'] = np.ones((data_dim['time'],),
+                                     dtype=bool)
+
     return data
 
 
@@ -411,6 +517,11 @@ def read_cbh_msg(data, ind, msg, logger):
 
     data['alarm'][ind] = elts[0][1]
 
+    # flags
+    data['info_flags'][ind] = elts[4]
+    # get unit of CBH
+    data['are_unit_meter'][ind] = are_units_meters(elts[4], logger)
+
     # number of CBH depends on nlayers value
     if 1 <= nlayers <= 4:
         data['cbh'][ind, 0] = np.float(elts[1])
@@ -418,9 +529,6 @@ def read_cbh_msg(data, ind, msg, logger):
         data['cbh'][ind, 1] = np.float(elts[2])
     if 3 <= nlayers <= 4:
         data['cbh'][ind, 2] = np.float(elts[3])
-
-    # flags
-    data['info_flags'][ind] = elts[4]
 
     return data
 
@@ -437,9 +545,15 @@ def read_clh_msg(data, ind, msg, logger):
 
     tmp = elts[1::2]
 
+    coeff = get_conversion_coeff(data['are_unit_meter'][ind])
+    if data['are_unit_meter'][ind]:
+        coeff = coeff * CLH_ALT_METERS_FACTOR
+    else:
+        coeff = coeff * CLH_ALT_FEET_FACTOR
+
     for level, ca in enumerate(elts[0::2]):
         if 1 <= ca <= 8:
-            data['clh'][ind, level] = tmp[level] * CBH_ALT_FACTOR
+            data['clh'][ind, level] = tmp[level] * coeff
 
     return data
 
