@@ -75,7 +75,7 @@ def filter_conf_sections(conf, logger):
 
     list_sec = conf.sections()
 
-    for elt in sections_to_rm:
+    for elt in set(sections_to_rm):
         try:
             list_sec.remove(elt)
         except ValueError, err:
