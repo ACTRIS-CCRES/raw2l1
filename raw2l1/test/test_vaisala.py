@@ -110,5 +110,34 @@ class TestVaisalaCL51(unittest.TestCase):
 
         self.assertEqual(resp, 0, 'CL51 one hour file')
 
+
+class TestVaisalaSwissAirport(unittest.TestCase):
+
+    IN_DIR = TEST_IN_DIR + 'vaisala_cl' + os.sep
+    conf_file = IN_DIR + 'conf_vaisala_cl31-swiss-airport_toprof_netcdf4.ini'
+
+    def test_2_files(self):
+
+        date = '20150819'
+        test_ifile = (
+            self.IN_DIR + '20150819*.log'
+        )
+        test_ofile = TEST_OUT_DIR + 'test_cl-swiss-airport_20150819.nc'
+
+        resp = subprocess.check_call([
+            MAIN_DIR + PRGM,
+            date,
+            self.conf_file,
+            test_ifile,
+            test_ofile,
+            '-log_level',
+            'debug',
+            '-v',
+            'debug'
+        ])
+
+        self.assertEqual(resp, 0, 'CL swiss airport')
+
+
 if __name__ == '__main__':
     unittest.main()
