@@ -127,6 +127,25 @@ class TestChm15k(unittest.TestCase):
 
         self.assertEqual(resp, 0)
 
+    def test_chm15k_error_msg(self):
+
+        date = '20151001'
+        test_ifile = self.IN_DIR + 'ceilometer-eprofile_20151001000023_03963_A201509300000_MaceHead_CHM15K.nc'
+        test_ofile = TEST_OUT_DIR + 'test_chm15k_20151001_error_msg.nc'
+        test_cfile = CONF_DIR + 'conf_lufft_chm15k-nimbus_toprof.ini'
+
+        resp = subprocess.check_call([
+            MAIN_DIR + PRGM,
+            date,
+            test_cfile,
+            test_ifile,
+            test_ofile,
+            '-log_level',
+            'debug'
+        ])
+
+        self.assertEqual(resp, 0)
+
 
 if __name__ == '__main__':
     unittest.main()

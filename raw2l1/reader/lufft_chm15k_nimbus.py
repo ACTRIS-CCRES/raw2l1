@@ -12,6 +12,62 @@ BRAND = 'jenoptik'
 MODEL = 'CHM15K nimbus'
 
 
+ERR_HEX_MSG = [
+    {'hex': 0x00000001, 'level': 'ERROR', 'msg': 'Signal quality'},
+    {'hex': 0x00000002, 'level': 'ERROR', 'msg': 'Signal recording'},
+    {'hex': 0x00000004, 'level': 'ERROR', 'msg': 'Signal values null or void'},
+    {'hex': 0x00000008, 'level': 'ERROR', 'msg': 'Signal recording error channel 2 (not used for Nimbus)'},
+    {'hex': 0x00000010, 'level': 'ERROR', 'msg': 'Create new NetCDF file'},
+    {'hex': 0x00000020, 'level': 'ERROR', 'msg': 'Write / add to NetCDF'},
+    {'hex': 0x00000040, 'level': 'ERROR', 'msg': 'RS485 telegram can not be generated, transmitted'},
+    {'hex': 0x00000080, 'level': 'ERROR', 'msg': 'Mount SD card faile (test: write to raw buffer)'},
+    {'hex': 0x00000100, 'level': 'ERROR', 'msg': 'Detector high voltage control failed / cable defect or absent'},
+    {'hex': 0x00000200, 'level': 'ERROR', 'msg': 'Inner housing temperature out of range'},
+    {'hex': 0x00000400, 'level': 'ERROR', 'msg': 'Laser optical unit temperature error'},
+    {'hex': 0x00000800, 'level': 'ERROR', 'msg': 'Laser trigger not detected'},
+    {'hex': 0x00001000, 'level': 'WARNING', 'msg': 'Laser driver board temperature'},
+    {'hex': 0x00002000, 'level': 'ERROR', 'msg': 'Laser interlock'},
+    {'hex': 0x00004000, 'level': 'ERROR', 'msg': 'Laser head temperature'},
+    {'hex': 0x00008000, 'level': 'WARNING', 'msg': 'Replace Laser - ageing'},
+    {'hex': 0x00010000, 'level': 'WARNING', 'msg': 'Signal quality – low signal/ noise level'},
+    {'hex': 0x00020000, 'level': 'WARNING', 'msg': 'Windows contaminated'},
+    {'hex': 0x00040000, 'level': 'WARNING', 'msg': 'Signal processing'},
+    {'hex': 0x00080000, 'level': 'STATUS', 'msg': 'not used'},
+    {'hex': 0x00100000, 'level': 'WARNING', 'msg': 'File system, fsck repaired bad sectors'},
+    {'hex': 0x00200000, 'level': 'WARNING', 'msg': 'RS485 baud rate/ transfer mode reset'},
+    {'hex': 0x00400000, 'level': 'WARNING', 'msg': 'AFD'},
+    {'hex': 0x00800000, 'level': 'WARNING', 'msg': 'configuration problem'},
+    {'hex': 0x01000000, 'level': 'WARNING', 'msg': 'Laser optical unit temperature'},
+    {'hex': 0x02000000, 'level': 'WARNING', 'msg': 'External temperature'},
+    {'hex': 0x04000000, 'level': 'WARNING', 'msg': 'Detector temperature out of range'},
+    {'hex': 0x08000000, 'level': 'WARNING', 'msg': 'General laser issue'},
+    {'hex': 0x10000000, 'level': 'STATUS', 'msg': 'NOL > 3 and standard telegram selected'},
+    {'hex': 0x20000000, 'level': 'STATUS', 'msg': 'Power save mode on'},
+    {'hex': 0x40000000, 'level': 'STATUS', 'msg': 'Standby mode on'},
+]
+
+
+def get_error_index(err_msg, logger):
+    """
+    based on error error message read in file. return all indexes of related msg and level
+    """
+
+    err_ind = []
+    err_int = err_msg
+    for i, d in enumerate(ERR_HEX_MSG):
+        if bool(err_int & d['hex']):
+            err_ind.append(i)
+
+            if ERR_HEX_MSG[i]['level'] == 'STATUS':
+                logger.info(ERR_HEX_MSG[i]['msg'])
+            elif ERR_HEX_MSG[i]['level'] == 'WARNING':
+                logger.warning(ERR_HEX_MSG[i]['msg'])
+            elif ERR_HEX_MSG[i]['level'] == 'ALARM':
+                logger.error(ERR_HEX_MSG[i]['msg'])
+
+    return err_ind
+
+
 def get_soft_version(str_version):
     """
     function to get the number of acquisition software version as a float
@@ -449,6 +505,10 @@ def read_data(list_files, conf, logger):
     # ---------------------------------------------------------------------
     logger.info("calculating Pr2")
     data = calc_pr2(data, soft_vers, logger)
+
+    # print messages status read in the file for each time step
+    for err_msg in data['error_ext'][:]:
+        get_error_index(err_msg, logger)
 
     if nb_files_read == 0:
         for f in list_files:
