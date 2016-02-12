@@ -222,7 +222,7 @@ def init_data(vars_dim, conf, logger):
     data['average_time'] = np.ones((vars_dim['time'],),
                                    dtype=np.int32) * missing_int
     data['p_calc'] = np.ones((vars_dim['time'],),
-                             dtype=np.int16) * missing_int
+                             dtype=np.float32) * missing_int
 
     # Time, layer dependent variables
     # -------------------------------------------------------------------------
