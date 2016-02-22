@@ -59,7 +59,9 @@ class TestCampbellScientificCS135ModeCL31(unittest.TestCase):
             test_ifile,
             test_ofile,
             '-log_level',
-            'debug'
+            'debug',
+            '-v',
+            'error'
         ])
 
         self.assertEqual(resp, 0, 'CS135 ')
