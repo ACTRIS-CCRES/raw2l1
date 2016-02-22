@@ -682,7 +682,7 @@ def read_data(list_files, conf, logger):
     # -------------------------------------------------------------------------
     try:
         conf['check_scale'] = to_bool(conf['check_scale'])
-    except ValueError:
+    except (ValueError, KeyError):
         conf['check_scale'] = False
 
     # Get range and vertical resolution from first file
