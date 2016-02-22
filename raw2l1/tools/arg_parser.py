@@ -64,6 +64,23 @@ def check_output_dir(output_file):
     return output_file
 
 
+def check_input_file_size(list_files, size_limit):
+    """
+    check size of input files. If files have a lower size they are rejected
+    """
+
+    err_msg = "WARNING -102 No Usable data in the input file '{}'"
+
+    final_list = []
+    for f in list_files:
+        if os.path.getsize(f) > size_limit:
+            final_list.append(f)
+        else:
+            print(err_msg.format(f))
+
+    return final_list
+
+
 def init_args_parser():
     """
     Configure the argument parser to read and do basic check on input
@@ -86,6 +103,13 @@ def init_args_parser():
     parser.add_argument('output_file',
                         type=check_output_dir,
                         help='Name of the output file (.nc extension)')
+
+    # Real time related argument
+    parser.add_argument('-file_min_size',
+                        required=False,
+                        type=int,
+                        default=0,
+                        help='Minimum size of input files in bytes. Files with lower size will be rejected')
 
     # logs related arguments
     parser.add_argument('-log',
@@ -120,13 +144,24 @@ def get_input_args(argv):
         print('\n', exc.argument)
         sys.exit(1)
 
+    # check input file
+    list_input = check_input_file_size(
+        [f for f in chain.from_iterable(parse_args.input_file)],
+        parse_args.file_min_size)
+
+    if len(list_input) == 0:
+        err_msg = "CRITICAL - 102 No Usable data in any file. Quitting raw2l1"
+        print(err_msg)
+        sys.exit(1)
+
     input_args = {}
     input_args['date'] = parse_args.date
     input_args['conf'] = parse_args.conf_file
-    input_args['input'] = [f for f in chain.from_iterable(parse_args.input_file)]
+    input_args['input'] = list_input
     input_args['output'] = parse_args.output_file
     input_args['log'] = parse_args.log
     input_args['log_level'] = parse_args.log_level
     input_args['verbose'] = parse_args.v
+    input_args['input_min_size'] = parse_args.file_min_size
 
     return input_args
