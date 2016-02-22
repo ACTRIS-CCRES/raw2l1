@@ -228,7 +228,7 @@ def create_netcdf_time_var(conf, data, nc_id, logger):
     nc_var[:] = nc.date2num(data['time'], units=units, calendar=calendar)
 
     logger.debug("adding attributes to time variable")
-    add_attr_to_var(nc_var, conf, 'time', logger)
+    add_attr_to_var(nc_var, data, conf, 'time', logger)
 
     return None
 
@@ -289,7 +289,7 @@ def add_data_to_var(nc_var, var_name, conf, data, logger):
     return None
 
 
-def add_attr_to_var(nc_var, conf, section, logger):
+def add_attr_to_var(nc_var, data, conf, section, logger):
     """
     add attribute to the variable of the netCDF file
     """
@@ -321,7 +321,18 @@ def add_attr_to_var(nc_var, conf, section, logger):
 
             # attributes we don't know if they are string
             if option not in common.STRING_ATTR:
-                value = convert_attribute(value, logger)
+
+                if KEY_READERDATA in value:
+                    try:
+                        data_key = get_data_key(value)
+                        value = data[data_key]
+                    except KeyError:
+                        mess = "key %s does not exist in read data. Exiting program"
+                        logger.critical(mess % data_key)
+                        sys.exit(1)
+
+                else:
+                    value = convert_attribute(value, logger)
 
             logger.debug("adding %s attribute %s" % (option, repr(value)))
             setattr(nc_var, option, value)
@@ -415,7 +426,7 @@ def create_netcdf_variables(conf, data, nc_id, logger):
             logger.error(msg)
 
         # add attributes to the variable
-        add_attr_to_var(nc_var, conf, section, logger)
+        add_attr_to_var(nc_var, data, conf, section, logger)
 
     return None
 
