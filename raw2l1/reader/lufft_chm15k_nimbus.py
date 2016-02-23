@@ -73,9 +73,12 @@ def get_soft_version(str_version):
     function to get the number of acquisition software version as a float
     """
 
-    version_nb = str_version.split(' ')[-1]
+    if type(str_version) == np.int16:
+        version_nb = float(str_version) / 1000.
+    else:
+        version_nb = float(str_version.split(' ')[-1])
 
-    return float(version_nb)
+    return version_nb
 
 
 def date_to_dt(date_num, date_units):
@@ -172,6 +175,10 @@ def init_data(vars_dim, conf, logger):
                             dtype=np.float32) * missing_float
     data['layer'] = np.ones((vars_dim['layer'],),
                             dtype=np.int16) * missing_int
+
+    # scalar variables
+    # -------------------------------------------------------------------------
+    data['cho'] = np.nan
 
     # Time dependent variables
     # -------------------------------------------------------------------------
@@ -305,10 +312,11 @@ def read_scalar_vars(data, nc_id, soft_vers, logger):
     data['latitude'] = nc_id.variables['latitude'][:]
     logger.debug('reading altitude')
     data['altitude'] = nc_id.variables['altitude'][:]
-    logger.debug('reading cloud height offset (cho)')
-    data['cho'] = nc_id.variables['cho'][:]
     logger.debug('reading azimuth')
     data['azimuth'] = nc_id.variables['azimuth'][:]
+    if soft_vers > 0.235:
+        logger.debug('reading cloud height offset (cho)')
+        data['cho'] = nc_id.variables['cho'][:]
     if soft_vers >= 0.7:
         logger.debug('reading scaling')
         data['scaling'] = nc_id.variables['scaling'][:]
@@ -360,9 +368,10 @@ def read_timedep_vars(data, nc_id, soft_vers, time_ind, time_size, logger):
     data['stddev'][ind_b:ind_e] = nc_id.variables['stddev'][:]
 
     # time dependant temperatures
-    logger.debug('reading temp_lom')
-    data['temp_lom'][ind_b:ind_e] = get_temp(nc_id.variables['temp_lom'],
-                                             logger)
+    if soft_vers > 0.235:
+        logger.debug('reading temp_lom')
+        data['temp_lom'][ind_b:ind_e] = get_temp(nc_id.variables['temp_lom'],
+                                                 logger)
     logger.debug('reading temp_int')
     data['temp_int'][ind_b:ind_e] = get_temp(nc_id.variables['temp_int'],
                                              logger)
@@ -391,10 +400,10 @@ def read_timedep_vars(data, nc_id, soft_vers, time_ind, time_size, logger):
     data['beta_raw'][ind_b:ind_e, :] = nc_id.variables['beta_raw'][:]
 
     # Read variables depending on software version
-    if soft_vers <= 0.559:
+    if 0.235 < soft_vers <= 0.559:
         logger.debug('reading laser_pulses as nn2')
         data['laser_pulses'][ind_b:ind_e] = nc_id.variables['nn2'][:]
-    else:
+    elif soft_vers > 0.559:
         logger.debug('reading laser_pulses')
         data['laser_pulses'][ind_b:ind_e] = nc_id.variables['laser_pulses'][:]
 
