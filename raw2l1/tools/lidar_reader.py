@@ -6,6 +6,7 @@ from __future__ import print_function, division, absolute_import
 import sys
 from importlib import import_module
 
+import datetime as dt
 import numpy as np
 
 from . import common
@@ -81,6 +82,31 @@ class RawDataReader(object):
             reader_conf[MISSING_FLOAT_KEY] = np.float(self.conf.get(READER_CONF, MISSING_FLOAT_KEY))
 
         return reader_conf
+
+    def timeliness_ok(self, max_age, logger):
+        """
+        check if data read are not too old or in the future
+        assume time variable is called time
+
+        return True if data timeliness is ok
+        """
+
+        ERR_MSG = '104 Data timeliness Error'
+
+        now = dt.datetime.now()
+
+        # check if data in the future
+        logger.debug("Checking if any data in the future")
+        if np.any(self.data['time'] > now):
+            logger.warning(ERR_MSG)
+            return False
+
+        tmp = now - self.data['time']
+        if np.any(tmp > max_age):
+            logger.warning(ERR_MSG)
+            return False
+
+        return True
 
     def read_data(self):
 

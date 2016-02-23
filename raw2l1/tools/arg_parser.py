@@ -110,6 +110,19 @@ def init_args_parser():
                         type=int,
                         default=0,
                         help='Minimum size of input files in bytes. Files with lower size will be rejected')
+    parser.add_argument('--check_timeliness',
+                        required=False,
+                        action='store_true',
+                        default=False,
+                        help='Check if data in input file have any date in the future or are too old. '
+                        "See '-file_max_age' option to define the maximum age of data. "
+                        "Option only for realtime processing")
+    parser.add_argument('-file_max_age',
+                        required=False,
+                        type=int,
+                        default=2,
+                        help='Maximum age of data in input files. Warning will be logged if older data are found. '
+                        'Default value is 2 hours. Option only for realtime processing')
 
     # logs related arguments
     parser.add_argument('-log',
@@ -162,6 +175,10 @@ def get_input_args(argv):
     input_args['log'] = parse_args.log
     input_args['log_level'] = parse_args.log_level
     input_args['verbose'] = parse_args.v
+
+    # real time
     input_args['input_min_size'] = parse_args.file_min_size
+    input_args['input_check_time'] = parse_args.check_timeliness
+    input_args['input_max_age'] = dt.timedelta(hours=parse_args.file_max_age)
 
     return input_args
