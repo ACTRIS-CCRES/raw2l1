@@ -77,6 +77,15 @@ def raw2l1(argv):
     lidar_data.read_data()
     logger.info("reading data successed")
 
+    # checking read data if needed
+    # -------------------------------------------------------------------------
+    if input_args['input_check_time']:
+        time_ok = lidar_data.timeliness_ok(input_args['input_max_age'], logger)
+
+        if not time_ok:
+            logger.critical("104 Data timeliness Error. Quitting raw2l1")
+            sys.exit(1)
+
     # write netCDF file
     # -------------------------------------------------------------------------
     logger.info("writing output file")
