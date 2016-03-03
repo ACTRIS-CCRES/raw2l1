@@ -1,3 +1,26 @@
+* v2.1.0
+    + change logger message to make them compatible with eprofile
+    + create conf file for eprofile. Compare to TOPROF version, only the global variable are changed
+    + allow user to chose the value of missing value in the reader configuration file. It needs to be taken into account in the data reader
+    + add options to check size and timeliness of input files and data
+    + add possibility to give several input files or pattern as argument in the command line
+    + a value from the reader can now be put in a netCDf attribute
+    + correct the bug making it impossible to have a different level of logs in the console and in the file
+    + correct minor bugs creating the logging of warnings
+    + vaisala reader
+        - add a modified version of the reader to process swiss airports files
+        - add decoding of instrument message. They are printed in the log during processing in any found
+        - if instruments is set in feets value in converted into meters automatically
+        - check scale value. data without a scale of 100% will be logged
+        - correct a bug making the the tilt angle a scalar value instead of a time depending variable
+    + chm15k-nimbus
+        - make the reader compatible with macehead data (They seem to have a really old version. Some variables are filled with missing values).
+        - instruments messages/alerts available in the file are logged with their meaning
+        - correct a bug concerning the reading of p_calc value
+    + RPG hatpro (experimental)
+        - add reader to convert data into TOPROF format. All HATPRO output files are not taken into account
+
+
 * v2.0.7
     + add CHANGELOG, LICENSE, requirements.txt files
     + update README
