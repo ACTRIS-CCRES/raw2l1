@@ -6,7 +6,14 @@ from __future__ import print_function, division, absolute_import
 import sys
 from importlib import import_module
 
+import datetime as dt
+import numpy as np
+
+from . import common
+
 READER_CONF = 'reader_conf'
+MISSING_FLOAT_KEY = 'missing_float'
+MISSING_INT_KEY = 'missing_int'
 
 
 class RawDataReader(object):
@@ -15,7 +22,7 @@ class RawDataReader(object):
         self.logger = logger
         self.data_reader = conf.get
         self.reader_mod = self.__load_reader__()
-        self.reader_conf = self.__get_reader_conf__()
+        self.reader_conf = self.__get_reader_conf__(logger)
         self.data = {}
 
     def __load_reader__(self):
@@ -27,9 +34,9 @@ class RawDataReader(object):
         try:
             reader_mod = import_module(
                 reader_dir + "." + self.conf.get('conf', 'reader'))
-        except ImportError, err:
-            self.logger.critical("unable to load lidar data reader")
-            self.logger.critical(err)
+        except ImportError as err:
+            msg = '107 unable to load lidar data reader '
+            self.logger.critical(msg, err)
             self.logger.critical("quitting raw2l1")
             sys.exit(1)
 
@@ -38,16 +45,16 @@ class RawDataReader(object):
         self.logger.info("loading read_data function from " + reader_name)
         try:
             reader_fcn = getattr(reader_mod, 'read_data')
-        except AttributeError, err:
-            self.logger.critical("unable find read_data function")
-            self.logger.critical(err)
+        except AttributeError as err:
+            msg = '107 unable find read_data function '
+            self.logger.critical(msg, err)
             self.logger.critical("quitting raw2l1")
             sys.exit(1)
         self.logger.info("loading read_data function : success")
 
         return reader_fcn
 
-    def __get_reader_conf__(self):
+    def __get_reader_conf__(self, logger):
         """
         Check is configuration contains a [reader_conf] section
         If one is found it is converted into a dictionnary
@@ -59,7 +66,47 @@ class RawDataReader(object):
             for key, value in self.conf.items(READER_CONF):
                 reader_conf[key] = value
 
+        # define missing values if they are not define in reader_conf section
+        if MISSING_INT_KEY not in reader_conf:
+            logger.info("""no {} option define in {} section.
+                        Using default value : {}""".format(MISSING_INT_KEY, READER_CONF, common.MISSING_INTEGER))
+            reader_conf[MISSING_INT_KEY] = common.MISSING_INTEGER
+        else:
+            reader_conf[MISSING_INT_KEY] = np.int(self.conf.get(READER_CONF, MISSING_INT_KEY))
+
+        if MISSING_FLOAT_KEY not in reader_conf:
+            logger.info("""no {} option define in {} section.
+                        Using default value : {}""".format(MISSING_INT_KEY, READER_CONF, common.MISSING_INTEGER))
+            reader_conf[MISSING_FLOAT_KEY] = common.MISSING_FLOAT
+        else:
+            reader_conf[MISSING_FLOAT_KEY] = np.float(self.conf.get(READER_CONF, MISSING_FLOAT_KEY))
+
         return reader_conf
+
+    def timeliness_ok(self, max_age, logger):
+        """
+        check if data read are not too old or in the future
+        assume time variable is called time
+
+        return True if data timeliness is ok
+        """
+
+        ERR_MSG = '104 Data timeliness Error'
+
+        now = dt.datetime.now()
+
+        # check if data in the future
+        logger.debug("Checking if any data in the future")
+        if np.any(self.data['time'] > now):
+            logger.warning(ERR_MSG)
+            return False
+
+        tmp = now - self.data['time']
+        if np.any(tmp > max_age):
+            logger.warning(ERR_MSG)
+            return False
+
+        return True
 
     def read_data(self):
 

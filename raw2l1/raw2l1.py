@@ -13,7 +13,7 @@ from tools.check_conf import check_conf
 from tools import create_netcdf as cnc
 
 __author__ = 'Marc-Antoine Drouin'
-__version__ = '2.0.7'
+__version__ = '2.1.0'
 
 NAME = 'raw2l1'
 
@@ -32,7 +32,7 @@ def welcome_msg():
     print(r"|_|_\_||_|!_/ \_!|___|___||_| ")
     print(r"")
     print(r"version: " + __version__)
-    print(r"SIRTA IPSL/CNRS/EP 2014-2015")
+    print(r"SIRTA IPSL/CNRS/EP 2014-2016")
     print(r"--------------------------------------------------")
     print(r"")
 
@@ -58,7 +58,7 @@ def raw2l1(argv):
     # reading configuration file
     # -------------------------------------------------------------------------
     logger.debug('reading configuration file ' + input_args['conf'].name)
-    setting = conf.init(input_args, logger)
+    setting = conf.init(input_args, __version__, logger)
     logger.info('reading configuration file: OK')
 
     # check configuration file
@@ -76,6 +76,15 @@ def raw2l1(argv):
     lidar_data = lr.RawDataReader(setting, logger)
     lidar_data.read_data()
     logger.info("reading data successed")
+
+    # checking read data if needed
+    # -------------------------------------------------------------------------
+    if input_args['input_check_time']:
+        time_ok = lidar_data.timeliness_ok(input_args['input_max_age'], logger)
+
+        if not time_ok:
+            logger.critical("104 Data timeliness Error. Quitting raw2l1")
+            sys.exit(1)
 
     # write netCDF file
     # -------------------------------------------------------------------------

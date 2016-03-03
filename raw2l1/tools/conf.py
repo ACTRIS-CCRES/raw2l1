@@ -7,7 +7,7 @@ import ConfigParser
 import logging
 
 
-def add(conf, input_args, logger):
+def add(conf, input_args, version, logger):
     """
     Allow to add parameters in conf section of conf object
     """
@@ -18,10 +18,13 @@ def add(conf, input_args, logger):
     for key, value in input_args.items():
         conf.set('conf', key, value)
 
+    # add version in conf
+    conf.set('conf', 'version', version)
+
     return conf
 
 
-def init(input_args, logger):
+def init(input_args, version, logger):
     """
     Load and check the INI configuration file
     """
@@ -34,7 +37,7 @@ def init(input_args, logger):
 
     # add user input arguments to conf object
     logger.debug("adding user entered options to configuration")
-    conf = add(conf, input_args, logger)
+    conf = add(conf, input_args, version, logger)
 
     # if in debug mode log all configuration
     if logger.getEffectiveLevel() == logging.DEBUG:

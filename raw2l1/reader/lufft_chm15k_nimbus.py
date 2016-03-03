@@ -12,14 +12,73 @@ BRAND = 'jenoptik'
 MODEL = 'CHM15K nimbus'
 
 
+ERR_HEX_MSG = [
+    {'hex': 0x00000001, 'level': 'ERROR', 'msg': 'Signal quality'},
+    {'hex': 0x00000002, 'level': 'ERROR', 'msg': 'Signal recording'},
+    {'hex': 0x00000004, 'level': 'ERROR', 'msg': 'Signal values null or void'},
+    {'hex': 0x00000008, 'level': 'ERROR', 'msg': 'Signal recording error channel 2 (not used for Nimbus)'},
+    {'hex': 0x00000010, 'level': 'ERROR', 'msg': 'Create new NetCDF file'},
+    {'hex': 0x00000020, 'level': 'ERROR', 'msg': 'Write / add to NetCDF'},
+    {'hex': 0x00000040, 'level': 'ERROR', 'msg': 'RS485 telegram can not be generated, transmitted'},
+    {'hex': 0x00000080, 'level': 'ERROR', 'msg': 'Mount SD card faile (test: write to raw buffer)'},
+    {'hex': 0x00000100, 'level': 'ERROR', 'msg': 'Detector high voltage control failed / cable defect or absent'},
+    {'hex': 0x00000200, 'level': 'ERROR', 'msg': 'Inner housing temperature out of range'},
+    {'hex': 0x00000400, 'level': 'ERROR', 'msg': 'Laser optical unit temperature error'},
+    {'hex': 0x00000800, 'level': 'ERROR', 'msg': 'Laser trigger not detected'},
+    {'hex': 0x00001000, 'level': 'WARNING', 'msg': 'Laser driver board temperature'},
+    {'hex': 0x00002000, 'level': 'ERROR', 'msg': 'Laser interlock'},
+    {'hex': 0x00004000, 'level': 'ERROR', 'msg': 'Laser head temperature'},
+    {'hex': 0x00008000, 'level': 'WARNING', 'msg': 'Replace Laser - ageing'},
+    {'hex': 0x00010000, 'level': 'WARNING', 'msg': 'Signal quality – low signal/ noise level'},
+    {'hex': 0x00020000, 'level': 'WARNING', 'msg': 'Windows contaminated'},
+    {'hex': 0x00040000, 'level': 'WARNING', 'msg': 'Signal processing'},
+    {'hex': 0x00080000, 'level': 'STATUS', 'msg': 'not used'},
+    {'hex': 0x00100000, 'level': 'WARNING', 'msg': 'File system, fsck repaired bad sectors'},
+    {'hex': 0x00200000, 'level': 'WARNING', 'msg': 'RS485 baud rate/ transfer mode reset'},
+    {'hex': 0x00400000, 'level': 'WARNING', 'msg': 'AFD'},
+    {'hex': 0x00800000, 'level': 'WARNING', 'msg': 'configuration problem'},
+    {'hex': 0x01000000, 'level': 'WARNING', 'msg': 'Laser optical unit temperature'},
+    {'hex': 0x02000000, 'level': 'WARNING', 'msg': 'External temperature'},
+    {'hex': 0x04000000, 'level': 'WARNING', 'msg': 'Detector temperature out of range'},
+    {'hex': 0x08000000, 'level': 'WARNING', 'msg': 'General laser issue'},
+    {'hex': 0x10000000, 'level': 'STATUS', 'msg': 'NOL > 3 and standard telegram selected'},
+    {'hex': 0x20000000, 'level': 'STATUS', 'msg': 'Power save mode on'},
+    {'hex': 0x40000000, 'level': 'STATUS', 'msg': 'Standby mode on'},
+]
+
+
+def get_error_index(err_msg, logger):
+    """
+    based on error error message read in file. return all indexes of related msg and level
+    """
+
+    err_ind = []
+    err_int = err_msg
+    for i, d in enumerate(ERR_HEX_MSG):
+        if bool(err_int & d['hex']):
+            err_ind.append(i)
+
+            if ERR_HEX_MSG[i]['level'] == 'STATUS':
+                logger.info(ERR_HEX_MSG[i]['msg'])
+            elif ERR_HEX_MSG[i]['level'] == 'WARNING':
+                logger.warning(ERR_HEX_MSG[i]['msg'])
+            elif ERR_HEX_MSG[i]['level'] == 'ALARM':
+                logger.error(ERR_HEX_MSG[i]['msg'])
+
+    return err_ind
+
+
 def get_soft_version(str_version):
     """
     function to get the number of acquisition software version as a float
     """
 
-    version_nb = str_version.split(' ')[-1]
+    if type(str_version) == np.int16:
+        version_nb = float(str_version) / 1000.
+    else:
+        version_nb = float(str_version.split(' ')[-1])
 
-    return float(version_nb)
+    return version_nb
 
 
 def date_to_dt(date_num, date_units):
@@ -50,7 +109,7 @@ def get_vars_dim(list_files, logger):
             nc_id = nc.Dataset(ifile, 'r')
             f_count += 1
         except:
-            logger.error("error trying to open " + ifile)
+            logger.error("109 error trying to open '{}'".format(ifile))
             continue
 
         if f_count == 1:
@@ -92,11 +151,14 @@ def get_temp(nc_obj, logger):
     return tmp
 
 
-def init_data(vars_dim, logger):
+def init_data(vars_dim, conf, logger):
     """
     based on the analysing of the file to read initialize the np.array of
     the output data dictionnary
     """
+
+    missing_int = conf['missing_int']
+    missing_float = conf['missing_float']
 
     data = {}
 
@@ -109,57 +171,87 @@ def init_data(vars_dim, logger):
     # dimensions of the output netCDf file
     # -------------------------------------------------------------------------
     data['time'] = np.empty((vars_dim['time'],), dtype=np.dtype(dt.datetime))
-    data['range'] = np.empty((vars_dim['range'],), dtype=np.float32)
-    data['layer'] = np.empty((vars_dim['layer'],), dtype=np.int16)
+    data['range'] = np.ones((vars_dim['range'],),
+                            dtype=np.float32) * missing_float
+    data['layer'] = np.ones((vars_dim['layer'],),
+                            dtype=np.int16) * missing_int
+
+    # scalar variables
+    # -------------------------------------------------------------------------
+    data['cho'] = np.nan
 
     # Time dependent variables
     # -------------------------------------------------------------------------
-    data['vor'] = np.empty((vars_dim['time'],), dtype=np.int16)
-    data['voe'] = np.empty((vars_dim['time'],), dtype=np.int16)
-    data['tcc'] = np.empty((vars_dim['time'],), dtype=np.int8)
-    data['stddev'] = np.empty((vars_dim['time'],), dtype=np.float32)
-    data['state_optics'] = np.empty((vars_dim['time'],), dtype=np.int8)
-    data['state_laser'] = np.empty((vars_dim['time'],), dtype=np.int8)
-    data['state_detector'] = np.empty((vars_dim['time'],), dtype=np.int8)
-    data['sci'] = np.empty((vars_dim['time'],), dtype=np.int8)
-    data['nn1'] = np.empty((vars_dim['time'],), dtype=np.int16)
-    data['nn2'] = np.empty((vars_dim['time'],), dtype=np.int16)
-    data['nn3'] = np.empty((vars_dim['time'],), dtype=np.int16)
-    data['mxd'] = np.empty((vars_dim['time'],), dtype=np.int16)
-    data['life_time'] = np.empty((vars_dim['time'],), dtype=np.int32)
-    data['error_ext'] = np.empty((vars_dim['time'],), dtype=np.int32)
-    data['temp_lom'] = np.empty((vars_dim['time'],), dtype=np.int16)
-    data['temp_int'] = np.empty((vars_dim['time'],), dtype=np.int16)
-    data['temp_ext'] = np.empty((vars_dim['time'],), dtype=np.int16)
-    data['temp_det'] = np.empty((vars_dim['time'],), dtype=np.int16)
-    data['laser_pulses'] = np.empty((vars_dim['time'],), dtype=np.int32)
-    data['error_ext'] = np.empty((vars_dim['time'],), dtype=np.int32)
-    data['bcc'] = np.empty((vars_dim['time'],), dtype=np.int8)
-    data['bckgrd_rcs_0'] = np.empty((vars_dim['time'],), dtype=np.float32)
-    data['average_time'] = np.empty((vars_dim['time'],), dtype=np.int32)
-    data['p_calc'] = np.empty((vars_dim['time'],), dtype=np.int16)
+    data['vor'] = np.ones((vars_dim['time'],),
+                          dtype=np.int16) * missing_int
+    data['voe'] = np.ones((vars_dim['time'],),
+                          dtype=np.int16) * missing_int
+    data['tcc'] = np.ones((vars_dim['time'],),
+                          dtype=np.int8) * missing_int
+    data['stddev'] = np.ones((vars_dim['time'],),
+                             dtype=np.float32) * missing_float
+    data['state_optics'] = np.ones((vars_dim['time'],),
+                                   dtype=np.int8) * missing_int
+    data['state_laser'] = np.ones((vars_dim['time'],),
+                                  dtype=np.int8) * missing_int
+    data['state_detector'] = np.ones((vars_dim['time'],),
+                                     dtype=np.int8) * missing_int
+    data['sci'] = np.ones((vars_dim['time'],),
+                          dtype=np.int8) * missing_int
+    data['nn1'] = np.ones((vars_dim['time'],),
+                          dtype=np.int16) * missing_int
+    data['nn2'] = np.ones((vars_dim['time'],),
+                          dtype=np.int16) * missing_int
+    data['nn3'] = np.ones((vars_dim['time'],),
+                          dtype=np.int16) * missing_int
+    data['mxd'] = np.ones((vars_dim['time'],),
+                          dtype=np.int16) * missing_int
+    data['life_time'] = np.ones((vars_dim['time'],),
+                                dtype=np.int32) * missing_int
+    data['error_ext'] = np.ones((vars_dim['time'],),
+                                dtype=np.int32) * missing_int
+    data['temp_lom'] = np.ones((vars_dim['time'],),
+                               dtype=np.int16) * missing_int
+    data['temp_int'] = np.ones((vars_dim['time'],),
+                               dtype=np.int16) * missing_int
+    data['temp_ext'] = np.ones((vars_dim['time'],),
+                               dtype=np.int16) * missing_int
+    data['temp_det'] = np.ones((vars_dim['time'],),
+                               dtype=np.int16) * missing_int
+    data['laser_pulses'] = np.ones((vars_dim['time'],),
+                                   dtype=np.int32) * missing_int
+    data['error_ext'] = np.ones((vars_dim['time'],),
+                                dtype=np.int32) * missing_int
+    data['bcc'] = np.ones((vars_dim['time'],),
+                          dtype=np.int8) * missing_int
+    data['bckgrd_rcs_0'] = np.ones((vars_dim['time'],),
+                                   dtype=np.float32) * missing_float
+    data['average_time'] = np.ones((vars_dim['time'],),
+                                   dtype=np.int32) * missing_int
+    data['p_calc'] = np.ones((vars_dim['time'],),
+                             dtype=np.float32) * missing_int
 
     # Time, layer dependent variables
     # -------------------------------------------------------------------------
-    data['pbs'] = np.empty((vars_dim['time'], vars_dim['layer']),
-                           dtype=np.int8)
-    data['pbl'] = np.empty((vars_dim['time'], vars_dim['layer']),
-                           dtype=np.int16)
-    data['cdp'] = np.empty((vars_dim['time'], vars_dim['layer']),
-                           dtype=np.int16)
-    data['cde'] = np.empty((vars_dim['time'], vars_dim['layer']),
-                           dtype=np.int16)
-    data['cbh'] = np.empty((vars_dim['time'], vars_dim['layer']),
-                           dtype=np.int16)
-    data['cbe'] = np.empty((vars_dim['time'], vars_dim['layer']),
-                           dtype=np.int16)
+    data['pbs'] = np.ones((vars_dim['time'], vars_dim['layer']),
+                          dtype=np.int8) * missing_int
+    data['pbl'] = np.ones((vars_dim['time'], vars_dim['layer']),
+                          dtype=np.int16) * missing_int
+    data['cdp'] = np.ones((vars_dim['time'], vars_dim['layer']),
+                          dtype=np.int16) * missing_int
+    data['cde'] = np.ones((vars_dim['time'], vars_dim['layer']),
+                          dtype=np.int16) * missing_int
+    data['cbh'] = np.ones((vars_dim['time'], vars_dim['layer']),
+                          dtype=np.int16) * missing_int
+    data['cbe'] = np.ones((vars_dim['time'], vars_dim['layer']),
+                          dtype=np.int16) * missing_int
 
     # Time, range dependent variables
     # -------------------------------------------------------------------------
-    data['beta_raw'] = np.empty((vars_dim['time'], vars_dim['range']),
-                                dtype=np.float32)
-    data['rcs_0'] = np.empty((vars_dim['time'], vars_dim['range']),
-                             dtype=np.float32)
+    data['beta_raw'] = np.ones((vars_dim['time'], vars_dim['range']),
+                               dtype=np.float32) * missing_float
+    data['rcs_0'] = np.ones((vars_dim['time'], vars_dim['range']),
+                            dtype=np.float32) * missing_float
 
     return data
 
@@ -220,10 +312,11 @@ def read_scalar_vars(data, nc_id, soft_vers, logger):
     data['latitude'] = nc_id.variables['latitude'][:]
     logger.debug('reading altitude')
     data['altitude'] = nc_id.variables['altitude'][:]
-    logger.debug('reading cloud height offset (cho)')
-    data['cho'] = nc_id.variables['cho'][:]
     logger.debug('reading azimuth')
     data['azimuth'] = nc_id.variables['azimuth'][:]
+    if soft_vers > 0.235:
+        logger.debug('reading cloud height offset (cho)')
+        data['cho'] = nc_id.variables['cho'][:]
     if soft_vers >= 0.7:
         logger.debug('reading scaling')
         data['scaling'] = nc_id.variables['scaling'][:]
@@ -275,9 +368,10 @@ def read_timedep_vars(data, nc_id, soft_vers, time_ind, time_size, logger):
     data['stddev'][ind_b:ind_e] = nc_id.variables['stddev'][:]
 
     # time dependant temperatures
-    logger.debug('reading temp_lom')
-    data['temp_lom'][ind_b:ind_e] = get_temp(nc_id.variables['temp_lom'],
-                                             logger)
+    if soft_vers > 0.235:
+        logger.debug('reading temp_lom')
+        data['temp_lom'][ind_b:ind_e] = get_temp(nc_id.variables['temp_lom'],
+                                                 logger)
     logger.debug('reading temp_int')
     data['temp_int'][ind_b:ind_e] = get_temp(nc_id.variables['temp_int'],
                                              logger)
@@ -306,10 +400,10 @@ def read_timedep_vars(data, nc_id, soft_vers, time_ind, time_size, logger):
     data['beta_raw'][ind_b:ind_e, :] = nc_id.variables['beta_raw'][:]
 
     # Read variables depending on software version
-    if soft_vers <= 0.559:
+    if 0.235 < soft_vers <= 0.559:
         logger.debug('reading laser_pulses as nn2')
         data['laser_pulses'][ind_b:ind_e] = nc_id.variables['nn2'][:]
-    else:
+    elif soft_vers > 0.559:
         logger.debug('reading laser_pulses')
         data['laser_pulses'][ind_b:ind_e] = nc_id.variables['laser_pulses'][:]
 
@@ -326,7 +420,7 @@ def calc_pr2(data, soft_vers, logger):
     """
 
     # Pr²
-    logger.debug('calculing Pr² using:')
+    logger.debug('calculing Pr2 using:')
     if soft_vers < 0.7:
         logger.debug('P = (beta_raw*stddev+base)*laser_pulses')
         p_raw = (
@@ -338,10 +432,9 @@ def calc_pr2(data, soft_vers, logger):
                      "*laser_pulses*range_scale")
         # Warning: For this type of file we do not correct the overlap function
         # as it is not available in the netCDf file
-        p_raw = ((
-            np.transpose(data['beta_raw'] / np.square(data['range']))
-            * data['p_calc'] * data['scaling']
-            + data['bckgrd_rcs_0']) * data['laser_pulses'])
+        p_raw = ((np.transpose(data['beta_raw'] / np.square(data['range'])) *
+                 data['p_calc'] * data['scaling'] +
+                 data['bckgrd_rcs_0']) * data['laser_pulses'])
 
     data['rcs_0'] = p_raw.T * np.square(data['range'])
 
@@ -363,7 +456,7 @@ def read_data(list_files, conf, logger):
     for dim, size in vars_dim.items():
         logger.debug(dim + ': ' + str(size))
     logger.info("initializing data output array")
-    data = init_data(vars_dim, logger)
+    data = init_data(vars_dim, conf, logger)
 
     nb_files = 0
     nb_files_read = 0
@@ -376,7 +469,7 @@ def read_data(list_files, conf, logger):
             raw_data = nc.Dataset(ifile, 'r')
             nb_files_read += 1
         except:
-            logger.error('unable to load ' + ifile + ' trying next one')
+            logger.error('109 unable to load ' + ifile + ' trying next one')
 
         nb_files += 1
         logger.debug('reading %02d: ' % (nb_files) + ifile)
@@ -417,13 +510,18 @@ def read_data(list_files, conf, logger):
 
     logger.info("reading of files: done")
 
-    # calculate Pr²
+    # calculate Pr2
     # ---------------------------------------------------------------------
-    logger.info("calculating Pr²")
+    logger.info("calculating Pr2")
     data = calc_pr2(data, soft_vers, logger)
 
+    # print messages status read in the file for each time step
+    for err_msg in data['error_ext'][:]:
+        get_error_index(err_msg, logger)
+
     if nb_files_read == 0:
-        logger.critical('No file could be read')
+        for f in list_files:
+            logger.critical("109 Tried to read '{}'. No file could be read".format(f))
         sys.exit(1)
     else:
         return data

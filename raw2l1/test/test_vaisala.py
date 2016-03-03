@@ -42,7 +42,7 @@ class TestVaisalaCL31(unittest.TestCase):
 class TestVaisalaMsg2(unittest.TestCase):
 
     IN_DIR = TEST_IN_DIR + 'vaisala_cl' + os.sep
-    conf_file = CONF_DIR + 'conf_vaisala_cl31.ini'
+    conf_file = CONF_DIR + 'conf_vaisala_cl31_toprof_netcdf4.ini'
 
     def test_cl_msg2(self):
 
@@ -51,6 +51,26 @@ class TestVaisalaMsg2(unittest.TestCase):
             self.IN_DIR + 'vaisala_cl_msg2.txt'
         )
         test_ofile = TEST_OUT_DIR + 'test_cl31_20150617_000000.nc'
+
+        resp = subprocess.check_call([
+            MAIN_DIR + PRGM,
+            date,
+            self.conf_file,
+            test_ifile,
+            test_ofile,
+            '-log_level',
+            'debug'
+        ])
+
+        self.assertEqual(resp, 0, 'CL31 one hour file')
+
+    def test_cl_scale_error(self):
+
+        date = '20150617'
+        test_ifile = (
+            self.IN_DIR + 'vaisala_cl_scale_error.txt'
+        )
+        test_ofile = TEST_OUT_DIR + 'test_cl31-scale-error_20150617_000000.nc'
 
         resp = subprocess.check_call([
             MAIN_DIR + PRGM,
@@ -89,6 +109,35 @@ class TestVaisalaCL51(unittest.TestCase):
         ])
 
         self.assertEqual(resp, 0, 'CL51 one hour file')
+
+
+class TestVaisalaSwissAirport(unittest.TestCase):
+
+    IN_DIR = TEST_IN_DIR + 'vaisala_cl' + os.sep
+    conf_file = IN_DIR + 'conf_vaisala_cl31-swiss-airport_toprof_netcdf4.ini'
+
+    def test_2_files(self):
+
+        date = '20150819'
+        test_ifile = (
+            self.IN_DIR + '20150819*.log'
+        )
+        test_ofile = TEST_OUT_DIR + 'test_cl-swiss-airport_20150819.nc'
+
+        resp = subprocess.check_call([
+            MAIN_DIR + PRGM,
+            date,
+            self.conf_file,
+            test_ifile,
+            test_ofile,
+            '-log_level',
+            'debug',
+            '-v',
+            'debug'
+        ])
+
+        self.assertEqual(resp, 0, 'CL swiss airport')
+
 
 if __name__ == '__main__':
     unittest.main()
