@@ -27,18 +27,26 @@ python raw2l1.py -h
 - to convert a LUFFT CHM15k file 
 
 ```
-python raw2l1 conf/conf_lufft_chm15k-nimbus_toprof_netcdf4.ini test/input/Jenoptik_chm15k/20150427_SIRTA_CHM150101_000.nc test/output/test_lufft_sirta.nc
+python '20150427' raw2l1 conf/conf_lufft_chm15k-nimbus_toprof_netcdf4.ini test/input/Jenoptik_chm15k/20150427_SIRTA_CHM150101_000.nc test/output/test_lufft_sirta.nc
 ```
 
 - to convert a VAISALA CL31 or CL51 file
 
 ```
- python raw2l1 conf/conf_vaisala_cl31_toprof.ini 'test/input/vaisala_cl31/cl31_0a_z1R5mF3s_v01_20141030_*.asc' test/output/test_cl31.nc
+ python raw2l1 '20141030' conf/conf_vaisala_cl31_toprof.ini 'test/input/vaisala_cl31/cl31_0a_z1R5mF3s_v01_20141030_*.asc' test/output/test_cl31.nc
 ```
 
 ```
-python raw2l1 conf/conf_vaisala_cl51_toprof_netcdf4.ini 'test/input/vaisala_cl51/h4090100.dat' test/output/test_cl51.nc
+python raw2l1 '20140901' conf/conf_vaisala_cl51_toprof_netcdf4.ini 'test/input/vaisala_cl51/h4090100.dat' test/output/test_cl51.nc
 ```
+
+# realtime production
+
+Options are available for the use of raw2l1 in near-realtime processing
+
+- ```-file_min_size```: allow to define the minimum size of input file in bytes. Files with a smaller size will be rejected.
+- ```-file_max_age```: allow to define the maximum age of data in a file in hours
+- ```--check_timeliness```: check if the data read are not to old or in the future. By default it checks thats data have a maximum age of 2 hours. This value can be changed with option ```-file_max_age```
 
 # run the test suite
 
@@ -62,4 +70,4 @@ M.-A Drouin based on the first version of Y. Morille
 
 # Copyright
 
-2014-2015 CNRS/Ecole polytechnique
+2014-2016 CNRS/Ecole polytechnique
