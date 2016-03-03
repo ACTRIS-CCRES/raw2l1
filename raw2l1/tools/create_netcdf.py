@@ -138,9 +138,8 @@ def create_netcdf_global(conf, nc_id, data, logger):
             pass
         else:
             if attr == 'history':
-                value = ('created the ' +
-                         dt.datetime.today().strftime('%Y-%m-%d') +
-                         ' ' + value)
+                value = dt.datetime.today().strftime('%Y%m%d')
+                value += ' raw2l1 ' + conf.get('conf', 'version')
 
             setattr(nc_id, attr, value)
             logger.debug("adding %s" % attr)

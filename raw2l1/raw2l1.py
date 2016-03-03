@@ -58,7 +58,7 @@ def raw2l1(argv):
     # reading configuration file
     # -------------------------------------------------------------------------
     logger.debug('reading configuration file ' + input_args['conf'].name)
-    setting = conf.init(input_args, logger)
+    setting = conf.init(input_args, __version__, logger)
     logger.info('reading configuration file: OK')
 
     # check configuration file
