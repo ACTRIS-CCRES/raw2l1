@@ -92,3 +92,6 @@ class TestCampbellScientificCS135ModeCL31(unittest.TestCase):
 #         ])
 
 #         self.assertEqual(resp, 0, 'CS135 ')
+
+if __name__ == '__main__':
+    unittest.main()
