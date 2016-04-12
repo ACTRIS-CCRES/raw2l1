@@ -1,3 +1,9 @@
+* v2.1.3
+    + correct minors bugs in vaisala reader
+        - problem reading CBH when full obscuration is determine
+        - problem reading files when message type change in a file
+        - problem reading file when an error occure during conversion of hexadecimal string to integers
+
 * v2.1.0
     + change logger message to make them compatible with eprofile
     + create conf file for eprofile. Compare to TOPROF version, only the global variable are changed
