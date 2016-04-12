@@ -643,6 +643,14 @@ def read_vars(lines, data, conf, time_ind, f_name, logger):
         msg = lines[i_line:i_line + msg_n_lines]
         logger.debug("processing data message %d" % (time_ind + 1))
 
+        # check if there is no change in message number
+        cur_msg_type = get_msg_type(get_conf_msg(msg[1], logger), f_name, logger)
+        if cur_msg_type != data['msg_type']:
+            i_line += 1
+            time_ind += 1
+            logger.error("100 Incorrect Header Information in 'f_name'. Message type change in file")
+            continue
+
         # read time only dependent variables
         logger.debug("reading time only dependent variables")
         data = read_time_dep_vars(data, time_ind, msg,
@@ -713,5 +721,7 @@ def read_data(list_files, conf, logger):
     # Final calculation on whole profiles
     # -------------------------------------------------------------------------
     data['pr2'] = data['rcs_0']*RCS_FACTOR*data['range']**2
+
+    print(data['time'])
 
     return data
