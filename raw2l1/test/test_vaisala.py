@@ -166,5 +166,27 @@ class TestVaisalaBugSIRTA(unittest.TestCase):
 
         self.assertEqual(resp, 0, 'CL SIRTA bug message type')
 
+    def test_20150521(self):
+
+        date = '20150911'
+        test_ifile = (
+            self.IN_DIR + 'cl31_0a_z1R5mF3s_v02_20150521_*.asc'
+        )
+        test_ofile = TEST_OUT_DIR + 'test_cl-sirta_20150521.nc'
+
+        resp = subprocess.check_call([
+            MAIN_DIR + PRGM,
+            date,
+            self.conf_file,
+            test_ifile,
+            test_ofile,
+            '-log_level',
+            'debug',
+            '-v',
+            'debug'
+        ])
+
+        self.assertEqual(resp, 0, 'CL SIRTA bug message type')
+
 if __name__ == '__main__':
     unittest.main()

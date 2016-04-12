@@ -541,11 +541,11 @@ def read_cbh_msg(data, ind, msg, logger):
     coeff = get_conversion_coeff(data['are_unit_meter'][ind])
 
     # number of CBH depends on nlayers value
-    if 1 <= nlayers <= 4:
+    if 1 <= nlayers < 4:
         data['cbh'][ind, 0] = np.float(elts[1]) * coeff
-    if 2 <= nlayers <= 4:
+    if 2 <= nlayers < 4:
         data['cbh'][ind, 1] = np.float(elts[2]) * coeff
-    if 3 <= nlayers <= 4:
+    if 3 <= nlayers < 4:
         data['cbh'][ind, 2] = np.float(elts[3]) * coeff
 
     return data
@@ -640,6 +640,8 @@ def read_vars(lines, data, conf, time_ind, f_name, logger):
             i_line += 1
             continue
 
+        logger.debug('timestamp: {:%Y%m%d %H:%M:%S}'.format(data['time'][time_ind]))
+
         msg = lines[i_line:i_line + msg_n_lines]
         logger.debug("processing data message %d" % (time_ind + 1))
 
@@ -721,7 +723,5 @@ def read_data(list_files, conf, logger):
     # Final calculation on whole profiles
     # -------------------------------------------------------------------------
     data['pr2'] = data['rcs_0']*RCS_FACTOR*data['range']**2
-
-    print(data['time'])
 
     return data
