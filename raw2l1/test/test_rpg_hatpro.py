@@ -20,7 +20,7 @@ class TestRunHatPro(unittest.TestCase):
     def test_rpg_hatpro_bl_ta_toprof(self):
 
         date = '20150930'
-        test_ifile = self.IN_DIR + 'hatpro_0a_z1Imwrad-TPB_v01_20150930_000020_1436.nc'
+        test_ifile = self.IN_DIR + 'hatpro_0a_z1Imwrad-CMP-TPC_v01_20160427_000057_479.nc'
         test_ofile = TEST_OUT_DIR + 'sups_sir_mwrBL00_l2_ta_v01_201509300000020.nc'
         test_cfile = CONF_DIR + 'conf_rpg_hatpro_bl00-l2-ta_toprof_netcdf4.ini'
 
@@ -39,7 +39,7 @@ class TestRunHatPro(unittest.TestCase):
     def test_rpg_hatpro_bl_ta_toprof_multi_files(self):
 
         date = '20150901'
-        test_ifile = self.IN_DIR + 'hatpro_0a_z1Imwrad-TPB_v01_20150901_*.nc'
+        test_ifile = self.IN_DIR + 'hatpro_0a_z1Imwrad-CMP-TPC_v01_20160427_*.nc'
         test_ofile = TEST_OUT_DIR + 'sups_sir_mwrBL00_l2_ta_v01_20150901000412.nc'
         test_cfile = CONF_DIR + 'conf_rpg_hatpro_bl00-l2-ta_toprof_netcdf4.ini'
 
