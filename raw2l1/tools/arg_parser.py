@@ -36,8 +36,6 @@ def check_input_files(input_files):
     check if the input files exist and return a list of the input files found
     """
 
-    print(input_files)
-
     list_files = glob.glob(input_files)
 
     if len(list_files) == 0:
@@ -104,6 +102,14 @@ def init_args_parser():
                         type=check_output_dir,
                         help='Name of the output file (.nc extension)')
 
+    # additional input files
+    parser.add_argument('-anc',
+                        '--ancillary',
+                        type=check_input_files,
+                        nargs='*',
+                        dest='ancillary',
+                        help='Name or pattern of the ancillary file(s) needed to do the conversion')
+
     # Real time related argument
     parser.add_argument('-file_min_size',
                         required=False,
@@ -153,6 +159,7 @@ def get_input_args(argv):
 
     try:
         parse_args = parser.parse_args(argv)
+        print(parse_args.ancillary)
     except argparse.ArgumentError, exc:
         print('\n', exc.argument)
         sys.exit(1)
@@ -160,6 +167,11 @@ def get_input_args(argv):
     # check input file
     list_input = check_input_file_size(
         [f for f in chain.from_iterable(parse_args.input_file)],
+        parse_args.file_min_size)
+
+    # check ancillary files
+    list_anc = check_input_file_size(
+        [f for f in chain.from_iterable(parse_args.ancillary)],
         parse_args.file_min_size)
 
     if len(list_input) == 0:
@@ -172,6 +184,7 @@ def get_input_args(argv):
     input_args['conf'] = parse_args.conf_file
     input_args['input'] = list_input
     input_args['output'] = parse_args.output_file
+    input_args['ancillary'] = list_anc
     input_args['log'] = parse_args.log
     input_args['log_level'] = parse_args.log_level
     input_args['verbose'] = parse_args.v
