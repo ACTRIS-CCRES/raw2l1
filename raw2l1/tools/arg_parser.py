@@ -169,15 +169,18 @@ def get_input_args(argv):
         [f for f in chain.from_iterable(parse_args.input_file)],
         parse_args.file_min_size)
 
-    # check ancillary files
-    list_anc = check_input_file_size(
-        [f for f in chain.from_iterable(parse_args.ancillary)],
-        parse_args.file_min_size)
-
     if len(list_input) == 0:
         err_msg = "CRITICAL - 102 No Usable data in any file. Quitting raw2l1"
         print(err_msg)
         sys.exit(1)
+
+    # check ancillary files
+    if parse_args.ancillary is None:
+        list_anc = []
+    else:
+        list_anc = check_input_file_size(
+            [f for f in chain.from_iterable(parse_args.ancillary)],
+            parse_args.file_min_size)
 
     input_args = {}
     input_args['date'] = parse_args.date
