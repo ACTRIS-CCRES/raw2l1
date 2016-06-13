@@ -350,10 +350,19 @@ def read_timedep_vars(data, nc_id, soft_vers, time_ind, time_size, logger):
     data['sci'][ind_b:ind_e] = nc_id.variables['sci'][:]
     logger.debug('reading nn1')
     data['nn1'][ind_b:ind_e] = nc_id.variables['nn1'][:]
+
     logger.debug('reading nn2')
-    data['nn2'][ind_b:ind_e] = nc_id.variables['nn1'][:]
+    try:
+        data['nn2'][ind_b:ind_e] = nc_id.variables['nn2'][:]
+    except KeyError:
+        logger.warning("nn2 variable doesn't exist")
+
     logger.debug('reading nn3')
-    data['nn3'][ind_b:ind_e] = nc_id.variables['nn1'][:]
+    try:
+        data['nn3'][ind_b:ind_e] = nc_id.variables['nn3'][:]
+    except KeyError:
+        logger.warning("nn3 variable doesn't exist")
+
     logger.debug('reading maximum detection height (mxd)')
     data['mxd'][ind_b:ind_e] = nc_id.variables['mxd'][:]
     logger.debug('reading life_time')
