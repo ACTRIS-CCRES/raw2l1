@@ -3,10 +3,21 @@
 
 import unittest
 import ConfigParser
-import numpy as np
+import datetime as dt
 import logging
 
+import numpy as np
+
 import tools.lidar_reader as lr
+
+
+def add_arg_options(conf):
+    """ add arguments needed to check loading of configuration file"""
+
+    conf.set('conf', 'date', dt.datetime(2016, 6, 10))
+    conf.set('conf', 'ancillary', [])
+
+    return conf
 
 
 class TestLidarReader(unittest.TestCase):
@@ -18,6 +29,7 @@ class TestLidarReader(unittest.TestCase):
         conf = ConfigParser.RawConfigParser()
         conf.optionxform = str
         conf.read('test/conf/readerconf_no_missing.ini')
+        conf = add_arg_options(conf)
 
         reader = lr.RawDataReader(conf, logger)
 
@@ -32,6 +44,7 @@ class TestLidarReader(unittest.TestCase):
         conf = ConfigParser.RawConfigParser()
         conf.optionxform = str
         conf.read('test/conf/readerconf_no_missing_int.ini')
+        conf = add_arg_options(conf)
 
         reader = lr.RawDataReader(conf, logger)
 
@@ -46,6 +59,7 @@ class TestLidarReader(unittest.TestCase):
         conf = ConfigParser.RawConfigParser()
         conf.optionxform = str
         conf.read('test/conf/readerconf_no_missing_float.ini')
+        conf = add_arg_options(conf)
 
         reader = lr.RawDataReader(conf, logger)
 
@@ -60,6 +74,7 @@ class TestLidarReader(unittest.TestCase):
         conf = ConfigParser.RawConfigParser()
         conf.optionxform = str
         conf.read('test/conf/readerconf_missing_float_nan.ini')
+        conf = add_arg_options(conf)
 
         reader = lr.RawDataReader(conf, logger)
 

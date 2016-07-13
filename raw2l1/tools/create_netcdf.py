@@ -321,7 +321,7 @@ def add_attr_to_var(nc_var, data, conf, section, logger):
             # attributes we don't know if they are string
             if option not in common.STRING_ATTR:
 
-                if KEY_READERDATA in value:
+                if type(value) is str and KEY_READERDATA in value:
                     try:
                         data_key = get_data_key(value)
                         value = data[data_key]

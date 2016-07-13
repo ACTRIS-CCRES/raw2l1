@@ -6,23 +6,23 @@ import subprocess
 import os
 
 MAIN_DIR = os.path.dirname(os.path.dirname(__file__)) + os.sep
-CONF_DIR = MAIN_DIR + 'conf' + os.sep
-TEST_DIR = MAIN_DIR + 'test' + os.sep
-TEST_IN_DIR = TEST_DIR + os.sep + 'input' + os.sep
-TEST_OUT_DIR = TEST_DIR + os.sep + 'output' + os.sep
+CONF_DIR = os.path.join(MAIN_DIR, 'conf')
+TEST_DIR = os.path.join(MAIN_DIR, 'test')
+TEST_IN_DIR = os.path.join(TEST_DIR, 'input')
+TEST_OUT_DIR = os.path.join(TEST_DIR, 'output')
 PRGM = "raw2l1.py"
 
 
 class TestChm15k(unittest.TestCase):
 
-    IN_DIR = TEST_IN_DIR + 'jenoptik_chm15k' + os.sep
-    conf_file = CONF_DIR + 'conf_jenoptik_chm15k.ini'
+    IN_DIR = os.path.join(TEST_IN_DIR, 'jenoptik_chm15k')
+    conf_file = os.path.join(CONF_DIR, 'conf_lufft_chm15k-nimbus_eprofile.ini')
 
     def test_chm15k_v0536(self):
 
         date = '20120306'
-        test_ifile = self.IN_DIR + '20120306_hohenpeissenberg_CHM060028_000.nc'
-        test_ofile = TEST_OUT_DIR + 'test_chm15k_20120306.nc'
+        test_ifile = os.path.join(self.IN_DIR, '20120306_hohenpeissenberg_CHM060028_000.nc')
+        test_ofile = os.path.join(TEST_OUT_DIR, 'test_chm15k_v0536_20120306.nc')
 
         resp = subprocess.check_call([
             MAIN_DIR + PRGM,
@@ -39,8 +39,8 @@ class TestChm15k(unittest.TestCase):
     def test_chm15k_v0556(self):
 
         date = '20130110'
-        test_ifile = self.IN_DIR + '20130110_hohenpeissenberg_CHM060028_000.nc'
-        test_ofile = TEST_OUT_DIR + 'test_chm15k_20130110.nc'
+        test_ifile = os.path.join(self.IN_DIR, '20130110_hohenpeissenberg_CHM060028_000.nc')
+        test_ofile = os.path.join(TEST_OUT_DIR, 'test_chm15k_v0556_20130110.nc')
 
         resp = subprocess.check_call([
             MAIN_DIR + PRGM,
@@ -57,8 +57,8 @@ class TestChm15k(unittest.TestCase):
     def test_chm15k_v0559(self):
 
         date = '20130718'
-        test_ifile = self.IN_DIR + '20130718_hohenpeissenberg_CHM060028_000.nc'
-        test_ofile = TEST_OUT_DIR + 'test_chm15k_20130718.nc'
+        test_ifile = os.path.join(self.IN_DIR, '20130718_hohenpeissenberg_CHM060028_000.nc')
+        test_ofile = os.path.join(TEST_OUT_DIR, 'test_chm15k_v0559_20130718.nc')
 
         resp = subprocess.check_call([
             MAIN_DIR + PRGM,
@@ -75,8 +75,8 @@ class TestChm15k(unittest.TestCase):
     def test_chm15k_v0719(self):
 
         date = '20131212'
-        test_ifile = self.IN_DIR + '20131212_hohenpeissenberg_CHM060028_000.nc'
-        test_ofile = TEST_OUT_DIR + 'test_chm15k_20131212.nc'
+        test_ifile = os.path.join(self.IN_DIR, '20131212_hohenpeissenberg_CHM060028_000.nc')
+        test_ofile = os.path.join(TEST_OUT_DIR, 'test_chm15k_v0719_20131212.nc')
 
         resp = subprocess.check_call([
             MAIN_DIR + PRGM,
@@ -93,8 +93,8 @@ class TestChm15k(unittest.TestCase):
     def test_chm15k_prob_time(self):
 
         date = '20120327'
-        test_ifile = self.IN_DIR + '20131212_hohenpeissenberg_CHM060028_000.nc'
-        test_ofile = TEST_OUT_DIR + 'test_chm15k_20120327_probtime.nc'
+        test_ifile = os.path.join(self.IN_DIR, '20131212_hohenpeissenberg_CHM060028_000.nc')
+        test_ofile = os.path.join(TEST_OUT_DIR, 'test_chm15k_20120327_probtime.nc')
 
         resp = subprocess.check_call([
             MAIN_DIR + PRGM,
@@ -111,9 +111,9 @@ class TestChm15k(unittest.TestCase):
     def test_chm15k_sirta(self):
 
         date = '20150427'
-        test_ifile = self.IN_DIR + '20150427_SIRTA_CHM150101_000.nc'
-        test_ofile = TEST_OUT_DIR + 'test_chm15k_20150427_sirta.nc'
-        test_cfile = CONF_DIR + 'conf_lufft_chm15k-nimbus_toprof.ini'
+        test_ifile = os.path.join(self.IN_DIR, '20150427_SIRTA_CHM150101_000.nc')
+        test_ofile = os.path.join(TEST_OUT_DIR, 'test_chm15k_20150427_sirta.nc')
+        test_cfile = os.path.join(CONF_DIR, 'conf_lufft_chm15k-nimbus_eprofile.ini')
 
         resp = subprocess.check_call([
             MAIN_DIR + PRGM,
@@ -129,12 +129,13 @@ class TestChm15k(unittest.TestCase):
 
         self.assertEqual(resp, 0)
 
-    def test_chm15k_error_msg(self):
+    def test_chm15k_v0235(self):
 
         date = '20151001'
-        test_ifile = self.IN_DIR + 'ceilometer-eprofile_20151001000023_03963_A201509300000_MaceHead_CHM15K.nc'
-        test_ofile = TEST_OUT_DIR + 'test_chm15k_20151001_error_msg.nc'
-        test_cfile = CONF_DIR + 'conf_lufft_chm15k-nimbus_toprof.ini'
+        test_ifile = os.path.join(self.IN_DIR,
+                                  'ceilometer-eprofile_20151001000023_03963_A201509300000_MaceHead_CHM15K.nc')
+        test_ofile = os.path.join(TEST_OUT_DIR, 'test_chm15k_v0235_20151001.nc')
+        test_cfile = os.path.join(CONF_DIR, 'conf_lufft_chm15k-nimbus_eprofile.ini')
 
         resp = subprocess.check_call([
             MAIN_DIR + PRGM,

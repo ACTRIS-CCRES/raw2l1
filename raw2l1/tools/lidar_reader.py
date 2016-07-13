@@ -66,6 +66,11 @@ class RawDataReader(object):
             for key, value in self.conf.items(READER_CONF):
                 reader_conf[key] = value
 
+        # add date to process
+        reader_conf['date'] = self.conf.get('conf', 'date')
+        # add list of ancillary files
+        reader_conf['ancillary'] = self.conf.get('conf', 'ancillary')
+
         # define missing values if they are not define in reader_conf section
         if MISSING_INT_KEY not in reader_conf:
             logger.info("""no {} option define in {} section.
