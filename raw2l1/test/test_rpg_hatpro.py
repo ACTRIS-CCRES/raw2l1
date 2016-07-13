@@ -116,7 +116,7 @@ class TestRunHatPro(unittest.TestCase):
 
         date = '20150930'
         test_ifile = self.IN_DIR + 'hatpro_0a_z1Imwrad-IWV_v01_20150930_000307_1436.nc'
-        test_ofile = TEST_OUT_DIR + 'sups_sir_mwr00_l2_prw_v01_20130901000307.nc'
+        test_ofile = TEST_OUT_DIR + 'sups_sir_mwr00_l2_prw_v01_20130930000307.nc'
         test_cfile = CONF_DIR + 'conf_rpg_hatpro_l2-prw_toprof_netcdf4.ini'
 
         resp = subprocess.check_call([
@@ -133,9 +133,10 @@ class TestRunHatPro(unittest.TestCase):
 
     def test_rpg_hatpro_tb_toprof(self):
 
-        date = '20150930'
-        test_ifile = self.IN_DIR + 'hatpro_0a_z1Imwrad-BRT_v01_20150930_000307_1436.nc'
-        test_ofile = TEST_OUT_DIR + 'sups_sir_mwr00_l1_tb_v01_20130901000307.nc'
+        date = '20150901'
+        test_ifile = self.IN_DIR + 'hatpro_0a_z1Imwrad-BRT_v01_20150901_*.nc'
+        test_afile = self.IN_DIR + 'hatpro_0a_z1Imwrad-MET_v01_20150901_*.nc'
+        test_ofile = TEST_OUT_DIR + 'sups_sir_mwr00_l1_tb_v01_20150901000307.nc'
         test_cfile = CONF_DIR + 'conf_rpg_hatpro_l1-tb_toprof_netcdf4.ini'
 
         resp = subprocess.check_call([
@@ -144,7 +145,11 @@ class TestRunHatPro(unittest.TestCase):
             test_cfile,
             test_ifile,
             test_ofile,
+            '-anc',
+            test_afile,
             '-log_level',
+            'debug',
+            '-v',
             'debug'
         ])
 
