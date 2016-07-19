@@ -195,8 +195,15 @@ def create_netcdf_dim(conf, data, nc_id, logger):
             # case where dimensions have no values
             if conf.has_option(section, 'size'):
                 dim_size = conf.get(section, 'size')
-                nc_id.createDimension(dim,
-                                      int(dim_size))
+
+                if KEY_READERDATA in dim_size:
+                    val_key = get_data_key(conf.get(section, 'size'))
+                    logger.debug("{} size : {:d}".format(name, data[val_key]))
+                    nc_id.createDimension(dim, data[val_key])
+                else:
+                    logger.debug("{} size : {:d}".format(name, int(dim_size)))
+                    nc_id.createDimension(dim,
+                                          int(dim_size))
 
             elif KEY_READERDATA in conf.get(section, 'value'):
                 try:

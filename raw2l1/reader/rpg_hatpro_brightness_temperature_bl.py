@@ -2,6 +2,8 @@
 
 from __future__ import print_function, division, absolute_import
 
+import sys
+
 import numpy as np
 import datetime as dt
 import netCDF4 as nc
@@ -20,7 +22,7 @@ FLT_MISSING_VALUE = -999.
 INT_MISSING_VALUE = -9
 
 
-def get_data_size(list_files, logger):
+def get_data_size(list_files, logger, only_time=False):
     """based on all files to read determine the size of the data"""
 
     dim = {}
@@ -30,6 +32,10 @@ def get_data_size(list_files, logger):
         nc_id = nc.Dataset(f, 'r')
 
         dim['time'] += len(nc_id.dimensions[TIME_DIM])
+
+        if i == 0 and only_time:
+            dim['n_freq'] = len(nc_id.dimensions['number_frequencies'])
+            dim['n_angle'] = len(nc_id.dimensions['number_scan_angles'])
 
         nc_id.close()
 
@@ -48,26 +54,20 @@ def init_data(vars_dim, logger):
                                  dtype=np.dtype(dt.datetime))
     data['freq_sb'] = np.ones((vars_dim['n_freq'],),
                               dtype=np.float32) * FLT_MISSING_VALUE
-    data['azi'] = np.ones((vars_dim['time'],),
+    data['azi'] = np.ones((vars_dim['n_angle'],),
                           dtype=np.float32) * FLT_MISSING_VALUE
-    data['ele'] = np.ones((vars_dim['time'],),
+    data['ele'] = np.ones((vars_dim['n_angle'],),
                           dtype=np.float32) * FLT_MISSING_VALUE
-    data['tb'] = np.ones((vars_dim['time'], vars_dim['n_freq']),
+    data['tb'] = np.ones((vars_dim['time'], vars_dim['n_angle'], vars_dim['n_freq']),
                          dtype=np.float32) * FLT_MISSING_VALUE
-    data['offset_tb'] = np.ones((vars_dim['time'], vars_dim['n_freq']),
+    data['offset_tb'] = np.ones((vars_dim['time'], vars_dim['n_angle'], vars_dim['n_freq']),
                                 dtype=np.float32) * FLT_MISSING_VALUE
     data['freq_shift'] = np.ones((vars_dim['n_freq'],),
                                  dtype=np.float32) * FLT_MISSING_VALUE
     data['tb_bias'] = np.ones((vars_dim['n_freq'],),
                               dtype=np.float32) * FLT_MISSING_VALUE
-    data['tb_cov'] = np.ones((vars_dim['n_freq'], vars_dim['n_freq2']),
+    data['tb_cov'] = np.ones((vars_dim['n_freq'], vars_dim['n_freq']),
                              dtype=np.float32) * FLT_MISSING_VALUE
-    data['wl_irp'] = np.ones((vars_dim['n_wl_irp']),
-                             dtype=np.float32) * FLT_MISSING_VALUE
-    data['tb_irp'] = np.ones((vars_dim['time'], vars_dim['n_wl_irp']),
-                             dtype=np.float32) * FLT_MISSING_VALUE
-    data['ele_irp'] = np.ones((vars_dim['time'],),
-                              dtype=np.float32) * FLT_MISSING_VALUE
     data['ta'] = np.ones((vars_dim['time'],),
                          dtype=np.float32) * FLT_MISSING_VALUE
     data['pa'] = np.ones((vars_dim['time'],),
@@ -118,9 +118,7 @@ def sync_meteo(data, meteo_data, logger):
     logger.debug('common timesteps found : {:d}'.format(common_time.size))
 
     time_filter = np.array([True if t in common_time else False for t in data['time'][:]])
-    print('time elts :', np.count_nonzero(time_filter))
     meteo_time_filter = np.array([True if t in common_time else False for t in meteo_data['time'][:]])
-    print('meteo elts :', np.count_nonzero(meteo_time_filter))
 
     data['ta'][time_filter] = meteo_data['ta'][meteo_time_filter]
     data['pa'][time_filter] = meteo_data['pa'][meteo_time_filter]
@@ -148,10 +146,8 @@ def read_data(list_files, conf, logger):
             logger.debug('files to read : {}'.format(f))
 
     # get variables size
-    vars_dim = get_data_size(list_files, logger)
-    vars_dim['n_freq'] = int(conf['n_freq'])
-    vars_dim['n_freq2'] = int(conf['n_freq2'])
-    vars_dim['n_wl_irp'] = int(conf['n_wl_irp'])
+    vars_dim = get_data_size(list_files, logger, only_time=True)
+
     if meteo_avail:
         meteo_vars_dim = get_data_size(meteo_files, logger)
 
@@ -171,14 +167,16 @@ def read_data(list_files, conf, logger):
         ind_e = time_ind + time_size
 
         data['time'][ind_s:ind_e] = time
-        data['ele'][ind_s:ind_e] = nc_id.variables['elevation_angle'][:]
-        data['azi'][ind_s:ind_e] = nc_id.variables['azimuth_angle'][:]
-        data['tb'][ind_s:ind_e, :] = nc_id.variables['TBs'][:]
+        data['tb'][ind_s:ind_e, :] = np.swapaxes(nc_id.variables['TBs'][:], 1, 2)
         data['rain_flag'][ind_s:ind_e] = nc_id.variables['rain_flag'][:]
 
         if i == 0:
+            data['nv'] = 2
+            data['n_freq'] = vars_dim['n_freq']
+            data['n_angle'] = vars_dim['n_angle']
             data['freq_sb'] = nc_id.variables['frequencies'][:]
-
+            data['ele'] = nc_id.variables['elevation_scan_angles'][:]
+            data['azi'] = nc_id.variables['azimuth_angle'][0:vars_dim['n_angle']]
         nc_id.close()
 
         time_ind += time_size
