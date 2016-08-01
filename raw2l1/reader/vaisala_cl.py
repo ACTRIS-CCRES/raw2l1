@@ -605,6 +605,7 @@ def read_rcs_var(data, ind, msg, logger):
         tmp = np.array([int(rcs_line[s * RCS_BYTES_SIZE:s * RCS_BYTES_SIZE +
                        RCS_BYTES_SIZE], 16) for s in range(rcs_size)])
     except ValueError as e:
+        logger.error("Impossible to decode message. Message is ignore")
         logger.warning(e)
         return data
 

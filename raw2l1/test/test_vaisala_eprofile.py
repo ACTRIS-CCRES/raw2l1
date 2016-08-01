@@ -5,8 +5,6 @@ import unittest
 import subprocess
 import os
 
-from nose.tools import raises
-
 MAIN_DIR = os.path.dirname(os.path.dirname(__file__)) + os.sep
 CONF_DIR = MAIN_DIR + 'conf' + os.sep
 TEST_DIR = MAIN_DIR + 'test' + os.sep
@@ -126,7 +124,7 @@ class TestVaisalaCL51MissingCBE(unittest.TestCase):
     IN_DIR = TEST_IN_DIR + 'vaisala_cl' + os.sep + 'eprofile' + os.sep
     conf_file = CONF_DIR + 'conf_vaisala_cl51_toprof_netcdf4.ini'
 
-    def test_(self):
+    def test_20160523160107_06472_A201605231500(self):
 
         date = '20160523'
         test_ifile = (
@@ -193,3 +191,75 @@ class TestVaisalaCL31EmptyFile(unittest.TestCase):
         ])
 
         self.assertEqual(resp, 1, 'CL31 empty log file h6042819')
+
+
+class TestVaisalaCL51EmptyFile(unittest.TestCase):
+
+    IN_DIR = TEST_IN_DIR + 'vaisala_cl' + os.sep + 'eprofile' + os.sep
+    conf_file = CONF_DIR + 'conf_vaisala_cl51_toprof_netcdf4.ini'
+
+    def test_20160517070311_06447_A201605170600(self):
+
+        date = '20160517'
+        test_ifile = (
+            self.IN_DIR + 'ceilometer-eprofile_20160517070311_06447_A201605170600_cl51.dat'
+        )
+        test_ofile = TEST_OUT_DIR + 'ceilometer-eprofile_20160517070311_06447_A201605170600_cl51.nc'
+
+        resp = subprocess.call([
+            MAIN_DIR + PRGM,
+            date,
+            self.conf_file,
+            test_ifile,
+            test_ofile,
+            '-log_level',
+            'debug'
+        ])
+
+        self.assertEqual(resp, 1, 'CL51 empty log file')
+
+
+class TestVaisalaCL51IncompleteFile(unittest.TestCase):
+
+    IN_DIR = TEST_IN_DIR + 'vaisala_cl' + os.sep + 'eprofile' + os.sep
+    conf_file = CONF_DIR + 'conf_vaisala_cl51_toprof_netcdf4.ini'
+
+    def test_20160517120306_06447_A201605171100(self):
+
+        date = '20160517'
+        test_ifile = (
+            self.IN_DIR + 'ceilometer-eprofile_20160517120306_06447_A201605171100_cl51.dat'
+        )
+        test_ofile = TEST_OUT_DIR + 'ceilometer-eprofile_20160517120306_06447_A201605171100_cl51.nc'
+
+        resp = subprocess.call([
+            MAIN_DIR + PRGM,
+            date,
+            self.conf_file,
+            test_ifile,
+            test_ofile,
+            '-log_level',
+            'debug'
+        ])
+
+        self.assertEqual(resp, 0, 'CL51 empty log file 20160517120306_06447_A201605171100')
+
+    def test_20160426210111_06418_A201604262000(self):
+
+        date = '20160426'
+        test_ifile = (
+            self.IN_DIR + 'ceilometer-eprofile_20160426210111_06418_A201604262000_cl51.dat'
+        )
+        test_ofile = TEST_OUT_DIR + 'ceilometer-eprofile_20160426210111_06418_A201604262000_cl51.nc'
+
+        resp = subprocess.call([
+            MAIN_DIR + PRGM,
+            date,
+            self.conf_file,
+            test_ifile,
+            test_ofile,
+            '-log_level',
+            'debug'
+        ])
+
+        self.assertEqual(resp, 0, 'CL51 empty log file 20160426210111_06418_A201604262000')
