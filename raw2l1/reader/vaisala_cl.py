@@ -390,20 +390,20 @@ def get_acq_conf(filename, data, data_dim, logger):
         if range_ok and msg_ok:
             break
 
-    # Read instrument/sofware id
-    data['instrument_id'] = conf_msg[0:3]
-    data['software_id'] = conf_msg[3:6]
-
     # if we are not able to read range in the file
     if not range_ok:
         logger.critical("107 Impossible to read range configuration in '" +
                         filename + "'. Stopping Raw2L1")
-        sys.exit(1)
-
     if not msg_ok:
         logger.critical("106 impossible to determine type of message in '" +
                         filename + "'. Stopping Raw2L1")
+
+    if not range_ok or not msg_ok:
         sys.exit(1)
+
+    # Read instrument/sofware id
+    data['instrument_id'] = conf_msg[0:3]
+    data['software_id'] = conf_msg[3:6]
 
     return data, data_dim
 
@@ -726,6 +726,6 @@ def read_data(list_files, conf, logger):
 
     # Final calculation on whole profiles
     # -------------------------------------------------------------------------
-    data['pr2'] = data['rcs_0']*RCS_FACTOR*data['range']**2
+    data['pr2'] = data['rcs_0'] * RCS_FACTOR * data['range'] ** 2
 
     return data

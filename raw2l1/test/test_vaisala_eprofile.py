@@ -1,0 +1,167 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+import unittest
+import subprocess
+import os
+
+from nose.tools import raises
+
+MAIN_DIR = os.path.dirname(os.path.dirname(__file__)) + os.sep
+CONF_DIR = MAIN_DIR + 'conf' + os.sep
+TEST_DIR = MAIN_DIR + 'test' + os.sep
+TEST_IN_DIR = TEST_DIR + os.sep + 'input' + os.sep
+TEST_OUT_DIR = TEST_DIR + os.sep + 'output' + os.sep
+PRGM = "raw2l1.py"
+
+
+class TestVaisalaCL31MissingCBE(unittest.TestCase):
+
+    IN_DIR = TEST_IN_DIR + 'vaisala_cl' + os.sep + 'eprofile' + os.sep
+    conf_file = CONF_DIR + 'conf_vaisala_cl31_toprof_netcdf4.ini'
+
+    def test_20160523005942_c6052300(self):
+
+        date = '20160523'
+        test_ifile = (
+            self.IN_DIR + 'ceilometer_20160523005942_c6052300.DAT'
+        )
+        test_ofile = TEST_OUT_DIR + 'ceilometer_20160523005942_c6052300.nc'
+
+        resp = subprocess.check_call([
+            MAIN_DIR + PRGM,
+            date,
+            self.conf_file,
+            test_ifile,
+            test_ofile,
+            '-log_level',
+            'debug'
+        ])
+
+        self.assertEqual(resp, 0, 'CL31 missing CBE c6052300')
+
+    def test_20160523010011_P6052300(self):
+
+        date = '20160523'
+        test_ifile = (
+            self.IN_DIR + 'ceilometer_20160523010011_P6052300.DAT'
+        )
+        test_ofile = TEST_OUT_DIR + 'ceilometer_20160523010011_P6052300.nc'
+
+        resp = subprocess.check_call([
+            MAIN_DIR + PRGM,
+            date,
+            self.conf_file,
+            test_ifile,
+            test_ofile,
+            '-log_level',
+            'debug'
+        ])
+
+        self.assertEqual(resp, 0, 'CL31 missing CBE ceilometer P6052300')
+
+    def test_20160523010012_Q6052300(self):
+
+        date = '20160523'
+        test_ifile = (
+            self.IN_DIR + 'ceilometer_20160523010012_Q6052300.DAT'
+        )
+        test_ofile = TEST_OUT_DIR + 'ceilometer_20160523010012_Q6052300.nc'
+
+        resp = subprocess.check_call([
+            MAIN_DIR + PRGM,
+            date,
+            self.conf_file,
+            test_ifile,
+            test_ofile,
+            '-log_level',
+            'debug'
+        ])
+
+        self.assertEqual(resp, 0, 'CL31 missing CBE ceilometer Q6052300')
+
+    def test_20160523010012_T6052300(self):
+
+        date = '20160523'
+        test_ifile = (
+            self.IN_DIR + 'ceilometer_20160523010012_T6052300.DAT'
+        )
+        test_ofile = TEST_OUT_DIR + 'ceilometer_20160523010012_T6052300.nc'
+
+        resp = subprocess.check_call([
+            MAIN_DIR + PRGM,
+            date,
+            self.conf_file,
+            test_ifile,
+            test_ofile,
+            '-log_level',
+            'debug'
+        ])
+
+        self.assertEqual(resp, 0, 'CL31 missing CBE ceilometer T6052300')
+
+    def test_20160523100012_P6052309(self):
+
+        date = '20160523'
+        test_ifile = (
+            self.IN_DIR + 'ceilometer_20160523100012_P6052309.DAT'
+        )
+        test_ofile = TEST_OUT_DIR + 'ceilometer_20160523100012_P6052309.nc'
+
+        resp = subprocess.check_call([
+            MAIN_DIR + PRGM,
+            date,
+            self.conf_file,
+            test_ifile,
+            test_ofile,
+            '-log_level',
+            'debug'
+        ])
+
+        self.assertEqual(resp, 0, 'CL31 missing CBE ceilometer P6052309')
+
+
+class TestVaisalaCL31EmptyFile(unittest.TestCase):
+
+    IN_DIR = TEST_IN_DIR + 'vaisala_cl' + os.sep + 'eprofile' + os.sep
+    conf_file = CONF_DIR + 'conf_vaisala_cl31_toprof_netcdf4.ini'
+
+    def test_20160427230032_h6042722(self):
+
+        date = '20160427'
+        test_ifile = (
+            self.IN_DIR + 'ceilometer_20160427230032_h6042722.DAT'
+        )
+        test_ofile = TEST_OUT_DIR + 'ceilometer_20160427230032_h6042722.nc'
+
+        resp = subprocess.call([
+            MAIN_DIR + PRGM,
+            date,
+            self.conf_file,
+            test_ifile,
+            test_ofile,
+            '-log_level',
+            'debug'
+        ])
+
+        self.assertEqual(resp, 1, 'CL31 empty log file h6042722')
+
+    def test_20160428200020_h6042819(self):
+
+        date = '20160428'
+        test_ifile = (
+            self.IN_DIR + 'ceilometer_20160428200020_h6042819.DAT'
+        )
+        test_ofile = TEST_OUT_DIR + 'ceilometer_20160428200020_h6042819.nc'
+
+        resp = subprocess.call([
+            MAIN_DIR + PRGM,
+            date,
+            self.conf_file,
+            test_ifile,
+            test_ofile,
+            '-log_level',
+            'debug'
+        ])
+
+        self.assertEqual(resp, 1, 'CL31 empty log file h6042819')
