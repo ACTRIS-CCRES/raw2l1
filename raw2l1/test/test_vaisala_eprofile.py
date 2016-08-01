@@ -121,6 +121,34 @@ class TestVaisalaCL31MissingCBE(unittest.TestCase):
         self.assertEqual(resp, 0, 'CL31 missing CBE ceilometer P6052309')
 
 
+class TestVaisalaCL51MissingCBE(unittest.TestCase):
+
+    IN_DIR = TEST_IN_DIR + 'vaisala_cl' + os.sep + 'eprofile' + os.sep
+    conf_file = CONF_DIR + 'conf_vaisala_cl51_toprof_netcdf4.ini'
+
+    def test_(self):
+
+        date = '20160523'
+        test_ifile = (
+            self.IN_DIR + 'ceilometer-eprofile_20160523160107_06472_A201605231500_cl51.dat'
+        )
+        test_ofile = TEST_OUT_DIR + 'ceilometer-eprofile_20160523160107_06472_A201605231500_cl51.nc'
+
+        resp = subprocess.check_call([
+            MAIN_DIR + PRGM,
+            date,
+            self.conf_file,
+            test_ifile,
+            test_ofile,
+            '-log_level',
+            'debug',
+            '-v',
+            'debug'
+        ])
+
+        self.assertEqual(resp, 0, 'CL51 missing CBE ceilometer ')
+
+
 class TestVaisalaCL31EmptyFile(unittest.TestCase):
 
     IN_DIR = TEST_IN_DIR + 'vaisala_cl' + os.sep + 'eprofile' + os.sep
