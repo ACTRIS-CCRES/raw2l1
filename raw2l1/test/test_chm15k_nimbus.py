@@ -154,7 +154,6 @@ class TestChm15k(unittest.TestCase):
         date = '20160426'
         test_ifile = os.path.join(
             self.IN_DIR,
-            'eprofile',
             'ceilometer-eprofile_20160426110611_06348_A201604261055_CHM15k.nc')
         test_ofile = os.path.join(
             TEST_OUT_DIR,
