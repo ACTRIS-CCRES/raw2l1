@@ -149,6 +149,32 @@ class TestChm15k(unittest.TestCase):
 
         self.assertEqual(resp, 0)
 
+    def test_chm15k_v0738(self):
+
+        date = '20160426'
+        test_ifile = os.path.join(
+            self.IN_DIR,
+            'eprofile',
+            'ceilometer-eprofile_20160426110611_06348_A201604261055_CHM15k.nc')
+        test_ofile = os.path.join(
+            TEST_OUT_DIR,
+            'eprofile_20160426110611_06348_A201604261055_CHM15k.nc')
+        test_cfile = os.path.join(
+            CONF_DIR,
+            'conf_lufft_chm15k-nimbus_eprofile.ini')
+
+        resp = subprocess.call([
+            MAIN_DIR + PRGM,
+            date,
+            test_cfile,
+            test_ifile,
+            test_ofile,
+            '-log_level',
+            'debug'
+        ])
+
+        self.assertEqual(resp, 0, 'Nimbus v0.738')
+
 
 if __name__ == '__main__':
     unittest.main()

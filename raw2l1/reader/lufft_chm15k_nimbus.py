@@ -60,14 +60,41 @@ def get_error_index(err_msg, logger):
         if bool(err_int & d['hex']):
             err_ind.append(i)
 
-            if ERR_HEX_MSG[i]['level'] == 'STATUS':
-                logger.info(ERR_HEX_MSG[i]['msg'])
-            elif ERR_HEX_MSG[i]['level'] == 'WARNING':
-                logger.warning(ERR_HEX_MSG[i]['msg'])
-            elif ERR_HEX_MSG[i]['level'] == 'ALARM':
-                logger.error(ERR_HEX_MSG[i]['msg'])
-
     return err_ind
+
+
+def store_error(data, err_msg, logger):
+    """store errors msg and their count by type"""
+
+    err_ind = get_error_index(err_msg, logger)
+
+    for i in err_ind:
+
+        if ERR_HEX_MSG[i]['msg'] in data['list_errors']:
+            data['list_errors'][ERR_HEX_MSG[i]['msg']]['count'] += 1
+        else:
+            data['list_errors'][ERR_HEX_MSG[i]['msg']] = {}
+            data['list_errors'][ERR_HEX_MSG[i]['msg']]['count'] = 1
+            data['list_errors'][ERR_HEX_MSG[i]['msg']]['level'] = ERR_HEX_MSG[i]['level']
+
+    return data
+
+
+def log_error_msg(data, logger):
+
+    msg_format = '{} : {:d} message(s)'
+
+    if len(data['list_errors']) > 0:
+        logger.info('summary of instruments messages')
+
+    for msg in data['list_errors']:
+
+        if data['list_errors'][msg]['level'] == 'STATUS':
+            logger.info(msg_format.format(msg, data['list_errors'][msg]['count']))
+        elif data['list_errors'][msg]['level'] == 'WARNING':
+            logger.warning(msg_format.format(msg, data['list_errors'][msg]['count']))
+        elif data['list_errors'][msg]['level'] == 'ALARM':
+            logger.error(msg_format.format(msg, data['list_errors'][msg]['count']))
 
 
 def get_soft_version(str_version):
@@ -253,6 +280,8 @@ def init_data(vars_dim, conf, logger):
                           dtype=np.int16) * missing_int
     data['cbe'] = np.ones((vars_dim['time'], vars_dim['layer']),
                           dtype=np.int16) * missing_int
+
+    data['list_errors'] = {}
 
     # Time, range dependent variables
     # -------------------------------------------------------------------------
@@ -564,7 +593,8 @@ def read_data(list_files, conf, logger):
 
     # print messages status read in the file for each time step
     for err_msg in data['error_ext'][:]:
-        get_error_index(err_msg, logger)
+        data = store_error(data, err_msg, logger)
+    log_error_msg(data, logger)
 
     if nb_files_read == 0:
         for f in list_files:
