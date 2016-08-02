@@ -97,6 +97,22 @@ def log_error_msg(data, logger):
             logger.error(msg_format.format(msg, data['list_errors'][msg]['count']))
 
 
+def read_overlap(overlap_file, missing_float, logger):
+    """read overlap from lufft TUB*.cfg file"""
+
+    with open(overlap_file, 'r') as f_ovl:
+        raw_ovl = f_ovl.readlines()[1]
+
+    try:
+        ovl = np.array([float(value) for value in raw_ovl.split()])
+    except ValueError:
+        logger.error('Problem while reading overlap. overlap data are ignore')
+        logger.error('Check your TUB* file')
+        return None
+
+    return ovl
+
+
 def get_soft_version(str_version):
     """
     function to get the number of acquisition software version as a float
@@ -265,6 +281,8 @@ def init_data(vars_dim, conf, logger):
                                    dtype=np.int32) * missing_int
     data['p_calc'] = np.ones((vars_dim['time'],),
                              dtype=np.float32) * missing_int
+    data['overlap'] = np.ones((vars_dim['range'],),
+                              dtype=np.float32) * missing_float
 
     # Time, layer dependent variables
     # -------------------------------------------------------------------------
@@ -526,7 +544,15 @@ def read_data(list_files, conf, logger):
         'Start reading of data using reader for ' + BRAND + ' ' + MODEL
     )
 
+    # check if overlap file available and read it if available
+    # ------------------------------------------------------------------------
+    overlap = None
+    if 'ancillary' in conf and len(conf['ancillary']) != 0:
+        overlap = read_overlap(conf['ancillary'][0],
+                               conf['missing_float'], logger)
+
     # analyse the files to read to get the complete size of data
+    # ------------------------------------------------------------------------
     logger.info("determining size of var to read")
     vars_dim = get_vars_dim(list_files, logger)
     for dim, size in vars_dim.items():
@@ -568,6 +594,17 @@ def read_data(list_files, conf, logger):
             # -----------------------------------------------------------------
             logger.info("reading scalar variables")
             data = read_scalar_vars(data, raw_data, soft_vers, logger)
+
+            # store overlap if available
+            # ----------------------------------------------------------------
+            if overlap is not None:
+
+                if overlap.size < data['range'].size:
+                    logger.error("overlap data don't have enough elements")
+                    logger.error("overlap file is ignore")
+                else:
+                    # raw overlap has 4096 values so we slice it to the number of range
+                    data['overlap'] = overlap[0:data['range'].size]
 
         # Time dependant variables
         # ---------------------------------------------------------------------
