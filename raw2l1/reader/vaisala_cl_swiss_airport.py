@@ -332,9 +332,9 @@ def calc_range(resol, n_gates):
     calculate range variable based on resolution and number of gates
     """
 
-    range_vect = np.array(range(n_gates), dtype=np.float)
+    range_vect = np.array(range(1, n_gates + 1), dtype=np.float)
 
-    return range_vect * np.float(resol) + np.float(resol / 2)
+    return range_vect * np.float(resol)
 
 
 def check_range(data, data_dim, filename, logger):
