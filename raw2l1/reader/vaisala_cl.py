@@ -153,7 +153,7 @@ def store_error(data, err_msg, logger):
 
 def log_error_msg(data, logger):
 
-    msg_format = '\t- {} : {:d} message(s)'
+    msg_format = '{} : {:d} message(s)'
 
     if len(data['list_errors']) > 0:
         logger.info('summary of instruments messages')
