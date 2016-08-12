@@ -80,6 +80,23 @@ def init_data(vars_dim, logger):
     return data
 
 
+def init_meteo_data(vars_dim, logger):
+    """initialize dict of meteo data"""
+
+    meteo_data = {}
+
+    meteo_data['time'] = np.empty((vars_dim['time'],),
+                                  dtype=np.dtype(dt.datetime))
+    meteo_data['ta'] = np.ones((vars_dim['time'],),
+                               dtype=np.float32) * FLT_MISSING_VALUE
+    meteo_data['pa'] = np.ones((vars_dim['time'],),
+                               dtype=np.float32) * FLT_MISSING_VALUE
+    meteo_data['hur'] = np.ones((vars_dim['time'],),
+                                dtype=np.float32) * FLT_MISSING_VALUE
+
+    return meteo_data
+
+
 def read_time(nc_id, logger):
     """read time variable"""
 
@@ -91,18 +108,52 @@ def read_time(nc_id, logger):
     return len(time), time
 
 
+def sync_meteo(data, meteo_data, logger):
+    """find in meteo data timestep corresponding to brightness data time"""
+
+    common_time = np.intersect1d(data['time'][:],
+                                 meteo_data['time'][:],
+                                 assume_unique=True)
+
+    logger.debug('common timesteps found : {:d}'.format(common_time.size))
+
+    time_filter = np.array([True if t in common_time else False for t in data['time'][:]])
+    print('time elts :', np.count_nonzero(time_filter))
+    meteo_time_filter = np.array([True if t in common_time else False for t in meteo_data['time'][:]])
+    print('meteo elts :', np.count_nonzero(meteo_time_filter))
+
+    data['ta'][time_filter] = meteo_data['ta'][meteo_time_filter]
+    data['pa'][time_filter] = meteo_data['pa'][meteo_time_filter]
+    data['hur'][time_filter] = meteo_data['hur'][meteo_time_filter]
+
+    return data
+
+
 def read_data(list_files, conf, logger):
     """raw2l1 plugin to read raw data of RPG hatpro
     bloundary layer temperature"""
 
     logger.debug(
         'start reading data using reader for ' + BRAND + ' ' + MODEL)
+    for f in list_files:
+        logger.debug('files to read : {}'.format(f))
+
+    meteo_avail = False
+    # check if meteo data available
+    if 'ancillary' in conf and len(conf['ancillary']) != 0:
+        meteo_avail = True
+        meteo_files = conf['ancillary']
+        logger.info("meteo data available")
+        for f in meteo_files:
+            logger.debug('files to read : {}'.format(f))
 
     # get variables size
     vars_dim = get_data_size(list_files, logger)
     vars_dim['n_freq'] = int(conf['n_freq'])
     vars_dim['n_freq2'] = int(conf['n_freq2'])
     vars_dim['n_wl_irp'] = int(conf['n_wl_irp'])
+    if meteo_avail:
+        meteo_vars_dim = get_data_size(meteo_files, logger)
 
     # Initialize data
     data = init_data(vars_dim, logger)
@@ -131,6 +182,34 @@ def read_data(list_files, conf, logger):
         nc_id.close()
 
         time_ind += time_size
+
+    # read meteo_data
+    if meteo_avail:
+
+        meteo_data = init_meteo_data(meteo_vars_dim, logger)
+
+        time_ind = 0
+        for i, f in enumerate(meteo_files):
+
+            nc_id = nc.Dataset(f, 'r')
+
+            time_size, time = read_time(nc_id, logger)
+
+            # determining index of data
+            ind_s = time_ind
+            ind_e = time_ind + time_size
+
+            meteo_data['time'][ind_s:ind_e] = time
+            meteo_data['ta'][ind_s:ind_e] = nc_id.variables['env_temperature'][:]
+            meteo_data['pa'][ind_s:ind_e] = nc_id.variables['env_pressure'][:] * 100.
+            meteo_data['hur'][ind_s:ind_e] = nc_id.variables['env_relative_humidity'][:] / 100.
+
+            nc_id.close()
+
+            time_ind += time_size
+
+        # synchronize meteo data from to brightness data
+        data = sync_meteo(data, meteo_data, logger)
 
     # produce time_bounds variable
     time_units = conf['time_units']

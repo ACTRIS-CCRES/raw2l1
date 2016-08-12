@@ -36,7 +36,7 @@ class RawDataReader(object):
                 reader_dir + "." + self.conf.get('conf', 'reader'))
         except ImportError as err:
             msg = '107 unable to load lidar data reader '
-            self.logger.critical(msg, err)
+            self.logger.critical(msg + str(err))
             self.logger.critical("quitting raw2l1")
             sys.exit(1)
 
@@ -47,7 +47,7 @@ class RawDataReader(object):
             reader_fcn = getattr(reader_mod, 'read_data')
         except AttributeError as err:
             msg = '107 unable find read_data function '
-            self.logger.critical(msg, err)
+            self.logger.critical(msg + str(err))
             self.logger.critical("quitting raw2l1")
             sys.exit(1)
         self.logger.info("loading read_data function : success")
@@ -65,6 +65,11 @@ class RawDataReader(object):
             self.logger.debug('reader_conf section found')
             for key, value in self.conf.items(READER_CONF):
                 reader_conf[key] = value
+
+        # add date to process
+        reader_conf['date'] = self.conf.get('conf', 'date')
+        # add list of ancillary files
+        reader_conf['ancillary'] = self.conf.get('conf', 'ancillary')
 
         # define missing values if they are not define in reader_conf section
         if MISSING_INT_KEY not in reader_conf:
