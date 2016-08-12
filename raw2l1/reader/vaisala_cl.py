@@ -131,14 +131,41 @@ def get_error_index(err_msg, logger):
         if bool(err_int & d['hex']):
             err_ind.append(i)
 
-            if ERR_HEX_MSG[i]['level'] == 'STATUS':
-                logger.info(ERR_HEX_MSG[i]['msg'])
-            elif ERR_HEX_MSG[i]['level'] == 'WARNING':
-                logger.warning(ERR_HEX_MSG[i]['msg'])
-            elif ERR_HEX_MSG[i]['level'] == 'ALARM':
-                logger.error(ERR_HEX_MSG[i]['msg'])
-
     return err_ind
+
+
+def store_error(data, err_msg, logger):
+    """store errors msg and their count by type"""
+
+    err_ind = get_error_index(err_msg, logger)
+
+    for i in err_ind:
+
+        if ERR_HEX_MSG[i]['msg'] in data['list_errors']:
+            data['list_errors'][ERR_HEX_MSG[i]['msg']]['count'] += 1
+        else:
+            data['list_errors'][ERR_HEX_MSG[i]['msg']] = {}
+            data['list_errors'][ERR_HEX_MSG[i]['msg']]['count'] = 1
+            data['list_errors'][ERR_HEX_MSG[i]['msg']]['level'] = ERR_HEX_MSG[i]['level']
+
+    return data
+
+
+def log_error_msg(data, logger):
+
+    msg_format = '{} : {:d} message(s)'
+
+    if len(data['list_errors']) > 0:
+        logger.info('summary of instruments messages')
+
+    for msg in data['list_errors']:
+
+        if data['list_errors'][msg]['level'] == 'STATUS':
+            logger.info(msg_format.format(msg, data['list_errors'][msg]['count']))
+        elif data['list_errors'][msg]['level'] == 'WARNING':
+            logger.warning(msg_format.format(msg, data['list_errors'][msg]['count']))
+        elif data['list_errors'][msg]['level'] == 'ALARM':
+            logger.error(msg_format.format(msg, data['list_errors'][msg]['count']))
 
 
 def are_units_meters(err_msg, logger):
@@ -305,9 +332,9 @@ def calc_range(resol, n_gates):
     calculate range variable based on resolution and number of gates
     """
 
-    range_vect = np.array(range(n_gates), dtype=np.float)
+    range_vect = np.array(range(1, n_gates + 1), dtype=np.float)
 
-    return range_vect * np.float(resol) + np.float(resol / 2)
+    return range_vect * np.float(resol)
 
 
 def check_range(data, data_dim, filename, logger):
@@ -390,20 +417,20 @@ def get_acq_conf(filename, data, data_dim, logger):
         if range_ok and msg_ok:
             break
 
-    # Read instrument/sofware id
-    data['instrument_id'] = conf_msg[0:3]
-    data['software_id'] = conf_msg[3:6]
-
     # if we are not able to read range in the file
     if not range_ok:
         logger.critical("107 Impossible to read range configuration in '" +
                         filename + "'. Stopping Raw2L1")
-        sys.exit(1)
-
     if not msg_ok:
         logger.critical("106 impossible to determine type of message in '" +
                         filename + "'. Stopping Raw2L1")
+
+    if not range_ok or not msg_ok:
         sys.exit(1)
+
+    # Read instrument/sofware id
+    data['instrument_id'] = conf_msg[0:3]
+    data['software_id'] = conf_msg[3:6]
 
     return data, data_dim
 
@@ -463,6 +490,7 @@ def init_data(data, data_dim, conf, logger):
     # -------------------------------------------------------------------------
     data['are_unit_meter'] = np.ones((data_dim['time'],),
                                      dtype=bool)
+    data['list_errors'] = {}
 
     return data
 
@@ -540,6 +568,8 @@ def read_cbh_msg(data, ind, msg, logger):
 
     coeff = get_conversion_coeff(data['are_unit_meter'][ind])
 
+    data = store_error(data, elts[4], logger)
+
     # number of CBH depends on nlayers value
     if 1 <= nlayers < 4:
         data['cbh'][ind, 0] = np.float(elts[1]) * coeff
@@ -604,8 +634,8 @@ def read_rcs_var(data, ind, msg, logger):
     try:
         tmp = np.array([int(rcs_line[s * RCS_BYTES_SIZE:s * RCS_BYTES_SIZE +
                        RCS_BYTES_SIZE], 16) for s in range(rcs_size)])
-    except ValueError as e:
-        logger.warning(e)
+    except ValueError:
+        logger.error("Impossible to decode message. Profile is ignore")
         return data
 
     # Each sample is coded with a 20-bit HEX ASCII character set
@@ -654,7 +684,7 @@ def read_vars(lines, data, conf, time_ind, f_name, logger):
         if cur_msg_type != data['msg_type']:
             i_line += 1
             time_ind += 1
-            logger.error("100 Incorrect Header Information in 'f_name'. Message type change in file")
+            logger.error("100 Incorrect Header Information in '{}'. Message type change in file".format(f_name))
             continue
 
         # read time only dependent variables
@@ -716,7 +746,7 @@ def read_data(list_files, conf, logger):
         # try reading the file
         lines = get_file_lines(ifile, logger)
         if lines is None:
-            logger.warning("102 No data found in the file '{}'trying next file".format(ifile))
+            logger.warning("102 No data found in the file '{}' trying next file".format(ifile))
             continue
 
         nb_files_read += 1
@@ -726,6 +756,10 @@ def read_data(list_files, conf, logger):
 
     # Final calculation on whole profiles
     # -------------------------------------------------------------------------
-    data['pr2'] = data['rcs_0']*RCS_FACTOR*data['range']**2
+    data['pr2'] = data['rcs_0'] * RCS_FACTOR * data['range'] ** 2
+
+    # Summary of instrument message
+    # ------------------------------------------------------------------------
+    log_error_msg(data, logger)
 
     return data

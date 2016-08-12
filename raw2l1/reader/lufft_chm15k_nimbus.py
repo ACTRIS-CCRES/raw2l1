@@ -60,14 +60,57 @@ def get_error_index(err_msg, logger):
         if bool(err_int & d['hex']):
             err_ind.append(i)
 
-            if ERR_HEX_MSG[i]['level'] == 'STATUS':
-                logger.info(ERR_HEX_MSG[i]['msg'])
-            elif ERR_HEX_MSG[i]['level'] == 'WARNING':
-                logger.warning(ERR_HEX_MSG[i]['msg'])
-            elif ERR_HEX_MSG[i]['level'] == 'ALARM':
-                logger.error(ERR_HEX_MSG[i]['msg'])
-
     return err_ind
+
+
+def store_error(data, err_msg, logger):
+    """store errors msg and their count by type"""
+
+    err_ind = get_error_index(err_msg, logger)
+
+    for i in err_ind:
+
+        if ERR_HEX_MSG[i]['msg'] in data['list_errors']:
+            data['list_errors'][ERR_HEX_MSG[i]['msg']]['count'] += 1
+        else:
+            data['list_errors'][ERR_HEX_MSG[i]['msg']] = {}
+            data['list_errors'][ERR_HEX_MSG[i]['msg']]['count'] = 1
+            data['list_errors'][ERR_HEX_MSG[i]['msg']]['level'] = ERR_HEX_MSG[i]['level']
+
+    return data
+
+
+def log_error_msg(data, logger):
+
+    msg_format = '{} : {:d} message(s)'
+
+    if len(data['list_errors']) > 0:
+        logger.info('summary of instruments messages')
+
+    for msg in data['list_errors']:
+
+        if data['list_errors'][msg]['level'] == 'STATUS':
+            logger.info(msg_format.format(msg, data['list_errors'][msg]['count']))
+        elif data['list_errors'][msg]['level'] == 'WARNING':
+            logger.warning(msg_format.format(msg, data['list_errors'][msg]['count']))
+        elif data['list_errors'][msg]['level'] == 'ALARM':
+            logger.error(msg_format.format(msg, data['list_errors'][msg]['count']))
+
+
+def read_overlap(overlap_file, missing_float, logger):
+    """read overlap from lufft TUB*.cfg file"""
+
+    with open(overlap_file, 'r') as f_ovl:
+        raw_ovl = f_ovl.readlines()[1]
+
+    try:
+        ovl = np.array([float(value) for value in raw_ovl.split()])
+    except ValueError:
+        logger.error('Problem while reading overlap. overlap data are ignore')
+        logger.error('Check your TUB* file')
+        return None
+
+    return ovl
 
 
 def get_soft_version(str_version):
@@ -238,6 +281,8 @@ def init_data(vars_dim, conf, logger):
                                    dtype=np.int32) * missing_int
     data['p_calc'] = np.ones((vars_dim['time'],),
                              dtype=np.float32) * missing_int
+    data['overlap'] = np.ones((vars_dim['range'],),
+                              dtype=np.float32) * missing_float
 
     # Time, layer dependent variables
     # -------------------------------------------------------------------------
@@ -253,6 +298,8 @@ def init_data(vars_dim, conf, logger):
                           dtype=np.int16) * missing_int
     data['cbe'] = np.ones((vars_dim['time'], vars_dim['layer']),
                           dtype=np.int16) * missing_int
+
+    data['list_errors'] = {}
 
     # Time, range dependent variables
     # -------------------------------------------------------------------------
@@ -497,7 +544,15 @@ def read_data(list_files, conf, logger):
         'Start reading of data using reader for ' + BRAND + ' ' + MODEL
     )
 
+    # check if overlap file available and read it if available
+    # ------------------------------------------------------------------------
+    overlap = None
+    if 'ancillary' in conf and len(conf['ancillary']) != 0:
+        overlap = read_overlap(conf['ancillary'][0],
+                               conf['missing_float'], logger)
+
     # analyse the files to read to get the complete size of data
+    # ------------------------------------------------------------------------
     logger.info("determining size of var to read")
     vars_dim = get_vars_dim(list_files, logger)
     for dim, size in vars_dim.items():
@@ -531,17 +586,28 @@ def read_data(list_files, conf, logger):
             logger.info("software version: %7.4f" % soft_vers)
 
             # read dimensions
-            # -----------------------------------------------------------------
+            # ----------------------------------------------------------------
             logger.info("reading dimension variables")
             time_size, data = read_dim_vars(data, raw_data, logger)
 
             # read scalar
-            # -----------------------------------------------------------------
+            # ----------------------------------------------------------------
             logger.info("reading scalar variables")
             data = read_scalar_vars(data, raw_data, soft_vers, logger)
 
+            # store overlap if available
+            # ----------------------------------------------------------------
+            if overlap is not None:
+
+                if overlap.size < data['range'].size:
+                    logger.error("overlap data don't have enough elements")
+                    logger.error("overlap file is ignore")
+                else:
+                    # raw overlap has 4096 values so we slice it to the number of range
+                    data['overlap'] = overlap[0:data['range'].size]
+
         # Time dependant variables
-        # ---------------------------------------------------------------------
+        # --------------------------------------------------------------------
         logger.info("reading time dependant variables for file %02d" %
                     nb_files_read)
         if nb_files_read > 1:
@@ -552,19 +618,25 @@ def read_data(list_files, conf, logger):
         time_ind += time_size
 
         # Close NetCDF file
-        # ---------------------------------------------------------------------
+        # --------------------------------------------------------------------
         raw_data.close()
 
     logger.info("reading of files: done")
 
+    # Correct offset of CBH if var available
+    # ------------------------------------------------------------------------
+    if not np.isnan(data['cho']):
+        data['cbh'] = data['cbh'] - data['cho']
+
     # calculate Pr2
-    # ---------------------------------------------------------------------
+    # ------------------------------------------------------------------------
     logger.info("calculating Pr2")
     data = calc_pr2(data, soft_vers, logger)
 
     # print messages status read in the file for each time step
     for err_msg in data['error_ext'][:]:
-        get_error_index(err_msg, logger)
+        data = store_error(data, err_msg, logger)
+    log_error_msg(data, logger)
 
     if nb_files_read == 0:
         for f in list_files:

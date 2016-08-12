@@ -149,6 +149,109 @@ class TestChm15k(unittest.TestCase):
 
         self.assertEqual(resp, 0)
 
+    def test_chm15k_v0738(self):
+
+        date = '20160426'
+        test_ifile = os.path.join(
+            self.IN_DIR,
+            'ceilometer-eprofile_20160426110611_06348_A201604261055_CHM15k.nc')
+        test_ofile = os.path.join(
+            TEST_OUT_DIR,
+            'eprofile_20160426110611_06348_A201604261055_CHM15k.nc')
+        test_cfile = os.path.join(
+            CONF_DIR,
+            'conf_lufft_chm15k-nimbus_eprofile.ini')
+
+        resp = subprocess.call([
+            MAIN_DIR + PRGM,
+            date,
+            test_cfile,
+            test_ifile,
+            test_ofile,
+            '-log_level',
+            'debug'
+        ])
+
+        self.assertEqual(resp, 0, 'Nimbus v0.738')
+
+
+class TestChm15kOverlap(unittest.TestCase):
+
+    IN_DIR = os.path.join(TEST_IN_DIR, 'jenoptik_chm15k')
+    conf_file = os.path.join(CONF_DIR, 'conf_lufft_chm15k-nimbus_eprofile.ini')
+
+    def test_chm15k_overlap_good(self):
+
+        date = '20150427'
+        test_ifile = os.path.join(self.IN_DIR, '20150427_SIRTA_CHM150101_000.nc')
+        test_ovl_file = os.path.join(self.IN_DIR, 'TUB140013_20150211_4096.cfg')
+        test_ofile = os.path.join(TEST_OUT_DIR, 'test_chm15k_20150427_sirta_good-ovl.nc')
+        test_cfile = os.path.join(CONF_DIR, 'conf_lufft_chm15k-nimbus_eprofile.ini')
+
+        resp = subprocess.check_call([
+            MAIN_DIR + PRGM,
+            date,
+            test_cfile,
+            test_ifile,
+            test_ofile,
+            '-anc',
+            test_ovl_file,
+            '-log_level',
+            'debug',
+            '-v',
+            'debug'
+        ])
+
+        self.assertEqual(resp, 0, "reading overlap")
+
+    def test_chm15k_overlap_bad(self):
+
+        date = '20150427'
+        test_ifile = os.path.join(self.IN_DIR, '20150427_SIRTA_CHM150101_000.nc')
+        test_ovl_file = os.path.join(self.IN_DIR, 'jenoptik_chm15k_overlap.txt')
+        test_ofile = os.path.join(TEST_OUT_DIR, 'test_chm15k_20150427_sirta_bad-ovl.nc')
+        test_cfile = os.path.join(CONF_DIR, 'conf_lufft_chm15k-nimbus_eprofile.ini')
+
+        resp = subprocess.check_call([
+            MAIN_DIR + PRGM,
+            date,
+            test_cfile,
+            test_ifile,
+            test_ofile,
+            '-anc',
+            test_ovl_file,
+            '-log_level',
+            'debug',
+            '-v',
+            'debug'
+        ])
+
+        self.assertEqual(resp, 0, "bad overlap file but readable")
+
+    def test_chm15k_overlap_empty(self):
+
+        date = '20150427'
+        test_ifile = os.path.join(self.IN_DIR, '20150427_SIRTA_CHM150101_000.nc')
+        test_ovl_file = os.path.join(self.IN_DIR, 'empty_overlap.txt')
+        test_ofile = os.path.join(TEST_OUT_DIR, 'test_chm15k_20150427_sirta_empty-ovl.nc')
+        test_cfile = os.path.join(CONF_DIR, 'conf_lufft_chm15k-nimbus_eprofile.ini')
+
+        resp = subprocess.check_call([
+            MAIN_DIR + PRGM,
+            date,
+            test_cfile,
+            test_ifile,
+            test_ofile,
+            '-anc',
+            test_ovl_file,
+            '-log_level',
+            'debug',
+            '-v',
+            'debug'
+        ])
+
+        self.assertEqual(resp, 0, "bad overlap file but readable")
+
 
 if __name__ == '__main__':
     unittest.main()
