@@ -586,12 +586,12 @@ def read_data(list_files, conf, logger):
             logger.info("software version: %7.4f" % soft_vers)
 
             # read dimensions
-            # -----------------------------------------------------------------
+            # ----------------------------------------------------------------
             logger.info("reading dimension variables")
             time_size, data = read_dim_vars(data, raw_data, logger)
 
             # read scalar
-            # -----------------------------------------------------------------
+            # ----------------------------------------------------------------
             logger.info("reading scalar variables")
             data = read_scalar_vars(data, raw_data, soft_vers, logger)
 
@@ -607,7 +607,7 @@ def read_data(list_files, conf, logger):
                     data['overlap'] = overlap[0:data['range'].size]
 
         # Time dependant variables
-        # ---------------------------------------------------------------------
+        # --------------------------------------------------------------------
         logger.info("reading time dependant variables for file %02d" %
                     nb_files_read)
         if nb_files_read > 1:
@@ -618,13 +618,18 @@ def read_data(list_files, conf, logger):
         time_ind += time_size
 
         # Close NetCDF file
-        # ---------------------------------------------------------------------
+        # --------------------------------------------------------------------
         raw_data.close()
 
     logger.info("reading of files: done")
 
+    # Correct offset of CBH if var available
+    # ------------------------------------------------------------------------
+    if not np.isnan(data['cho']):
+        data['cbh'] = data['cbh'] - data['cho']
+
     # calculate Pr2
-    # ---------------------------------------------------------------------
+    # ------------------------------------------------------------------------
     logger.info("calculating Pr2")
     data = calc_pr2(data, soft_vers, logger)
 
