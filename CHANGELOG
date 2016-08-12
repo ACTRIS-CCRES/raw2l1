@@ -1,3 +1,15 @@
+* v2.1.5
+    + add a new argument `-anc` which allows to give the reader another type of file
+    + vaisala reader
+        - correct bugs detected by MetOffice and add tests
+        - change how instruments messages are printed. Instead of doing it for each time step a summary is done at the end of the reading
+    + chm15k-nimbus reader
+        - correct bugs detected by Metoffice and add tests
+        - change how instruments messages are printed. Instead of doing it for each time step a summary is done at the end of the reading
+        - it is now possible to give to pass the overlap using TUB*.cfg from lufft with -anc command line options. It allows a better checking of the size and could be used during the reading
+    + RPG hatpro (experimental)
+        - add reader for every type of files required by TORPOF
+
 * V2.1.4
     + correct minor bug in test
 
