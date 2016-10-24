@@ -22,6 +22,7 @@ KEYS_VALTYPE = {
     '$float$': np.float32,
     '$double$': np.float64,
     '$string$': 'string',
+    '$time$': np.float64,
     'default': np.float64,
 }
 
@@ -158,13 +159,13 @@ def create_netcdf_global(conf, nc_id, data, logger):
     return None
 
 
-def create_netcdf_time_dim(nc_id, logger):
+def create_netcdf_time_dim(section, nc_id, logger):
     """
     Special function to create time dimension as its dimension is unlimited
     """
 
     logger.debug("dimension found: time")
-    nc_id.createDimension('time', None)
+    nc_id.createDimension(section, None)
 
     return None
 
@@ -187,10 +188,15 @@ def create_netcdf_dim(conf, data, nc_id, logger):
                            repr(err))
             continue
 
+        # try to get type of variable
+        try:
+            type_var = conf.get(section, 'type')
+        except ConfigParser.NoOptionError:
+            pass
+
         if section not in common.CONF_SECTIONS and name == dim:
 
             logger.debug("dimension found: " + section)
-            # get dimension of data:
 
             # case where dimensions have no values
             if conf.has_option(section, 'size'):
@@ -204,6 +210,11 @@ def create_netcdf_dim(conf, data, nc_id, logger):
                     logger.debug("{} size : {:d}".format(name, int(dim_size)))
                     nc_id.createDimension(dim,
                                           int(dim_size))
+            elif type_var == '$time$':
+                # case of time var
+
+                create_netcdf_time_dim(section, nc_id, logger)
+                continue
 
             elif KEY_READERDATA in conf.get(section, 'value'):
                 try:
@@ -219,22 +230,28 @@ def create_netcdf_dim(conf, data, nc_id, logger):
     return None
 
 
-def create_netcdf_time_var(conf, data, nc_id, logger):
+def create_netcdf_time_var(conf, var_name, data, nc_id, logger):
     """
     Special fonction to create the time variable
     """
 
-    units = conf.get('time', 'units')
-    calendar = conf.get('time', 'calendar')
-    val_type = get_var_type(conf.get('time', 'type'), conf, logger)
+    units = conf.get(var_name, 'units')
+    calendar = conf.get(var_name, 'calendar')
+    val_type = get_var_type(conf.get(var_name, 'type'), conf, logger)
+    dim = conf.get(var_name, 'dim')
 
-    nc_var = nc_id.createVariable('time', val_type, ('time',))
+    nc_var = nc_id.createVariable(var_name, val_type, (dim,))
 
     logger.debug("converting time to CF compliant format")
-    nc_var[:] = nc.date2num(data['time'], units=units, calendar=calendar)
+    if var_name not in data.keys():
+        tmp_var_name = get_data_key(conf.get(var_name, 'value'))
+    else:
+        tmp_var_name = var_name
+
+    nc_var[:] = nc.date2num(data[tmp_var_name], units=units, calendar=calendar)
 
     logger.debug("adding attributes to time variable")
-    add_attr_to_var(nc_var, data, conf, 'time', logger)
+    add_attr_to_var(nc_var, data, conf, var_name, logger)
 
     return None
 
@@ -383,6 +400,11 @@ def create_netcdf_variables(conf, data, nc_id, logger):
         else:
             fill_value = None
 
+        # create time variable
+        if conf.get(section, 'type') == '$time$':
+            create_netcdf_time_var(conf, section, data, nc_id, logger)
+            continue
+
         # case of string variable:
         # we have to get the precise type of data from the read variable
         if (val_type == 'string' and
@@ -465,14 +487,12 @@ def create_netcdf(conf, data, logger):
     # write dimension of the netCDF file
     # -------------------------------------------------------------------------
     logger.info("creating dimensions")
-    create_netcdf_time_dim(nc_id, logger)
     create_netcdf_dim(conf, data, nc_id, logger)
 
     # write variables in netCDf file
     # -------------------------------------------------------------------------
     logger.info("creating variables")
     logger.debug("creating time variable")
-    create_netcdf_time_var(conf, data, nc_id, logger)
     create_netcdf_variables(conf, data, nc_id, logger)
 
     nc_id.close()

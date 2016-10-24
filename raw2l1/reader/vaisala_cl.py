@@ -729,6 +729,12 @@ def read_data(list_files, conf, logger):
     except (ValueError, KeyError):
         conf['check_scale'] = False
 
+    try:
+        conf['time_resol'] = int(conf['time_resolution'])
+    except KeyError:
+        logger.error("the time_resolution option in reader_conf is required")
+        sys.exit(1)
+
     # Get range and vertical resolution from first file
     logger.info("analyzing first file to determine acquisition configuration")
     data, data_dim = get_acq_conf(list_files[0], data, data_dim, logger)
@@ -753,6 +759,11 @@ def read_data(list_files, conf, logger):
 
         # reading data in the file
         time_ind, data = read_vars(lines, data, conf, time_ind, ifile, logger)
+
+    # add start_time and time resolution variable
+    # ------------------------------------------------------------------------
+    data['time_resolution'] = conf['time_resol']
+    data['start_time'] = data['time'] - dt.timedelta(seconds=conf['time_resol'])
 
     # Final calculation on whole profiles
     # -------------------------------------------------------------------------
