@@ -1,3 +1,15 @@
+* v2.1.6
+    + improve managing of time variable in the creation of netCDF file
+        - a new type has been added: `$time$`
+        - section about time variable are required to have `units` and `calendar` options (compatible with netCDF-CF convention)
+        - update all confifuration files examples with the new `$time$` type for time variables
+    + chm15k reader
+        - add variable `start_time`
+    + cl31 reader
+        - add variableriable `start_time`
+        - an option `time_resolution` (in seconds) is now required in `[reader_conf]` section
+    + update E-PROFILE example conf file with the requirements describe in `Raw2L1-L1L2-issues_and_developments` documents
+
 * v2.1.5
     + add a new argument `-anc` which allows to give the reader another type of file
     + vaisala reader
