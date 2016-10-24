@@ -13,6 +13,7 @@ MODEL = 'CHM15K nimbus'
 
 NN2_FACTOR = 3e-5
 CONSTANT_P_CALC = 0.05
+RAW_DATA_MISSING_CLOUDS = -1
 
 ERR_HEX_MSG = [
     {'hex': 0x00000001, 'level': 'ERROR', 'msg': 'Signal quality'},
@@ -229,7 +230,7 @@ def init_data(vars_dim, conf, logger):
 
     # scalar variables
     # -------------------------------------------------------------------------
-    data['cho'] = np.nan
+    data['cho'] = missing_int
 
     # Time dependent variables
     # -------------------------------------------------------------------------
@@ -623,10 +624,12 @@ def read_data(list_files, conf, logger):
 
     logger.info("reading of files: done")
 
-    # Correct offset of CBH if var available
+    # Correct offset of CBH if var available and manage missing values
     # ------------------------------------------------------------------------
-    if not np.isnan(data['cho']):
-        data['cbh'] = data['cbh'] - data['cho']
+    data['cbh'][data['cbh'] == RAW_DATA_MISSING_CLOUDS] = conf['missing_int']
+
+    if data['cho'] != conf['missing_int']:
+        data['cbh'][data['cbh'] != conf['missing_int']] = data['cbh'][data['cbh'] != conf['missing_int']] - data['cho']
 
     # add start time variable
     # ------------------------------------------------------------------------
