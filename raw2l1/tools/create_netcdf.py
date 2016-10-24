@@ -182,22 +182,21 @@ def create_netcdf_dim(conf, data, nc_id, logger):
         try:
             dim = conf.get(section, 'dim')
             name = section
-            type_var = conf.get(section, 'type')
         except ConfigParser.NoSectionError, err:
             logger.warning("107 Unable to process section"
                            " whilst creating netCDF file '{}'".format(conf.get('conf', 'output')) +
                            repr(err))
             continue
 
+        # try to get type of variable
+        try:
+            type_var = conf.get(section, 'type')
+        except ConfigParser.NoOptionError:
+            pass
+
         if section not in common.CONF_SECTIONS and name == dim:
 
             logger.debug("dimension found: " + section)
-
-            # case of time var
-            if type_var == '$time$':
-
-                create_netcdf_time_dim(section, nc_id, logger)
-                continue
 
             # case where dimensions have no values
             if conf.has_option(section, 'size'):
@@ -211,6 +210,11 @@ def create_netcdf_dim(conf, data, nc_id, logger):
                     logger.debug("{} size : {:d}".format(name, int(dim_size)))
                     nc_id.createDimension(dim,
                                           int(dim_size))
+            elif type_var == '$time$':
+                # case of time var
+
+                create_netcdf_time_dim(section, nc_id, logger)
+                continue
 
             elif KEY_READERDATA in conf.get(section, 'value'):
                 try:
