@@ -31,6 +31,8 @@ class TestChm15k(unittest.TestCase):
             test_ifile,
             test_ofile,
             '-log_level',
+            'debug',
+            '-v',
             'debug'
         ])
 
