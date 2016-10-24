@@ -628,6 +628,14 @@ def read_data(list_files, conf, logger):
     if not np.isnan(data['cho']):
         data['cbh'] = data['cbh'] - data['cho']
 
+    # add start time variable
+    # ------------------------------------------------------------------------
+
+    # convert average__time into timedelta object
+    tmp = np.array([dt.timedelta(seconds=value / 1000) for value in data['average_time']])
+
+    data['start_time'] = data['time'] - tmp
+
     # calculate Pr2
     # ------------------------------------------------------------------------
     logger.info("calculating Pr2")

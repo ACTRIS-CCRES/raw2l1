@@ -89,5 +89,6 @@ class TestVaisalaCL51Toprof(unittest.TestCase):
 
         self.assertEqual(resp, 0, 'CL51 one hour file')
 
+
 if __name__ == '__main__':
     unittest.main()

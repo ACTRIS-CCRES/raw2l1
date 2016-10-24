@@ -62,5 +62,6 @@ class TestVaisalaBugSIRTA(unittest.TestCase):
 
         self.assertEqual(resp, 0, 'CL SIRTA bug message type')
 
+
 if __name__ == '__main__':
     unittest.main()
