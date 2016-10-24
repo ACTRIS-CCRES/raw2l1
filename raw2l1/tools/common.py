@@ -5,7 +5,7 @@
 CONF_SECTIONS = ['conf', 'reader_conf', 'global']
 
 # netCDF special processing sections
-SPEC_SECTIONS = ['time']
+SPEC_SECTIONS = []
 
 # Reserved attributes
 RESERV_ATTR = [
