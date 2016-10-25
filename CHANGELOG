@@ -1,3 +1,7 @@
+* v2.17
+    + create a reader specifically for CHM15k data from UK metoffice
+    + correct errors in E-PROFILE configuration files examples
+
 * v2.1.6
     + improve managing of time variable in the creation of netCDF file
         - a new type has been added: `$time$`
@@ -20,7 +24,7 @@
         - change how instruments messages are printed. Instead of doing it for each time step a summary is done at the end of the reading
         - it is now possible to give to pass the overlap using TUB*.cfg from lufft with -anc command line options. It allows a better checking of the size and could be used during the reading
     + RPG hatpro (experimental)
-        - add reader for every type of files required by TORPOF
+        - add reader for every type of files required by TOPROF
 
 * V2.1.4
     + correct minor bug in test
