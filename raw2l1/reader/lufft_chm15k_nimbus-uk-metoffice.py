@@ -416,7 +416,7 @@ def read_timedep_vars(data, nc_id, soft_vers, time_ind, time_size, logger):
     logger.debug('reading aerosol layer in pbl (pbl)')
     data['pbl'][ind_b:ind_e, :] = nc_id.variables['PBL'][:]
     logger.debug('reading cbh')
-    data['cbh'][ind_b:ind_e, :] = nc_id.variables['CBH'][:, :]
+    data['cbh'][ind_b:ind_e, :] = nc_id.variables['CBH'][:, :] * 1000.
     logger.debug('reading cloud depth (cdp)')
     data['cdp'][ind_b:ind_e, :] = nc_id.variables['CDP'][:]
     logger.debug('reading cloud depth variation (cde)')
