@@ -9,11 +9,11 @@ import sys
 
 # brand and model of the LIDAR
 BRAND = 'jenoptik'
-MODEL = 'CHM15K nimbus'
+MODEL = 'CHM15K nimbus (UK MetOffice data format)'
 
 NN2_FACTOR = 3e-5
 CONSTANT_P_CALC = 0.05
-RAW_DATA_MISSING_CLOUDS = -1
+RAW_DATA_MISSING_CLOUDS = -999.
 
 ERR_HEX_MSG = [
     {'hex': 0x00000001, 'level': 'ERROR', 'msg': 'Signal quality'},
@@ -158,9 +158,11 @@ def get_vars_dim(list_files, logger):
             logger.error("109 error trying to open '{}'".format(ifile))
             continue
 
+        print('size :', nc_id.dimensions['nbases'])
+
         if f_count == 1:
             data_dim['range'] = len(nc_id.variables['range'][:])
-            data_dim['layer'] = len(nc_id.variables['layer'][:])
+            data_dim['layer'] = nc_id.dimensions['nbases'].size
 
         data_dim['time'] += len(nc_id.variables['time'][:])
 
@@ -218,18 +220,21 @@ def init_data(vars_dim, conf, logger):
     # -------------------------------------------------------------------------
     data['firmware_version'] = ""
     data['instrument_id'] = ""
-    data['scaling'] = np.nan
+    data['scaling'] = missing_float
 
     # dimensions of the output netCDf file
     # -------------------------------------------------------------------------
     data['time'] = np.empty((vars_dim['time'],), dtype=np.dtype(dt.datetime))
     data['range'] = np.ones((vars_dim['range'],),
                             dtype=np.float32) * missing_float
-    data['layer'] = np.ones((vars_dim['layer'],),
-                            dtype=np.int16) * missing_int
+    data['layer'] = np.arange(vars_dim['layer'])
 
     # scalar variables
     # -------------------------------------------------------------------------
+    data['latitude'] = missing_float
+    data['longitude'] = missing_float
+    data['l0_wavelength'] = missing_float
+    data['nominal_pulse_energy'] = missing_float
     data['cho'] = missing_int
 
     # Time dependent variables
@@ -350,7 +355,7 @@ def read_dim_vars(data, nc_id, logger):
     logger.debug('reading range')
     data['range'] = nc_id.variables['range'][:]
     logger.debug('reading layer')
-    data['layer'] = nc_id.variables['layer'][:]
+    data['layer'] = np.arange(nc_id.dimensions['nbases'].size)
 
     return time_size, data
 
@@ -364,8 +369,6 @@ def read_scalar_vars(data, nc_id, soft_vers, logger):
     data['zenith'] = nc_id.variables['zenith'][:]
     logger.debug('reading wavelength as l0_wavelength')
     data['l0_wavelength'] = nc_id.variables['wavelength'][:]
-    logger.debug('reading range_gate as range_resol')
-    data['range_resol'] = nc_id.variables['range_gate'][:]
     logger.debug('reading longitude')
     data['longitude'] = nc_id.variables['longitude'][:]
     logger.debug('reading latitude')
@@ -376,10 +379,10 @@ def read_scalar_vars(data, nc_id, soft_vers, logger):
     data['azimuth'] = nc_id.variables['azimuth'][:]
     if soft_vers > 0.235:
         logger.debug('reading cloud height offset (cho)')
-        data['cho'] = nc_id.variables['cho'][:]
-    if soft_vers >= 0.7:
-        logger.debug('reading scaling')
-        data['scaling'] = nc_id.variables['scaling'][:]
+        data['cho'] = nc_id.variables['CHO'][:]
+
+    # read overlap
+    data['overlap'] = nc_id.variables['overlap'][:]
 
     return data
 
@@ -394,80 +397,32 @@ def read_timedep_vars(data, nc_id, soft_vers, time_ind, time_size, logger):
 
     # time dependent variables
     # ---------------------------------------------------------------------
-    logger.debug('reading vertical optical range (vor)')
-    data['vor'][ind_b:ind_e] = nc_id.variables['vor'][:]
-    logger.debug('reading vertical optical range error (voe)')
-    data['voe'][ind_b:ind_e] = nc_id.variables['voe'][:]
     logger.debug('reading total cloud cover (tcc)')
-    data['tcc'][ind_b:ind_e] = nc_id.variables['tcc'][:]
-    logger.debug('reading state_optics')
-    data['state_optics'][ind_b:ind_e] = nc_id.variables['state_optics'][:]
-    logger.debug('reading state_laser')
-    data['state_laser'][ind_b:ind_e] = nc_id.variables['state_laser'][:]
-    logger.debug('reading state_detector')
-    data['state_detector'][ind_b:ind_e] = nc_id.variables['state_detector'][:]
+    data['tcc'][ind_b:ind_e] = nc_id.variables['TCC'][:]
     logger.debug('reading sky condition index (sci)')
-    data['sci'][ind_b:ind_e] = nc_id.variables['sci'][:]
-    logger.debug('reading nn1')
-    data['nn1'][ind_b:ind_e] = nc_id.variables['nn1'][:]
-
-    logger.debug('reading nn2')
-    try:
-        data['nn2'][ind_b:ind_e] = nc_id.variables['nn2'][:]
-        data['meta']['is_nn2'] = True
-    except KeyError:
-        logger.warning("nn2 variable not available")
-
-    logger.debug('reading nn3')
-    try:
-        data['nn3'][ind_b:ind_e] = nc_id.variables['nn3'][:]
-    except KeyError:
-        logger.warning("nn3 variable not available")
+    data['sci'][ind_b:ind_e] = nc_id.variables['SCI'][:]
 
     logger.debug('reading maximum detection height (mxd)')
-    data['mxd'][ind_b:ind_e] = nc_id.variables['mxd'][:]
-    logger.debug('reading life_time')
-    data['life_time'][ind_b:ind_e] = nc_id.variables['life_time'][:]
+    data['mxd'][ind_b:ind_e] = nc_id.variables['MXD'][:]
     logger.debug('reading 31 bit service code (error_ext)')
-    data['error_ext'][ind_b:ind_e] = nc_id.variables['error_ext'][:]
+    data['error_ext'][ind_b:ind_e] = nc_id.variables['message_bits'][:]
     logger.debug('reading base cloud cover (bcc)')
-    data['bcc'][ind_b:ind_e] = nc_id.variables['bcc'][:]
-    logger.debug('reading bckgrd_rcs_0 as base')
-    data['bckgrd_rcs_0'][ind_b:ind_e] = nc_id.variables['base'][:]
-    logger.debug('reading stddev')
-    data['stddev'][ind_b:ind_e] = nc_id.variables['stddev'][:]
-
-    # time dependant temperatures
-    logger.debug('reading temp_lom')
-    try:
-        data['temp_lom'][ind_b:ind_e] = get_temp(nc_id.variables['temp_lom'],
-                                                 logger)
-    except KeyError:
-        logger.warning('temp_lom variable is not available')
-    logger.debug('reading temp_int')
-    data['temp_int'][ind_b:ind_e] = get_temp(nc_id.variables['temp_int'],
-                                             logger)
-    logger.debug('reading temp_ext')
-    data['temp_ext'][ind_b:ind_e] = get_temp(nc_id.variables['temp_ext'],
-                                             logger)
-    logger.debug('reading temp_det')
-    data['temp_det'][ind_b:ind_e] = get_temp(nc_id.variables['temp_det'],
-                                             logger)
+    data['bcc'][ind_b:ind_e] = nc_id.variables['BCC'][:]
 
     # 2d time dependent variables
     # ---------------------------------------------------------------------
     logger.debug('reading quality score for aerosol layer in PBL')
-    data['pbs'][ind_b:ind_e, :] = nc_id.variables['pbs'][:]
+    data['pbs'][ind_b:ind_e, :] = nc_id.variables['PBS'][:]
     logger.debug('reading aerosol layer in pbl (pbl)')
-    data['pbl'][ind_b:ind_e, :] = nc_id.variables['pbl'][:]
+    data['pbl'][ind_b:ind_e, :] = nc_id.variables['PBL'][:]
     logger.debug('reading cbh')
-    data['cbh'][ind_b:ind_e, :] = nc_id.variables['cbh'][:, :]
+    data['cbh'][ind_b:ind_e, :] = nc_id.variables['CBH'][:, :] * 1000.
     logger.debug('reading cloud depth (cdp)')
-    data['cdp'][ind_b:ind_e, :] = nc_id.variables['cdp'][:]
+    data['cdp'][ind_b:ind_e, :] = nc_id.variables['CDP'][:]
     logger.debug('reading cloud depth variation (cde)')
-    data['cbe'][ind_b:ind_e, :] = nc_id.variables['cbe'][:]
+    data['cbe'][ind_b:ind_e, :] = nc_id.variables['CDE'][:]
     logger.debug('reading cloud base height variation (cbe)')
-    data['cde'][ind_b:ind_e, :] = nc_id.variables['cde'][:]
+    data['cde'][ind_b:ind_e, :] = nc_id.variables['CBE'][:]
     logger.debug('reading beta_raw')
     data['beta_raw'][ind_b:ind_e, :] = nc_id.variables['beta_raw'][:]
     # case of MetOffice
@@ -479,59 +434,8 @@ def read_timedep_vars(data, nc_id, soft_vers, time_ind, time_size, logger):
         pass
 
     # Read variables depending on software version
-    if 0.235 < soft_vers <= 0.559:
-        logger.debug('reading laser_pulses as nn2')
-        data['laser_pulses'][ind_b:ind_e] = nc_id.variables['nn2'][:]
-    elif soft_vers > 0.559:
-        logger.debug('reading laser_pulses')
-        data['laser_pulses'][ind_b:ind_e] = nc_id.variables['laser_pulses'][:]
-
-    logger.debug('reading p_calc')
-    try:
-        data['p_calc'][ind_b:ind_e] = nc_id.variables['p_calc'][:]
-        data['meta']['is_p_calc'] = True
-    except KeyError:
-        logger.debug('p_calc variable not available')
-
-    return data
-
-
-def calc_pr2(data, soft_vers, logger):
-    """
-    Do the calculation of the Pr² according to the sofware version of the LIDAR
-    """
-
-    # Pr²
-    logger.debug('calculing Pr2 using:')
-    if soft_vers < 0.7:
-
-        # check if it is a MetOffice
-        if data['meta']['is_metoffice']:
-            logger.debug('using beta to get rcs_0 (MetOffice)')
-            data['rcs_0'] = data['beta']
-        else:
-
-            # if p_calc not available
-            if not data['meta']['is_p_calc']:
-
-                if data['meta']['is_nn2']:
-                    data['p_calc'] = data['nn2'] * NN2_FACTOR
-                else:
-                    # if no nn2 : assume it is constant
-                    data['p_calc'] = CONSTANT_P_CALC
-
-        logger.debug('P = (beta_raw*stddev)*p_calc')
-        print('0 value P_CALC :', np.any(data['p_calc'] == 0))
-        data['rcs_0'] = (
-            (data['beta_raw'].T * data['stddev'] + data['bckgrd_rcs_0']) /
-            data['p_calc']).T * np.square(data['range'])
-    else:
-        # find a way to pass the overlap
-        logger.debug("P = (beta_raw/r2*ovl*p_calc*scaling+base)" +
-                     "*laser_pulses*range_scale")
-        # Warning: For this type of file we do not correct the overlap function
-        # as it is not available in the netCDf file
-        data['rcs_0'] = data['beta_raw']
+    logger.debug('reading laser_pulses')
+    data['laser_pulses'][ind_b:ind_e] = nc_id.variables['npulses'][:]
 
     return data
 
@@ -544,13 +448,6 @@ def read_data(list_files, conf, logger):
     logger.debug(
         'Start reading of data using reader for ' + BRAND + ' ' + MODEL
     )
-
-    # check if overlap file available and read it if available
-    # ------------------------------------------------------------------------
-    overlap = None
-    if 'ancillary' in conf and len(conf['ancillary']) != 0:
-        overlap = read_overlap(conf['ancillary'][0],
-                               conf['missing_float'], logger)
 
     # analyse the files to read to get the complete size of data
     # ------------------------------------------------------------------------
@@ -581,9 +478,9 @@ def read_data(list_files, conf, logger):
         if nb_files_read == 1:
             # get Jenoptik software version to know the method to use
             # to calculate P
-            soft_vers = get_soft_version(raw_data.software_version)
+            soft_vers = get_soft_version(raw_data.firmware_version)
             data['firmware_version'] = soft_vers
-            data['instrument_id'] = raw_data.serlom
+            data['instrument_id'] = ""
             logger.info("software version: %7.4f" % soft_vers)
 
             # read dimensions
@@ -595,17 +492,6 @@ def read_data(list_files, conf, logger):
             # ----------------------------------------------------------------
             logger.info("reading scalar variables")
             data = read_scalar_vars(data, raw_data, soft_vers, logger)
-
-            # store overlap if available
-            # ----------------------------------------------------------------
-            if overlap is not None:
-
-                if overlap.size < data['range'].size:
-                    logger.error("overlap data don't have enough elements")
-                    logger.error("overlap file is ignore")
-                else:
-                    # raw overlap has 4096 values so we slice it to the number of range
-                    data['overlap'] = overlap[0:data['range'].size]
 
         # Time dependant variables
         # --------------------------------------------------------------------
@@ -638,11 +524,6 @@ def read_data(list_files, conf, logger):
     tmp = np.array([dt.timedelta(seconds=value / 1000) for value in data['average_time']])
 
     data['start_time'] = data['time'] - tmp
-
-    # calculate Pr2
-    # ------------------------------------------------------------------------
-    logger.info("calculating Pr2")
-    data = calc_pr2(data, soft_vers, logger)
 
     # print messages status read in the file for each time step
     for err_msg in data['error_ext'][:]:
