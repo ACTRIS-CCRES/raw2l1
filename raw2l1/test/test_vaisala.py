@@ -5,6 +5,9 @@ import unittest
 import subprocess
 import os
 
+import numpy as np
+import netCDF4 as nc
+
 MAIN_DIR = os.path.dirname(os.path.dirname(__file__)) + os.sep
 CONF_DIR = MAIN_DIR + 'conf' + os.sep
 TEST_DIR = MAIN_DIR + 'test' + os.sep
@@ -209,6 +212,102 @@ class TestVaisalaBugSIRTA(unittest.TestCase):
         ])
 
         self.assertEqual(resp, 0, 'CL SIRTA bug conversion hexadecimal data')
+
+
+class TestUnitsInFeet(unittest.TestCase):
+    """Test the convertion of data from feet to meters"""
+
+    IN_DIR = TEST_IN_DIR + 'vaisala_cl' + os.sep
+
+    def test_cl31_feet(self):
+        """test using data from station 08360 in feet"""
+
+        wanted_cbh_values = [
+            7397, 7562, 7598, 7580, 7388, 7406,
+            7479, 7620, 7443, 7620, 7488, 7415,
+            7507, 7452, 7562, 7562, 7620, 7620,
+            7525, 7525
+        ]
+
+        date = '20161113'
+        conf_file = os.path.join(
+            CONF_DIR,
+            'conf_vaisala_cl31_toprof_netcdf4.ini'
+        )
+        test_ifile = os.path.join(
+            self.IN_DIR,
+            'ceilometer-eprofile_20161113233608_08045_A201611132320_cl31.dat')
+        test_ofile = os.path.join(
+            TEST_OUT_DIR,
+            'test_cbh_feet.nc'
+        )
+
+        subprocess.check_call([
+            MAIN_DIR + PRGM,
+            date,
+            conf_file,
+            test_ifile,
+            test_ofile,
+            '-log_level',
+            'debug',
+            '-v',
+            'debug'
+        ])
+
+        # get cbh values
+        nc_id = nc.Dataset(test_ofile)
+        raw2l1_cbh = np.ma.filled(nc_id.variables['cbh'][:])
+        nc_id.close()
+
+        self.assertEqual(
+            wanted_cbh_values,
+            raw2l1_cbh[:, 0].flatten().astype(int).tolist(),
+            'test cbh CL31 conversion from feet to meters')
+
+    def test_cl31_meters(self):
+        """test using data from station 08360 in feet"""
+
+        wanted_cbh_values = [
+            3450, 3455, 3455, 3455,
+            3460, 3460, 3465, 3470,
+            3470, 3470
+        ]
+
+        date = '20141030'
+        conf_file = os.path.join(
+            CONF_DIR,
+            'conf_vaisala_cl31_toprof_netcdf4.ini'
+        )
+        test_ifile = os.path.join(
+            self.IN_DIR,
+            'vaisala_test_cbh_meters.dat')
+        test_ofile = os.path.join(
+            TEST_OUT_DIR,
+            'test_cbh_meters.nc'
+        )
+
+        subprocess.check_call([
+            MAIN_DIR + PRGM,
+            date,
+            conf_file,
+            test_ifile,
+            test_ofile,
+            '-log_level',
+            'debug',
+            '-v',
+            'debug'
+        ])
+
+        # get cbh values
+        nc_id = nc.Dataset(test_ofile)
+        raw2l1_cbh = np.ma.filled(nc_id.variables['cbh'][:])
+        nc_id.close()
+
+        self.assertEqual(
+            wanted_cbh_values,
+            raw2l1_cbh[:, 0].flatten().astype(int).tolist(),
+            'test cbh CL31 in meters no conversion needed')
+
 
 if __name__ == '__main__':
     unittest.main()

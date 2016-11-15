@@ -177,9 +177,12 @@ def are_units_meters(err_msg, logger):
 
     for i in err_ind:
         if ERR_HEX_MSG[i]['msg'] == 'Units are meters if on, else feet':
-            return False
+            logger.debug("units are in meters")
+            return True
 
-    return True
+    logger.debug("units are in feet")
+
+    return False
 
 
 def get_conversion_coeff(are_units_meters):
