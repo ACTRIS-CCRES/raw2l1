@@ -1,4 +1,12 @@
-* v2.17
+* v2.1.8
+    + chm15k reader
+        - add test to check that cho (cloud base offset) is substracted from cbh if available
+    + cl31 reader
+        - correct bug with CBH and CLH. Instead of converting data in feet to meters, coefficient was applied to data in meters
+        - add test to check the conversion of data is working
+        - the bug was already corrected in reader for swiss airport data
+
+* v2.1.7
     + create a reader specifically for CHM15k data from UK metoffice
     + correct errors in E-PROFILE configuration files examples
 
@@ -6,7 +14,7 @@
     + improve managing of time variable in the creation of netCDF file
         - a new type has been added: `$time$`
         - section about time variable are required to have `units` and `calendar` options (compatible with netCDF-CF convention)
-        - update all confifuration files examples with the new `$time$` type for time variables
+        - update all configuration files examples with the new `$time$` type for time variables
     + chm15k reader
         - add variable `start_time`
     + cl31 reader
