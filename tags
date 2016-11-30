@@ -1,0 +1,877 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.8	//
+ALLOW_NC4_COMP	raw2l1/tools/common.py	/^ALLOW_NC4_COMP = ['true', 'false']$/;"	kind:variable	line:37
+ALLOW_NC4_COMP_LEVEL	raw2l1/tools/common.py	/^ALLOW_NC4_COMP_LEVEL = range(1, 10)$/;"	kind:variable	line:38
+ALLOW_NC_FMT	raw2l1/tools/common.py	/^ALLOW_NC_FMT = ['NETCDF3_CLASSIC', 'NETCDF4']$/;"	kind:variable	line:36
+ALT_DIM	raw2l1/reader/rpg_hatpro_absolute_humidity.py	/^ALT_DIM = 'number_altitude_layers'$/;"	kind:variable	line:17
+ALT_DIM	raw2l1/reader/rpg_hatpro_air_temp.py	/^ALT_DIM = 'number_altitude_layers'$/;"	kind:variable	line:17
+ALT_DIM	raw2l1/reader/rpg_hatpro_air_temp_bl.py	/^ALT_DIM = 'number_altitude_layers'$/;"	kind:variable	line:17
+ALT_VAR	raw2l1/reader/rpg_hatpro_absolute_humidity.py	/^ALT_VAR = 'altitude_layers'$/;"	kind:variable	line:18
+ALT_VAR	raw2l1/reader/rpg_hatpro_air_temp.py	/^ALT_VAR = 'altitude_layers'$/;"	kind:variable	line:18
+ALT_VAR	raw2l1/reader/rpg_hatpro_air_temp_bl.py	/^ALT_VAR = 'altitude_layers'$/;"	kind:variable	line:18
+BRAND	raw2l1/reader/campbellscientific_cs135.py	/^BRAND = 'campbell scientific'$/;"	kind:variable	line:13
+BRAND	raw2l1/reader/leosphere_wls70.py	/^BRAND = 'leosphere'$/;"	kind:variable	line:7
+BRAND	raw2l1/reader/lufft_chm15k_nimbus-uk-metoffice.py	/^BRAND = 'jenoptik'$/;"	kind:variable	line:11
+BRAND	raw2l1/reader/lufft_chm15k_nimbus.py	/^BRAND = 'jenoptik'$/;"	kind:variable	line:11
+BRAND	raw2l1/reader/rpg_hatpro_absolute_humidity.py	/^BRAND = 'RPG'$/;"	kind:variable	line:12
+BRAND	raw2l1/reader/rpg_hatpro_air_temp.py	/^BRAND = 'RPG'$/;"	kind:variable	line:12
+BRAND	raw2l1/reader/rpg_hatpro_air_temp_bl.py	/^BRAND = 'RPG'$/;"	kind:variable	line:12
+BRAND	raw2l1/reader/rpg_hatpro_brightness_temperature.py	/^BRAND = 'RPG'$/;"	kind:variable	line:12
+BRAND	raw2l1/reader/rpg_hatpro_brightness_temperature_bl.py	/^BRAND = 'RPG'$/;"	kind:variable	line:14
+BRAND	raw2l1/reader/rpg_hatpro_clwvi.py	/^BRAND = 'RPG'$/;"	kind:variable	line:12
+BRAND	raw2l1/reader/rpg_hatpro_prw.py	/^BRAND = 'RPG'$/;"	kind:variable	line:12
+BRAND	raw2l1/reader/sigmaspace_minimpl.py	/^BRAND = 'SigmaSpace'$/;"	kind:variable	line:12
+BRAND	raw2l1/reader/sirta_ipral.py	/^BRAND = 'Gordien Stratos\/Raymetrics\/SIRTA'$/;"	kind:variable	line:11
+BRAND	raw2l1/reader/vaisala_cl.py	/^BRAND = 'vaisala'$/;"	kind:variable	line:12
+BRAND	raw2l1/reader/vaisala_cl_swiss_airport.py	/^BRAND = 'vaisala'$/;"	kind:variable	line:13
+CBH_ALT_FACTOR	raw2l1/reader/lib/libvaisala.py	/^CBH_ALT_FACTOR = 10.$/;"	kind:variable	line:51
+CBH_DIM	raw2l1/reader/campbellscientific_cs135.py	/^CBH_DIM = 4$/;"	kind:variable	line:31
+CBH_DIM	raw2l1/reader/lib/libvaisala.py	/^CBH_DIM = 3$/;"	kind:variable	line:44
+CBH_DIM	raw2l1/reader/vaisala_cl.py	/^CBH_DIM = 3$/;"	kind:variable	line:57
+CBH_DIM	raw2l1/reader/vaisala_cl_swiss_airport.py	/^CBH_DIM = 3$/;"	kind:variable	line:57
+CHANNELS	raw2l1/reader/sirta_ipral.py	/^CHANNELS = [$/;"	kind:variable	line:19
+CLH_ALT_FACTOR	raw2l1/reader/campbellscientific_cs135.py	/^CLH_ALT_FACTOR = 10.$/;"	kind:variable	line:40
+CLH_ALT_FEET_FACTOR	raw2l1/reader/vaisala_cl.py	/^CLH_ALT_FEET_FACTOR = 100.$/;"	kind:variable	line:66
+CLH_ALT_FEET_FACTOR	raw2l1/reader/vaisala_cl_swiss_airport.py	/^CLH_ALT_FEET_FACTOR = 100.$/;"	kind:variable	line:66
+CLH_ALT_METERS_FACTOR	raw2l1/reader/vaisala_cl.py	/^CLH_ALT_METERS_FACTOR = 10.$/;"	kind:variable	line:65
+CLH_ALT_METERS_FACTOR	raw2l1/reader/vaisala_cl_swiss_airport.py	/^CLH_ALT_METERS_FACTOR = 10.$/;"	kind:variable	line:65
+CLH_DIM	raw2l1/reader/campbellscientific_cs135.py	/^CLH_DIM = 5$/;"	kind:variable	line:32
+CLH_DIM	raw2l1/reader/lib/libvaisala.py	/^CLH_DIM = 5$/;"	kind:variable	line:45
+CLH_DIM	raw2l1/reader/vaisala_cl.py	/^CLH_DIM = 5$/;"	kind:variable	line:58
+CLH_DIM	raw2l1/reader/vaisala_cl_swiss_airport.py	/^CLH_DIM = 5$/;"	kind:variable	line:58
+COMMENTS	raw2l1/tools/read_overlap.py	/^COMMENTS = '#'$/;"	kind:variable	line:9
+CONF_DIR	raw2l1/test/test_chm15k_nimbus-uk-metoffice.py	/^CONF_DIR = os.path.join(MAIN_DIR, 'conf')$/;"	kind:variable	line:9
+CONF_DIR	raw2l1/test/test_chm15k_nimbus.py	/^CONF_DIR = os.path.join(MAIN_DIR, 'conf')$/;"	kind:variable	line:12
+CONF_DIR	raw2l1/test/test_cs135.py	/^CONF_DIR = MAIN_DIR + 'conf' + os.sep$/;"	kind:variable	line:9
+CONF_DIR	raw2l1/test/test_logs.py	/^CONF_DIR = MAIN_DIR + 'conf' + os.sep$/;"	kind:variable	line:9
+CONF_DIR	raw2l1/test/test_netcdf4.py	/^CONF_DIR = MAIN_DIR + 'conf' + os.sep$/;"	kind:variable	line:9
+CONF_DIR	raw2l1/test/test_rpg_hatpro.py	/^CONF_DIR = MAIN_DIR + 'conf' + os.sep$/;"	kind:variable	line:9
+CONF_DIR	raw2l1/test/test_sigmaspace_minimpl.py	/^CONF_DIR = MAIN_DIR + 'conf' + os.sep$/;"	kind:variable	line:9
+CONF_DIR	raw2l1/test/test_timeliness.py	/^CONF_DIR = MAIN_DIR + 'conf' + os.sep$/;"	kind:variable	line:10
+CONF_DIR	raw2l1/test/test_toprof_format.py	/^CONF_DIR = MAIN_DIR + 'conf' + os.sep$/;"	kind:variable	line:9
+CONF_DIR	raw2l1/test/test_vaisala.py	/^CONF_DIR = MAIN_DIR + 'conf' + os.sep$/;"	kind:variable	line:12
+CONF_DIR	raw2l1/test/test_vaisala_eprofile.py	/^CONF_DIR = MAIN_DIR + 'conf' + os.sep$/;"	kind:variable	line:9
+CONF_DIR	raw2l1/test/test_vaisala_sirta.py	/^CONF_DIR = MAIN_DIR + 'conf' + os.sep$/;"	kind:variable	line:9
+CONF_MSG_REGEX	raw2l1/reader/campbellscientific_cs135.py	/^CONF_MSG_REGEX = r'CS.\\d{6}'$/;"	kind:variable	line:16
+CONF_MSG_REGEX	raw2l1/reader/lib/libvaisala.py	/^CONF_MSG_REGEX = r'CL.\\d{5}'$/;"	kind:variable	line:5
+CONF_MSG_REGEX	raw2l1/reader/vaisala_cl.py	/^CONF_MSG_REGEX = r'CL.\\d{5}'$/;"	kind:variable	line:18
+CONF_MSG_REGEX	raw2l1/reader/vaisala_cl_swiss_airport.py	/^CONF_MSG_REGEX = r'CL.\\d{5}'$/;"	kind:variable	line:18
+CONF_OPTIONS	raw2l1/tools/common.py	/^CONF_OPTIONS = [$/;"	kind:variable	line:29
+CONF_SECTIONS	raw2l1/tools/common.py	/^CONF_SECTIONS = ['conf', 'reader_conf', 'global']$/;"	kind:variable	line:5
+CONSTANT_P_CALC	raw2l1/reader/lufft_chm15k_nimbus-uk-metoffice.py	/^CONSTANT_P_CALC = 0.05$/;"	kind:variable	line:15
+CONSTANT_P_CALC	raw2l1/reader/lufft_chm15k_nimbus.py	/^CONSTANT_P_CALC = 0.05$/;"	kind:variable	line:15
+ConfigParser	raw2l1/reader/campbellscientific_cs135.py	/^import ConfigParser$/;"	kind:namespace	line:9
+ConfigParser	raw2l1/test/test_lidar_reader.py	/^import ConfigParser$/;"	kind:namespace	line:5
+ConfigParser	raw2l1/tools/conf.py	/^import ConfigParser$/;"	kind:namespace	line:6
+ConfigParser	raw2l1/tools/create_netcdf.py	/^import ConfigParser$/;"	kind:namespace	line:10
+DATE_FMT	raw2l1/reader/leosphere_wls70.py	/^DATE_FMT = '%Y\/%m\/%d %H:%M:%S'$/;"	kind:variable	line:11
+DATE_FMT	raw2l1/reader/sirta_ipral.py	/^DATE_FMT = '%md\/%m\/%Y %H:%M:%S'$/;"	kind:variable	line:43
+DATE_FMT	raw2l1/tools/arg_parser.py	/^DATE_FMT = "%Y%m%d"$/;"	kind:variable	line:16
+DEG_2_K	raw2l1/reader/sigmaspace_minimpl.py	/^DEG_2_K = 273.15$/;"	kind:variable	line:23
+DEG_TO_K	raw2l1/reader/campbellscientific_cs135.py	/^DEG_TO_K = 273.15$/;"	kind:variable	line:39
+DEG_TO_K	raw2l1/reader/lib/libvaisala.py	/^DEG_TO_K = 273.15$/;"	kind:variable	line:50
+DEG_TO_K	raw2l1/reader/vaisala_cl.py	/^DEG_TO_K = 273.15$/;"	kind:variable	line:63
+DEG_TO_K	raw2l1/reader/vaisala_cl_swiss_airport.py	/^DEG_TO_K = 273.15$/;"	kind:variable	line:63
+ERRORS	raw2l1/tools/errors.py	/^ERRORS = {$/;"	kind:variable	line:5
+ERR_HEX_MSG	raw2l1/reader/lufft_chm15k_nimbus-uk-metoffice.py	/^ERR_HEX_MSG = [$/;"	kind:variable	line:18
+ERR_HEX_MSG	raw2l1/reader/lufft_chm15k_nimbus.py	/^ERR_HEX_MSG = [$/;"	kind:variable	line:18
+ERR_HEX_MSG	raw2l1/reader/vaisala_cl.py	/^ERR_HEX_MSG = [$/;"	kind:variable	line:71
+ERR_HEX_MSG	raw2l1/reader/vaisala_cl_swiss_airport.py	/^ERR_HEX_MSG = [$/;"	kind:variable	line:71
+ERR_MSG	raw2l1/reader/sirta_ipral.py	/^ERR_MSG = {$/;"	kind:variable	line:50
+FEET_TO_METERS	raw2l1/reader/vaisala_cl.py	/^FEET_TO_METERS = 0.3048$/;"	kind:variable	line:64
+FEET_TO_METERS	raw2l1/reader/vaisala_cl_swiss_airport.py	/^FEET_TO_METERS = 0.3048$/;"	kind:variable	line:64
+FILENAME_LENGTH	raw2l1/reader/sirta_ipral.py	/^FILENAME_LENGTH = 13$/;"	kind:variable	line:45
+FILE_HEADERS	raw2l1/reader/vaisala_cl.py	/^FILE_HEADERS = ["-Ceilometer Logfile", "-File created:"]$/;"	kind:variable	line:17
+FILE_HEADERS	raw2l1/reader/vaisala_cl_swiss_airport.py	/^FILE_HEADERS = ["-Ceilometer Logfile", "-File created:"]$/;"	kind:variable	line:17
+FILLING	raw2l1/tools/read_overlap.py	/^FILLING = np.nan$/;"	kind:variable	line:10
+FLT_MISSING_VALUE	raw2l1/reader/rpg_hatpro_absolute_humidity.py	/^FLT_MISSING_VALUE = -999.$/;"	kind:variable	line:20
+FLT_MISSING_VALUE	raw2l1/reader/rpg_hatpro_air_temp.py	/^FLT_MISSING_VALUE = -999.$/;"	kind:variable	line:20
+FLT_MISSING_VALUE	raw2l1/reader/rpg_hatpro_air_temp_bl.py	/^FLT_MISSING_VALUE = -999.$/;"	kind:variable	line:20
+FLT_MISSING_VALUE	raw2l1/reader/rpg_hatpro_brightness_temperature.py	/^FLT_MISSING_VALUE = -999.$/;"	kind:variable	line:19
+FLT_MISSING_VALUE	raw2l1/reader/rpg_hatpro_brightness_temperature_bl.py	/^FLT_MISSING_VALUE = -999.$/;"	kind:variable	line:21
+FLT_MISSING_VALUE	raw2l1/reader/rpg_hatpro_clwvi.py	/^FLT_MISSING_VALUE = -999.$/;"	kind:variable	line:19
+FLT_MISSING_VALUE	raw2l1/reader/rpg_hatpro_prw.py	/^FLT_MISSING_VALUE = -999.$/;"	kind:variable	line:19
+FMT_DATE	raw2l1/reader/vaisala_cl.py	/^FMT_DATE = "-%Y-%m-%d %H:%M:%S"$/;"	kind:variable	line:16
+HEADER_TAG	raw2l1/reader/leosphere_wls70.py	/^HEADER_TAG = 'HeaderSize'$/;"	kind:variable	line:13
+INT_MISSING_VALUE	raw2l1/reader/rpg_hatpro_absolute_humidity.py	/^INT_MISSING_VALUE = -9$/;"	kind:variable	line:21
+INT_MISSING_VALUE	raw2l1/reader/rpg_hatpro_air_temp.py	/^INT_MISSING_VALUE = -9$/;"	kind:variable	line:21
+INT_MISSING_VALUE	raw2l1/reader/rpg_hatpro_air_temp_bl.py	/^INT_MISSING_VALUE = -9$/;"	kind:variable	line:21
+INT_MISSING_VALUE	raw2l1/reader/rpg_hatpro_brightness_temperature.py	/^INT_MISSING_VALUE = -9$/;"	kind:variable	line:20
+INT_MISSING_VALUE	raw2l1/reader/rpg_hatpro_brightness_temperature_bl.py	/^INT_MISSING_VALUE = -9$/;"	kind:variable	line:22
+INT_MISSING_VALUE	raw2l1/reader/rpg_hatpro_clwvi.py	/^INT_MISSING_VALUE = -9$/;"	kind:variable	line:20
+INT_MISSING_VALUE	raw2l1/reader/rpg_hatpro_prw.py	/^INT_MISSING_VALUE = -9$/;"	kind:variable	line:20
+IN_DIR	raw2l1/test/test_chm15k_nimbus-uk-metoffice.py	/^    IN_DIR = os.path.join(TEST_IN_DIR, 'jenoptik_chm15k')$/;"	kind:variable	line:18
+IN_DIR	raw2l1/test/test_chm15k_nimbus.py	/^    IN_DIR = os.path.join(TEST_IN_DIR, 'jenoptik_chm15k')$/;"	kind:variable	line:185
+IN_DIR	raw2l1/test/test_chm15k_nimbus.py	/^    IN_DIR = os.path.join(TEST_IN_DIR, 'jenoptik_chm15k')$/;"	kind:variable	line:21
+IN_DIR	raw2l1/test/test_cs135.py	/^    IN_DIR = TEST_IN_DIR + 'campbell_cs135' + os.sep$/;"	kind:variable	line:18
+IN_DIR	raw2l1/test/test_cs135.py	/^    IN_DIR = TEST_IN_DIR + 'campbell_cs135' + os.sep$/;"	kind:variable	line:44
+IN_DIR	raw2l1/test/test_logs.py	/^    IN_DIR = TEST_IN_DIR + 'rpg_hatpro' + os.sep$/;"	kind:variable	line:18
+IN_DIR	raw2l1/test/test_netcdf4.py	/^    IN_DIR = TEST_IN_DIR + 'campbell_cs135' + os.sep$/;"	kind:variable	line:18
+IN_DIR	raw2l1/test/test_rpg_hatpro.py	/^    IN_DIR = TEST_IN_DIR + 'rpg_hatpro' + os.sep$/;"	kind:variable	line:18
+IN_DIR	raw2l1/test/test_sigmaspace_minimpl.py	/^    IN_DIR = TEST_IN_DIR + 'sigmaspace_minimpl' + os.sep$/;"	kind:variable	line:18
+IN_DIR	raw2l1/test/test_timeliness.py	/^    IN_DIR = TEST_IN_DIR + 'campbell_cs135' + os.sep$/;"	kind:variable	line:19
+IN_DIR	raw2l1/test/test_toprof_format.py	/^    IN_DIR = TEST_IN_DIR + 'jenoptik_chm15k' + os.sep$/;"	kind:variable	line:18
+IN_DIR	raw2l1/test/test_toprof_format.py	/^    IN_DIR = TEST_IN_DIR + 'vaisala_cl31' + os.sep$/;"	kind:variable	line:43
+IN_DIR	raw2l1/test/test_toprof_format.py	/^    IN_DIR = TEST_IN_DIR + 'vaisala_cl51' + os.sep$/;"	kind:variable	line:69
+IN_DIR	raw2l1/test/test_vaisala.py	/^    IN_DIR = TEST_IN_DIR + 'vaisala_cl' + os.sep$/;"	kind:variable	line:119
+IN_DIR	raw2l1/test/test_vaisala.py	/^    IN_DIR = TEST_IN_DIR + 'vaisala_cl' + os.sep$/;"	kind:variable	line:220
+IN_DIR	raw2l1/test/test_vaisala.py	/^    IN_DIR = TEST_IN_DIR + 'vaisala_cl' + os.sep$/;"	kind:variable	line:47
+IN_DIR	raw2l1/test/test_vaisala.py	/^    IN_DIR = TEST_IN_DIR + 'vaisala_cl31' + os.sep$/;"	kind:variable	line:147
+IN_DIR	raw2l1/test/test_vaisala.py	/^    IN_DIR = TEST_IN_DIR + 'vaisala_cl31' + os.sep$/;"	kind:variable	line:21
+IN_DIR	raw2l1/test/test_vaisala.py	/^    IN_DIR = TEST_IN_DIR + 'vaisala_cl51' + os.sep$/;"	kind:variable	line:93
+IN_DIR	raw2l1/test/test_vaisala_eprofile.py	/^    IN_DIR = TEST_IN_DIR + 'vaisala_cl' + os.sep + 'eprofile' + os.sep$/;"	kind:variable	line:124
+IN_DIR	raw2l1/test/test_vaisala_eprofile.py	/^    IN_DIR = TEST_IN_DIR + 'vaisala_cl' + os.sep + 'eprofile' + os.sep$/;"	kind:variable	line:152
+IN_DIR	raw2l1/test/test_vaisala_eprofile.py	/^    IN_DIR = TEST_IN_DIR + 'vaisala_cl' + os.sep + 'eprofile' + os.sep$/;"	kind:variable	line:18
+IN_DIR	raw2l1/test/test_vaisala_eprofile.py	/^    IN_DIR = TEST_IN_DIR + 'vaisala_cl' + os.sep + 'eprofile' + os.sep$/;"	kind:variable	line:198
+IN_DIR	raw2l1/test/test_vaisala_eprofile.py	/^    IN_DIR = TEST_IN_DIR + 'vaisala_cl' + os.sep + 'eprofile' + os.sep$/;"	kind:variable	line:224
+IN_DIR	raw2l1/test/test_vaisala_sirta.py	/^    IN_DIR = TEST_IN_DIR + 'vaisala_cl31' + os.sep$/;"	kind:variable	line:18
+KEYS_VALTYPE	raw2l1/tools/create_netcdf.py	/^KEYS_VALTYPE = {$/;"	kind:variable	line:18
+KEY_NODIM	raw2l1/tools/create_netcdf.py	/^KEY_NODIM = '$none$'$/;"	kind:variable	line:17
+KEY_OVERLAP	raw2l1/tools/create_netcdf.py	/^KEY_OVERLAP = '$overlap$'$/;"	kind:variable	line:16
+KEY_READERDATA	raw2l1/tools/create_netcdf.py	/^KEY_READERDATA = '$reader_data$'$/;"	kind:variable	line:15
+KM_2_M	raw2l1/reader/sigmaspace_minimpl.py	/^KM_2_M = 1.e3$/;"	kind:variable	line:24
+LINE_2_N_FIELDS	raw2l1/reader/sirta_ipral.py	/^LINE_2_N_FIELDS = 12$/;"	kind:variable	line:46
+LOG_DATE_FMT	raw2l1/tools/log.py	/^LOG_DATE_FMT = '%Y-%m-%d %H:%M:%S'$/;"	kind:variable	line:14
+LOG_DIR	raw2l1/tools/log.py	/^LOG_DIR = 'logs'$/;"	kind:variable	line:15
+LOG_FILENAME	raw2l1/tools/log.py	/^LOG_FILENAME = 'raw2l1.log'$/;"	kind:variable	line:16
+LOG_FMT	raw2l1/tools/log.py	/^LOG_FMT = '%(asctime)s - %(name)s - %(levelname)s - %(message)s'$/;"	kind:variable	line:13
+LOG_LEVEL	raw2l1/tools/arg_parser.py	/^LOG_LEVEL = ['debug', 'info', 'warning', 'error', 'critical']$/;"	kind:variable	line:17
+MAIN_DIR	raw2l1/test/test_chm15k_nimbus-uk-metoffice.py	/^MAIN_DIR = os.path.dirname(os.path.dirname(__file__)) + os.sep$/;"	kind:variable	line:8
+MAIN_DIR	raw2l1/test/test_chm15k_nimbus.py	/^MAIN_DIR = os.path.dirname(os.path.dirname(__file__)) + os.sep$/;"	kind:variable	line:11
+MAIN_DIR	raw2l1/test/test_cs135.py	/^MAIN_DIR = os.path.dirname(os.path.dirname(__file__)) + os.sep$/;"	kind:variable	line:8
+MAIN_DIR	raw2l1/test/test_logs.py	/^MAIN_DIR = os.path.dirname(os.path.dirname(__file__)) + os.sep$/;"	kind:variable	line:8
+MAIN_DIR	raw2l1/test/test_netcdf4.py	/^MAIN_DIR = os.path.dirname(os.path.dirname(__file__)) + os.sep$/;"	kind:variable	line:8
+MAIN_DIR	raw2l1/test/test_rpg_hatpro.py	/^MAIN_DIR = os.path.dirname(os.path.dirname(__file__)) + os.sep$/;"	kind:variable	line:8
+MAIN_DIR	raw2l1/test/test_sigmaspace_minimpl.py	/^MAIN_DIR = os.path.dirname(os.path.dirname(__file__)) + os.sep$/;"	kind:variable	line:8
+MAIN_DIR	raw2l1/test/test_timeliness.py	/^MAIN_DIR = os.path.dirname(os.path.dirname(__file__)) + os.sep$/;"	kind:variable	line:9
+MAIN_DIR	raw2l1/test/test_toprof_format.py	/^MAIN_DIR = os.path.dirname(os.path.dirname(__file__)) + os.sep$/;"	kind:variable	line:8
+MAIN_DIR	raw2l1/test/test_vaisala.py	/^MAIN_DIR = os.path.dirname(os.path.dirname(__file__)) + os.sep$/;"	kind:variable	line:11
+MAIN_DIR	raw2l1/test/test_vaisala_eprofile.py	/^MAIN_DIR = os.path.dirname(os.path.dirname(__file__)) + os.sep$/;"	kind:variable	line:8
+MAIN_DIR	raw2l1/test/test_vaisala_sirta.py	/^MAIN_DIR = os.path.dirname(os.path.dirname(__file__)) + os.sep$/;"	kind:variable	line:8
+MIN_2_SEC	raw2l1/reader/sigmaspace_minimpl.py	/^MIN_2_SEC = 60$/;"	kind:variable	line:25
+MISSING_FLOAT	raw2l1/reader/sigmaspace_minimpl.py	/^MISSING_FLOAT = np.nan$/;"	kind:variable	line:20
+MISSING_FLOAT	raw2l1/tools/common.py	/^MISSING_FLOAT = -999.$/;"	kind:variable	line:41
+MISSING_FLOAT_KEY	raw2l1/tools/lidar_reader.py	/^MISSING_FLOAT_KEY = 'missing_float'$/;"	kind:variable	line:15
+MISSING_INT	raw2l1/reader/sigmaspace_minimpl.py	/^MISSING_INT = -9$/;"	kind:variable	line:19
+MISSING_INTEGER	raw2l1/tools/common.py	/^MISSING_INTEGER = -9$/;"	kind:variable	line:42
+MISSING_INT_KEY	raw2l1/tools/lidar_reader.py	/^MISSING_INT_KEY = 'missing_int'$/;"	kind:variable	line:16
+MISSING_METEO	raw2l1/reader/sigmaspace_minimpl.py	/^MISSING_METEO = -999.$/;"	kind:variable	line:16
+MLH_DIM	raw2l1/reader/campbellscientific_cs135.py	/^MLH_DIM = 3$/;"	kind:variable	line:33
+MODEL	raw2l1/reader/campbellscientific_cs135.py	/^MODEL = 'CS135'$/;"	kind:variable	line:14
+MODEL	raw2l1/reader/leosphere_wls70.py	/^MODEL = 'WLS70'$/;"	kind:variable	line:8
+MODEL	raw2l1/reader/lufft_chm15k_nimbus-uk-metoffice.py	/^MODEL = 'CHM15K nimbus (UK MetOffice data format)'$/;"	kind:variable	line:12
+MODEL	raw2l1/reader/lufft_chm15k_nimbus.py	/^MODEL = 'CHM15K nimbus'$/;"	kind:variable	line:12
+MODEL	raw2l1/reader/rpg_hatpro_absolute_humidity.py	/^MODEL = 'HATPRO boundary layer temperature'$/;"	kind:variable	line:13
+MODEL	raw2l1/reader/rpg_hatpro_air_temp.py	/^MODEL = 'HATPRO boundary layer temperature'$/;"	kind:variable	line:13
+MODEL	raw2l1/reader/rpg_hatpro_air_temp_bl.py	/^MODEL = 'HATPRO boundary layer temperature'$/;"	kind:variable	line:13
+MODEL	raw2l1/reader/rpg_hatpro_brightness_temperature.py	/^MODEL = 'HATPRO boundary layer temperature'$/;"	kind:variable	line:13
+MODEL	raw2l1/reader/rpg_hatpro_brightness_temperature_bl.py	/^MODEL = 'HATPRO boundary layer temperature'$/;"	kind:variable	line:15
+MODEL	raw2l1/reader/rpg_hatpro_clwvi.py	/^MODEL = 'HATPRO boundary layer temperature'$/;"	kind:variable	line:13
+MODEL	raw2l1/reader/rpg_hatpro_prw.py	/^MODEL = 'HATPRO boundary layer temperature'$/;"	kind:variable	line:13
+MODEL	raw2l1/reader/sigmaspace_minimpl.py	/^MODEL = 'MiniMPL'$/;"	kind:variable	line:13
+MODEL	raw2l1/reader/sirta_ipral.py	/^MODEL = 'IPRAL'$/;"	kind:variable	line:12
+MODEL	raw2l1/reader/vaisala_cl.py	/^MODEL = 'CL31 & CL51'$/;"	kind:variable	line:13
+MODEL	raw2l1/reader/vaisala_cl_swiss_airport.py	/^MODEL = 'CL31 & CL51 swiss airport'$/;"	kind:variable	line:14
+MSG_NB_LINES	raw2l1/reader/lib/libvaisala.py	/^MSG_NB_LINES = {$/;"	kind:variable	line:6
+MSG_NB_LINES	raw2l1/reader/vaisala_cl.py	/^MSG_NB_LINES = {$/;"	kind:variable	line:19
+MSG_NB_LINES	raw2l1/reader/vaisala_cl_swiss_airport.py	/^MSG_NB_LINES = {$/;"	kind:variable	line:19
+MSG_TIMESTAMP_FMT	raw2l1/reader/campbellscientific_cs135.py	/^MSG_TIMESTAMP_FMT = ("can't read data without timestamp format" +$/;"	kind:variable	line:43
+MSG_TYPE_LINES	raw2l1/reader/campbellscientific_cs135.py	/^MSG_TYPE_LINES = {$/;"	kind:variable	line:20
+MSG_TYPE_NOPROF	raw2l1/reader/campbellscientific_cs135.py	/^MSG_TYPE_NOPROF = [1, 3, 5]$/;"	kind:variable	line:19
+MSG_TYPE_PROF	raw2l1/reader/campbellscientific_cs135.py	/^MSG_TYPE_PROF = [2, 4, 6]$/;"	kind:variable	line:18
+NAME	raw2l1/raw2l1.py	/^NAME = 'raw2l1'$/;"	kind:variable	line:18
+NN2_FACTOR	raw2l1/reader/lufft_chm15k_nimbus-uk-metoffice.py	/^NN2_FACTOR = 3e-5$/;"	kind:variable	line:14
+NN2_FACTOR	raw2l1/reader/lufft_chm15k_nimbus.py	/^NN2_FACTOR = 3e-5$/;"	kind:variable	line:14
+OK_SCALE_VALUE	raw2l1/reader/vaisala_cl.py	/^OK_SCALE_VALUE = 100.$/;"	kind:variable	line:68
+OK_SCALE_VALUE	raw2l1/reader/vaisala_cl_swiss_airport.py	/^OK_SCALE_VALUE = 100.$/;"	kind:variable	line:68
+OVER_DTYPE	raw2l1/tools/read_overlap.py	/^OVER_DTYPE = [('range', 'f4'), ('overlap', 'f4')]$/;"	kind:variable	line:8
+POLARIZATION	raw2l1/reader/sirta_ipral.py	/^POLARIZATION = {'o': 'none', 's': 'perpendicular', 'p': 'parallel'}$/;"	kind:variable	line:40
+PRGM	raw2l1/test/test_chm15k_nimbus-uk-metoffice.py	/^PRGM = "raw2l1.py"$/;"	kind:variable	line:13
+PRGM	raw2l1/test/test_chm15k_nimbus.py	/^PRGM = "raw2l1.py"$/;"	kind:variable	line:16
+PRGM	raw2l1/test/test_cs135.py	/^PRGM = "raw2l1.py"$/;"	kind:variable	line:13
+PRGM	raw2l1/test/test_logs.py	/^PRGM = "raw2l1.py"$/;"	kind:variable	line:13
+PRGM	raw2l1/test/test_netcdf4.py	/^PRGM = "raw2l1.py"$/;"	kind:variable	line:13
+PRGM	raw2l1/test/test_rpg_hatpro.py	/^PRGM = "raw2l1.py"$/;"	kind:variable	line:13
+PRGM	raw2l1/test/test_sigmaspace_minimpl.py	/^PRGM = "raw2l1.py"$/;"	kind:variable	line:13
+PRGM	raw2l1/test/test_timeliness.py	/^PRGM = "raw2l1.py"$/;"	kind:variable	line:14
+PRGM	raw2l1/test/test_toprof_format.py	/^PRGM = "raw2l1.py"$/;"	kind:variable	line:13
+PRGM	raw2l1/test/test_vaisala.py	/^PRGM = "raw2l1.py"$/;"	kind:variable	line:16
+PRGM	raw2l1/test/test_vaisala_eprofile.py	/^PRGM = "raw2l1.py"$/;"	kind:variable	line:13
+PRGM	raw2l1/test/test_vaisala_sirta.py	/^PRGM = "raw2l1.py"$/;"	kind:variable	line:13
+PROG_DESC	raw2l1/tools/arg_parser.py	/^PROG_DESC = "Raw LIDAR data to netCDF converter"$/;"	kind:variable	line:15
+PULSE_FACTOR	raw2l1/reader/campbellscientific_cs135.py	/^PULSE_FACTOR = 1000.$/;"	kind:variable	line:35
+RANGE_DIM	raw2l1/reader/campbellscientific_cs135.py	/^RANGE_DIM = 2048$/;"	kind:variable	line:29
+RANGE_GATES	raw2l1/reader/lib/libvaisala.py	/^RANGE_GATES = {$/;"	kind:variable	line:23
+RANGE_GATES	raw2l1/reader/vaisala_cl.py	/^RANGE_GATES = {$/;"	kind:variable	line:36
+RANGE_GATES	raw2l1/reader/vaisala_cl_swiss_airport.py	/^RANGE_GATES = {$/;"	kind:variable	line:36
+RANGE_RESOL	raw2l1/reader/campbellscientific_cs135.py	/^RANGE_RESOL = 5$/;"	kind:variable	line:30
+RANGE_RESOL	raw2l1/reader/lib/libvaisala.py	/^RANGE_RESOL = {$/;"	kind:variable	line:13
+RANGE_RESOL	raw2l1/reader/vaisala_cl.py	/^RANGE_RESOL = {$/;"	kind:variable	line:26
+RANGE_RESOL	raw2l1/reader/vaisala_cl_swiss_airport.py	/^RANGE_RESOL = {$/;"	kind:variable	line:26
+RAW_DATA_MISSING_CLOUDS	raw2l1/reader/lufft_chm15k_nimbus-uk-metoffice.py	/^RAW_DATA_MISSING_CLOUDS = -999.$/;"	kind:variable	line:16
+RAW_DATA_MISSING_CLOUDS	raw2l1/reader/lufft_chm15k_nimbus.py	/^RAW_DATA_MISSING_CLOUDS = -1$/;"	kind:variable	line:16
+RCS_BYTES_SIZE	raw2l1/reader/campbellscientific_cs135.py	/^RCS_BYTES_SIZE = 5$/;"	kind:variable	line:37
+RCS_BYTES_SIZE	raw2l1/reader/lib/libvaisala.py	/^RCS_BYTES_SIZE = 5$/;"	kind:variable	line:48
+RCS_BYTES_SIZE	raw2l1/reader/vaisala_cl.py	/^RCS_BYTES_SIZE = 5$/;"	kind:variable	line:61
+RCS_BYTES_SIZE	raw2l1/reader/vaisala_cl_swiss_airport.py	/^RCS_BYTES_SIZE = 5$/;"	kind:variable	line:61
+RCS_FACTOR	raw2l1/reader/campbellscientific_cs135.py	/^RCS_FACTOR = 1e-8$/;"	kind:variable	line:38
+RCS_FACTOR	raw2l1/reader/lib/libvaisala.py	/^RCS_FACTOR = 1e-8$/;"	kind:variable	line:49
+RCS_FACTOR	raw2l1/reader/vaisala_cl.py	/^RCS_FACTOR = 1e-8$/;"	kind:variable	line:62
+RCS_FACTOR	raw2l1/reader/vaisala_cl_swiss_airport.py	/^RCS_FACTOR = 1e-8$/;"	kind:variable	line:62
+RCS_MSG_LINE	raw2l1/reader/lib/libvaisala.py	/^RCS_MSG_LINE = {$/;"	kind:variable	line:38
+RCS_MSG_LINE	raw2l1/reader/vaisala_cl.py	/^RCS_MSG_LINE = {$/;"	kind:variable	line:51
+RCS_MSG_LINE	raw2l1/reader/vaisala_cl_swiss_airport.py	/^RCS_MSG_LINE = {$/;"	kind:variable	line:51
+READER_CONF	raw2l1/tools/lidar_reader.py	/^READER_CONF = 'reader_conf'$/;"	kind:variable	line:14
+RESERV_ATTR	raw2l1/tools/common.py	/^RESERV_ATTR = [$/;"	kind:variable	line:11
+RawDataReader	raw2l1/tools/lidar_reader.py	/^class RawDataReader(object):$/;"	kind:class	line:19
+SPEC_SECTIONS	raw2l1/tools/common.py	/^SPEC_SECTIONS = []$/;"	kind:variable	line:8
+STATE_MSG_LINE	raw2l1/reader/lib/libvaisala.py	/^STATE_MSG_LINE = {$/;"	kind:variable	line:34
+STATE_MSG_LINE	raw2l1/reader/vaisala_cl.py	/^STATE_MSG_LINE = {$/;"	kind:variable	line:47
+STATE_MSG_LINE	raw2l1/reader/vaisala_cl_swiss_airport.py	/^STATE_MSG_LINE = {$/;"	kind:variable	line:47
+STRING_ATTR	raw2l1/tools/common.py	/^STRING_ATTR = [$/;"	kind:variable	line:21
+SUM_BCKSCATTER_FACTOR	raw2l1/reader/campbellscientific_cs135.py	/^SUM_BCKSCATTER_FACTOR = 1.E-4$/;"	kind:variable	line:41
+SUM_BCKSCATTER_FACTOR	raw2l1/reader/lib/libvaisala.py	/^SUM_BCKSCATTER_FACTOR = 1.E-4$/;"	kind:variable	line:52
+SUM_BCKSCATTER_FACTOR	raw2l1/reader/vaisala_cl.py	/^SUM_BCKSCATTER_FACTOR = 1.E-4$/;"	kind:variable	line:67
+SUM_BCKSCATTER_FACTOR	raw2l1/reader/vaisala_cl_swiss_airport.py	/^SUM_BCKSCATTER_FACTOR = 1.E-4$/;"	kind:variable	line:67
+TEST_DIR	raw2l1/test/test_chm15k_nimbus-uk-metoffice.py	/^TEST_DIR = os.path.join(MAIN_DIR, 'test')$/;"	kind:variable	line:10
+TEST_DIR	raw2l1/test/test_chm15k_nimbus.py	/^TEST_DIR = os.path.join(MAIN_DIR, 'test')$/;"	kind:variable	line:13
+TEST_DIR	raw2l1/test/test_cs135.py	/^TEST_DIR = MAIN_DIR + 'test' + os.sep$/;"	kind:variable	line:10
+TEST_DIR	raw2l1/test/test_logs.py	/^TEST_DIR = MAIN_DIR + 'test' + os.sep$/;"	kind:variable	line:10
+TEST_DIR	raw2l1/test/test_netcdf4.py	/^TEST_DIR = MAIN_DIR + 'test' + os.sep$/;"	kind:variable	line:10
+TEST_DIR	raw2l1/test/test_rpg_hatpro.py	/^TEST_DIR = MAIN_DIR + 'test' + os.sep$/;"	kind:variable	line:10
+TEST_DIR	raw2l1/test/test_sigmaspace_minimpl.py	/^TEST_DIR = MAIN_DIR + 'test' + os.sep$/;"	kind:variable	line:10
+TEST_DIR	raw2l1/test/test_timeliness.py	/^TEST_DIR = MAIN_DIR + 'test' + os.sep$/;"	kind:variable	line:11
+TEST_DIR	raw2l1/test/test_toprof_format.py	/^TEST_DIR = MAIN_DIR + 'test' + os.sep$/;"	kind:variable	line:10
+TEST_DIR	raw2l1/test/test_vaisala.py	/^TEST_DIR = MAIN_DIR + 'test' + os.sep$/;"	kind:variable	line:13
+TEST_DIR	raw2l1/test/test_vaisala_eprofile.py	/^TEST_DIR = MAIN_DIR + 'test' + os.sep$/;"	kind:variable	line:10
+TEST_DIR	raw2l1/test/test_vaisala_sirta.py	/^TEST_DIR = MAIN_DIR + 'test' + os.sep$/;"	kind:variable	line:10
+TEST_IN_DIR	raw2l1/test/test_chm15k_nimbus-uk-metoffice.py	/^TEST_IN_DIR = os.path.join(TEST_DIR, 'input')$/;"	kind:variable	line:11
+TEST_IN_DIR	raw2l1/test/test_chm15k_nimbus.py	/^TEST_IN_DIR = os.path.join(TEST_DIR, 'input')$/;"	kind:variable	line:14
+TEST_IN_DIR	raw2l1/test/test_cs135.py	/^TEST_IN_DIR = TEST_DIR + os.sep + 'input' + os.sep$/;"	kind:variable	line:11
+TEST_IN_DIR	raw2l1/test/test_logs.py	/^TEST_IN_DIR = TEST_DIR + os.sep + 'input' + os.sep$/;"	kind:variable	line:11
+TEST_IN_DIR	raw2l1/test/test_netcdf4.py	/^TEST_IN_DIR = TEST_DIR + os.sep + 'input' + os.sep$/;"	kind:variable	line:11
+TEST_IN_DIR	raw2l1/test/test_rpg_hatpro.py	/^TEST_IN_DIR = TEST_DIR + os.sep + 'input' + os.sep$/;"	kind:variable	line:11
+TEST_IN_DIR	raw2l1/test/test_sigmaspace_minimpl.py	/^TEST_IN_DIR = TEST_DIR + os.sep + 'input' + os.sep$/;"	kind:variable	line:11
+TEST_IN_DIR	raw2l1/test/test_timeliness.py	/^TEST_IN_DIR = TEST_DIR + os.sep + 'input' + os.sep$/;"	kind:variable	line:12
+TEST_IN_DIR	raw2l1/test/test_toprof_format.py	/^TEST_IN_DIR = TEST_DIR + os.sep + 'input' + os.sep$/;"	kind:variable	line:11
+TEST_IN_DIR	raw2l1/test/test_vaisala.py	/^TEST_IN_DIR = TEST_DIR + os.sep + 'input' + os.sep$/;"	kind:variable	line:14
+TEST_IN_DIR	raw2l1/test/test_vaisala_eprofile.py	/^TEST_IN_DIR = TEST_DIR + os.sep + 'input' + os.sep$/;"	kind:variable	line:11
+TEST_IN_DIR	raw2l1/test/test_vaisala_sirta.py	/^TEST_IN_DIR = TEST_DIR + os.sep + 'input' + os.sep$/;"	kind:variable	line:11
+TEST_OUT_DIR	raw2l1/test/test_chm15k_nimbus-uk-metoffice.py	/^TEST_OUT_DIR = os.path.join(TEST_DIR, 'output')$/;"	kind:variable	line:12
+TEST_OUT_DIR	raw2l1/test/test_chm15k_nimbus.py	/^TEST_OUT_DIR = os.path.join(TEST_DIR, 'output')$/;"	kind:variable	line:15
+TEST_OUT_DIR	raw2l1/test/test_cs135.py	/^TEST_OUT_DIR = TEST_DIR + os.sep + 'output' + os.sep$/;"	kind:variable	line:12
+TEST_OUT_DIR	raw2l1/test/test_logs.py	/^TEST_OUT_DIR = TEST_DIR + os.sep + 'output' + os.sep$/;"	kind:variable	line:12
+TEST_OUT_DIR	raw2l1/test/test_netcdf4.py	/^TEST_OUT_DIR = TEST_DIR + os.sep + 'output' + os.sep$/;"	kind:variable	line:12
+TEST_OUT_DIR	raw2l1/test/test_rpg_hatpro.py	/^TEST_OUT_DIR = TEST_DIR + os.sep + 'output' + os.sep$/;"	kind:variable	line:12
+TEST_OUT_DIR	raw2l1/test/test_sigmaspace_minimpl.py	/^TEST_OUT_DIR = TEST_DIR + os.sep + 'output' + os.sep$/;"	kind:variable	line:12
+TEST_OUT_DIR	raw2l1/test/test_timeliness.py	/^TEST_OUT_DIR = TEST_DIR + os.sep + 'output' + os.sep$/;"	kind:variable	line:13
+TEST_OUT_DIR	raw2l1/test/test_toprof_format.py	/^TEST_OUT_DIR = TEST_DIR + os.sep + 'output' + os.sep$/;"	kind:variable	line:12
+TEST_OUT_DIR	raw2l1/test/test_vaisala.py	/^TEST_OUT_DIR = TEST_DIR + os.sep + 'output' + os.sep$/;"	kind:variable	line:15
+TEST_OUT_DIR	raw2l1/test/test_vaisala_eprofile.py	/^TEST_OUT_DIR = TEST_DIR + os.sep + 'output' + os.sep$/;"	kind:variable	line:12
+TEST_OUT_DIR	raw2l1/test/test_vaisala_sirta.py	/^TEST_OUT_DIR = TEST_DIR + os.sep + 'output' + os.sep$/;"	kind:variable	line:12
+TIME_DIM	raw2l1/reader/rpg_hatpro_absolute_humidity.py	/^TIME_DIM = 'time'$/;"	kind:variable	line:15
+TIME_DIM	raw2l1/reader/rpg_hatpro_air_temp.py	/^TIME_DIM = 'time'$/;"	kind:variable	line:15
+TIME_DIM	raw2l1/reader/rpg_hatpro_air_temp_bl.py	/^TIME_DIM = 'time'$/;"	kind:variable	line:15
+TIME_DIM	raw2l1/reader/rpg_hatpro_brightness_temperature.py	/^TIME_DIM = 'time'$/;"	kind:variable	line:15
+TIME_DIM	raw2l1/reader/rpg_hatpro_brightness_temperature_bl.py	/^TIME_DIM = 'time'$/;"	kind:variable	line:17
+TIME_DIM	raw2l1/reader/rpg_hatpro_clwvi.py	/^TIME_DIM = 'time'$/;"	kind:variable	line:15
+TIME_DIM	raw2l1/reader/rpg_hatpro_prw.py	/^TIME_DIM = 'time'$/;"	kind:variable	line:15
+TIME_VAR	raw2l1/reader/rpg_hatpro_absolute_humidity.py	/^TIME_VAR = 'time'$/;"	kind:variable	line:16
+TIME_VAR	raw2l1/reader/rpg_hatpro_air_temp.py	/^TIME_VAR = 'time'$/;"	kind:variable	line:16
+TIME_VAR	raw2l1/reader/rpg_hatpro_air_temp_bl.py	/^TIME_VAR = 'time'$/;"	kind:variable	line:16
+TIME_VAR	raw2l1/reader/rpg_hatpro_brightness_temperature.py	/^TIME_VAR = 'time'$/;"	kind:variable	line:16
+TIME_VAR	raw2l1/reader/rpg_hatpro_brightness_temperature_bl.py	/^TIME_VAR = 'time'$/;"	kind:variable	line:18
+TIME_VAR	raw2l1/reader/rpg_hatpro_clwvi.py	/^TIME_VAR = 'time'$/;"	kind:variable	line:16
+TIME_VAR	raw2l1/reader/rpg_hatpro_prw.py	/^TIME_VAR = 'time'$/;"	kind:variable	line:16
+TestArgParser	raw2l1/test/test_arg_parser.py	/^class TestArgParser(unittest.TestCase):$/;"	kind:class	line:39
+TestArgParserDate	raw2l1/test/test_arg_parser.py	/^class TestArgParserDate(unittest.TestCase):$/;"	kind:class	line:13
+TestCampbellScientificCS135	raw2l1/test/test_cs135.py	/^class TestCampbellScientificCS135(unittest.TestCase):$/;"	kind:class	line:16
+TestCampbellScientificCS135ModeCL31	raw2l1/test/test_cs135.py	/^class TestCampbellScientificCS135ModeCL31(unittest.TestCase):$/;"	kind:class	line:42
+TestCampbellScientificCS135NetCDF4	raw2l1/test/test_netcdf4.py	/^class TestCampbellScientificCS135NetCDF4(unittest.TestCase):$/;"	kind:class	line:16
+TestChm15k	raw2l1/test/test_chm15k_nimbus.py	/^class TestChm15k(unittest.TestCase):$/;"	kind:class	line:19
+TestChm15kMetOffice	raw2l1/test/test_chm15k_nimbus-uk-metoffice.py	/^class TestChm15kMetOffice(unittest.TestCase):$/;"	kind:class	line:16
+TestChm15kOverlap	raw2l1/test/test_chm15k_nimbus.py	/^class TestChm15kOverlap(unittest.TestCase):$/;"	kind:class	line:183
+TestChm15kToprof	raw2l1/test/test_toprof_format.py	/^class TestChm15kToprof(unittest.TestCase):$/;"	kind:class	line:16
+TestLidarReader	raw2l1/test/test_lidar_reader.py	/^class TestLidarReader(unittest.TestCase):$/;"	kind:class	line:23
+TestLogs	raw2l1/test/test_logs.py	/^class TestLogs(unittest.TestCase):$/;"	kind:class	line:16
+TestRunHatPro	raw2l1/test/test_rpg_hatpro.py	/^class TestRunHatPro(unittest.TestCase):$/;"	kind:class	line:16
+TestSigmaSpaceMiniMPL	raw2l1/test/test_sigmaspace_minimpl.py	/^class TestSigmaSpaceMiniMPL(unittest.TestCase):$/;"	kind:class	line:16
+TestTimeliness	raw2l1/test/test_timeliness.py	/^class TestTimeliness(unittest.TestCase):$/;"	kind:class	line:17
+TestUnitsInFeet	raw2l1/test/test_vaisala.py	/^class TestUnitsInFeet(unittest.TestCase):$/;"	kind:class	line:217
+TestVaisalaBugSIRTA	raw2l1/test/test_vaisala.py	/^class TestVaisalaBugSIRTA(unittest.TestCase):$/;"	kind:class	line:145
+TestVaisalaBugSIRTA	raw2l1/test/test_vaisala_sirta.py	/^class TestVaisalaBugSIRTA(unittest.TestCase):$/;"	kind:class	line:16
+TestVaisalaCL31	raw2l1/test/test_vaisala.py	/^class TestVaisalaCL31(unittest.TestCase):$/;"	kind:class	line:19
+TestVaisalaCL31EmptyFile	raw2l1/test/test_vaisala_eprofile.py	/^class TestVaisalaCL31EmptyFile(unittest.TestCase):$/;"	kind:class	line:150
+TestVaisalaCL31MissingCBE	raw2l1/test/test_vaisala_eprofile.py	/^class TestVaisalaCL31MissingCBE(unittest.TestCase):$/;"	kind:class	line:16
+TestVaisalaCL31Toprof	raw2l1/test/test_toprof_format.py	/^class TestVaisalaCL31Toprof(unittest.TestCase):$/;"	kind:class	line:41
+TestVaisalaCL51	raw2l1/test/test_vaisala.py	/^class TestVaisalaCL51(unittest.TestCase):$/;"	kind:class	line:91
+TestVaisalaCL51EmptyFile	raw2l1/test/test_vaisala_eprofile.py	/^class TestVaisalaCL51EmptyFile(unittest.TestCase):$/;"	kind:class	line:196
+TestVaisalaCL51IncompleteFile	raw2l1/test/test_vaisala_eprofile.py	/^class TestVaisalaCL51IncompleteFile(unittest.TestCase):$/;"	kind:class	line:222
+TestVaisalaCL51MissingCBE	raw2l1/test/test_vaisala_eprofile.py	/^class TestVaisalaCL51MissingCBE(unittest.TestCase):$/;"	kind:class	line:122
+TestVaisalaCL51Toprof	raw2l1/test/test_toprof_format.py	/^class TestVaisalaCL51Toprof(unittest.TestCase):$/;"	kind:class	line:67
+TestVaisalaMsg2	raw2l1/test/test_vaisala.py	/^class TestVaisalaMsg2(unittest.TestCase):$/;"	kind:class	line:45
+TestVaisalaSwissAirport	raw2l1/test/test_vaisala.py	/^class TestVaisalaSwissAirport(unittest.TestCase):$/;"	kind:class	line:117
+UNIT_CONVERT_FACTOR	raw2l1/reader/rpg_hatpro_clwvi.py	/^UNIT_CONVERT_FACTOR = 1.e-3$/;"	kind:variable	line:21
+__author__	raw2l1/raw2l1.py	/^__author__ = 'Marc-Antoine Drouin'$/;"	kind:variable	line:15
+__get_reader_conf__	raw2l1/tools/lidar_reader.py	/^    def __get_reader_conf__(self, logger):$/;"	kind:member	line:57
+__init__	raw2l1/tools/lidar_reader.py	/^    def __init__(self, conf, logger):$/;"	kind:member	line:20
+__init__.py	raw2l1/reader/__init__.py	1;"	kind:file	line:1
+__init__.py	raw2l1/reader/lib/__init__.py	1;"	kind:file	line:1
+__init__.py	raw2l1/test/__init__.py	1;"	kind:file	line:1
+__init__.py	raw2l1/tools/__init__.py	1;"	kind:file	line:1
+__load_reader__	raw2l1/tools/lidar_reader.py	/^    def __load_reader__(self):$/;"	kind:member	line:28
+__version__	raw2l1/raw2l1.py	/^__version__ = '2.1.8'$/;"	kind:variable	line:16
+abc	raw2l1/reader/test_reader.py	/^def abc(data):$/;"	kind:function	line:5
+absolute_import	raw2l1/raw2l1.py	/^from __future__ import print_function, division, absolute_import$/;"	kind:namespace	line:5
+absolute_import	raw2l1/reader/campbellscientific_cs135.py	/^from __future__ import print_function, absolute_import, division$/;"	kind:namespace	line:3
+absolute_import	raw2l1/reader/leosphere_wls7.py	/^from __future__ import print_function, division, absolute_import$/;"	kind:namespace	line:4
+absolute_import	raw2l1/reader/leosphere_wls70.py	/^from __future__ import print_function, division, absolute_import$/;"	kind:namespace	line:4
+absolute_import	raw2l1/reader/lib/libvaisala.py	/^from __future__ import print_function, division, absolute_import$/;"	kind:namespace	line:3
+absolute_import	raw2l1/reader/libhatpro.py	/^from __future__ import print_function, division, absolute_import$/;"	kind:namespace	line:3
+absolute_import	raw2l1/reader/lufft_chm15k_nimbus-uk-metoffice.py	/^from __future__ import print_function, absolute_import, division$/;"	kind:namespace	line:3
+absolute_import	raw2l1/reader/lufft_chm15k_nimbus.py	/^from __future__ import print_function, absolute_import, division$/;"	kind:namespace	line:3
+absolute_import	raw2l1/reader/rpg_hatpro_absolute_humidity.py	/^from __future__ import print_function, division, absolute_import$/;"	kind:namespace	line:3
+absolute_import	raw2l1/reader/rpg_hatpro_air_temp.py	/^from __future__ import print_function, division, absolute_import$/;"	kind:namespace	line:3
+absolute_import	raw2l1/reader/rpg_hatpro_air_temp_bl.py	/^from __future__ import print_function, division, absolute_import$/;"	kind:namespace	line:3
+absolute_import	raw2l1/reader/rpg_hatpro_brightness_temperature.py	/^from __future__ import print_function, division, absolute_import$/;"	kind:namespace	line:3
+absolute_import	raw2l1/reader/rpg_hatpro_brightness_temperature_bl.py	/^from __future__ import print_function, division, absolute_import$/;"	kind:namespace	line:3
+absolute_import	raw2l1/reader/rpg_hatpro_clwvi.py	/^from __future__ import print_function, division, absolute_import$/;"	kind:namespace	line:3
+absolute_import	raw2l1/reader/rpg_hatpro_prw.py	/^from __future__ import print_function, division, absolute_import$/;"	kind:namespace	line:3
+absolute_import	raw2l1/reader/sigmaspace_minimpl.py	/^from __future__ import print_function, absolute_import, division$/;"	kind:namespace	line:3
+absolute_import	raw2l1/reader/sirta_ipral.py	/^from __future__ import print_function, absolute_import, division$/;"	kind:namespace	line:3
+absolute_import	raw2l1/reader/vaisala_cl.py	/^from __future__ import print_function, absolute_import, division$/;"	kind:namespace	line:3
+absolute_import	raw2l1/reader/vaisala_cl_swiss_airport.py	/^from __future__ import print_function, absolute_import, division$/;"	kind:namespace	line:3
+absolute_import	raw2l1/tools/arg_parser.py	/^from __future__ import print_function, division, absolute_import$/;"	kind:namespace	line:5
+absolute_import	raw2l1/tools/conf.py	/^from __future__ import print_function, division, absolute_import$/;"	kind:namespace	line:5
+absolute_import	raw2l1/tools/create_netcdf.py	/^from __future__ import print_function, division, absolute_import$/;"	kind:namespace	line:4
+absolute_import	raw2l1/tools/errors.py	/^from __future__ import print_function, division, absolute_import$/;"	kind:namespace	line:3
+absolute_import	raw2l1/tools/lidar_reader.py	/^from __future__ import print_function, division, absolute_import$/;"	kind:namespace	line:4
+absolute_import	raw2l1/tools/log.py	/^from __future__ import print_function, division, absolute_import$/;"	kind:namespace	line:5
+absolute_import	raw2l1/tools/read_overlap.py	/^from __future__ import print_function, division, absolute_import$/;"	kind:namespace	line:4
+absolute_import	raw2l1/tools/utils.py	/^from __future__ import print_function, division, absolute_import$/;"	kind:namespace	line:5
+add	raw2l1/tools/conf.py	/^def add(conf, input_args, version, logger):$/;"	kind:function	line:10
+add_arg_options	raw2l1/test/test_lidar_reader.py	/^def add_arg_options(conf):$/;"	kind:function	line:14
+add_attr_to_var	raw2l1/tools/create_netcdf.py	/^def add_attr_to_var(nc_var, data, conf, section, logger):$/;"	kind:function	line:315
+add_data_to_var	raw2l1/tools/create_netcdf.py	/^def add_data_to_var(nc_var, var_name, conf, data, logger):$/;"	kind:function	line:259
+ag	raw2l1/raw2l1.py	/^from tools import arg_parser as ag$/;"	kind:namespace	line:9
+ag	raw2l1/test/test_arg_parser.py	/^import tools.arg_parser as ag$/;"	kind:namespace	line:10
+are_units_meters	raw2l1/reader/vaisala_cl.py	/^def are_units_meters(err_msg, logger):$/;"	kind:function	line:171
+are_units_meters	raw2l1/reader/vaisala_cl_swiss_airport.py	/^def are_units_meters(err_msg, logger):$/;"	kind:function	line:171
+arg_parser.py	raw2l1/tools/arg_parser.py	1;"	kind:file	line:1
+argparse	raw2l1/test/test_arg_parser.py	/^import argparse$/;"	kind:namespace	line:7
+argparse	raw2l1/tools/arg_parser.py	/^import argparse$/;"	kind:namespace	line:7
+basename	raw2l1/reader/vaisala_cl_swiss_airport.py	/^from os.path import basename$/;"	kind:namespace	line:6
+calc_pr2	raw2l1/reader/lufft_chm15k_nimbus.py	/^def calc_pr2(data, soft_vers, logger):$/;"	kind:function	line:499
+calc_range	raw2l1/reader/vaisala_cl.py	/^def calc_range(resol, n_gates):$/;"	kind:function	line:333
+calc_range	raw2l1/reader/vaisala_cl_swiss_airport.py	/^def calc_range(resol, n_gates):$/;"	kind:function	line:330
+campbellscientific_cs135.py	raw2l1/reader/campbellscientific_cs135.py	1;"	kind:file	line:1
+chain	raw2l1/tools/arg_parser.py	/^from itertools import chain$/;"	kind:namespace	line:12
+check_conf	raw2l1/raw2l1.py	/^from tools.check_conf import check_conf$/;"	kind:namespace	line:12
+check_conf	raw2l1/tools/check_conf.py	/^def check_conf(conf, logger):$/;"	kind:function	line:99
+check_conf.py	raw2l1/tools/check_conf.py	1;"	kind:file	line:1
+check_conf_options	raw2l1/tools/check_conf.py	/^def check_conf_options(conf, logger):$/;"	kind:function	line:74
+check_date_format	raw2l1/tools/arg_parser.py	/^def check_date_format(input_date):$/;"	kind:function	line:20
+check_dir	raw2l1/tools/arg_parser.py	/^from tools.utils import check_dir$/;"	kind:namespace	line:13
+check_dir	raw2l1/tools/utils.py	/^def check_dir(dir_name):$/;"	kind:function	line:10
+check_input	raw2l1/reader/campbellscientific_cs135.py	/^def check_input(conf, logger):$/;"	kind:function	line:48
+check_input_file_size	raw2l1/tools/arg_parser.py	/^def check_input_file_size(list_files, size_limit):$/;"	kind:function	line:65
+check_input_files	raw2l1/tools/arg_parser.py	/^def check_input_files(input_files):$/;"	kind:function	line:34
+check_list_options	raw2l1/tools/check_conf.py	/^def check_list_options(conf, section, list_opts, logger):$/;"	kind:function	line:8
+check_msg_type	raw2l1/reader/vaisala_cl.py	/^def check_msg_type(data, logger):$/;"	kind:function	line:365
+check_msg_type	raw2l1/reader/vaisala_cl_swiss_airport.py	/^def check_msg_type(data, logger):$/;"	kind:function	line:362
+check_nc4_compression_option	raw2l1/tools/check_conf.py	/^def check_nc4_compression_option(conf, section, logger):$/;"	kind:function	line:36
+check_output_dir	raw2l1/tools/arg_parser.py	/^def check_output_dir(output_file):$/;"	kind:function	line:49
+check_range	raw2l1/reader/vaisala_cl.py	/^def check_range(data, data_dim, filename, logger):$/;"	kind:function	line:343
+check_range	raw2l1/reader/vaisala_cl_swiss_airport.py	/^def check_range(data, data_dim, filename, logger):$/;"	kind:function	line:340
+check_required_sections	raw2l1/tools/check_conf.py	/^def check_required_sections(conf, logger):$/;"	kind:function	line:22
+check_scale_value	raw2l1/reader/vaisala_cl.py	/^def check_scale_value(data, conf, ind, f_name, logger):$/;"	kind:function	line:200
+check_scale_value	raw2l1/reader/vaisala_cl_swiss_airport.py	/^def check_scale_value(data, conf, ind, f_name, logger):$/;"	kind:function	line:199
+chomp	raw2l1/reader/campbellscientific_cs135.py	/^from tools.utils import chomp$/;"	kind:namespace	line:10
+chomp	raw2l1/reader/vaisala_cl.py	/^from tools.utils import chomp, to_bool$/;"	kind:namespace	line:9
+chomp	raw2l1/reader/vaisala_cl_swiss_airport.py	/^from tools.utils import chomp, to_bool$/;"	kind:namespace	line:10
+chomp	raw2l1/tools/utils.py	/^def chomp(text_list):$/;"	kind:function	line:18
+cnc	raw2l1/raw2l1.py	/^from tools import create_netcdf as cnc$/;"	kind:namespace	line:13
+common	raw2l1/tools/check_conf.py	/^from tools import common$/;"	kind:namespace	line:5
+common	raw2l1/tools/create_netcdf.py	/^from tools import common$/;"	kind:namespace	line:13
+common	raw2l1/tools/lidar_reader.py	/^from . import common$/;"	kind:namespace	line:12
+common.py	raw2l1/tools/common.py	1;"	kind:file	line:1
+conf	raw2l1/raw2l1.py	/^from tools import conf$/;"	kind:namespace	line:11
+conf.py	raw2l1/tools/conf.py	1;"	kind:file	line:1
+conf_file	raw2l1/test/test_chm15k_nimbus-uk-metoffice.py	/^    conf_file = os.path.join(CONF_DIR, 'conf_lufft_chm15k-nimbus-uk-metoffice_eprofile.ini')$/;"	kind:variable	line:19
+conf_file	raw2l1/test/test_chm15k_nimbus.py	/^    conf_file = os.path.join(CONF_DIR, 'conf_lufft_chm15k-nimbus_eprofile.ini')$/;"	kind:variable	line:186
+conf_file	raw2l1/test/test_chm15k_nimbus.py	/^    conf_file = os.path.join(CONF_DIR, 'conf_lufft_chm15k-nimbus_eprofile.ini')$/;"	kind:variable	line:22
+conf_file	raw2l1/test/test_cs135.py	/^    conf_file = CONF_DIR + 'conf_campbell_cs135_toprof.ini'$/;"	kind:variable	line:19
+conf_file	raw2l1/test/test_cs135.py	/^    conf_file = IN_DIR + 'conf_cs135-cl31_toprof.ini'$/;"	kind:variable	line:45
+conf_file	raw2l1/test/test_netcdf4.py	/^    conf_file = CONF_DIR + 'conf_campbell_cs135_toprof_netcdf4.ini'$/;"	kind:variable	line:19
+conf_file	raw2l1/test/test_sigmaspace_minimpl.py	/^    conf_file = CONF_DIR + 'conf_sigmaspace_minimpl_eprofile.ini'$/;"	kind:variable	line:19
+conf_file	raw2l1/test/test_timeliness.py	/^    conf_file = CONF_DIR + 'conf_campbell_cs135_toprof.ini'$/;"	kind:variable	line:20
+conf_file	raw2l1/test/test_toprof_format.py	/^    conf_file = CONF_DIR + 'conf_lufft_chm15k-nimbus_toprof.ini'$/;"	kind:variable	line:19
+conf_file	raw2l1/test/test_toprof_format.py	/^    conf_file = CONF_DIR + 'conf_vaisala_cl31_toprof.ini'$/;"	kind:variable	line:44
+conf_file	raw2l1/test/test_toprof_format.py	/^    conf_file = CONF_DIR + 'conf_vaisala_cl51_toprof.ini'$/;"	kind:variable	line:70
+conf_file	raw2l1/test/test_vaisala.py	/^    conf_file = CONF_DIR + 'conf_vaisala_cl31.ini'$/;"	kind:variable	line:22
+conf_file	raw2l1/test/test_vaisala.py	/^    conf_file = CONF_DIR + 'conf_vaisala_cl31_toprof_netcdf4.ini'$/;"	kind:variable	line:148
+conf_file	raw2l1/test/test_vaisala.py	/^    conf_file = CONF_DIR + 'conf_vaisala_cl31_toprof_netcdf4.ini'$/;"	kind:variable	line:48
+conf_file	raw2l1/test/test_vaisala.py	/^    conf_file = CONF_DIR + 'conf_vaisala_cl51.ini'$/;"	kind:variable	line:94
+conf_file	raw2l1/test/test_vaisala.py	/^    conf_file = IN_DIR + 'conf_vaisala_cl31-swiss-airport_toprof_netcdf4.ini'$/;"	kind:variable	line:120
+conf_file	raw2l1/test/test_vaisala_eprofile.py	/^    conf_file = CONF_DIR + 'conf_vaisala_cl31_toprof_netcdf4.ini'$/;"	kind:variable	line:153
+conf_file	raw2l1/test/test_vaisala_eprofile.py	/^    conf_file = CONF_DIR + 'conf_vaisala_cl31_toprof_netcdf4.ini'$/;"	kind:variable	line:19
+conf_file	raw2l1/test/test_vaisala_eprofile.py	/^    conf_file = CONF_DIR + 'conf_vaisala_cl51_toprof_netcdf4.ini'$/;"	kind:variable	line:125
+conf_file	raw2l1/test/test_vaisala_eprofile.py	/^    conf_file = CONF_DIR + 'conf_vaisala_cl51_toprof_netcdf4.ini'$/;"	kind:variable	line:199
+conf_file	raw2l1/test/test_vaisala_eprofile.py	/^    conf_file = CONF_DIR + 'conf_vaisala_cl51_toprof_netcdf4.ini'$/;"	kind:variable	line:225
+conf_file	raw2l1/test/test_vaisala_sirta.py	/^    conf_file = CONF_DIR + 'conf_vaisala_cl31_toprof_netcdf4.ini'$/;"	kind:variable	line:19
+config	raw2l1/tools/log.py	/^import logging.config$/;"	kind:namespace	line:8
+convert_attribute	raw2l1/tools/create_netcdf.py	/^def convert_attribute(value, logger):$/;"	kind:function	line:108
+correct_time_units	raw2l1/reader/libhatpro.py	/^def correct_time_units(s):$/;"	kind:function	line:6
+correct_time_units	raw2l1/reader/rpg_hatpro_absolute_humidity.py	/^from .libhatpro import correct_time_units$/;"	kind:namespace	line:9
+correct_time_units	raw2l1/reader/rpg_hatpro_air_temp.py	/^from .libhatpro import correct_time_units$/;"	kind:namespace	line:9
+correct_time_units	raw2l1/reader/rpg_hatpro_air_temp_bl.py	/^from .libhatpro import correct_time_units$/;"	kind:namespace	line:9
+correct_time_units	raw2l1/reader/rpg_hatpro_brightness_temperature.py	/^from .libhatpro import correct_time_units$/;"	kind:namespace	line:9
+correct_time_units	raw2l1/reader/rpg_hatpro_brightness_temperature_bl.py	/^from .libhatpro import correct_time_units$/;"	kind:namespace	line:11
+correct_time_units	raw2l1/reader/rpg_hatpro_clwvi.py	/^from .libhatpro import correct_time_units$/;"	kind:namespace	line:9
+correct_time_units	raw2l1/reader/rpg_hatpro_prw.py	/^from .libhatpro import correct_time_units$/;"	kind:namespace	line:9
+count_msg_to_read	raw2l1/reader/campbellscientific_cs135.py	/^def count_msg_to_read(list_files, date_fmt, logger):$/;"	kind:function	line:85
+count_msg_to_read	raw2l1/reader/vaisala_cl.py	/^def count_msg_to_read(list_files, logger):$/;"	kind:function	line:233
+count_msg_to_read	raw2l1/reader/vaisala_cl_swiss_airport.py	/^def count_msg_to_read(list_files, f_fmt, logger):$/;"	kind:function	line:232
+create_netcdf	raw2l1/tools/create_netcdf.py	/^def create_netcdf(conf, data, logger):$/;"	kind:function	line:462
+create_netcdf.py	raw2l1/tools/create_netcdf.py	1;"	kind:file	line:1
+create_netcdf_dim	raw2l1/tools/create_netcdf.py	/^def create_netcdf_dim(conf, data, nc_id, logger):$/;"	kind:function	line:173
+create_netcdf_global	raw2l1/tools/create_netcdf.py	/^def create_netcdf_global(conf, nc_id, data, logger):$/;"	kind:function	line:123
+create_netcdf_time_dim	raw2l1/tools/create_netcdf.py	/^def create_netcdf_time_dim(section, nc_id, logger):$/;"	kind:function	line:162
+create_netcdf_time_var	raw2l1/tools/create_netcdf.py	/^def create_netcdf_time_var(conf, var_name, data, nc_id, logger):$/;"	kind:function	line:233
+create_netcdf_variables	raw2l1/tools/create_netcdf.py	/^def create_netcdf_variables(conf, data, nc_id, logger):$/;"	kind:function	line:366
+date_to_dt	raw2l1/reader/lufft_chm15k_nimbus-uk-metoffice.py	/^def date_to_dt(date_num, date_units):$/;"	kind:function	line:130
+date_to_dt	raw2l1/reader/lufft_chm15k_nimbus.py	/^def date_to_dt(date_num, date_units):$/;"	kind:function	line:130
+dim_to_tuple	raw2l1/tools/create_netcdf.py	/^def dim_to_tuple(dim):$/;"	kind:function	line:30
+division	raw2l1/raw2l1.py	/^from __future__ import print_function, division, absolute_import$/;"	kind:namespace	line:5
+division	raw2l1/reader/campbellscientific_cs135.py	/^from __future__ import print_function, absolute_import, division$/;"	kind:namespace	line:3
+division	raw2l1/reader/leosphere_wls7.py	/^from __future__ import print_function, division, absolute_import$/;"	kind:namespace	line:4
+division	raw2l1/reader/leosphere_wls70.py	/^from __future__ import print_function, division, absolute_import$/;"	kind:namespace	line:4
+division	raw2l1/reader/lib/libvaisala.py	/^from __future__ import print_function, division, absolute_import$/;"	kind:namespace	line:3
+division	raw2l1/reader/libhatpro.py	/^from __future__ import print_function, division, absolute_import$/;"	kind:namespace	line:3
+division	raw2l1/reader/lufft_chm15k_nimbus-uk-metoffice.py	/^from __future__ import print_function, absolute_import, division$/;"	kind:namespace	line:3
+division	raw2l1/reader/lufft_chm15k_nimbus.py	/^from __future__ import print_function, absolute_import, division$/;"	kind:namespace	line:3
+division	raw2l1/reader/rpg_hatpro_absolute_humidity.py	/^from __future__ import print_function, division, absolute_import$/;"	kind:namespace	line:3
+division	raw2l1/reader/rpg_hatpro_air_temp.py	/^from __future__ import print_function, division, absolute_import$/;"	kind:namespace	line:3
+division	raw2l1/reader/rpg_hatpro_air_temp_bl.py	/^from __future__ import print_function, division, absolute_import$/;"	kind:namespace	line:3
+division	raw2l1/reader/rpg_hatpro_brightness_temperature.py	/^from __future__ import print_function, division, absolute_import$/;"	kind:namespace	line:3
+division	raw2l1/reader/rpg_hatpro_brightness_temperature_bl.py	/^from __future__ import print_function, division, absolute_import$/;"	kind:namespace	line:3
+division	raw2l1/reader/rpg_hatpro_clwvi.py	/^from __future__ import print_function, division, absolute_import$/;"	kind:namespace	line:3
+division	raw2l1/reader/rpg_hatpro_prw.py	/^from __future__ import print_function, division, absolute_import$/;"	kind:namespace	line:3
+division	raw2l1/reader/sigmaspace_minimpl.py	/^from __future__ import print_function, absolute_import, division$/;"	kind:namespace	line:3
+division	raw2l1/reader/sirta_ipral.py	/^from __future__ import print_function, absolute_import, division$/;"	kind:namespace	line:3
+division	raw2l1/reader/vaisala_cl.py	/^from __future__ import print_function, absolute_import, division$/;"	kind:namespace	line:3
+division	raw2l1/reader/vaisala_cl_swiss_airport.py	/^from __future__ import print_function, absolute_import, division$/;"	kind:namespace	line:3
+division	raw2l1/tools/arg_parser.py	/^from __future__ import print_function, division, absolute_import$/;"	kind:namespace	line:5
+division	raw2l1/tools/conf.py	/^from __future__ import print_function, division, absolute_import$/;"	kind:namespace	line:5
+division	raw2l1/tools/create_netcdf.py	/^from __future__ import print_function, division, absolute_import$/;"	kind:namespace	line:4
+division	raw2l1/tools/errors.py	/^from __future__ import print_function, division, absolute_import$/;"	kind:namespace	line:3
+division	raw2l1/tools/lidar_reader.py	/^from __future__ import print_function, division, absolute_import$/;"	kind:namespace	line:4
+division	raw2l1/tools/log.py	/^from __future__ import print_function, division, absolute_import$/;"	kind:namespace	line:5
+division	raw2l1/tools/read_overlap.py	/^from __future__ import print_function, division, absolute_import$/;"	kind:namespace	line:4
+division	raw2l1/tools/utils.py	/^from __future__ import print_function, division, absolute_import$/;"	kind:namespace	line:5
+dt	raw2l1/reader/campbellscientific_cs135.py	/^import datetime as dt$/;"	kind:namespace	line:6
+dt	raw2l1/reader/lufft_chm15k_nimbus-uk-metoffice.py	/^import datetime as dt$/;"	kind:namespace	line:7
+dt	raw2l1/reader/lufft_chm15k_nimbus.py	/^import datetime as dt$/;"	kind:namespace	line:7
+dt	raw2l1/reader/rpg_hatpro_absolute_humidity.py	/^import datetime as dt$/;"	kind:namespace	line:6
+dt	raw2l1/reader/rpg_hatpro_air_temp.py	/^import datetime as dt$/;"	kind:namespace	line:6
+dt	raw2l1/reader/rpg_hatpro_air_temp_bl.py	/^import datetime as dt$/;"	kind:namespace	line:6
+dt	raw2l1/reader/rpg_hatpro_brightness_temperature.py	/^import datetime as dt$/;"	kind:namespace	line:6
+dt	raw2l1/reader/rpg_hatpro_brightness_temperature_bl.py	/^import datetime as dt$/;"	kind:namespace	line:8
+dt	raw2l1/reader/rpg_hatpro_clwvi.py	/^import datetime as dt$/;"	kind:namespace	line:6
+dt	raw2l1/reader/rpg_hatpro_prw.py	/^import datetime as dt$/;"	kind:namespace	line:6
+dt	raw2l1/reader/sigmaspace_minimpl.py	/^import datetime as dt$/;"	kind:namespace	line:6
+dt	raw2l1/reader/sirta_ipral.py	/^import datetime as dt$/;"	kind:namespace	line:5
+dt	raw2l1/reader/vaisala_cl.py	/^import datetime as dt$/;"	kind:namespace	line:6
+dt	raw2l1/reader/vaisala_cl_swiss_airport.py	/^import datetime as dt$/;"	kind:namespace	line:9
+dt	raw2l1/test/test_arg_parser.py	/^import datetime as dt$/;"	kind:namespace	line:8
+dt	raw2l1/test/test_lidar_reader.py	/^import datetime as dt$/;"	kind:namespace	line:6
+dt	raw2l1/tools/arg_parser.py	/^import datetime as dt$/;"	kind:namespace	line:8
+dt	raw2l1/tools/create_netcdf.py	/^import datetime as dt$/;"	kind:namespace	line:8
+dt	raw2l1/tools/lidar_reader.py	/^import datetime as dt$/;"	kind:namespace	line:9
+errors.py	raw2l1/tools/errors.py	1;"	kind:file	line:1
+filename_to_date	raw2l1/reader/sirta_ipral.py	/^def filename_to_date(s, logger):$/;"	kind:function	line:61
+filter_conf_sections	raw2l1/tools/create_netcdf.py	/^def filter_conf_sections(conf, logger):$/;"	kind:function	line:67
+get_acq_conf	raw2l1/reader/vaisala_cl.py	/^def get_acq_conf(filename, data, data_dim, logger):$/;"	kind:function	line:380
+get_acq_conf	raw2l1/reader/vaisala_cl_swiss_airport.py	/^def get_acq_conf(filename, data, data_dim, f_fmt, logger):$/;"	kind:function	line:377
+get_conf_msg	raw2l1/reader/vaisala_cl.py	/^def get_conf_msg(line, logger):$/;"	kind:function	line:258
+get_conf_msg	raw2l1/reader/vaisala_cl_swiss_airport.py	/^def get_conf_msg(line, logger):$/;"	kind:function	line:255
+get_conversion_coeff	raw2l1/reader/vaisala_cl.py	/^def get_conversion_coeff(are_units_meters):$/;"	kind:function	line:188
+get_conversion_coeff	raw2l1/reader/vaisala_cl_swiss_airport.py	/^def get_conversion_coeff(are_units_meters):$/;"	kind:function	line:187
+get_data_key	raw2l1/tools/create_netcdf.py	/^def get_data_key(option):$/;"	kind:function	line:58
+get_data_size	raw2l1/reader/rpg_hatpro_absolute_humidity.py	/^def get_data_size(list_files, logger):$/;"	kind:function	line:24
+get_data_size	raw2l1/reader/rpg_hatpro_air_temp.py	/^def get_data_size(list_files, logger):$/;"	kind:function	line:24
+get_data_size	raw2l1/reader/rpg_hatpro_air_temp_bl.py	/^def get_data_size(list_files, logger):$/;"	kind:function	line:24
+get_data_size	raw2l1/reader/rpg_hatpro_brightness_temperature.py	/^def get_data_size(list_files, logger):$/;"	kind:function	line:23
+get_data_size	raw2l1/reader/rpg_hatpro_brightness_temperature_bl.py	/^def get_data_size(list_files, logger, only_time=False):$/;"	kind:function	line:25
+get_data_size	raw2l1/reader/rpg_hatpro_clwvi.py	/^def get_data_size(list_files, logger):$/;"	kind:function	line:24
+get_data_size	raw2l1/reader/rpg_hatpro_prw.py	/^def get_data_size(list_files, logger):$/;"	kind:function	line:23
+get_date_dt	raw2l1/reader/sirta_ipral.py	/^def get_date_dt(date, hour, logger):$/;"	kind:function	line:91
+get_dimension_size	raw2l1/reader/sigmaspace_minimpl.py	/^def get_dimension_size(list_files, logger):$/;"	kind:function	line:28
+get_error_index	raw2l1/reader/lufft_chm15k_nimbus-uk-metoffice.py	/^def get_error_index(err_msg, logger):$/;"	kind:function	line:53
+get_error_index	raw2l1/reader/lufft_chm15k_nimbus.py	/^def get_error_index(err_msg, logger):$/;"	kind:function	line:53
+get_error_index	raw2l1/reader/vaisala_cl.py	/^def get_error_index(err_msg, logger):$/;"	kind:function	line:123
+get_error_index	raw2l1/reader/vaisala_cl_swiss_airport.py	/^def get_error_index(err_msg, logger):$/;"	kind:function	line:123
+get_error_msg	raw2l1/tools/errors.py	/^def get_error_msg(msg_id, fmt_dict, comments=None):$/;"	kind:function	line:20
+get_file_lines	raw2l1/reader/campbellscientific_cs135.py	/^def get_file_lines(filename, logger):$/;"	kind:function	line:68
+get_file_lines	raw2l1/reader/vaisala_cl.py	/^def get_file_lines(filename, logger):$/;"	kind:function	line:216
+get_file_lines	raw2l1/reader/vaisala_cl_swiss_airport.py	/^def get_file_lines(filename, logger):$/;"	kind:function	line:215
+get_input_args	raw2l1/tools/arg_parser.py	/^def get_input_args(argv):$/;"	kind:function	line:152
+get_msg_nb_lines	raw2l1/reader/vaisala_cl.py	/^def get_msg_nb_lines(msg_number):$/;"	kind:function	line:324
+get_msg_nb_lines	raw2l1/reader/vaisala_cl_swiss_airport.py	/^def get_msg_nb_lines(msg_number):$/;"	kind:function	line:321
+get_msg_type	raw2l1/reader/campbellscientific_cs135.py	/^def get_msg_type(list_files, date_fmt, logger):$/;"	kind:function	line:331
+get_msg_type	raw2l1/reader/vaisala_cl.py	/^def get_msg_type(conf_msg, filename, logger):$/;"	kind:function	line:305
+get_msg_type	raw2l1/reader/vaisala_cl_swiss_airport.py	/^def get_msg_type(conf_msg, filename, logger):$/;"	kind:function	line:302
+get_n_dim	raw2l1/tools/create_netcdf.py	/^def get_n_dim(dim):$/;"	kind:function	line:41
+get_overlap_filename	raw2l1/tools/create_netcdf.py	/^def get_overlap_filename(option):$/;"	kind:function	line:49
+get_range_ngates	raw2l1/reader/vaisala_cl.py	/^def get_range_ngates(conf_msg, logger):$/;"	kind:function	line:288
+get_range_ngates	raw2l1/reader/vaisala_cl_swiss_airport.py	/^def get_range_ngates(conf_msg, logger):$/;"	kind:function	line:285
+get_range_resol	raw2l1/reader/vaisala_cl.py	/^def get_range_resol(conf_msg, logger):$/;"	kind:function	line:273
+get_range_resol	raw2l1/reader/vaisala_cl_swiss_airport.py	/^def get_range_resol(conf_msg, logger):$/;"	kind:function	line:270
+get_rcs_line_nb_in_msg	raw2l1/reader/vaisala_cl.py	/^def get_rcs_line_nb_in_msg(msg_type):$/;"	kind:function	line:510
+get_rcs_line_nb_in_msg	raw2l1/reader/vaisala_cl_swiss_airport.py	/^def get_rcs_line_nb_in_msg(msg_type):$/;"	kind:function	line:505
+get_soft_version	raw2l1/reader/lufft_chm15k_nimbus-uk-metoffice.py	/^def get_soft_version(str_version):$/;"	kind:function	line:117
+get_soft_version	raw2l1/reader/lufft_chm15k_nimbus.py	/^def get_soft_version(str_version):$/;"	kind:function	line:117
+get_state_line_nb_in_msg	raw2l1/reader/vaisala_cl.py	/^def get_state_line_nb_in_msg(msg_type):$/;"	kind:function	line:501
+get_state_line_nb_in_msg	raw2l1/reader/vaisala_cl_swiss_airport.py	/^def get_state_line_nb_in_msg(msg_type):$/;"	kind:function	line:496
+get_temp	raw2l1/reader/lufft_chm15k_nimbus-uk-metoffice.py	/^def get_temp(nc_obj, logger):$/;"	kind:function	line:178
+get_temp	raw2l1/reader/lufft_chm15k_nimbus.py	/^def get_temp(nc_obj, logger):$/;"	kind:function	line:176
+get_var_type	raw2l1/tools/create_netcdf.py	/^def get_var_type(type_str, conf, logger):$/;"	kind:function	line:91
+get_vars_dim	raw2l1/reader/lufft_chm15k_nimbus-uk-metoffice.py	/^def get_vars_dim(list_files, logger):$/;"	kind:function	line:140
+get_vars_dim	raw2l1/reader/lufft_chm15k_nimbus.py	/^def get_vars_dim(list_files, logger):$/;"	kind:function	line:140
+glob	raw2l1/tools/arg_parser.py	/^import glob$/;"	kind:namespace	line:11
+init	raw2l1/reader/sigmaspace_minimpl.py	/^def init(data, dims, conf, logger):$/;"	kind:function	line:69
+init	raw2l1/tools/conf.py	/^def init(input_args, version, logger):$/;"	kind:function	line:27
+init	raw2l1/tools/log.py	/^def init(opt, name):$/;"	kind:function	line:19
+init_args_parser	raw2l1/tools/arg_parser.py	/^def init_args_parser():$/;"	kind:function	line:82
+init_data	raw2l1/reader/campbellscientific_cs135.py	/^def init_data(time_dim, conf, logger):$/;"	kind:function	line:109
+init_data	raw2l1/reader/lufft_chm15k_nimbus-uk-metoffice.py	/^def init_data(vars_dim, conf, logger):$/;"	kind:function	line:202
+init_data	raw2l1/reader/lufft_chm15k_nimbus.py	/^def init_data(vars_dim, conf, logger):$/;"	kind:function	line:200
+init_data	raw2l1/reader/rpg_hatpro_absolute_humidity.py	/^def init_data(vars_dim, logger):$/;"	kind:function	line:46
+init_data	raw2l1/reader/rpg_hatpro_air_temp.py	/^def init_data(vars_dim, logger):$/;"	kind:function	line:46
+init_data	raw2l1/reader/rpg_hatpro_air_temp_bl.py	/^def init_data(vars_dim, logger):$/;"	kind:function	line:48
+init_data	raw2l1/reader/rpg_hatpro_brightness_temperature.py	/^def init_data(vars_dim, logger):$/;"	kind:function	line:41
+init_data	raw2l1/reader/rpg_hatpro_brightness_temperature_bl.py	/^def init_data(vars_dim, logger):$/;"	kind:function	line:47
+init_data	raw2l1/reader/rpg_hatpro_clwvi.py	/^def init_data(vars_dim, logger):$/;"	kind:function	line:42
+init_data	raw2l1/reader/rpg_hatpro_prw.py	/^def init_data(vars_dim, logger):$/;"	kind:function	line:41
+init_data	raw2l1/reader/vaisala_cl.py	/^def init_data(data, data_dim, conf, logger):$/;"	kind:function	line:441
+init_data	raw2l1/reader/vaisala_cl_swiss_airport.py	/^def init_data(data, data_dim, conf, logger):$/;"	kind:function	line:436
+init_meteo_data	raw2l1/reader/rpg_hatpro_brightness_temperature.py	/^def init_meteo_data(vars_dim, logger):$/;"	kind:function	line:83
+init_meteo_data	raw2l1/reader/rpg_hatpro_brightness_temperature_bl.py	/^def init_meteo_data(vars_dim, logger):$/;"	kind:function	line:83
+is_msg_type_ok	raw2l1/reader/campbellscientific_cs135.py	/^def is_msg_type_ok(msg_type, filename, logger):$/;"	kind:function	line:309
+leosphere_wls7.py	raw2l1/reader/leosphere_wls7.py	1;"	kind:file	line:1
+leosphere_wls70.py	raw2l1/reader/leosphere_wls70.py	1;"	kind:file	line:1
+libhatpro.py	raw2l1/reader/libhatpro.py	1;"	kind:file	line:1
+libvaisala.py	raw2l1/reader/lib/libvaisala.py	1;"	kind:file	line:1
+lidar_reader.py	raw2l1/tools/lidar_reader.py	1;"	kind:file	line:1
+literal_eval	raw2l1/tools/create_netcdf.py	/^from ast import literal_eval$/;"	kind:namespace	line:11
+log	raw2l1/raw2l1.py	/^from tools import log$/;"	kind:namespace	line:10
+log.py	raw2l1/tools/log.py	1;"	kind:file	line:1
+log_error_msg	raw2l1/reader/lufft_chm15k_nimbus-uk-metoffice.py	/^def log_error_msg(data, logger):$/;"	kind:function	line:84
+log_error_msg	raw2l1/reader/lufft_chm15k_nimbus.py	/^def log_error_msg(data, logger):$/;"	kind:function	line:84
+log_error_msg	raw2l1/reader/vaisala_cl.py	/^def log_error_msg(data, logger):$/;"	kind:function	line:154
+log_error_msg	raw2l1/reader/vaisala_cl_swiss_airport.py	/^def log_error_msg(data, logger):$/;"	kind:function	line:154
+logging	raw2l1/test/test_lidar_reader.py	/^import logging$/;"	kind:namespace	line:7
+logging	raw2l1/tools/conf.py	/^import logging$/;"	kind:namespace	line:7
+logging	raw2l1/tools/log.py	/^import logging$/;"	kind:namespace	line:7
+logging	raw2l1/tools/log.py	/^import logging.config$/;"	kind:namespace	line:8
+lr	raw2l1/raw2l1.py	/^from tools import lidar_reader as lr$/;"	kind:namespace	line:8
+lr	raw2l1/test/test_lidar_reader.py	/^import tools.lidar_reader as lr$/;"	kind:namespace	line:11
+lufft_chm15k_nimbus-uk-metoffice.py	raw2l1/reader/lufft_chm15k_nimbus-uk-metoffice.py	1;"	kind:file	line:1
+lufft_chm15k_nimbus.py	raw2l1/reader/lufft_chm15k_nimbus.py	1;"	kind:file	line:1
+nc	raw2l1/reader/lufft_chm15k_nimbus-uk-metoffice.py	/^import netCDF4 as nc$/;"	kind:namespace	line:5
+nc	raw2l1/reader/lufft_chm15k_nimbus.py	/^import netCDF4 as nc$/;"	kind:namespace	line:5
+nc	raw2l1/reader/rpg_hatpro_absolute_humidity.py	/^import netCDF4 as nc$/;"	kind:namespace	line:7
+nc	raw2l1/reader/rpg_hatpro_air_temp.py	/^import netCDF4 as nc$/;"	kind:namespace	line:7
+nc	raw2l1/reader/rpg_hatpro_air_temp_bl.py	/^import netCDF4 as nc$/;"	kind:namespace	line:7
+nc	raw2l1/reader/rpg_hatpro_brightness_temperature.py	/^import netCDF4 as nc$/;"	kind:namespace	line:7
+nc	raw2l1/reader/rpg_hatpro_brightness_temperature_bl.py	/^import netCDF4 as nc$/;"	kind:namespace	line:9
+nc	raw2l1/reader/rpg_hatpro_clwvi.py	/^import netCDF4 as nc$/;"	kind:namespace	line:7
+nc	raw2l1/reader/rpg_hatpro_prw.py	/^import netCDF4 as nc$/;"	kind:namespace	line:7
+nc	raw2l1/reader/sigmaspace_minimpl.py	/^import netCDF4 as nc$/;"	kind:namespace	line:9
+nc	raw2l1/test/test_chm15k_nimbus.py	/^import netCDF4 as nc$/;"	kind:namespace	line:9
+nc	raw2l1/test/test_vaisala.py	/^import netCDF4 as nc$/;"	kind:namespace	line:9
+nc	raw2l1/tools/create_netcdf.py	/^import netCDF4 as nc$/;"	kind:namespace	line:6
+np	raw2l1/reader/campbellscientific_cs135.py	/^import numpy as np$/;"	kind:namespace	line:5
+np	raw2l1/reader/lufft_chm15k_nimbus-uk-metoffice.py	/^import numpy as np$/;"	kind:namespace	line:6
+np	raw2l1/reader/lufft_chm15k_nimbus.py	/^import numpy as np$/;"	kind:namespace	line:6
+np	raw2l1/reader/rpg_hatpro_absolute_humidity.py	/^import numpy as np$/;"	kind:namespace	line:5
+np	raw2l1/reader/rpg_hatpro_air_temp.py	/^import numpy as np$/;"	kind:namespace	line:5
+np	raw2l1/reader/rpg_hatpro_air_temp_bl.py	/^import numpy as np$/;"	kind:namespace	line:5
+np	raw2l1/reader/rpg_hatpro_brightness_temperature.py	/^import numpy as np$/;"	kind:namespace	line:5
+np	raw2l1/reader/rpg_hatpro_brightness_temperature_bl.py	/^import numpy as np$/;"	kind:namespace	line:7
+np	raw2l1/reader/rpg_hatpro_clwvi.py	/^import numpy as np$/;"	kind:namespace	line:5
+np	raw2l1/reader/rpg_hatpro_prw.py	/^import numpy as np$/;"	kind:namespace	line:5
+np	raw2l1/reader/sigmaspace_minimpl.py	/^import numpy as np$/;"	kind:namespace	line:8
+np	raw2l1/reader/vaisala_cl.py	/^import numpy as np$/;"	kind:namespace	line:5
+np	raw2l1/reader/vaisala_cl_swiss_airport.py	/^import numpy as np$/;"	kind:namespace	line:8
+np	raw2l1/test/test_chm15k_nimbus.py	/^import numpy as np$/;"	kind:namespace	line:8
+np	raw2l1/test/test_lidar_reader.py	/^import numpy as np$/;"	kind:namespace	line:9
+np	raw2l1/test/test_vaisala.py	/^import numpy as np$/;"	kind:namespace	line:8
+np	raw2l1/tools/create_netcdf.py	/^import numpy as np$/;"	kind:namespace	line:9
+np	raw2l1/tools/lidar_reader.py	/^import numpy as np$/;"	kind:namespace	line:10
+np	raw2l1/tools/read_overlap.py	/^import numpy as np$/;"	kind:namespace	line:6
+os	raw2l1/test/test_arg_parser.py	/^import os$/;"	kind:namespace	line:6
+os	raw2l1/test/test_chm15k_nimbus-uk-metoffice.py	/^import os$/;"	kind:namespace	line:6
+os	raw2l1/test/test_chm15k_nimbus.py	/^import os$/;"	kind:namespace	line:6
+os	raw2l1/test/test_cs135.py	/^import os$/;"	kind:namespace	line:6
+os	raw2l1/test/test_logs.py	/^import os$/;"	kind:namespace	line:6
+os	raw2l1/test/test_netcdf4.py	/^import os$/;"	kind:namespace	line:6
+os	raw2l1/test/test_rpg_hatpro.py	/^import os$/;"	kind:namespace	line:6
+os	raw2l1/test/test_sigmaspace_minimpl.py	/^import os$/;"	kind:namespace	line:6
+os	raw2l1/test/test_timeliness.py	/^import os$/;"	kind:namespace	line:6
+os	raw2l1/test/test_toprof_format.py	/^import os$/;"	kind:namespace	line:6
+os	raw2l1/test/test_vaisala.py	/^import os$/;"	kind:namespace	line:6
+os	raw2l1/test/test_vaisala_eprofile.py	/^import os$/;"	kind:namespace	line:6
+os	raw2l1/test/test_vaisala_sirta.py	/^import os$/;"	kind:namespace	line:6
+os	raw2l1/tools/arg_parser.py	/^import os$/;"	kind:namespace	line:10
+os	raw2l1/tools/log.py	/^import os$/;"	kind:namespace	line:9
+os	raw2l1/tools/utils.py	/^import os$/;"	kind:namespace	line:7
+print_function	raw2l1/raw2l1.py	/^from __future__ import print_function, division, absolute_import$/;"	kind:namespace	line:5
+print_function	raw2l1/reader/campbellscientific_cs135.py	/^from __future__ import print_function, absolute_import, division$/;"	kind:namespace	line:3
+print_function	raw2l1/reader/leosphere_wls7.py	/^from __future__ import print_function, division, absolute_import$/;"	kind:namespace	line:4
+print_function	raw2l1/reader/leosphere_wls70.py	/^from __future__ import print_function, division, absolute_import$/;"	kind:namespace	line:4
+print_function	raw2l1/reader/lib/libvaisala.py	/^from __future__ import print_function, division, absolute_import$/;"	kind:namespace	line:3
+print_function	raw2l1/reader/libhatpro.py	/^from __future__ import print_function, division, absolute_import$/;"	kind:namespace	line:3
+print_function	raw2l1/reader/lufft_chm15k_nimbus-uk-metoffice.py	/^from __future__ import print_function, absolute_import, division$/;"	kind:namespace	line:3
+print_function	raw2l1/reader/lufft_chm15k_nimbus.py	/^from __future__ import print_function, absolute_import, division$/;"	kind:namespace	line:3
+print_function	raw2l1/reader/rpg_hatpro_absolute_humidity.py	/^from __future__ import print_function, division, absolute_import$/;"	kind:namespace	line:3
+print_function	raw2l1/reader/rpg_hatpro_air_temp.py	/^from __future__ import print_function, division, absolute_import$/;"	kind:namespace	line:3
+print_function	raw2l1/reader/rpg_hatpro_air_temp_bl.py	/^from __future__ import print_function, division, absolute_import$/;"	kind:namespace	line:3
+print_function	raw2l1/reader/rpg_hatpro_brightness_temperature.py	/^from __future__ import print_function, division, absolute_import$/;"	kind:namespace	line:3
+print_function	raw2l1/reader/rpg_hatpro_brightness_temperature_bl.py	/^from __future__ import print_function, division, absolute_import$/;"	kind:namespace	line:3
+print_function	raw2l1/reader/rpg_hatpro_clwvi.py	/^from __future__ import print_function, division, absolute_import$/;"	kind:namespace	line:3
+print_function	raw2l1/reader/rpg_hatpro_prw.py	/^from __future__ import print_function, division, absolute_import$/;"	kind:namespace	line:3
+print_function	raw2l1/reader/sigmaspace_minimpl.py	/^from __future__ import print_function, absolute_import, division$/;"	kind:namespace	line:3
+print_function	raw2l1/reader/sirta_ipral.py	/^from __future__ import print_function, absolute_import, division$/;"	kind:namespace	line:3
+print_function	raw2l1/reader/vaisala_cl.py	/^from __future__ import print_function, absolute_import, division$/;"	kind:namespace	line:3
+print_function	raw2l1/reader/vaisala_cl_swiss_airport.py	/^from __future__ import print_function, absolute_import, division$/;"	kind:namespace	line:3
+print_function	raw2l1/tools/arg_parser.py	/^from __future__ import print_function, division, absolute_import$/;"	kind:namespace	line:5
+print_function	raw2l1/tools/conf.py	/^from __future__ import print_function, division, absolute_import$/;"	kind:namespace	line:5
+print_function	raw2l1/tools/create_netcdf.py	/^from __future__ import print_function, division, absolute_import$/;"	kind:namespace	line:4
+print_function	raw2l1/tools/errors.py	/^from __future__ import print_function, division, absolute_import$/;"	kind:namespace	line:3
+print_function	raw2l1/tools/lidar_reader.py	/^from __future__ import print_function, division, absolute_import$/;"	kind:namespace	line:4
+print_function	raw2l1/tools/log.py	/^from __future__ import print_function, division, absolute_import$/;"	kind:namespace	line:5
+print_function	raw2l1/tools/read_overlap.py	/^from __future__ import print_function, division, absolute_import$/;"	kind:namespace	line:4
+print_function	raw2l1/tools/utils.py	/^from __future__ import print_function, division, absolute_import$/;"	kind:namespace	line:5
+raises	raw2l1/test/test_timeliness.py	/^from nose.tools import raises$/;"	kind:namespace	line:7
+raw2l1	raw2l1/raw2l1.py	/^def raw2l1(argv):$/;"	kind:function	line:42
+raw2l1.py	raw2l1/raw2l1.py	1;"	kind:file	line:1
+re	raw2l1/reader/campbellscientific_cs135.py	/^import re$/;"	kind:namespace	line:8
+re	raw2l1/reader/libhatpro.py	/^    import re$/;"	kind:namespace	line:13
+re	raw2l1/reader/vaisala_cl.py	/^import re$/;"	kind:namespace	line:8
+re	raw2l1/reader/vaisala_cl_swiss_airport.py	/^import re$/;"	kind:namespace	line:7
+read_cbh	raw2l1/reader/campbellscientific_cs135.py	/^def read_cbh(line, data, ind, logger):$/;"	kind:function	line:194
+read_cbh_msg	raw2l1/reader/vaisala_cl.py	/^def read_cbh_msg(data, ind, msg, logger):$/;"	kind:function	line:550
+read_cbh_msg	raw2l1/reader/vaisala_cl_swiss_airport.py	/^def read_cbh_msg(data, ind, msg, logger):$/;"	kind:function	line:545
+read_cbh_vars	raw2l1/reader/vaisala_cl.py	/^def read_cbh_vars(data, ind, msg, logger):$/;"	kind:function	line:612
+read_cbh_vars	raw2l1/reader/vaisala_cl_swiss_airport.py	/^def read_cbh_vars(data, ind, msg, logger):$/;"	kind:function	line:607
+read_clh_msg	raw2l1/reader/vaisala_cl.py	/^def read_clh_msg(data, ind, msg, logger):$/;"	kind:function	line:587
+read_clh_msg	raw2l1/reader/vaisala_cl_swiss_airport.py	/^def read_clh_msg(data, ind, msg, logger):$/;"	kind:function	line:582
+read_data	raw2l1/reader/campbellscientific_cs135.py	/^def read_data(list_files, conf, logger):$/;"	kind:function	line:440
+read_data	raw2l1/reader/leosphere_wls7.py	/^def read_data(list_files, logger):$/;"	kind:function	line:7
+read_data	raw2l1/reader/leosphere_wls70.py	/^def read_data(list_files, logger):$/;"	kind:function	line:19
+read_data	raw2l1/reader/lufft_chm15k_nimbus-uk-metoffice.py	/^def read_data(list_files, conf, logger):$/;"	kind:function	line:443
+read_data	raw2l1/reader/lufft_chm15k_nimbus.py	/^def read_data(list_files, conf, logger):$/;"	kind:function	line:539
+read_data	raw2l1/reader/rpg_hatpro_absolute_humidity.py	/^def read_data(list_files, conf, logger):$/;"	kind:function	line:78
+read_data	raw2l1/reader/rpg_hatpro_air_temp.py	/^def read_data(list_files, conf, logger):$/;"	kind:function	line:78
+read_data	raw2l1/reader/rpg_hatpro_air_temp_bl.py	/^def read_data(list_files, conf, logger):$/;"	kind:function	line:79
+read_data	raw2l1/reader/rpg_hatpro_brightness_temperature.py	/^def read_data(list_files, conf, logger):$/;"	kind:function	line:132
+read_data	raw2l1/reader/rpg_hatpro_brightness_temperature_bl.py	/^def read_data(list_files, conf, logger):$/;"	kind:function	line:130
+read_data	raw2l1/reader/rpg_hatpro_clwvi.py	/^def read_data(list_files, conf, logger):$/;"	kind:function	line:84
+read_data	raw2l1/reader/rpg_hatpro_prw.py	/^def read_data(list_files, conf, logger):$/;"	kind:function	line:79
+read_data	raw2l1/reader/sigmaspace_minimpl.py	/^def read_data(list_files, conf, logger):$/;"	kind:function	line:238
+read_data	raw2l1/reader/sirta_ipral.py	/^def read_data(list_files, conf, logger):$/;"	kind:function	line:125
+read_data	raw2l1/reader/test_reader.py	/^def read_data(list_files, logger):$/;"	kind:function	line:13
+read_data	raw2l1/reader/vaisala_cl.py	/^def read_data(list_files, conf, logger):$/;"	kind:function	line:716
+read_data	raw2l1/reader/vaisala_cl_swiss_airport.py	/^def read_data(list_files, conf, logger):$/;"	kind:function	line:696
+read_data	raw2l1/tools/lidar_reader.py	/^    def read_data(self):$/;"	kind:member	line:116
+read_dim_vars	raw2l1/reader/lufft_chm15k_nimbus-uk-metoffice.py	/^def read_dim_vars(data, nc_id, logger):$/;"	kind:function	line:342
+read_dim_vars	raw2l1/reader/lufft_chm15k_nimbus.py	/^def read_dim_vars(data, nc_id, logger):$/;"	kind:function	line:337
+read_header	raw2l1/reader/campbellscientific_cs135.py	/^def read_header(line, data, logger):$/;"	kind:function	line:173
+read_header	raw2l1/reader/leosphere_wls70.py	/^def read_header(file_, logger):$/;"	kind:function	line:16
+read_laser	raw2l1/reader/campbellscientific_cs135.py	/^def read_laser(line, data, ind, logger):$/;"	kind:function	line:222
+read_line_2	raw2l1/reader/sirta_ipral.py	/^def read_line_2(line, filename, logger):$/;"	kind:function	line:104
+read_mlh	raw2l1/reader/campbellscientific_cs135.py	/^def read_mlh(line, data, ind, logger):$/;"	kind:function	line:290
+read_msg_001	raw2l1/reader/campbellscientific_cs135.py	/^def read_msg_001(msg, data, ind, logger):$/;"	kind:function	line:364
+read_msg_002	raw2l1/reader/campbellscientific_cs135.py	/^def read_msg_002(msg, data, ind, logger):$/;"	kind:function	line:374
+read_msg_003	raw2l1/reader/campbellscientific_cs135.py	/^def read_msg_003(msg, data, ind, logger):$/;"	kind:function	line:386
+read_msg_004	raw2l1/reader/campbellscientific_cs135.py	/^def read_msg_004(msg, data, ind, logger):$/;"	kind:function	line:397
+read_msg_005	raw2l1/reader/campbellscientific_cs135.py	/^def read_msg_005(msg, data, ind, logger):$/;"	kind:function	line:414
+read_msg_006	raw2l1/reader/campbellscientific_cs135.py	/^def read_msg_006(msg, data, ind, logger):$/;"	kind:function	line:426
+read_nd_values	raw2l1/reader/sigmaspace_minimpl.py	/^def read_nd_values(data, nc_id, time_ind, logger):$/;"	kind:function	line:180
+read_overlap	raw2l1/reader/lufft_chm15k_nimbus-uk-metoffice.py	/^def read_overlap(overlap_file, missing_float, logger):$/;"	kind:function	line:101
+read_overlap	raw2l1/reader/lufft_chm15k_nimbus.py	/^def read_overlap(overlap_file, missing_float, logger):$/;"	kind:function	line:101
+read_overlap	raw2l1/tools/create_netcdf.py	/^from tools.read_overlap import read_overlap$/;"	kind:namespace	line:12
+read_overlap	raw2l1/tools/read_overlap.py	/^def read_overlap(fname, logger):$/;"	kind:function	line:13
+read_overlap.py	raw2l1/tools/read_overlap.py	1;"	kind:file	line:1
+read_profile	raw2l1/reader/campbellscientific_cs135.py	/^def read_profile(line, data, ind, logger):$/;"	kind:function	line:249
+read_rcs_var	raw2l1/reader/vaisala_cl.py	/^def read_rcs_var(data, ind, msg, logger):$/;"	kind:function	line:625
+read_rcs_var	raw2l1/reader/vaisala_cl_swiss_airport.py	/^def read_rcs_var(data, ind, msg, logger):$/;"	kind:function	line:620
+read_scalar_values	raw2l1/reader/sigmaspace_minimpl.py	/^def read_scalar_values(data, nc_id, logger):$/;"	kind:function	line:139
+read_scalar_vars	raw2l1/reader/lufft_chm15k_nimbus-uk-metoffice.py	/^def read_scalar_vars(data, nc_id, soft_vers, logger):$/;"	kind:function	line:363
+read_scalar_vars	raw2l1/reader/lufft_chm15k_nimbus.py	/^def read_scalar_vars(data, nc_id, soft_vers, logger):$/;"	kind:function	line:358
+read_scalar_vars	raw2l1/reader/vaisala_cl.py	/^def read_scalar_vars(data, msg, msg_type, logger):$/;"	kind:function	line:519
+read_scalar_vars	raw2l1/reader/vaisala_cl_swiss_airport.py	/^def read_scalar_vars(data, msg, msg_type, logger):$/;"	kind:function	line:514
+read_sky_condition	raw2l1/reader/campbellscientific_cs135.py	/^def read_sky_condition(line, data, ind, logger):$/;"	kind:function	line:271
+read_time	raw2l1/reader/rpg_hatpro_absolute_humidity.py	/^def read_time(nc_id, logger):$/;"	kind:function	line:67
+read_time	raw2l1/reader/rpg_hatpro_air_temp.py	/^def read_time(nc_id, logger):$/;"	kind:function	line:67
+read_time	raw2l1/reader/rpg_hatpro_air_temp_bl.py	/^def read_time(nc_id, logger):$/;"	kind:function	line:68
+read_time	raw2l1/reader/rpg_hatpro_brightness_temperature.py	/^def read_time(nc_id, logger):$/;"	kind:function	line:100
+read_time	raw2l1/reader/rpg_hatpro_brightness_temperature_bl.py	/^def read_time(nc_id, logger):$/;"	kind:function	line:100
+read_time	raw2l1/reader/rpg_hatpro_clwvi.py	/^def read_time(nc_id, logger):$/;"	kind:function	line:73
+read_time	raw2l1/reader/rpg_hatpro_prw.py	/^def read_time(nc_id, logger):$/;"	kind:function	line:68
+read_time	raw2l1/reader/sigmaspace_minimpl.py	/^def read_time(nc_id):$/;"	kind:function	line:163
+read_time_dep_vars	raw2l1/reader/vaisala_cl.py	/^def read_time_dep_vars(data, ind, msg, msg_type, logger):$/;"	kind:function	line:530
+read_time_dep_vars	raw2l1/reader/vaisala_cl_swiss_airport.py	/^def read_time_dep_vars(data, ind, msg, msg_type, logger):$/;"	kind:function	line:525
+read_time_var	raw2l1/reader/lufft_chm15k_nimbus-uk-metoffice.py	/^def read_time_var(data, nc_id, time_ind, logger):$/;"	kind:function	line:324
+read_time_var	raw2l1/reader/lufft_chm15k_nimbus.py	/^def read_time_var(data, nc_id, time_ind, logger):$/;"	kind:function	line:319
+read_timedep_vars	raw2l1/reader/lufft_chm15k_nimbus-uk-metoffice.py	/^def read_timedep_vars(data, nc_id, soft_vers, time_ind, time_size, logger):$/;"	kind:function	line:390
+read_timedep_vars	raw2l1/reader/lufft_chm15k_nimbus.py	/^def read_timedep_vars(data, nc_id, soft_vers, time_ind, time_size, logger):$/;"	kind:function	line:387
+read_vars	raw2l1/reader/vaisala_cl.py	/^def read_vars(lines, data, conf, time_ind, f_name, logger):$/;"	kind:function	line:655
+read_vars	raw2l1/reader/vaisala_cl_swiss_airport.py	/^def read_vars(lines, data, conf, time_ind, f_name, f_fmt, logger):$/;"	kind:function	line:650
+rpg_hatpro_absolute_humidity.py	raw2l1/reader/rpg_hatpro_absolute_humidity.py	1;"	kind:file	line:1
+rpg_hatpro_air_temp.py	raw2l1/reader/rpg_hatpro_air_temp.py	1;"	kind:file	line:1
+rpg_hatpro_air_temp_bl.py	raw2l1/reader/rpg_hatpro_air_temp_bl.py	1;"	kind:file	line:1
+rpg_hatpro_brightness_temperature.py	raw2l1/reader/rpg_hatpro_brightness_temperature.py	1;"	kind:file	line:1
+rpg_hatpro_brightness_temperature_bl.py	raw2l1/reader/rpg_hatpro_brightness_temperature_bl.py	1;"	kind:file	line:1
+rpg_hatpro_clwvi.py	raw2l1/reader/rpg_hatpro_clwvi.py	1;"	kind:file	line:1
+rpg_hatpro_prw.py	raw2l1/reader/rpg_hatpro_prw.py	1;"	kind:file	line:1
+sigmaspace_minimpl.py	raw2l1/reader/sigmaspace_minimpl.py	1;"	kind:file	line:1
+sirta_ipral.py	raw2l1/reader/sirta_ipral.py	1;"	kind:file	line:1
+store_error	raw2l1/reader/lufft_chm15k_nimbus-uk-metoffice.py	/^def store_error(data, err_msg, logger):$/;"	kind:function	line:67
+store_error	raw2l1/reader/lufft_chm15k_nimbus.py	/^def store_error(data, err_msg, logger):$/;"	kind:function	line:67
+store_error	raw2l1/reader/vaisala_cl.py	/^def store_error(data, err_msg, logger):$/;"	kind:function	line:137
+store_error	raw2l1/reader/vaisala_cl_swiss_airport.py	/^def store_error(data, err_msg, logger):$/;"	kind:function	line:137
+subprocess	raw2l1/test/test_chm15k_nimbus-uk-metoffice.py	/^import subprocess$/;"	kind:namespace	line:5
+subprocess	raw2l1/test/test_chm15k_nimbus.py	/^import subprocess$/;"	kind:namespace	line:5
+subprocess	raw2l1/test/test_cs135.py	/^import subprocess$/;"	kind:namespace	line:5
+subprocess	raw2l1/test/test_logs.py	/^import subprocess$/;"	kind:namespace	line:5
+subprocess	raw2l1/test/test_netcdf4.py	/^import subprocess$/;"	kind:namespace	line:5
+subprocess	raw2l1/test/test_rpg_hatpro.py	/^import subprocess$/;"	kind:namespace	line:5
+subprocess	raw2l1/test/test_sigmaspace_minimpl.py	/^import subprocess$/;"	kind:namespace	line:5
+subprocess	raw2l1/test/test_timeliness.py	/^import subprocess$/;"	kind:namespace	line:5
+subprocess	raw2l1/test/test_toprof_format.py	/^import subprocess$/;"	kind:namespace	line:5
+subprocess	raw2l1/test/test_vaisala.py	/^import subprocess$/;"	kind:namespace	line:5
+subprocess	raw2l1/test/test_vaisala_eprofile.py	/^import subprocess$/;"	kind:namespace	line:5
+subprocess	raw2l1/test/test_vaisala_sirta.py	/^import subprocess$/;"	kind:namespace	line:5
+sync_meteo	raw2l1/reader/rpg_hatpro_brightness_temperature.py	/^def sync_meteo(data, meteo_data, logger):$/;"	kind:function	line:111
+sync_meteo	raw2l1/reader/rpg_hatpro_brightness_temperature_bl.py	/^def sync_meteo(data, meteo_data, logger):$/;"	kind:function	line:111
+sys	raw2l1/raw2l1.py	/^import sys$/;"	kind:namespace	line:7
+sys	raw2l1/reader/campbellscientific_cs135.py	/^import sys$/;"	kind:namespace	line:7
+sys	raw2l1/reader/lufft_chm15k_nimbus-uk-metoffice.py	/^import sys$/;"	kind:namespace	line:8
+sys	raw2l1/reader/lufft_chm15k_nimbus.py	/^import sys$/;"	kind:namespace	line:8
+sys	raw2l1/reader/rpg_hatpro_brightness_temperature_bl.py	/^import sys$/;"	kind:namespace	line:5
+sys	raw2l1/reader/sigmaspace_minimpl.py	/^import sys$/;"	kind:namespace	line:5
+sys	raw2l1/reader/vaisala_cl.py	/^import sys$/;"	kind:namespace	line:7
+sys	raw2l1/reader/vaisala_cl_swiss_airport.py	/^import sys$/;"	kind:namespace	line:5
+sys	raw2l1/tools/arg_parser.py	/^import sys$/;"	kind:namespace	line:9
+sys	raw2l1/tools/check_conf.py	/^import sys$/;"	kind:namespace	line:4
+sys	raw2l1/tools/create_netcdf.py	/^import sys$/;"	kind:namespace	line:7
+sys	raw2l1/tools/lidar_reader.py	/^import sys$/;"	kind:namespace	line:6
+sys	raw2l1/tools/log.py	/^import sys$/;"	kind:namespace	line:10
+test_1h_file	raw2l1/test/test_sigmaspace_minimpl.py	/^    def test_1h_file(self):$/;"	kind:member	line:43
+test_20150521	raw2l1/test/test_vaisala.py	/^    def test_20150521(self):$/;"	kind:member	line:172
+test_20150603	raw2l1/test/test_vaisala.py	/^    def test_20150603(self):$/;"	kind:member	line:194
+test_20150603	raw2l1/test/test_vaisala_sirta.py	/^    def test_20150603(self):$/;"	kind:member	line:43
+test_20150911	raw2l1/test/test_vaisala.py	/^    def test_20150911(self):$/;"	kind:member	line:150
+test_20160426210111_06418_A201604262000	raw2l1/test/test_vaisala_eprofile.py	/^    def test_20160426210111_06418_A201604262000(self):$/;"	kind:member	line:247
+test_20160427230032_h6042722	raw2l1/test/test_vaisala_eprofile.py	/^    def test_20160427230032_h6042722(self):$/;"	kind:member	line:155
+test_20160428200020_h6042819	raw2l1/test/test_vaisala_eprofile.py	/^    def test_20160428200020_h6042819(self):$/;"	kind:member	line:175
+test_20160514	raw2l1/test/test_chm15k_nimbus-uk-metoffice.py	/^    def test_20160514(self):$/;"	kind:member	line:21
+test_20160517070311_06447_A201605170600	raw2l1/test/test_vaisala_eprofile.py	/^    def test_20160517070311_06447_A201605170600(self):$/;"	kind:member	line:201
+test_20160517120306_06447_A201605171100	raw2l1/test/test_vaisala_eprofile.py	/^    def test_20160517120306_06447_A201605171100(self):$/;"	kind:member	line:227
+test_20160523005942_c6052300	raw2l1/test/test_vaisala_eprofile.py	/^    def test_20160523005942_c6052300(self):$/;"	kind:member	line:21
+test_20160523010011_P6052300	raw2l1/test/test_vaisala_eprofile.py	/^    def test_20160523010011_P6052300(self):$/;"	kind:member	line:41
+test_20160523010012_Q6052300	raw2l1/test/test_vaisala_eprofile.py	/^    def test_20160523010012_Q6052300(self):$/;"	kind:member	line:61
+test_20160523010012_T6052300	raw2l1/test/test_vaisala_eprofile.py	/^    def test_20160523010012_T6052300(self):$/;"	kind:member	line:81
+test_20160523100012_P6052309	raw2l1/test/test_vaisala_eprofile.py	/^    def test_20160523100012_P6052309(self):$/;"	kind:member	line:101
+test_20160523160107_06472_A201605231500	raw2l1/test/test_vaisala_eprofile.py	/^    def test_20160523160107_06472_A201605231500(self):$/;"	kind:member	line:127
+test_2_files	raw2l1/test/test_vaisala.py	/^    def test_2_files(self):$/;"	kind:member	line:122
+test_5min_file	raw2l1/test/test_sigmaspace_minimpl.py	/^    def test_5min_file(self):$/;"	kind:member	line:21
+test_ancillary	raw2l1/test/test_arg_parser.py	/^    def test_ancillary(self):$/;"	kind:member	line:41
+test_arg_parser.py	raw2l1/test/test_arg_parser.py	1;"	kind:file	line:1
+test_chm15k_nimbus-uk-metoffice.py	raw2l1/test/test_chm15k_nimbus-uk-metoffice.py	1;"	kind:file	line:1
+test_chm15k_nimbus.py	raw2l1/test/test_chm15k_nimbus.py	1;"	kind:file	line:1
+test_chm15k_overlap_bad	raw2l1/test/test_chm15k_nimbus.py	/^    def test_chm15k_overlap_bad(self):$/;"	kind:member	line:212
+test_chm15k_overlap_empty	raw2l1/test/test_chm15k_nimbus.py	/^    def test_chm15k_overlap_empty(self):$/;"	kind:member	line:236
+test_chm15k_overlap_good	raw2l1/test/test_chm15k_nimbus.py	/^    def test_chm15k_overlap_good(self):$/;"	kind:member	line:188
+test_chm15k_prob_time	raw2l1/test/test_chm15k_nimbus.py	/^    def test_chm15k_prob_time(self):$/;"	kind:member	line:98
+test_chm15k_sirta	raw2l1/test/test_chm15k_nimbus.py	/^    def test_chm15k_sirta(self):$/;"	kind:member	line:116
+test_chm15k_toprof	raw2l1/test/test_toprof_format.py	/^    def test_chm15k_toprof(self):$/;"	kind:member	line:21
+test_chm15k_v0235	raw2l1/test/test_chm15k_nimbus.py	/^    def test_chm15k_v0235(self):$/;"	kind:member	line:137
+test_chm15k_v0536	raw2l1/test/test_chm15k_nimbus.py	/^    def test_chm15k_v0536(self):$/;"	kind:member	line:24
+test_chm15k_v0556	raw2l1/test/test_chm15k_nimbus.py	/^    def test_chm15k_v0556(self):$/;"	kind:member	line:44
+test_chm15k_v0559	raw2l1/test/test_chm15k_nimbus.py	/^    def test_chm15k_v0559(self):$/;"	kind:member	line:62
+test_chm15k_v0719	raw2l1/test/test_chm15k_nimbus.py	/^    def test_chm15k_v0719(self):$/;"	kind:member	line:80
+test_chm15k_v0738	raw2l1/test/test_chm15k_nimbus.py	/^    def test_chm15k_v0738(self):$/;"	kind:member	line:157
+test_cho_substraction	raw2l1/test/test_chm15k_nimbus.py	/^    def test_cho_substraction(self):$/;"	kind:member	line:260
+test_cl31_feet	raw2l1/test/test_vaisala.py	/^    def test_cl31_feet(self):$/;"	kind:member	line:222
+test_cl31_meters	raw2l1/test/test_vaisala.py	/^    def test_cl31_meters(self):$/;"	kind:member	line:267
+test_cl31_onehour_file	raw2l1/test/test_toprof_format.py	/^    def test_cl31_onehour_file(self):$/;"	kind:member	line:46
+test_cl31_onehour_file	raw2l1/test/test_vaisala.py	/^    def test_cl31_onehour_file(self):$/;"	kind:member	line:24
+test_cl51_oneday_file	raw2l1/test/test_toprof_format.py	/^    def test_cl51_oneday_file(self):$/;"	kind:member	line:72
+test_cl51_oneday_file	raw2l1/test/test_vaisala.py	/^    def test_cl51_oneday_file(self):$/;"	kind:member	line:96
+test_cl_msg2	raw2l1/test/test_vaisala.py	/^    def test_cl_msg2(self):$/;"	kind:member	line:50
+test_cl_scale_error	raw2l1/test/test_vaisala.py	/^    def test_cl_scale_error(self):$/;"	kind:member	line:70
+test_cs135.py	raw2l1/test/test_cs135.py	1;"	kind:file	line:1
+test_cs135_dummy_file	raw2l1/test/test_cs135.py	/^    def test_cs135_dummy_file(self):$/;"	kind:member	line:21
+test_cs135_dummy_file	raw2l1/test/test_cs135.py	/^    def test_cs135_dummy_file(self):$/;"	kind:member	line:47
+test_cs135_dummy_file	raw2l1/test/test_netcdf4.py	/^    def test_cs135_dummy_file(self):$/;"	kind:member	line:21
+test_date_20150301	raw2l1/test/test_arg_parser.py	/^    def test_date_20150301(self):$/;"	kind:member	line:31
+test_date_error	raw2l1/test/test_arg_parser.py	/^    def test_date_error(self):$/;"	kind:member	line:15
+test_date_format	raw2l1/test/test_arg_parser.py	/^    def test_date_format(self):$/;"	kind:member	line:23
+test_lidar_reader.py	raw2l1/test/test_lidar_reader.py	1;"	kind:file	line:1
+test_log_cinfo_finfo	raw2l1/test/test_logs.py	/^    def test_log_cinfo_finfo(self):$/;"	kind:member	line:20
+test_logs.py	raw2l1/test/test_logs.py	1;"	kind:file	line:1
+test_netcdf4.py	raw2l1/test/test_netcdf4.py	1;"	kind:file	line:1
+test_no_missing_conf	raw2l1/test/test_lidar_reader.py	/^    def test_no_missing_conf(self):$/;"	kind:member	line:25
+test_no_missing_float_conf	raw2l1/test/test_lidar_reader.py	/^    def test_no_missing_float_conf(self):$/;"	kind:member	line:55
+test_no_missing_int_conf	raw2l1/test/test_lidar_reader.py	/^    def test_no_missing_int_conf(self):$/;"	kind:member	line:40
+test_no_missing_nan_float_conf	raw2l1/test/test_lidar_reader.py	/^    def test_no_missing_nan_float_conf(self):$/;"	kind:member	line:70
+test_reader.py	raw2l1/reader/test_reader.py	1;"	kind:file	line:1
+test_rpg_hatpro.py	raw2l1/test/test_rpg_hatpro.py	1;"	kind:file	line:1
+test_rpg_hatpro_bl_ta_toprof	raw2l1/test/test_rpg_hatpro.py	/^    def test_rpg_hatpro_bl_ta_toprof(self):$/;"	kind:member	line:20
+test_rpg_hatpro_bl_ta_toprof_multi_files	raw2l1/test/test_rpg_hatpro.py	/^    def test_rpg_hatpro_bl_ta_toprof_multi_files(self):$/;"	kind:member	line:39
+test_rpg_hatpro_clwvi_toprof	raw2l1/test/test_rpg_hatpro.py	/^    def test_rpg_hatpro_clwvi_toprof(self):$/;"	kind:member	line:96
+test_rpg_hatpro_hua_toprof	raw2l1/test/test_rpg_hatpro.py	/^    def test_rpg_hatpro_hua_toprof(self):$/;"	kind:member	line:77
+test_rpg_hatpro_prw_toprof	raw2l1/test/test_rpg_hatpro.py	/^    def test_rpg_hatpro_prw_toprof(self):$/;"	kind:member	line:115
+test_rpg_hatpro_ta_toprof	raw2l1/test/test_rpg_hatpro.py	/^    def test_rpg_hatpro_ta_toprof(self):$/;"	kind:member	line:58
+test_rpg_hatpro_tb_bl_toprof	raw2l1/test/test_rpg_hatpro.py	/^    def test_rpg_hatpro_tb_bl_toprof(self):$/;"	kind:member	line:158
+test_rpg_hatpro_tb_toprof	raw2l1/test/test_rpg_hatpro.py	/^    def test_rpg_hatpro_tb_toprof(self):$/;"	kind:member	line:134
+test_sigmaspace_minimpl.py	raw2l1/test/test_sigmaspace_minimpl.py	1;"	kind:file	line:1
+test_timeliness.py	raw2l1/test/test_timeliness.py	1;"	kind:file	line:1
+test_too_old_auto	raw2l1/test/test_timeliness.py	/^    def test_too_old_auto(self):$/;"	kind:member	line:23
+test_too_old_duration_set	raw2l1/test/test_timeliness.py	/^    def test_too_old_duration_set(self):$/;"	kind:member	line:43
+test_toprof_format.py	raw2l1/test/test_toprof_format.py	1;"	kind:file	line:1
+test_vaisala.py	raw2l1/test/test_vaisala.py	1;"	kind:file	line:1
+test_vaisala_eprofile.py	raw2l1/test/test_vaisala_eprofile.py	1;"	kind:file	line:1
+test_vaisala_sirta.py	raw2l1/test/test_vaisala_sirta.py	1;"	kind:file	line:1
+timeliness_ok	raw2l1/tools/lidar_reader.py	/^    def timeliness_ok(self, max_age, logger):$/;"	kind:member	line:91
+to_bool	raw2l1/reader/vaisala_cl.py	/^from tools.utils import chomp, to_bool$/;"	kind:namespace	line:9
+to_bool	raw2l1/reader/vaisala_cl_swiss_airport.py	/^from tools.utils import chomp, to_bool$/;"	kind:namespace	line:10
+to_bool	raw2l1/tools/utils.py	/^def to_bool(s):$/;"	kind:function	line:25
+tools	raw2l1/test/test_arg_parser.py	/^import tools.arg_parser as ag$/;"	kind:namespace	line:10
+tools	raw2l1/test/test_lidar_reader.py	/^import tools.lidar_reader as lr$/;"	kind:namespace	line:11
+unittest	raw2l1/test/test_arg_parser.py	/^import unittest$/;"	kind:namespace	line:4
+unittest	raw2l1/test/test_chm15k_nimbus-uk-metoffice.py	/^import unittest$/;"	kind:namespace	line:4
+unittest	raw2l1/test/test_chm15k_nimbus.py	/^import unittest$/;"	kind:namespace	line:4
+unittest	raw2l1/test/test_cs135.py	/^import unittest$/;"	kind:namespace	line:4
+unittest	raw2l1/test/test_lidar_reader.py	/^import unittest$/;"	kind:namespace	line:4
+unittest	raw2l1/test/test_logs.py	/^import unittest$/;"	kind:namespace	line:4
+unittest	raw2l1/test/test_netcdf4.py	/^import unittest$/;"	kind:namespace	line:4
+unittest	raw2l1/test/test_rpg_hatpro.py	/^import unittest$/;"	kind:namespace	line:4
+unittest	raw2l1/test/test_sigmaspace_minimpl.py	/^import unittest$/;"	kind:namespace	line:4
+unittest	raw2l1/test/test_timeliness.py	/^import unittest$/;"	kind:namespace	line:4
+unittest	raw2l1/test/test_toprof_format.py	/^import unittest$/;"	kind:namespace	line:4
+unittest	raw2l1/test/test_vaisala.py	/^import unittest$/;"	kind:namespace	line:4
+unittest	raw2l1/test/test_vaisala_eprofile.py	/^import unittest$/;"	kind:namespace	line:4
+unittest	raw2l1/test/test_vaisala_sirta.py	/^import unittest$/;"	kind:namespace	line:4
+utils	raw2l1/tools/log.py	/^from tools import utils$/;"	kind:namespace	line:11
+utils.py	raw2l1/tools/utils.py	1;"	kind:file	line:1
+vaisala_cl.py	raw2l1/reader/vaisala_cl.py	1;"	kind:file	line:1
+vaisala_cl_swiss_airport.py	raw2l1/reader/vaisala_cl_swiss_airport.py	1;"	kind:file	line:1
+welcome_msg	raw2l1/raw2l1.py	/^def welcome_msg():$/;"	kind:function	line:21
