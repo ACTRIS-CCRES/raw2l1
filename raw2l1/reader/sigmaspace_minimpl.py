@@ -148,9 +148,9 @@ def read_scalar_values(data, nc_id, logger):
     logger.debug('site name')
     data['site'] = nc_id.lidar_site
     logger.debug('reading time resolution')
-    data['time_resol'] = int(nc_id.temporal_resolution.split()[0])
+    data['time_resol'] = int(nc_id.temporal_resolution.split()[0]) * MIN_2_SEC
     logger.debug('reading range resolution')
-    data['time_resol'] = int(nc_id.range_bin_resolution.split()[0]) * MIN_2_SEC
+    data['range_resol'] = int(nc_id.range_bin_resolution.split()[0])
     logger.debug('reading station localization')
     data['station_latitude'] = nc_id.variables['latitude'][0]
     data['station_longitude'] = nc_id.variables['longitude'][0]
@@ -334,5 +334,13 @@ def read_data(list_files, conf, logger):
 
     # laser energy to joule
     data['laser_energy'][data['laser_energy'] != MISSING_FLOAT] = data['laser_energy'][data['laser_energy'] != MISSING_FLOAT] * 1.e-6
+
+    # add date in separate variables
+    data['year'] = np.array([d.year for d in data['time']])
+    data['month'] = np.array([d.month for d in data['time']])
+    data['day'] = np.array([d.day for d in data['time']])
+    data['hour'] = np.array([d.hour for d in data['time']])
+    data['minute'] = np.array([d.minute for d in data['time']])
+    data['second'] = np.array([d.second for d in data['time']])
 
     return data
