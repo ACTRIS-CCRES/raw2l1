@@ -1,0 +1,58 @@
+HeaderLength=55
+Version=2.1.58
+ID System=WLS7-57
+ID Client=EDF
+Localisation=SIRTA
+GPS Localisation=Not Available
+Comments=
+Measurements informations :
+********************
+ScanAngle(°)=27.76
+NumberOfAveragedShots=10000
+RollAngle(°)=0.00
+HeadingAngle(°)=0.00
+Altitudes(m)=	40	60	80	100	120	140	160	180	200
+PitchAngle(°)=0.00
+CNRThreshold=-22
+WiperCNRThreshold=-19.0
+WiperAltitude(m)=100.0
+WiperDuration(ms)=1000.0
+Wavelenght(nm)=1543.00
+Angle BetweenTwoPositions(°)=90
+DirectionOffset(°)=0.000
+Algorithm Parameters :
+********************
+Algorithm=MLE
+MAOFrequency(Hz)=68000000.000
+CutOffFrequency(Hz)=90000000.000
+WindowLength(s)=0.000000E+0
+IndexRange0=64
+PathLaserPulse=C:\Documents and Settings\user\Desktop\Calibration a distance\AcqirisRun_2009-06-29T14-42-36\pulse_laser.sig
+NumberOfSamples_LaserPulse=74
+BeginIndex_LaserPulse=0
+BeginIndex_NoiseReference=0
+NumberOfNoiseWindowsByProfile=1
+VrThreshold (m/s)=)1.700
+SigmaFreqThreshold (m/s)=)0.750
+Acquisition Parameters :
+********************
+SamplingInterval=4.000000E-9
+NumberOfSamples=1024
+VerticalCoupling=AC, 50 Ohm
+Offset=0.000
+FullScale=0.200
+NumberOfSegments=100
+TriggerSource=External
+TriggerCoupling=DC, 50 Ohm (Ext. trig. only)
+TriggerSlope=Positive
+TriggerLevel1=3000
+TriggerLevel2=0
+DelayLine=4.000000E-7
+AbsoluteInitialPosition(°)=21780
+RelativeInitialPosition(°)=180
+InitialDate/Time=13/01/2010 00:01:00.70
+Gain=32.797000
+InitialLD1(mA)=IC1=290
+InitialLD2(mA)=IC2=1400
+Date	WiperCount	Tm	Vhm1	dVh1	VhMax1	VhMin1	Azim1	um1	du1	vm1	dv1	wm1	dw1	CNRm	dCNR	CNRmax	CNRmin	sigmaFreqm	dsigmaFreq	Avail.1		Vhm2	dVh2	VhMax2	VhMin2	Azim2	um2	du2	vm2	dv2	wm2	dw2	CNRm	dCNR	CNRmax	CNRmin	sigmaFreqm	dsigmaFreq	Avail.2		Vhm3	dVh3	VhMax3	VhMin3	Azim3	um3	du3	vm3	dv3	wm3	dw3	CNRm	dCNR	CNRmax	CNRmin	sigmaFreqm	dsigmaFreq	Avail.3		Vhm4	dVh4	VhMax4	VhMin4	Azim4	um4	du4	vm4	dv4	wm4	dw4	CNRm	dCNR	CNRmax	CNRmin	sigmaFreqm	dsigmaFreq	Avail.4		Vhm5	dVh5	VhMax5	VhMin5	Azim5	um5	du5	vm5	dv5	wm5	dw5	CNRm	dCNR	CNRmax	CNRmin	sigmaFreqm	dsigmaFreq	Avail.5		Vhm6	dVh6	VhMax6	VhMin6	Azim6	um6	du6	vm6	dv6	wm6	dw6	CNRm	dCNR	CNRmax	CNRmin	sigmaFreqm	dsigmaFreq	Avail.6		Vhm7	dVh7	VhMax7	VhMin7	Azim7	um7	du7	vm7	dv7	wm7	dw7	CNRm	dCNR	CNRmax	CNRmin	sigmaFreqm	dsigmaFreq	Avail.7		Vhm8	dVh8	VhMax8	VhMin8	Azim8	um8	du8	vm8	dv8	wm8	dw8	CNRm	dCNR	CNRmax	CNRmin	sigmaFreqm	dsigmaFreq	Avail.8		Vhm9	dVh9	VhMax9	VhMin9	Azim9	um9	du9	vm9	dv9	wm9	dw9	CNRm	dCNR	CNRmax	CNRmin	sigmaFreqm	dsigmaFreq	Avail.9	
+13/01/2010 00:10:00	1	6.90	3.11	0.79	5.77	1.15	101.7	-0.617	0.648	2.982	0.788	1.063	0.373	-8.01	4.54	3.86	-16.77	1.375	0.209	100.00		3.31	0.79	5.79	0.49	102.7	-0.707	0.722	3.147	0.822	0.974	0.390	-8.89	5.03	4.02	-19.18	1.298	0.277	100.00		3.67	0.80	5.94	1.06	105.1	-0.928	0.793	3.438	0.884	0.894	0.362	-9.37	5.31	3.67	-20.55	1.307	0.316	100.00		4.26	0.81	6.49	1.45	107.2	-1.241	0.671	4.006	0.873	0.827	0.398	-9.54	5.63	3.90	-21.63	1.308	0.354	99.27		4.83	0.95	8.13	1.55	108.5	-1.514	0.782	4.532	0.913	0.726	0.383	-9.47	5.70	5.37	-21.89	1.289	0.421	96.33		5.16	0.92	7.34	1.44	109.9	-1.738	0.790	4.800	0.879	0.656	0.356	-8.97	6.00	9.40	-21.94	1.242	0.479	83.30		5.37	0.78	7.75	2.83	113.6	-2.133	0.732	4.881	0.761	0.842	0.399	-10.40	6.09	7.66	-21.74	1.182	0.543	72.66		5.61	0.54	6.94	3.62	117.3	-2.552	0.697	4.949	0.493	0.951	0.332	-11.75	5.23	2.06	-21.76	1.210	0.513	42.94		5.77	0.55	7.51	4.15	119.3	-2.815	0.379	5.017	0.580	1.106	0.287	-13.13	5.11	-1.27	-21.75	1.169	0.577	18.35	
