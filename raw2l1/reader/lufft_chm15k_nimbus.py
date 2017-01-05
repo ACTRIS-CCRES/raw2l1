@@ -551,6 +551,9 @@ def read_data(list_files, conf, logger):
     if 'ancillary' in conf and len(conf['ancillary']) != 0:
         overlap = read_overlap(conf['ancillary'][0],
                                conf['missing_float'], logger)
+    elif 'overlap_file' in conf:
+        overlap = read_overlap(conf['overlap_file'],
+                               conf['missing_float'], logger)
 
     # analyse the files to read to get the complete size of data
     # ------------------------------------------------------------------------
@@ -571,7 +574,7 @@ def read_data(list_files, conf, logger):
         try:
             raw_data = nc.Dataset(ifile, 'r')
             nb_files_read += 1
-        except:
+        except RuntimeError:
             logger.error('109 unable to load ' + ifile + ' trying next one')
 
         nb_files += 1
@@ -650,8 +653,8 @@ def read_data(list_files, conf, logger):
     log_error_msg(data, logger)
 
     if nb_files_read == 0:
-        for f in list_files:
-            logger.critical("109 Tried to read '{}'. No file could be read".format(f))
+        for file_ in list_files:
+            logger.critical("109 Tried to read '{}'. No file could be read".format(file_))
         sys.exit(1)
     else:
         return data
