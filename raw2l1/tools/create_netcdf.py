@@ -416,11 +416,11 @@ def create_netcdf_variables(conf, data, nc_id, logger):
 
         # case of string variable:
         # we have to get the precise type of data from the read variable
-        if (val_type == 'string' and
-           conf.get('conf', 'netcdf_format') == 'NETCDF3_CLASSIC'):
+        if (val_type == 'string' and conf.get('conf', 'netcdf_format') == 'NETCDF3_CLASSIC'):
             msg = "107 Error creation netCDF file '{}".format(conf.get('conf', 'output'))
             msg += " impossible to put string variable in netCDF3 files use netCDF4 format"
             logger.error(msg)
+            continue
         elif val_type == 'string':
             if var_name not in data.keys():
                 tmp_var_name = get_data_key(conf.get(var_name, 'value'))
