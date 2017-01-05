@@ -235,8 +235,14 @@ def create_netcdf_time_var(conf, var_name, data, nc_id, logger):
     Special fonction to create the time variable
     """
 
+    has_calendar = False
+
     units = conf.get(var_name, 'units')
-    calendar = conf.get(var_name, 'calendar')
+    try:
+        calendar = conf.get(var_name, 'calendar')
+        has_calendar = True
+    except ConfigParser.NoOptionError:
+        pass
     val_type = get_var_type(conf.get(var_name, 'type'), conf, logger)
     dim = conf.get(var_name, 'dim')
 
@@ -248,7 +254,10 @@ def create_netcdf_time_var(conf, var_name, data, nc_id, logger):
     else:
         tmp_var_name = var_name
 
-    nc_var[:] = nc.date2num(data[tmp_var_name], units=units, calendar=calendar)
+    if has_calendar:
+        nc_var[:] = nc.date2num(data[tmp_var_name], units=units, calendar=calendar)
+    else:
+        nc_var[:] = nc.date2num(data[tmp_var_name], units=units)
 
     logger.debug("adding attributes to time variable")
     add_attr_to_var(nc_var, data, conf, var_name, logger)
@@ -407,11 +416,11 @@ def create_netcdf_variables(conf, data, nc_id, logger):
 
         # case of string variable:
         # we have to get the precise type of data from the read variable
-        if (val_type == 'string' and
-           conf.get('conf', 'netcdf_format') == 'NETCDF3_CLASSIC'):
+        if (val_type == 'string' and conf.get('conf', 'netcdf_format') == 'NETCDF3_CLASSIC'):
             msg = "107 Error creation netCDF file '{}".format(conf.get('conf', 'output'))
             msg += " impossible to put string variable in netCDF3 files use netCDF4 format"
             logger.error(msg)
+            continue
         elif val_type == 'string':
             if var_name not in data.keys():
                 tmp_var_name = get_data_key(conf.get(var_name, 'value'))

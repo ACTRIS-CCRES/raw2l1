@@ -209,6 +209,30 @@ class TestChm15kOverlap(unittest.TestCase):
 
         self.assertEqual(resp, 0, "reading overlap")
 
+    def test_chm15k_overlap_good_conf(self):
+        """
+        test that the reading of overlap TUB file defined in conf file goes well
+        """
+
+        date = '20150427'
+        test_ifile = os.path.join(self.IN_DIR, '20150427_SIRTA_CHM150101_000.nc')
+        test_ofile = os.path.join(TEST_OUT_DIR, 'test_chm15k_20150427_sirta_good-ovl-conf-file.nc')
+        test_cfile = os.path.join(self.IN_DIR, 'conf_lufft_chm15k-nimbus_eprofile.ini')
+
+        resp = subprocess.check_call([
+            MAIN_DIR + PRGM,
+            date,
+            test_cfile,
+            test_ifile,
+            test_ofile,
+            '-log_level',
+            'debug',
+            '-v',
+            'debug'
+        ])
+
+        self.assertEqual(resp, 0, "reading overlap define conf file")
+
     def test_chm15k_overlap_bad(self):
 
         date = '20150427'
