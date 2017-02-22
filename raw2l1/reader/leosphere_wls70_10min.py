@@ -392,8 +392,4 @@ def read_data(list_files, conf, logger):
     logger.debug('merging columns into 2d variables')
     data = create_2d_var(raw_data, data, VAR_2D, conf, logger)
 
-    for key in data:
-        print(key)
-    sys.exit(0)
-
     return data
