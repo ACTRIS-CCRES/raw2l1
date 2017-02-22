@@ -29,10 +29,11 @@ HEADER_BAD_CHAR_RE = r'[()\[\]\/°%]'
 # header value with special processing
 HEADER_SPECIAL = [
     'GPS Localisation',
+    'GPS Location',
     'Altitudes (m)',
 ]
 
-LOCALIZATION_DELIMS = r':|N|E|°'
+LOCALIZATION_DELIMS = r':|N|E|°|\xb0C'
 
 RAW_DATA_MISSING = ['NaN']
 
@@ -40,11 +41,11 @@ RAW_DATA_MISSING = ['NaN']
 VAR_TIME = ['Timestamp_end_of_interval']
 
 VAR_1D = [
-    ('wiper_count', ['Wiper count']),
-    ('temp_int', ['Int Temp (°C)']),
-    ('temp_ext', ['Ext Temp (°C)']),
-    ('pres', ['Pressure (hPa)']),
-    ('rh', ['Rel Humidity (%)']),
+    ('wiper_count', ['Wiper_count']),
+    ('temp_int', ['Int_Temp_(°C)', 'Int_Temp_\xb0C']),
+    ('temp_ext', ['Ext_Temp_(°C)', 'Ext_Temp_\xb0C']),
+    ('pres', ['Pressure_(hPa)', 'Pressure_hPa']),
+    ('rh', ['Rel_Humidity_(%)', 'Rel_Humidity_']),
 ]
 # variables which need to be merged
 VAR_2D = [
@@ -113,8 +114,10 @@ def norm_value_name(name):
 def get_localization(value_str, conf, logger):
     """extract latitude and longitude"""
 
+    logger.debug('try parsing {}'.format(value_str))
+
     # check if value available
-    if len(value_str) == 0:
+    if len(value_str) == 0 or len(value_str) == 'Not Available':
         logger.warning('localization data unavailable')
         lat = conf['missing_float']
         lon = conf['missing_float']
@@ -122,8 +125,19 @@ def get_localization(value_str, conf, logger):
 
     # we have to parse the line
     tmp = re.split(LOCALIZATION_DELIMS, value_str)
-    lat = float(tmp[1])/100.
-    lon = float(tmp[3])/100.
+    try:
+        lat = float(tmp[1])
+    except ValueError:
+        lat = float(tmp[1][:-1])
+    finally:
+        lat = conf['missing_float']
+
+    try:
+        lon = float(tmp[3])
+    except ValueError:
+        lon = float(tmp[3][:-1])
+    finally:
+        lon = conf['missing_float']
 
     return lat, lon
 
@@ -195,7 +209,7 @@ def read_header_data(file_, conf, data, logger):
         # special variable
         if value_name in HEADER_SPECIAL:
 
-            if value_name == 'GPS Localisation':
+            if value_name == 'GPS Localisation' or value_name == 'GPS Location':
                 data['latitude'], data['longitude'] = get_localization(value,
                                                                        conf, logger)
             if value_name == 'Altitudes (m)':
@@ -231,6 +245,8 @@ def read_columns(file_, data, conf, logger):
     col_dtypes = [np.float] * (len(col_names) - 1)
     col_dtypes = [dt.datetime] + col_dtypes
 
+    logger.debug('reading columns')
+
     columns = np.genfromtxt(
         file_,
         skip_header=header + 2,
@@ -244,30 +260,42 @@ def read_columns(file_, data, conf, logger):
 
     return columns
 
+
 def create_1d_var(raw_data, data, var_names, conf, logger):
     """extract 1d var to store them into dict"""
+
+    logger.debug('reading 1d variables')
 
     for var in var_names:
 
         name = var[0]
         col_names = var[1]
 
+        logger.debug('reading {}'.format(name))
+
         for col in col_names:
             try:
                 data[name] = raw_data[col]
             except ValueError:
+                logger.debug('column {} not found'.format(col))
                 continue
+
+            logger.debug('column {} found'.format(col))
+
+        # case column was not found
+        if name not in data:
+            data[name] = np.ones((raw_data.size,)) * conf['missing_float']
 
     return data
 
 
-def create_2d_var(raw_data, data, vars, conf, logger):
+def create_2d_var(raw_data, data, list_vars, conf, logger):
     """merge several columns of the ndarray into a 2d variable"""
 
     # get list of column names
     column_names = [col[0] for col in raw_data.dtype.descr]
 
-    for var in vars:
+    for var in list_vars:
 
         var_name = var[0]
         col_names = var[1]
