@@ -1,7 +1,9 @@
 #!/usr/bin/env python
 # -*- encoding: utf-8 -*-
 
-from __future__ import print_function, division, absolute_import
+from __future__ import print_function
+from __future__ import division
+from __future__ import absolute_import
 
 import sys
 import os
@@ -18,6 +20,8 @@ MODEL = 'WLS70'
 # CONSTANTS
 MIN_2_SEC = 60
 
+# file format
+FILE_ENCODING = 'latin_1' # = ISO-8859-1
 FILE_SEP = '\t'
 
 # date format
@@ -228,15 +232,17 @@ def read_columns(file_, data, conf, logger):
     header = data['HeaderSize']
 
     # get the number of columns to fix types
-    with open(file_) as f_id:
+    with open(file_, 'r') as f_id:
         count = 0
         while count <= header + 1:
             line = f_id.readline()
             count += 1
 
     col_names = [col for col in line.strip().split(FILE_SEP)]
-    col_dtypes = [np.float] * (len(col_names) - 1)
+    col_dtypes = ['f4'] * (len(col_names) - 1)
     col_dtypes = [dt.datetime] + col_dtypes
+
+    logger.debug('reading columns')
 
     columns = np.genfromtxt(
         file_,
@@ -254,27 +260,38 @@ def read_columns(file_, data, conf, logger):
 def create_1d_var(raw_data, data, var_names, conf, logger):
     """extract 1d var to store them into dict"""
 
+    logger.debug('reading 1d variables')
+
     for var in var_names:
 
         name = var[0]
         col_names = var[1]
 
+        logger.debug('reading {}'.format(name))
+
         for col in col_names:
             try:
                 data[name] = raw_data[col]
             except ValueError:
+                logger.debug('column {} not found'.format(col))
                 continue
+
+            logger.debug('column found')
+
+        # case column was not found
+        if name not in data:
+            data[name] = np.ones((raw_data.size,)) * conf['missing_float']
 
     return data
 
 
-def create_2d_var(raw_data, data, vars, conf, logger):
+def create_2d_var(raw_data, data, list_vars, conf, logger):
     """merge several columns of the ndarray into a 2d variable"""
 
     # get list of column names
     column_names = [col[0] for col in raw_data.dtype.descr]
 
-    for var in vars:
+    for var in list_vars:
 
         var_name = var[0]
         col_names = var[1]
@@ -366,7 +383,6 @@ def read_data(list_files, conf, logger):
             [d - dt.timedelta(seconds=data['time_resol']) for d in data['time']]
         )
 
-
     # extract 1d data
     # ------------------------------------------------------------------------
     data = create_1d_var(raw_data, data, VAR_1D, conf, logger)
@@ -375,5 +391,9 @@ def read_data(list_files, conf, logger):
     # ------------------------------------------------------------------------
     logger.debug('merging columns into 2d variables')
     data = create_2d_var(raw_data, data, VAR_2D, conf, logger)
+
+    for key in data:
+        print(key)
+    sys.exit(0)
 
     return data
