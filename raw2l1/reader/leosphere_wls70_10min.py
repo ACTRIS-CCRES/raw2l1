@@ -45,10 +45,10 @@ VAR_TIME = ['Date', 'Timestamp']
 
 VAR_1D = [
     ('wiper_count', ['WiperCount']),
-    ('temp_int', ['Int Temp (°C)', 'Tm']),
-    ('temp_ext', ['Ext Temp (°C)']),
-    ('pres', ['Pressure (hPa)']),
-    ('rh', ['	Rel Humidity (%)']),
+    ('temp_int', ['Int_Temp_\xb0C', 'Int_Temp_°C', 'Tm']),
+    ('temp_ext', ['Ext_Temp_\xb0C', 'Ext_Temp_°C',]),
+    ('pres', ['Pressure_hPa']),
+    ('rh', ['Rel_Humidity_']),
 ]
 # variables which need to be merged
 VAR_2D = [
@@ -242,6 +242,7 @@ def read_columns(file_, data, conf, logger):
     col_dtypes = ['f4'] * (len(col_names) - 1)
     col_dtypes = [dt.datetime] + col_dtypes
 
+    logger.debug('available columns {}'.format(col_names))
     logger.debug('reading columns')
 
     columns = np.genfromtxt(
@@ -254,6 +255,8 @@ def read_columns(file_, data, conf, logger):
         dtype=col_dtypes,
         converters={0: convert_time_str},
     )
+
+    logger.debug('columns read : {}'.format(columns.dtype.names))
 
     return columns
 
