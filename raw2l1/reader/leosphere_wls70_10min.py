@@ -15,7 +15,7 @@ import numpy as np
 
 # brand and model of the LIDAR
 BRAND = 'leosphere'
-MODEL = 'WLS70'
+MODEL = 'WLS70 10 min'
 
 # CONSTANTS
 MIN_2_SEC = 60

@@ -1,7 +1,9 @@
 #!/usr/bin/env python
 # -*- encoding: utf-8 -*-
 
-from __future__ import print_function, division, absolute_import
+from __future__ import print_function
+from __future__ import division
+from __future__ import absolute_import
 
 import sys
 import os
@@ -13,7 +15,7 @@ import numpy as np
 
 # brand and model of the LIDAR
 BRAND = 'leosphere'
-MODEL = 'WLS7'
+MODEL = 'WLS7 10 min'
 
 # CONSTANTS
 MIN_2_SEC = 60
