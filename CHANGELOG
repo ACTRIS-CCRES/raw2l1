@@ -1,3 +1,7 @@
+* v2.1.11
+    + leosphere WLS reader
+        - update variables read names for WLS70 10s to make them more readable
+
 * v2.1.10
     + leosphere WLS reader
         - add reader for WLS7 1s data and WLS70 10s data
