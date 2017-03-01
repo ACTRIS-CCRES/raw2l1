@@ -1,3 +1,8 @@
+* v2.1.10
+    + leosphere WLS reader
+        - add reader for WLS7 1s data and WLS70 10s data
+        - update examples of configuration files
+
 * v2.1.9
     + netCDF creation module
         - correct bug when creating time variable and calendar attribute is missing
@@ -7,6 +12,7 @@
         - examples of configuration files are not yet available
     + CHM15k reader
         - add possibility to add the path to the overlap TUB*.cfg file in the reader_conf section
+
 * v2.1.8
     + chm15k reader
         - add test to check that cho (cloud base offset) is substracted from cbh if available
@@ -27,7 +33,7 @@
     + chm15k reader
         - add variable `start_time`
     + cl31 reader
-        - add variableriable `start_time`
+        - add variable `start_time`
         - an option `time_resolution` (in seconds) is now required in `[reader_conf]` section
     + update E-PROFILE example conf file with the requirements describe in `Raw2L1-L1L2-issues_and_developments` documents
 
