@@ -407,7 +407,6 @@ def read_data(list_files, conf, logger):
             [d - dt.timedelta(seconds=data['time_resol']) for d in data['time']]
         )
 
-
     # extract 1d data
     # ------------------------------------------------------------------------
     data = create_1d_var(raw_data, data, VAR_1D, conf, logger)

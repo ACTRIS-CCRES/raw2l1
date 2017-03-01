@@ -389,6 +389,11 @@ def read_data(list_files, conf, logger):
             [d - dt.timedelta(seconds=data['time_resol']) for d in data['time']]
         )
 
+    # period of mean
+    data['nv'] = 2
+    data['time_bounds'] = np.ones((data['time'].size, data['nv']), dtype=np.dtype(dt.datetime))
+    data['time_bounds'][:, 0] = data['start_time']
+    data['time_bounds'][:, 1] = data['time']
 
     # extract 1d data
     # ------------------------------------------------------------------------

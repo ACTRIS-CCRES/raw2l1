@@ -45,7 +45,7 @@ VAR_TIME = ['Date', 'Timestamp']
 
 VAR_1D = [
     ('wiper_count', ['Wiper']),
-    ('temperature', ['Temperature_\xb0C', 'Temperature_°C']),
+    ('temp_int', ['Temperature_\xb0C', 'Temperature_°C']),
     ('laser_position', ['Position']),
 ]
 # variables which need to be merged
@@ -54,7 +54,7 @@ VAR_2D = [
     ('rwsd', ['RWSD']),
     ('rws', ['RWS']),
     ('ws', ['Vh']),
-    ('azi', ['Azi', 'Dir']),
+    ('wd', ['Azi', 'Dir']),
     ('u', ['u']),
     ('v', ['v']),
     ('w', ['w']),
