@@ -51,8 +51,8 @@ VAR_1D = [
 # variables which need to be merged
 VAR_2D = [
     ('cnr', ['CNR']),
-    ('rwsd', ['RWSD']),
-    ('rws', ['RWS']),
+    ('radial_ws_disp', ['RWSD']),
+    ('radial_ws', ['RWS']),
     ('ws', ['Vh']),
     ('wd', ['Azi', 'Dir']),
     ('u', ['u']),
