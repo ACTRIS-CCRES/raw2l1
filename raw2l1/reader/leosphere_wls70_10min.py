@@ -56,7 +56,7 @@ VAR_2D = [
     ('ws_std', ['dVh']),
     ('ws_max', ['VhMax']),
     ('ws_min', ['VhMin']),
-    ('wd', ['Azim']),
+    ('wd', ['Azim', 'Dir']),
     ('u', ['um']),
     ('u_std', ['du']),
     ('v', ['vm']),
@@ -72,6 +72,12 @@ VAR_2D = [
     ('data_availability', ['Avail'])
 ]
 
+MISSING_VALUES = {
+    'cnr_min': 50000,
+    'cnr_max': -50000,
+    'ws_min': 50000,
+    'ws_max': -50000,
+}
 
 def merge_structured_arrays(list_arr):
     """merge structure array
@@ -400,5 +406,10 @@ def read_data(list_files, conf, logger):
     # ------------------------------------------------------------------------
     logger.debug('merging columns into 2d variables')
     data = create_2d_var(raw_data, data, VAR_2D, conf, logger)
+
+    # replace weird missing data
+    # ------------------------------------------------------------------------
+    for var_name in MISSING_VALUES:
+        data[var_name][data[var_name] == MISSING_VALUES[var_name]] = conf['missing_float']
 
     return data
