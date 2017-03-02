@@ -1,3 +1,7 @@
+* v2.1.12
+    + leosphere WLS reader
+        - WLS70 10 min reader correct bug with missing values for cnr_min, cnr_max, ws_min and ws_max
+
 * v2.1.11
     + leosphere WLS reader
         - update variables read names for WLS70 10s to make them more readable
