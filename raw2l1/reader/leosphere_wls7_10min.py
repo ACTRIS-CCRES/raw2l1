@@ -408,4 +408,7 @@ def read_data(list_files, conf, logger):
     data['u'] = -1. * data['ws'] * np.sin(data['wd'])
     data['v'] = -1. * data['ws'] * np.cos(data['wd'])
 
+    # W is given positive downward we prefer it upward
+    data['w'] = -1. * data['w']
+
     return data
