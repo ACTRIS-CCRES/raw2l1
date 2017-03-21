@@ -54,8 +54,8 @@ VAR_2D = [
     ('radial_ws', ['Radial_Wind_Speed']),
     ('ws', ['Wind_Speed']),
     ('wd', ['Wind_Direction']),
-    ('u', ['Xwind']),
-    ('v', ['Ywind']),
+    ('x_wind', ['Xwind']),
+    ('y_wind', ['Ywind']),
     ('w', ['Zwind']),
 ]
 
@@ -380,7 +380,7 @@ def read_data(list_files, conf, logger):
 
     # get specific configuration
     # ------------------------------------------------------------------------
-    data['time_resol'] = int(conf['time_resol']) * MIN_2_SEC
+    data['time_resol'] = 1 # in seconds
 
     # read data from file(s)
     # ------------------------------------------------------------------------
@@ -407,6 +407,13 @@ def read_data(list_files, conf, logger):
             [d - dt.timedelta(seconds=data['time_resol']) for d in data['time']]
         )
 
+    # time bounds
+    data['nv'] = 2
+    data['time_bounds'] = np.ones((data['time'].size, data['nv']),
+                                  dtype=np.dtype(dt.datetime))
+    data['time_bounds'][:, 0] = data['start_time']
+    data['time_bounds'][:, 1] = data['time']
+
     # extract 1d data
     # ------------------------------------------------------------------------
     data = create_1d_var(raw_data, data, VAR_1D, conf, logger)
@@ -415,5 +422,14 @@ def read_data(list_files, conf, logger):
     # ------------------------------------------------------------------------
     logger.debug('merging columns into 2d variables')
     data = create_2d_var(raw_data, data, VAR_2D, conf, logger)
+
+    # calculate missing variables
+    # ------------------------------------------------------------------------
+    data['u'] = -1. * data['ws'] * np.sin(np.deg2rad(data['wd']))
+    data['v'] = -1. * data['ws'] * np.cos(np.deg2rad(data['wd']))
+
+    # W is given positive downward we prefer it upward
+    # ------------------------------------------------------------------------
+    data['w'] = -1. * data['w']
 
     return data
