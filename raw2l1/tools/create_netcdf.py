@@ -246,7 +246,11 @@ def create_netcdf_time_var(conf, var_name, data, nc_id, logger):
     val_type = get_var_type(conf.get(var_name, 'type'), conf, logger)
     dim = conf.get(var_name, 'dim')
 
-    nc_var = nc_id.createVariable(var_name, val_type, (dim,))
+    args = [var_name, val_type]
+    if dim != KEY_NODIM:
+        args.append(dim_to_tuple(dim))
+
+    nc_var = nc_id.createVariable(*args)
 
     logger.debug("converting time to CF compliant format")
     if var_name not in data.keys():
