@@ -362,7 +362,7 @@ def read_data(list_files, conf, logger):
 
     # get specific configuration
     # ------------------------------------------------------------------------
-    data['time_resol'] = int(conf['time_resol']) * MIN_2_SEC
+    data['time_resol'] = 600 # in seconds
 
     # read data from file(s)
     # ------------------------------------------------------------------------
@@ -389,9 +389,10 @@ def read_data(list_files, conf, logger):
             [d - dt.timedelta(seconds=data['time_resol']) for d in data['time']]
         )
 
-    # period of mean
+    # time bounds
     data['nv'] = 2
-    data['time_bounds'] = np.ones((data['time'].size, data['nv']), dtype=np.dtype(dt.datetime))
+    data['time_bounds'] = np.ones((data['time'].size, data['nv']),
+                                  dtype=np.dtype(dt.datetime))
     data['time_bounds'][:, 0] = data['start_time']
     data['time_bounds'][:, 1] = data['time']
 
@@ -405,7 +406,12 @@ def read_data(list_files, conf, logger):
     data = create_2d_var(raw_data, data, VAR_2D, conf, logger)
 
     # calculate missing variables
-    data['u'] = -1. * data['ws'] * np.sin(data['wd'])
-    data['v'] = -1. * data['ws'] * np.cos(data['wd'])
+    # ------------------------------------------------------------------------
+    data['u'] = -1. * data['ws'] * np.sin(np.deg2rad(data['wd']))
+    data['v'] = -1. * data['ws'] * np.cos(np.deg2rad(data['wd']))
+
+    # W is given positive downward we prefer it upward
+    # ------------------------------------------------------------------------
+    data['w'] = -1. * data['w']
 
     return data

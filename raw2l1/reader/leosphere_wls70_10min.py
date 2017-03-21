@@ -365,7 +365,7 @@ def read_data(list_files, conf, logger):
 
     # get specific configuration
     # ------------------------------------------------------------------------
-    data['time_resol'] = int(conf['time_resol']) * MIN_2_SEC
+    data['time_resol'] = 600
 
     # read data from file(s)
     # ------------------------------------------------------------------------
@@ -406,6 +406,15 @@ def read_data(list_files, conf, logger):
     # ------------------------------------------------------------------------
     logger.debug('merging columns into 2d variables')
     data = create_2d_var(raw_data, data, VAR_2D, conf, logger)
+
+    # U and V are not offset corrected we recalculate them based on ws and wd
+    # ------------------------------------------------------------------------
+    data['u'] = -1. * data['ws'] * np.sin(np.deg2rad(data['wd']))
+    data['v'] = -1. * data['ws'] * np.cos(np.deg2rad(data['wd']))
+
+    # W is given positive downward we prefer it upward
+    # ------------------------------------------------------------------------
+    data['w'] = -1. * data['w']
 
     # replace weird missing data
     # ------------------------------------------------------------------------
