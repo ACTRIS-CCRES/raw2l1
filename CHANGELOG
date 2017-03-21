@@ -1,3 +1,13 @@
+* v2.1.13
+    + netCDF creation module
+        - correct bug preventing creation of multidimensional time variables
+        - it is now possible to create time_bnds variables require by CF convention when time dependant processing is done on variables
+            + for this kind of variable is it still necessary to provide units (which make the file not fully CF compliant)
+    + leosphere WLS reader
+        - add calculation of u and v for each reader from wind_speed and wind_direction
+        - update examples of configuration files
+        - update tests to check with multiples version of raw data
+
 * v2.1.12
     + leosphere WLS reader
         - WLS70 10 min reader correct bug with missing values for cnr_min, cnr_max, ws_min and ws_max
