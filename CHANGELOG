@@ -1,7 +1,11 @@
+* v2.1.15
+    + leosphere WLS readers
+        - readers were not able to concatenate several input files. Only the last one was used.
+
 * v2.1.14
     + leosphere WLS70 reader 10s
-        - correct bug with u, v, x_wind and y_wind
-        - same name was used for u, x_wind and v, y_wind
+        - correct bug with `u`, `v`, `x_wind` and `y_wind`
+        - same name was used for `u`, `x_wind` and `v`, `y_wind`
 
 * v2.1.13
     + netCDF creation module

@@ -360,9 +360,9 @@ def read_data(list_files, conf, logger):
 
     # read data from file(s)
     # ------------------------------------------------------------------------
+    tmp_list = []
     for i_file, file_ in enumerate(list_files):
 
-        tmp_list = []
         if i_file == 0:
             data = read_header_data(file_, conf, data, logger)
 
