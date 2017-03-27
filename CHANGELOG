@@ -1,3 +1,7 @@
+* v2.1.16
+    + LUFFT CHM15k readers
+        - correct calculation of RCS. Doesn't substract background anymore.
+
 * v2.1.15
     + leosphere WLS readers
         - readers were not able to concatenate several input files. Only the last one was used.
