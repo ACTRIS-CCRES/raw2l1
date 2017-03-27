@@ -523,7 +523,7 @@ def calc_pr2(data, soft_vers, logger):
         logger.debug('P = (beta_raw*stddev)*p_calc')
         print('0 value P_CALC :', np.any(data['p_calc'] == 0))
         data['rcs_0'] = (
-            (data['beta_raw'].T * data['stddev'] + data['bckgrd_rcs_0']) /
+            (data['beta_raw'].T * data['stddev']) /
             data['p_calc']).T * np.square(data['range'])
     else:
         # find a way to pass the overlap
