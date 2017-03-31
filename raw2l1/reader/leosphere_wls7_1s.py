@@ -262,7 +262,7 @@ def read_columns(file_, data, conf, logger):
     col_dtypes = [np.float] * (len(col_names) - 1)
     col_dtypes = [dt.datetime] + col_dtypes
 
-    logger.debug('reading columns')
+    logger.debug('reading columns in %s', os.path.basename(file_))
 
     columns = np.genfromtxt(
         file_,
@@ -276,6 +276,7 @@ def read_columns(file_, data, conf, logger):
             0: convert_time_str,
             1: convert_laser_pos_str
         },
+        invalid_raise=False,
     )
 
     return columns
