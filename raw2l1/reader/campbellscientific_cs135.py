@@ -150,6 +150,10 @@ def init_data(time_dim, conf, logger):
         (time_dim,), dtype=np.float) * missing_float
     data['window_transmission'] = np.ones(
         (time_dim,), dtype=np.int) * missing_int
+    data['vertical_visibility'] = np.ones(
+        (time_dim,), dtype=np.int) * missing_int
+    data['highest_signal_received'] = np.ones(
+        (time_dim,), dtype=np.int) * missing_int
     data['alarm'] = np.ndarray((time_dim,), dtype='S1')
     data['info_flags'] = np.ndarray((time_dim,), dtype='S12')
 
@@ -212,6 +216,9 @@ def read_cbh(line, data, ind, logger):
         data['cbh'][ind, 2] = np.float(elts[4])
     if nlayers == 4:
         data['cbh'][ind, 3] = np.float(elts[5])
+    if nlayers == 5:
+        data['vertical_visibility'][ind] = np.float(elts[2])
+        data['highest_signal_received'][ind] = np.float(elts[3])
 
     # flags
     data['info_flags'][ind] = elts[6]

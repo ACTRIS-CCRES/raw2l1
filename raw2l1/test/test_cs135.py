@@ -14,6 +14,7 @@ PRGM = "raw2l1.py"
 
 
 class TestCampbellScientificCS135(unittest.TestCase):
+    """Test for CS135 data in campbell Scientific format"""
 
     IN_DIR = TEST_IN_DIR + 'campbell_cs135' + os.sep
     conf_file = CONF_DIR + 'conf_campbell_cs135_toprof.ini'
@@ -40,6 +41,7 @@ class TestCampbellScientificCS135(unittest.TestCase):
 
 
 class TestCampbellScientificCS135ModeCL31(unittest.TestCase):
+    """Test for CS135 data in vaisala format"""
 
     IN_DIR = TEST_IN_DIR + 'campbell_cs135' + os.sep
     conf_file = IN_DIR + 'conf_cs135-cl31_toprof.ini'
@@ -68,7 +70,7 @@ class TestCampbellScientificCS135ModeCL31(unittest.TestCase):
 
 
 # class TestCampbellScientificCS135RealFile(unittest.TestCase):
-    """Test avec ficheir ceilinex. Fichier supprimé par erreur"""
+#     """Test with ceilinex file. file remove by mistake"""
 
 #     IN_DIR = TEST_IN_DIR + 'campbell_cs135' + os.sep
 #     conf_file = IN_DIR + 'conf_campbell_cs135_toprof_netcdf4.ini'
