@@ -260,6 +260,7 @@ def read_columns(file_, data, conf, logger):
         names=col_names,
         dtype=col_dtypes,
         converters={0: convert_time_str},
+        invalid_raise=False,
     )
 
     logger.debug('columns read : {}'.format(columns.dtype.names))
