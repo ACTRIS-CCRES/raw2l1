@@ -465,6 +465,8 @@ def init_data(data, data_dim, conf, logger):
                                  dtype=np.float32) * missing_float
     data['integrated_rcs_0'] = np.ones((data_dim['time'],),
                                        dtype=np.float32) * missing_float
+    data['vertical_visibility'] = np.ones((data_dim['time'],),
+                                          dtype=np.int32) * missing_int
     data['alarm'] = np.ndarray((data_dim['time'],), dtype='S1')
     data['info_flags'] = np.ndarray((data_dim['time'],), dtype='S12')
 
@@ -581,25 +583,34 @@ def read_cbh_msg(data, ind, msg, logger):
 
 def read_clh_msg(data, ind, msg, logger):
     """
-    extract CLH
+    extract CLH, cloud amount and visibility
     """
 
+    # split lines to get each elements
+    # even elements are cloud amount
+    # odd elements are CLH
     line = msg[2]
     elts = line.strip().split()
+    octas = [int(octa) for octa in elts[0::2]]
+    clh_str = elts[1::2]
 
-    data['cloud_amount'][ind] = np.array(elts[0::2], dtype=np.int)
-
-    tmp = elts[1::2]
-
+    # depending on configuration a different factor need to be applied
+    # if value are in meters or feets
     coeff = get_conversion_coeff(data['are_unit_meter'][ind])
     if data['are_unit_meter'][ind]:
         coeff = coeff * CLH_ALT_METERS_FACTOR
     else:
         coeff = coeff * CLH_ALT_FEET_FACTOR
 
-    for level, ca in enumerate(elts[0::2]):
-        if 1 <= ca <= 8:
-            data['clh'][ind, level] = tmp[level] * coeff
+    # get cloud amount
+    for level, octa in enumerate(octas):
+        if 1 <= octa <= 8:
+            data['cloud_amount'][ind, level] = np.int(octa)
+            data['clh'][ind, level] = float(clh_str[level]) * coeff
+        elif octa == 0:
+            data['cloud_amount'][ind, level] = np.int(octa)
+        elif octa == 9:
+            data['vertical_visibility'][ind] = float(clh_str[level])
 
     return data
 
