@@ -1,3 +1,10 @@
+* v2.1.17
+    + VAISALA CL31 & CL31 readers (swiss airport included)
+        - add reading of vertical visibility variable accessible through `vertical_visibility` keyword
+    + CAMPBELL SCIENTIFIC CS135 reader
+        - add reading of vertical visibility variable accessible through `vertical_visibility` keyword
+        - add reading of highest signal received variable accessible through `highest_signal_received` keyword
+
 * v2.1.16
     + LUFFT CHM15k readers
         - correct calculation of RCS. Doesn't substract background anymore.
