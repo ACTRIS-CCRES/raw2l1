@@ -122,7 +122,7 @@ def get_soft_version(str_version):
     if type(str_version) == np.int16:
         version_nb = float(str_version) / 1000.
     else:
-        version_nb = float(str_version.split(' ')[-1])
+        version_nb = float(str_version.split(' ')[2])
 
     return version_nb
 
