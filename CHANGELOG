@@ -1,3 +1,7 @@
+* v2.1.18
+    + LUFFT CHM15k readers
+        - correct bug when parsing software version for firmware greater equal to 0.747 and add tests
+
 * v2.1.17
     + VAISALA CL31 & CL31 readers (swiss airport included)
         - add reading of vertical visibility variable accessible through `vertical_visibility` keyword
