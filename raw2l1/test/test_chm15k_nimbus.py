@@ -8,12 +8,43 @@ import os
 import numpy as np
 import netCDF4 as nc
 
+import reader.lufft_chm15k_nimbus as reader
+
+
 MAIN_DIR = os.path.dirname(os.path.dirname(__file__)) + os.sep
 CONF_DIR = os.path.join(MAIN_DIR, 'conf')
 TEST_DIR = os.path.join(MAIN_DIR, 'test')
 TEST_IN_DIR = os.path.join(TEST_DIR, 'input')
 TEST_OUT_DIR = os.path.join(TEST_DIR, 'output')
 PRGM = "raw2l1.py"
+
+
+class TestSoftVersionParsing(unittest.TestCase):
+    """check that the parsing of software version is working"""
+
+    def test_version_old_format(self):
+        """old format of sofware version"""
+
+        version = np.int16(235)
+        version_value = reader.get_soft_version(version)
+
+        self.assertEqual(version_value, 0.235, 'old format of sofware version)')
+
+    def test_version_lower_0747(self):
+        """software version before 0.747"""
+
+        version = '11.07.1 2.12 0.536'
+        version_value = reader.get_soft_version(version)
+
+        self.assertEqual(version_value, 0.536, 'version lower than 0.747')
+
+    def test_version_greater_0747(self):
+        """software version greater or equal than 0.747"""
+
+        version = '12.12.1 2.13 0.747 0'
+        version_value = reader.get_soft_version(version)
+
+        self.assertEqual(version_value, 0.747, 'version greater equal than 0.747')
 
 
 class TestChm15k(unittest.TestCase):
