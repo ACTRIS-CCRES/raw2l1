@@ -140,8 +140,6 @@ def init_data(data_dim, logger):
     # n_chan dependant
     for i_chan in xrange(data_dim['n_chan']):
 
-        # data['rcs_nan%02d' % i_chan] = np.ones((data_dim['time'], data_dim['range']),
-        #                                        dtype=np.float32) * MISSING_FLOAT
         data['rcs_%02d' % i_chan] = np.ones((data_dim['time'], data_dim['range']),
                                             dtype=np.float32) * MISSING_FLOAT
         data['wavelength_%02d' % i_chan] = np.ones((data_dim['time'], data_dim['range']),
@@ -231,7 +229,7 @@ def read_header(file_id, data, data_dim, index, logger, date_only=False):
             data['max_detection_range_{:02d}'.format(i_chan)] = MISSING_FLOAT
 
     # remove duplicate wavelength and link each to a channel
-    sort_wavelengths = set(wavelengths)
+    sort_wavelengths = set(sorted(wavelengths))
     for i_wv, wavelength in enumerate(sort_wavelengths):
         data['wavelength_l{:02d}'.format(i_wv)] = wavelength
 
@@ -288,6 +286,9 @@ def read_data(list_files, conf, logger):
 
     logger.info('Start reading of data using reader for %s %s', BRAND, MODEL)
 
+    # get conf parameters
+    # ------------------------------------------------------------------------
+
     # determine size of data to read
     # ------------------------------------------------------------------------
     logger.info("determining size of var to read")
@@ -335,7 +336,6 @@ def read_data(list_files, conf, logger):
 
     # determine range
     data['range'] = np.arange(1, data_dim['range'] + 1) * data['range_resol']
-    print(data['range'])
 
     # add necessary dimension
     data['nv'] = data_dim['nv']
