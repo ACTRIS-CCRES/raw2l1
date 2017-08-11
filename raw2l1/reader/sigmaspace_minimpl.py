@@ -326,7 +326,6 @@ def read_data(list_files, conf, logger):
         'dew_point_out',
         'telescope_temp', 'detector_temp',
         'laser_temp',
-        'laser_energy',
     ]
 
     for var in vars_to_convert:

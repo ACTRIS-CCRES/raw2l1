@@ -1,3 +1,7 @@
+* V2.1.19
+    + SIGMASPACE miniMPL reader
+        - correct bug with `laser_energy`. 273.15 was added to the variable by mistake
+
 * v2.1.18
     + LUFFT CHM15k readers
         - correct bug when parsing software version for firmware greater equal to 0.747 and add tests
