@@ -19,11 +19,12 @@ RESERV_ATTR = [
 ]
 
 STRING_ATTR = [
-    'units',
+    # 'units',
     'comments',
     'long_name',
     'standard_name',
     'comment',
+    'flag_values'
 ]
 
 CONF_OPTIONS = [
