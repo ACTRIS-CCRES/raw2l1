@@ -1,5 +1,8 @@
 image: continuumio/anaconda3:latest
 
+variables:
+  GIT_SSL_NO_VERIFY: "1"
+
 stages:
   - test
 
@@ -20,7 +23,7 @@ stages:
 # services such as redis or postgres
 before_script:
   - python -V
-  - conda create -n raw2l1 python=2 
+  - conda create -n raw2l1 python=2
   - source activate raw2l1
   - conda install --file requirements.txt
   - cd raw2l1
@@ -29,7 +32,7 @@ run_test:
   stage: test
   script:
     - nosetests
-    
+
 coverage:
     stage: test
     script:
