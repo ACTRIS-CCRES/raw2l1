@@ -30,6 +30,19 @@ N_HEADER_LINE = 3
 MISSING_FLOAT = np.nan
 MISSING_INT = -9
 
+BCK_MIN_ALT_KEY = 'bckgrd_min_alt'
+BCK_MAX_ALT_KEY = 'bckgrd_max_alt'
+BCK_MIN_ALT = 50000
+BCK_MAX_ALT = 60000
+
+POLARIZATION = {
+    'o': 0,
+    'p': 1,
+    's': 2
+}
+
+BCK_COMMENT_FMT = 'calcultated between {:5d} m and {:5d} m'
+
 
 def date_to_dt(date_num, date_units):
     """convert date np.array from datenum to datetime.datetime"""
@@ -37,6 +50,107 @@ def date_to_dt(date_num, date_units):
     return nc.num2date(date_num,
                        units=date_units,
                        calendar='standard')
+
+
+def get_channel_conf(conf, logger):
+    """check configuration of channels and build the conf dict"""
+
+    # associate channels to a number
+    try:
+        tmp_rcs = ast.literal_eval(conf['rcs'])
+    except ValueError:
+        logger.critical("error parsing 'rcs' option in [reader_conf] in config file. quitting")
+        sys.exit(1)
+
+    logger.debug('rcs %s %s', tmp_rcs)
+
+    try:
+        tmp_chan = ast.literal_eval(conf['channels'])
+    except ValueError:
+        logger.critical("error parsing 'channels' option in [reader_conf] in config file. quitting")
+        sys.exit(1)
+
+    logger.debug('channels id %s', tmp_chan)
+
+    # check if the lists have the same number of elements
+    if len(tmp_rcs) != len(tmp_chan):
+        logger.critical("error in configuration: 'channel' and 'rcs' options don't have the same number of elements. quitting")
+        sys.exit(1)
+
+    # when we know the order of the variables in files we well need to add an index
+    chan_conf = {
+        'var_names': ['rcs_{:02d}'.format(x) for x in tmp_rcs],
+        'channels': tmp_chan,
+        'index': [None] * len(tmp_rcs),
+    }
+
+    logger.debug('list of channels  : %s', chan_conf['channels'])
+    logger.debug('list of variables : %s', chan_conf['var_names'])
+
+    return chan_conf
+
+
+def get_bck_alt(conf, logger):
+    """get value of maximum and minimum altitude for background signal calculation
+    if not define, use default value"""
+
+    try:
+        min_alt = ast.literal_eval(conf[BCK_MIN_ALT_KEY])
+    except KeyError:
+        min_alt = BCK_MIN_ALT
+        logger.warning('%s not defined in conf file using default value %d',
+                       BCK_MIN_ALT_KEY, BCK_MIN_ALT)
+    except ValueError:
+        logger.critical("error parsing '%s' option in [reader_conf] in config file. quitting",
+                        BCK_MIN_ALT_KEY, conf[BCK_MIN_ALT_KEY])
+        sys.exit(1)
+
+    try:
+        max_alt = ast.literal_eval(conf[BCK_MAX_ALT_KEY])
+    except KeyError:
+        min_alt = BCK_MAX_ALT
+        logger.warning('%s not defined in conf file using default value %d',
+                       BCK_MAX_ALT_KEY, BCK_MAX_ALT)
+    except ValueError:
+        logger.critical("error parsing '%s' option in [reader_conf] in config file. quitting",
+                        BCK_MAX_ALT_KEY, conf[BCK_MAX_ALT_KEY])
+        sys.exit(1)
+
+    return min_alt, max_alt
+
+
+def get_channel_index(file_id, n_chan, chan_conf, logger):
+    """associate id of channel with rcs_XX variable of channels"""
+
+    # skip header
+    for i in range(N_HEADER_LINE):
+        line = file_id.readline()
+        print(i, line.strip())
+
+    for i_chan in range(n_chan):
+
+        line = file_id.readline()
+        line_id = line.split()[-1]
+
+        try:
+            index = chan_conf['channels'].index(line_id)
+        except ValueError:
+            logger.warning('id %s not found in raw data', line_id)
+            continue
+
+        chan_conf['index'][index] = i_chan
+
+    # check if we found at least one channel:
+    uniq_index = set(chan_conf['index'])
+
+    if len(uniq_index) == 1 and list(uniq_index) == [None]:
+        logger.critical('No requested channels in conf file could be identified.'
+                        'stopping code')
+        sys.exit(1)
+
+
+    return chan_conf
+
 
 def get_data_size(list_files, logger):
     """determine size of data to read"""
@@ -119,6 +233,8 @@ def get_data_size(list_files, logger):
 def init_data(data_dim, logger):
     """initialize dict containing ndarrays based on data dimension"""
 
+    n_chan = data_dim['n_chan']
+
     data = {}
 
     # dimensions
@@ -137,21 +253,31 @@ def init_data(data_dim, logger):
     data['latitude'] = MISSING_FLOAT
     data['altitude'] = MISSING_FLOAT
 
-    # n_chan dependant
-    for i_chan in xrange(data_dim['n_chan']):
+    data['active'] = np.ones((n_chan,), dtype=np.int) * MISSING_INT
+    data['detection_mode_ind'] = np.ones((n_chan,), dtype=np.int) * MISSING_INT
+    data['detection_mode'] = np.array(['photocounting'] * n_chan)
+    data['telescope'] = np.ones((n_chan,), dtype=np.int) * MISSING_INT
+    data['n_range'] = np.ones((n_chan,), dtype=np.int) * MISSING_INT
+    data['number_one'] = np.ones((n_chan,), dtype=np.int) * MISSING_INT
+    data['voltage'] = np.ones((n_chan,), dtype=np.float32) * MISSING_FLOAT
+    data['range_resol_vect'] = np.ones((n_chan,), dtype=np.float32) * MISSING_FLOAT
+    data['wavelength'] = np.ones((n_chan,), dtype=np.float32) * MISSING_FLOAT
+    data['polarization'] = np.array([str(MISSING_INT)] * n_chan, dtype=np.str)
+    data['filter_wheel_position'] = np.ones((n_chan,), dtype=np.int) * MISSING_INT # speficfic for IPRAL
+    # unused column
+    data['bin_shift'] = np.ones((n_chan,), dtype=np.int) * MISSING_INT
+    data['bin_shift_dec'] = np.ones((n_chan,), dtype=np.int) * MISSING_INT
+    data['adc_bits'] = np.ones((n_chan,), dtype=np.int) * MISSING_INT
+    data['n_shots'] = np.ones((n_chan,), dtype=np.int) * MISSING_INT
+    data['discriminator_level'] = np.ones((n_chan,), dtype=np.int) * MISSING_FLOAT
+    data['adc_range'] = np.ones((n_chan,), dtype=np.float32) * MISSING_FLOAT
 
-        data['rcs_%02d' % i_chan] = np.ones((data_dim['time'], data_dim['range']),
-                                            dtype=np.float32) * MISSING_FLOAT
-        data['wavelength_%02d' % i_chan] = np.ones((data_dim['time'], data_dim['range']),
-                                                   dtype=np.float32) * MISSING_FLOAT
-        data['voltage_%02d' % i_chan] = MISSING_INT
-        data['range_length_%02d' % i_chan] = MISSING_INT
-        data['bin_shift_%02d' % i_chan] = MISSING_INT
-        data['ADCbits_%02d' % i_chan] = MISSING_INT
-        data['n_shots_%02d' % i_chan] = MISSING_INT
-        data['detection_mode_%02d' % i_chan] = np.empty(1, dtype=np.str)
-        data['max_detection_range_%02d' % i_chan] = MISSING_INT
-        data['discriminator_level_%02d' % i_chan] = MISSING_INT
+    # multi_dim vars
+    for i_chan in xrange(data_dim['n_chan']):
+        data['rcs_{:02d}'.format(i_chan)] = np.ones((data_dim['time'], data_dim['range']),
+                                                    dtype=np.float32) * MISSING_FLOAT
+        data['bckgrd_rcs_{:02d}'.format(i_chan)] = np.ones((data_dim['time'],),
+                                                           dtype=np.float32) * MISSING_FLOAT
 
     return data
 
@@ -167,6 +293,7 @@ def read_header(file_id, data, data_dim, index, logger, date_only=False):
     # ------------------------------------------------------------------------
     logger.debug('reading header second line')
     line = file_id.readline()
+    logger.debug('parsing : %s', line)
     elts = line.split()
 
     logger.debug('reading dates')
@@ -198,54 +325,53 @@ def read_header(file_id, data, data_dim, index, logger, date_only=False):
 
     # channels description
     # ------------------------------------------------------------------------
-    wavelengths = []
-    range_resol = []
     for i_chan in xrange(data_dim['n_chan']):
 
         var_name = 'rcs_{:02d}'.format(i_chan)
 
         line = file_id.readline()
+        logger.debug('parsing : %s', line.strip())
         elts = line.split()
 
-        data['laser_{:02d}'.format(i_chan)] = int(elts[1])
-        data['telescope_{:02d}'.format(i_chan)] = int(elts[2])
-        data['voltage_{:02d}'.format(i_chan)] = int(elts[5])
-        range_resol.append(float(elts[6]))
-        data['range_length_{:02d}'.format(i_chan)] = float(elts[6])
-        wavelengths.append(int(elts[7].split('.')[0]))
-        data['polarization_{:02d}'.format(i_chan)] = str(elts[7][6])
-        data['bin_shift_{:02d}'.format(i_chan)] = float(elts[10])
-        data['ADCbits_{:02d}'.format(i_chan)] = int(elts[12])
-        data['n_shots_{:02d}'.format(i_chan)] = int(elts[13])
+        data['active'][i_chan] = int(elts[0])
+        data['detection_mode_ind'][i_chan] = int(elts[1])
+        # data['telescope'][i_chan] = int(elts[2]) # don't know what is this value
+        data['n_range'][i_chan] = int(elts[3])
+        data['number_one'][i_chan] = int(elts[4])
+        data['voltage'][i_chan] = int(elts[5])
+        data['range_resol_vect'][i_chan] = float(elts[6])
+        data['wavelength'][i_chan] = int(elts[7].split('.')[0])
+        data['polarization'][i_chan] = str(elts[7].split('.')[1])
+        data['filter_wheel_position'][i_chan] = int(elts[8])
+        # unused
+        data['bin_shift'][i_chan] = float(elts[10])
+        data['bin_shift_dec'][i_chan] = float(elts[11])
+        data['adc_bits'][i_chan] = int(elts[12])
+        data['n_shots'][i_chan] = int(elts[13])
 
         tmp = elts[15][0:2]
         if tmp == 'BT':
-            data['detection_mode_{:02d}'.format(i_chan)] = 'analog'
-            data['max_detection_range_{:02d}'.format(i_chan)] = float(elts[14]) * 1000.
-            data['discriminator_level_{:02d}'.format(i_chan)] = MISSING_FLOAT
+            data['detection_mode'][i_chan] = 'analog'
+            data['adc_range'][i_chan] = float(elts[14])
         elif tmp == 'BC':
-            data['detection_mode_{:02d}'.format(i_chan)] = 'photocounting'
-            data['discriminator_level_{:02d}'.format(i_chan)] = float(elts[14])
-            data['max_detection_range_{:02d}'.format(i_chan)] = MISSING_FLOAT
+            data['detection_mode'][i_chan] = 'photocounting'
+            data['discriminator_level'][i_chan] = float(elts[14])
 
-    # remove duplicate wavelength and link each to a channel
-    sort_wavelengths = set(sorted(wavelengths))
-    for i_wv, wavelength in enumerate(sort_wavelengths):
-        data['wavelength_l{:02d}'.format(i_wv)] = wavelength
-
-    for i_chan in xrange(data_dim['n_chan']):
-        for i_wv, wavelength in enumerate(sort_wavelengths):
-            if wavelengths[i_chan] == wavelength:
-                data['wavelength_{:02d}'.format(i_chan)] = i_wv
-                continue
+        # telescope
+        telescope_ind = int(elts[15][2::])
+        if telescope_ind < 10:
+            data['telescope'][i_chan] = 1
+        else:
+            data['telescope'][i_chan] = 2
 
     # check all range_resol is the same
-    sort_range_resol = set(range_resol)
+    sort_range_resol = np.unique(data['range_resol_vect'])
     if len(sort_range_resol) == 1:
         data['range_resol'] = list(sort_range_resol)[0]
         logger.debug('range_resol: %s', data['range_resol'])
     else:
         logger.critical("all channel don't have the same resolution : %s", sort_range_resol )
+        sys.exit(1)
 
     return data
 
@@ -254,24 +380,30 @@ def read_profiles(file_id, data, data_dim, index, logger):
     """read profile for each channel"""
 
     # skip header and channels descriptions
-    for i in range(N_HEADER_LINE + data_dim['n_chan']):
+    for i in range(N_HEADER_LINE + data_dim['n_chan'] + 1):
         line = file_id.readline()
+        logger.debug('%2d %s', i, line.strip())
 
-    for i_chan in xrange(data_dim['n_chan']):
+    for i_chan in range(data_dim['n_chan']):
+
+        # check of channel is active
+        if data['active'][i_chan] == 0:
+            continue
 
         tmp_data = np.fromfile(file_id, dtype='i4', count=data_dim['range'])
 
-        shots = data['n_shots_{:02d}'.format(i_chan)]
+        shots = data['n_shots'][i_chan]
 
-        if data['detection_mode_{:02d}'.format(i_chan)] == 'analog':
-            max_range = data['max_detection_range_{:02d}'.format(i_chan)]
-            adc = data['ADCbits_{:02d}'.format(i_chan)]
-            data['rcs_{:02d}'.format(i_chan)][index, :] = tmp_data / shots * max_range / (2**adc - 1)
+        if data['detection_mode'][i_chan] == 'analog':
+            max_range = data['adc_range'][i_chan]
+            adc = data['adc_bits'][i_chan]
+            data['rcs_{:02d}'.format(i_chan)][index, :] = tmp_data / shots * max_range * 1000 / (2**adc - 1)
             data['units_{:02d}'.format(i_chan)] = 'mV'
         else :
-            range_length = data['range_length_{:02d}'.format(i_chan)]
+            range_length = data['n_range'][i_chan]
             # It coincides with the ASCII converted by the Advanced Licel.exe by it has no sense.
-            # See Licel programming manual.pdf. Bins-per-microseconds number from technical specifications 20 bins/microsec.
+            # See Licel programming manual.pdf. Bins-per-microseconds number
+            # from technical specifications 20 bins/microsec.
             data['rcs_{:02d}'.format(i_chan)][index,:] = tmp_data / shots * 20. * (7.5 / range_length)
             data['units_{:02d}'.format(i_chan)] = 'MHz'
 
@@ -288,16 +420,19 @@ def read_data(list_files, conf, logger):
 
     # get conf parameters
     # ------------------------------------------------------------------------
+    missing_flt = conf['missing_float']
+    missing_int = conf['missing_int']
+
+    # min and max alt for background signal calculation
+    bck_min_alt, bck_max_alt = get_bck_alt(conf, logger)
+
+    # associate channels and var_names
+    # chan_conf = get_channel_conf(conf, logger)
 
     # determine size of data to read
     # ------------------------------------------------------------------------
     logger.info("determining size of var to read")
     data_dim = get_data_size(list_files, logger)
-
-    # initialize data array
-    logger.info("initializing data output array")
-    data = init_data(data_dim, logger)
-
 
     for ind, file_ in enumerate(list_files):
 
@@ -306,6 +441,15 @@ def read_data(list_files, conf, logger):
         except IOError:
             logger.error("error trying to open " + file_)
             continue
+
+        # identify line of channel in file
+        # --------------------------------------------------------------------
+        if ind == 0:
+            # chan_conf = get_channel_index(f_id, data_dim['n_chan'], chan_conf, logger)
+            # initialize data array
+            logger.info("initializing data output array")
+            data = init_data(data_dim, logger)
+            # f_id.seek(0)
 
         # read header
         # --------------------------------------------------------------------
@@ -337,12 +481,25 @@ def read_data(list_files, conf, logger):
     # determine range
     data['range'] = np.arange(1, data_dim['range'] + 1) * data['range_resol']
 
-    # add necessary dimension
-    data['nv'] = data_dim['nv']
+    # add necessary dimensions
+    data['n_chan'] = data_dim['n_chan']
+    data['nv'] = data_dim['nv'] # for time bounds
 
-    # PR2
+    # convert polarization in values
+    data['polarization'] = [POLARIZATION[val_] for val_ in data['polarization']]
+
+    # bacground alt filter
+    bck_filter = (data['range'] > bck_min_alt) & (data['range'] < bck_max_alt)
+    data['bckgrd_rcs_comment'] = BCK_COMMENT_FMT.format(bck_min_alt, bck_max_alt)
+
+    # PR2 and background
     for i_chan in xrange(data_dim['n_chan']):
+
+        profiles = data['rcs_{:02d}'.format(i_chan)]
         square = np.square(data['range'])
-        data['rcs_{:02d}'.format(i_chan)] = data['rcs_{:02d}'.format(i_chan)] * square
+
+        data['bckgrd_rcs_{:02d}'.format(i_chan)] = np.mean(profiles[:, bck_filter], axis=1)
+        data['rcs_{:02d}'.format(i_chan)] = profiles * square
+        data['units_rcs_{:02d}'.format(i_chan)] = data['units_{:02d}'.format(i_chan)] + '.m^2'
 
     return data

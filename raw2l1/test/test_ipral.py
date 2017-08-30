@@ -57,32 +57,10 @@ class TestRunIpral(unittest.TestCase):
             '-log_level',
             'debug',
             '-v',
-            'debug'
+            'info'
         ])
 
         self.assertEqual(resp, 0, 'run IPRAL several files')
-
-    # def test_run_ipral_one_file_ref(self):
-    #     """test ipral reader with one file"""
-
-    #     date = '20170621'
-    #     conf_file = os.path.join(TEST_IN_DIR, 'conf', 'conf_ipral_ref_00.ini')
-    #     test_ifile = os.path.join(self.IN_DIR, 'RM1762107.030037')
-    #     test_ofile = os.path.join(TEST_OUT_DIR, 'test_ipral_one_file_ref.nc')
-
-    #     resp = subprocess.check_call([
-    #         MAIN_DIR + PRGM,
-    #         date,
-    #         conf_file,
-    #         test_ifile,
-    #         test_ofile,
-    #         '-log_level',
-    #         'debug',
-    #         '-v',
-    #         'debug'
-    #     ])
-
-    #     self.assertEqual(resp, 0, 'run IPRAL one file')
 
 
 if __name__ == '__main__':
