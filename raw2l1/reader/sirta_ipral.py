@@ -404,7 +404,8 @@ def read_profiles(file_id, data, data_dim, index, logger):
             # It coincides with the ASCII converted by the Advanced Licel.exe by it has no sense.
             # See Licel programming manual.pdf. Bins-per-microseconds number
             # from technical specifications 20 bins/microsec.
-            data['rcs_{:02d}'.format(i_chan)][index,:] = tmp_data / shots * 20. * (7.5 / range_length)
+            reduction_factor = range_length / 7.5
+            data['rcs_{:02d}'.format(i_chan)][index,:] = tmp_data / (shots / (20/reduction_factor))
             data['units_{:02d}'.format(i_chan)] = 'MHz'
 
         # jump over space between profiles
