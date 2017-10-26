@@ -401,12 +401,11 @@ def read_profiles(file_id, data, data_dim, index, logger):
             adc = data['adc_bits'][i_chan]
             data['rcs_{:02d}'.format(i_chan)][index, :] = tmp_data / shots * max_range * 1000 / (2**adc - 1)
             data['units_{:02d}'.format(i_chan)] = 'mV'
-        else :
-            range_length = data['n_range'][i_chan]
+        else :            
             # It coincides with the ASCII converted by the Advanced Licel.exe by it has no sense.
             # See Licel programming manual.pdf. Bins-per-microseconds number
             # from technical specifications 20 bins/microsec.
-            reduction_factor = range_length / DEFAULT_RESOLUTION
+            reduction_factor = data['range_resol'] / DEFAULT_RESOLUTION
             data['rcs_{:02d}'.format(i_chan)][index,:] = tmp_data / (shots / (20/reduction_factor))
             data['units_{:02d}'.format(i_chan)] = 'MHz'
 
