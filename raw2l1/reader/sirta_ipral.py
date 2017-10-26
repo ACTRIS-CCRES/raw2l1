@@ -41,6 +41,8 @@ POLARIZATION = {
     's': 2
 }
 
+DEFAULT_RESOLUTION = 7.5
+
 BCK_COMMENT_FMT = 'calcultated between {:5d} m and {:5d} m'
 
 
@@ -404,7 +406,7 @@ def read_profiles(file_id, data, data_dim, index, logger):
             # It coincides with the ASCII converted by the Advanced Licel.exe by it has no sense.
             # See Licel programming manual.pdf. Bins-per-microseconds number
             # from technical specifications 20 bins/microsec.
-            reduction_factor = range_length / 7.5
+            reduction_factor = range_length / DEFAULT_RESOLUTION
             data['rcs_{:02d}'.format(i_chan)][index,:] = tmp_data / (shots / (20/reduction_factor))
             data['units_{:02d}'.format(i_chan)] = 'MHz'
 
