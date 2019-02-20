@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 # Compatibility with python 3
-from __future__ import print_function, division, absolute_import
+
 
 import argparse
 import datetime as dt
@@ -160,7 +160,7 @@ def get_input_args(argv):
     try:
         parse_args = parser.parse_args(argv)
         print(parse_args.ancillary)
-    except argparse.ArgumentError, exc:
+    except argparse.ArgumentError as exc:
         print('\n', exc.argument)
         sys.exit(1)
 

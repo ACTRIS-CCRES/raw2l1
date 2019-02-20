@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 # Compatibility with python 3
-from __future__ import print_function, division, absolute_import
+
 
 import sys
 from tools import lidar_reader as lr

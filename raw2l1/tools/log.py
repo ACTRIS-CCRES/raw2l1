@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 # Compatibility with python 3
-from __future__ import print_function, division, absolute_import
+
 
 import logging
 import logging.config

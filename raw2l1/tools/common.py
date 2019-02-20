@@ -36,7 +36,7 @@ CONF_OPTIONS = [
 # authorized netCDF format
 ALLOW_NC_FMT = ['NETCDF3_CLASSIC', 'NETCDF4']
 ALLOW_NC4_COMP = ['true', 'false']
-ALLOW_NC4_COMP_LEVEL = range(1, 10)
+ALLOW_NC4_COMP_LEVEL = list(range(1, 10))
 
 # Default value for missing and _FillValue if not define in reader_conf section
 MISSING_FLOAT = -999.

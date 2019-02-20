@@ -1,6 +1,6 @@
 # -*- coding: utf8 -*-
 
-from __future__ import print_function, absolute_import, division
+
 
 import sys
 import datetime as dt
@@ -60,7 +60,7 @@ def get_dimension_size(list_files, logger):
 
     # log size of data
     fmt = '{} : {:d}'
-    for key, value in data_dims.items():
+    for key, value in list(data_dims.items()):
         logger.debug(fmt.format(key, value))
 
     return data_dims, data

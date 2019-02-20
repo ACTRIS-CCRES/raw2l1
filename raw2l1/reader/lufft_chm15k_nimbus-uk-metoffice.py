@@ -1,6 +1,6 @@
 # -*- coding: utf8 -*-
 
-from __future__ import print_function, absolute_import, division
+
 
 import netCDF4 as nc
 import numpy as np
@@ -169,7 +169,7 @@ def get_vars_dim(list_files, logger):
         nc_id.close()
 
     logger.debug("size of dimensions")
-    for key in data_dim.keys():
+    for key in list(data_dim.keys()):
         logger.debug("%r : %d" % (key, data_dim[key]))
 
     return data_dim
@@ -453,7 +453,7 @@ def read_data(list_files, conf, logger):
     # ------------------------------------------------------------------------
     logger.info("determining size of var to read")
     vars_dim = get_vars_dim(list_files, logger)
-    for dim, size in vars_dim.items():
+    for dim, size in list(vars_dim.items()):
         logger.debug(dim + ': ' + str(size))
     logger.info("initializing data output array")
     data = init_data(vars_dim, conf, logger)

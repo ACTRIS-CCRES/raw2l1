@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*-
 
 # Compatibility with python 3
-from __future__ import print_function, division, absolute_import
+
 
 import netCDF4 as nc
 import sys
 import datetime as dt
 import numpy as np
-import ConfigParser
+import configparser
 from ast import literal_eval
 from tools.read_overlap import read_overlap
 from tools import common
@@ -79,7 +79,7 @@ def filter_conf_sections(conf, logger):
     for elt in set(sections_to_rm):
         try:
             list_sec.remove(elt)
-        except ValueError, err:
+        except ValueError as err:
             logger.warning("107 Unable to remove section "
                            "whilst creating netCDF file '{}'".format(conf.get('conf', 'output')) +
                            repr(elt) + ' ' + repr(err))
@@ -182,7 +182,7 @@ def create_netcdf_dim(conf, data, nc_id, logger):
         try:
             dim = conf.get(section, 'dim')
             name = section
-        except ConfigParser.NoSectionError, err:
+        except configparser.NoSectionError as err:
             logger.warning("107 Unable to process section"
                            " whilst creating netCDF file '{}'".format(conf.get('conf', 'output')) +
                            repr(err))
@@ -191,7 +191,7 @@ def create_netcdf_dim(conf, data, nc_id, logger):
         # try to get type of variable
         try:
             type_var = conf.get(section, 'type')
-        except ConfigParser.NoOptionError:
+        except configparser.NoOptionError:
             pass
 
         if section not in common.CONF_SECTIONS and name == dim:
@@ -241,7 +241,7 @@ def create_netcdf_time_var(conf, var_name, data, nc_id, logger):
     try:
         calendar = conf.get(var_name, 'calendar')
         has_calendar = True
-    except ConfigParser.NoOptionError:
+    except configparser.NoOptionError:
         pass
     val_type = get_var_type(conf.get(var_name, 'type'), conf, logger)
     dim = conf.get(var_name, 'dim')
@@ -253,7 +253,7 @@ def create_netcdf_time_var(conf, var_name, data, nc_id, logger):
     nc_var = nc_id.createVariable(*args)
 
     logger.debug("converting time to CF compliant format")
-    if var_name not in data.keys():
+    if var_name not in list(data.keys()):
         tmp_var_name = get_data_key(conf.get(var_name, 'value'))
     else:
         tmp_var_name = var_name
@@ -304,7 +304,7 @@ def add_data_to_var(nc_var, var_name, conf, data, logger):
         over_fname = get_overlap_filename(data_val)
         try:
             nc_var[:] = read_overlap(over_fname, logger)
-        except IOError, err:
+        except IOError as err:
             logger.error(
                 "107 problem encountered while reading overlap file " +
                 "'{}".format(over_fname)
@@ -315,7 +315,7 @@ def add_data_to_var(nc_var, var_name, conf, data, logger):
             data_val = convert_attribute(data_val, logger)
             if not isinstance(data_val, str):
                 nc_var[:] = np.array(data_val, dtype=data_type)
-        except ValueError, err:
+        except ValueError as err:
             logger.error(
                 "107 Error creating netCDF file '{}'".format(conf.get('conf', 'output')) +
                 "impossible to convert value to " +
@@ -404,7 +404,7 @@ def create_netcdf_variables(conf, data, nc_id, logger):
         try:
             val_type = get_var_type(conf.get(section, 'type'), conf, logger)
             logger.debug("type " + repr(val_type))
-        except ConfigParser.NoOptionError:
+        except configparser.NoOptionError:
             continue
 
         # check if fill value is defined
@@ -426,7 +426,7 @@ def create_netcdf_variables(conf, data, nc_id, logger):
             logger.error(msg)
             continue
         elif val_type == 'string':
-            if var_name not in data.keys():
+            if var_name not in list(data.keys()):
                 tmp_var_name = get_data_key(conf.get(var_name, 'value'))
             else:
                 tmp_var_name = var_name
@@ -486,7 +486,7 @@ def create_netcdf(conf, data, logger):
         nc_id = nc.Dataset(conf.get('conf', 'output'),
                            'w',
                            format=conf.get('conf', 'netcdf_format'))
-    except IOError, err:
+    except IOError as err:
         logger.critical("107 Error trying to create the netCDF file '{}".format(format(conf.get('conf', 'output'))))
         logger.critical(err)
         logger.critical("quitting raw2l1")

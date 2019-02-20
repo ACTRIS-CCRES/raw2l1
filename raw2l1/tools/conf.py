@@ -2,8 +2,8 @@
 # -*- coding: utf-8 -*-
 
 # Compatibility with python 3
-from __future__ import print_function, division, absolute_import
-import ConfigParser
+
+import configparser
 import logging
 
 
@@ -15,7 +15,7 @@ def add(conf, input_args, version, logger):
     # Warning: for configuration file, we do not use the filename but the
     # filehandler
     #   to access filename use, conf_file.name
-    for key, value in input_args.items():
+    for key, value in list(input_args.items()):
         conf.set('conf', key, value)
 
     # add version in conf
@@ -29,7 +29,7 @@ def init(input_args, version, logger):
     Load and check the INI configuration file
     """
 
-    conf = ConfigParser.RawConfigParser()
+    conf = configparser.RawConfigParser()
     conf.optionxform = str
     conf.read(input_args['conf'].name)
 

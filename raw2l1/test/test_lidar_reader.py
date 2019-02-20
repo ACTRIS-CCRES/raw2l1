@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import unittest
-import ConfigParser
+import configparser
 import datetime as dt
 import logging
 
@@ -26,14 +26,14 @@ class TestLidarReader(unittest.TestCase):
 
         logger = logging.getLogger('dummy')
 
-        conf = ConfigParser.RawConfigParser()
+        conf = configparser.RawConfigParser()
         conf.optionxform = str
         conf.read('test/conf/readerconf_no_missing.ini')
         conf = add_arg_options(conf)
 
         reader = lr.RawDataReader(conf, logger)
 
-        self.assertEquals(
+        self.assertEqual(
             (reader.reader_conf['missing_float'], reader.reader_conf['missing_int']),
             (np.float(-999.), np.int(-9)))
 
@@ -41,14 +41,14 @@ class TestLidarReader(unittest.TestCase):
 
         logger = logging.getLogger('dummy')
 
-        conf = ConfigParser.RawConfigParser()
+        conf = configparser.RawConfigParser()
         conf.optionxform = str
         conf.read('test/conf/readerconf_no_missing_int.ini')
         conf = add_arg_options(conf)
 
         reader = lr.RawDataReader(conf, logger)
 
-        self.assertEquals(
+        self.assertEqual(
             (reader.reader_conf['missing_float'], reader.reader_conf['missing_int']),
             (np.float(-1337), np.int(-9)))
 
@@ -56,14 +56,14 @@ class TestLidarReader(unittest.TestCase):
 
         logger = logging.getLogger('dummy')
 
-        conf = ConfigParser.RawConfigParser()
+        conf = configparser.RawConfigParser()
         conf.optionxform = str
         conf.read('test/conf/readerconf_no_missing_float.ini')
         conf = add_arg_options(conf)
 
         reader = lr.RawDataReader(conf, logger)
 
-        self.assertEquals(
+        self.assertEqual(
             (reader.reader_conf['missing_float'], reader.reader_conf['missing_int']),
             (np.float(-999), np.int(-1337)))
 
@@ -71,7 +71,7 @@ class TestLidarReader(unittest.TestCase):
 
         logger = logging.getLogger('dummy')
 
-        conf = ConfigParser.RawConfigParser()
+        conf = configparser.RawConfigParser()
         conf.optionxform = str
         conf.read('test/conf/readerconf_missing_float_nan.ini')
         conf = add_arg_options(conf)

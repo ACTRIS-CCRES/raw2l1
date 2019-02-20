@@ -1,6 +1,6 @@
 # -*- coding: utf8 -*-
 
-from __future__ import print_function, absolute_import, division
+
 
 import numpy as np
 import datetime as dt
@@ -278,7 +278,7 @@ def get_range_resol(conf_msg, logger):
         int_coding = int(conf_msg[7:8])
         range_resol = RANGE_RESOL[int_coding]
         logger.debug("range resolution: %d m" % range_resol)
-    except Exception, err:
+    except Exception as err:
         logger.warning("105 Problem reading range resolution: " + repr(err))
         return None
 
@@ -294,7 +294,7 @@ def get_range_ngates(conf_msg, logger):
         int_coding = int(conf_msg[7:8])
         range_ngates = RANGE_GATES[int_coding]
         logger.debug("number of vertical gates: %d" % range_ngates)
-    except Exception, err:
+    except Exception as err:
         logger.warning("105 Problem reading number of vertical gates " +
                        repr(err))
         return None
@@ -335,7 +335,7 @@ def calc_range(resol, n_gates):
     calculate range variable based on resolution and number of gates
     """
 
-    range_vect = np.array(range(1, n_gates + 1), dtype=np.float)
+    range_vect = np.array(list(range(1, n_gates + 1)), dtype=np.float)
 
     return range_vect * np.float(resol)
 
@@ -451,8 +451,8 @@ def init_data(data, data_dim, conf, logger):
     # -------------------------------------------------------------------------
     data['time'] = np.ones((data_dim['time'],),
                            dtype=np.dtype(dt.datetime)) * np.nan
-    data['cbh_layer'] = np.array([x + 1 for x in xrange(CBH_DIM)])
-    data['clh_layer'] = np.array([x + 1 for x in xrange(CLH_DIM)])
+    data['cbh_layer'] = np.array([x + 1 for x in range(CBH_DIM)])
+    data['clh_layer'] = np.array([x + 1 for x in range(CLH_DIM)])
 
     # Time dependant variables
     # -------------------------------------------------------------------------

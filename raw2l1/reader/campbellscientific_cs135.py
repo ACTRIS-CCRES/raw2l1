@@ -1,12 +1,12 @@
 # -*- coding: utf8 -*-
 
-from __future__ import print_function, absolute_import, division
+
 
 import numpy as np
 import datetime as dt
 import sys
 import re
-import ConfigParser
+import configparser
 from tools.utils import chomp
 
 # brand and model of the LIDAR
@@ -53,10 +53,10 @@ def check_input(conf, logger):
     # check if the timestamp format in available in conf file
     try:
         timestamp_fmt = conf['timestamp_fmt']
-    except ConfigParser.NoSectionError:
+    except configparser.NoSectionError:
         logger.critical("101 configuration file MUST have a reader_conf section")
         sys.exit(2)
-    except ConfigParser.NoOptionError:
+    except configparser.NoOptionError:
         logger.critical("101 reader_conf section MUST have a timestamp_fmt option")
         sys.exit(2)
 
@@ -261,7 +261,7 @@ def read_profile(line, data, ind, logger):
     tmp = np.array([
         int(
             line[s * RCS_BYTES_SIZE:s * RCS_BYTES_SIZE + RCS_BYTES_SIZE], 16
-        ) for s in xrange(RANGE_DIM)
+        ) for s in range(RANGE_DIM)
     ])
 
     # Each sample is coded with a 20-bit HEX ASCII character set

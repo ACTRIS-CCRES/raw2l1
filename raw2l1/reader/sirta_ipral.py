@@ -6,7 +6,7 @@ reader for raw data from SIRTA IPRAL LIDAR
 the file format is based on LICEL file format
 """
 
-from __future__ import print_function, absolute_import, division
+
 
 import sys
 import ast
@@ -275,7 +275,7 @@ def init_data(data_dim, logger):
     data['adc_range'] = np.ones((n_chan,), dtype=np.float32) * MISSING_FLOAT
 
     # multi_dim vars
-    for i_chan in xrange(data_dim['n_chan']):
+    for i_chan in range(data_dim['n_chan']):
         data['rcs_{:02d}'.format(i_chan)] = np.ones((data_dim['time'], data_dim['range']),
                                                     dtype=np.float32) * MISSING_FLOAT
         data['bckgrd_rcs_{:02d}'.format(i_chan)] = np.ones((data_dim['time'],),
@@ -327,7 +327,7 @@ def read_header(file_id, data, data_dim, index, logger, date_only=False):
 
     # channels description
     # ------------------------------------------------------------------------
-    for i_chan in xrange(data_dim['n_chan']):
+    for i_chan in range(data_dim['n_chan']):
 
         var_name = 'rcs_{:02d}'.format(i_chan)
 
@@ -495,7 +495,7 @@ def read_data(list_files, conf, logger):
     data['bckgrd_rcs_comment'] = BCK_COMMENT_FMT.format(bck_min_alt, bck_max_alt)
 
     # PR2 and background
-    for i_chan in xrange(data_dim['n_chan']):
+    for i_chan in range(data_dim['n_chan']):
 
         profiles = data['rcs_{:02d}'.format(i_chan)]
         square = np.square(data['range'])

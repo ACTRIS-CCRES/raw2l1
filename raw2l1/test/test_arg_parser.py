@@ -72,14 +72,14 @@ class TestArgParser(unittest.TestCase):
 
         inputs = ag.get_input_args(argv)
 
-        for key in inputs.keys():
+        for key in list(inputs.keys()):
             if key != 'conf':
                 self.assertEqual(inputs[key], ref_inputs[key])
 
             # TODO : test conf element
             # conf is not tested because it is a file pointer.
             # don't know how to do it
-            print(ref_inputs[key], inputs[key])
+            print((ref_inputs[key], inputs[key]))
 
 if __name__ == '__main__':
     unittest.main()

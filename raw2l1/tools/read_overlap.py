@@ -1,7 +1,7 @@
 # -*- coding: utf8 -*-
 
 # Compatibility with python 3
-from __future__ import print_function, division, absolute_import
+
 
 import numpy as np
 
@@ -22,7 +22,7 @@ def read_overlap(fname, logger):
                              comments=COMMENTS,
                              filling_values=FILLING,)
 
-    except IOError, err:
+    except IOError as err:
         logger.errot("107 Error Reading overlap file : " + fname)
         logger.error(err)
         data = None
