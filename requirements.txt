@@ -2,10 +2,10 @@
 numpy
 netCDF4
 # require to run test
-pytest
-nose
-coverage
-pylint
+pytest==3.7.4
+pytest-cov==2.6.0
+black
+flake8
 # require for documentation
 Sphinx
 sphinx-bootstrap-theme
