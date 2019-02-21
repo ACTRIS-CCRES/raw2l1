@@ -16,10 +16,10 @@ def add(conf, input_args, version, logger):
     # filehandler
     #   to access filename use, conf_file.name
     for key, value in list(input_args.items()):
-        conf.set('conf', key, value)
+        conf.set("conf", key, value)
 
     # add version in conf
-    conf.set('conf', 'version', version)
+    conf.set("conf", "version", version)
 
     return conf
 
@@ -31,7 +31,7 @@ def init(input_args, version, logger):
 
     conf = configparser.RawConfigParser()
     conf.optionxform = str
-    conf.read(input_args['conf'].name)
+    conf.read(input_args["conf"].name)
 
     # TODO: Add a function to check available values once format is fixed
 
@@ -44,7 +44,7 @@ def init(input_args, version, logger):
         logger.debug("raw2l1 configuration")
         for section in conf.sections():
             for key, value in conf.items(section):
-                logger.debug('[' + section + '] ' + key + ' : ' + repr(value))
+                logger.debug("[" + section + "] " + key + " : " + repr(value))
         logger.debug("end of configuration")
 
     return conf
