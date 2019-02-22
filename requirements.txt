@@ -4,6 +4,7 @@ netCDF4
 # require to run test
 pytest==3.7.4
 pytest-cov==2.6.0
+nose
 black
 flake8
 # require for documentation
