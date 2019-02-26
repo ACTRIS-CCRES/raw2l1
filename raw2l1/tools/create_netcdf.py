@@ -12,18 +12,18 @@ from ast import literal_eval
 from tools.read_overlap import read_overlap
 from tools import common
 
-KEY_READERDATA = '$reader_data$'
-KEY_OVERLAP = '$overlap$'
-KEY_NODIM = '$none$'
+KEY_READERDATA = "$reader_data$"
+KEY_OVERLAP = "$overlap$"
+KEY_NODIM = "$none$"
 KEYS_VALTYPE = {
-    '$short$': np.int16,
-    '$integer$': np.int32,
-    '$long$': np.int64,
-    '$float$': np.float32,
-    '$double$': np.float64,
-    '$string$': 'string',
-    '$time$': np.float64,
-    'default': np.float64,
+    "$short$": np.int16,
+    "$integer$": np.int32,
+    "$long$": np.int64,
+    "$float$": np.float32,
+    "$double$": np.float64,
+    "$string$": "string",
+    "$time$": np.float64,
+    "default": np.float64,
 }
 
 
@@ -33,7 +33,7 @@ def dim_to_tuple(dim):
     syntax
     """
 
-    list_dim = dim.replace(" ", "").split(',')
+    list_dim = dim.replace(" ", "").split(",")
 
     return tuple(list_dim)
 
@@ -43,7 +43,7 @@ def get_n_dim(dim):
     return the number of dimension of a variable
     """
 
-    return len(dim.split(','))
+    return len(dim.split(","))
 
 
 def get_overlap_filename(option):
@@ -52,7 +52,7 @@ def get_overlap_filename(option):
     in the configuration file
     """
 
-    return option.split(',')[1].strip(' ')
+    return option.split(",")[1].strip(" ")
 
 
 def get_data_key(option):
@@ -61,7 +61,7 @@ def get_data_key(option):
     the netCDF variable
     """
 
-    return option.split(',')[1].strip(' ')
+    return option.split(",")[1].strip(" ")
 
 
 def filter_conf_sections(conf, logger):
@@ -80,9 +80,13 @@ def filter_conf_sections(conf, logger):
         try:
             list_sec.remove(elt)
         except ValueError as err:
-            logger.warning("107 Unable to remove section "
-                           "whilst creating netCDF file '{}'".format(conf.get('conf', 'output')) +
-                           repr(elt) + ' ' + repr(err))
+            logger.warning(
+                "107 Unable to remove section "
+                "whilst creating netCDF file '{}'".format(conf.get("conf", "output"))
+                + repr(elt)
+                + " "
+                + repr(err)
+            )
             continue
 
     return list_sec
@@ -98,7 +102,8 @@ def get_var_type(type_str, conf, logger):
     except KeyError:
         msg = (
             "107 Type of data '" + type_str + "' unknown using default. "
-            "Check your configuration file '{}'".format(conf.get('conf', 'conf')))
+            "Check your configuration file '{}'".format(conf.get("conf", "conf"))
+        )
         logger.error(msg)
         val_type = np.float64
 
@@ -125,36 +130,40 @@ def create_netcdf_global(conf, nc_id, data, logger):
     Create the global attribute of the netCDF file
     """
 
-    for attr, value in conf.items('global'):
+    for attr, value in conf.items("global"):
         if KEY_READERDATA in value:
             reader_key = get_data_key(value)
             try:
                 setattr(nc_id, attr, data[reader_key])
                 logger.debug("adding %s" % attr)
             except KeyError:
-                mess = ("107 Error creating netCDF file '{}'".format(conf.get('conf', 'output')) +
-                        "no key %s in data read. Global var %s will be ignore.")
+                mess = (
+                    "107 Error creating netCDF file '{}'".format(
+                        conf.get("conf", "output")
+                    )
+                    + "no key %s in data read. Global var %s will be ignore."
+                )
                 logger.error(mess % (reader_key, attr))
-        elif attr == 'add_date':
+        elif attr == "add_date":
             pass
         else:
-            if attr == 'history':
-                value = dt.datetime.today().strftime('%Y%m%d')
-                value += ' raw2l1 ' + conf.get('conf', 'version')
+            if attr == "history":
+                value = dt.datetime.today().strftime("%Y%m%d")
+                value += " raw2l1 " + conf.get("conf", "version")
 
             setattr(nc_id, attr, value)
             logger.debug("adding %s" % attr)
 
     # Add year, month day for STRAT compatibility
     add_date = False
-    if conf.has_option('global', 'add_date'):
-        add_date = conf.get_boolean('global', 'add_date')
+    if conf.has_option("global", "add_date"):
+        add_date = conf.get_boolean("global", "add_date")
 
     if add_date:
-        dt_date = conf.get('conf', 'date')
-        setattr(nc_id, 'year', int(dt_date.strftime('%Y')))
-        setattr(nc_id, 'month', int(dt_date.strftime('%m')))
-        setattr(nc_id, 'day', int(dt_date.strftime('%d')))
+        dt_date = conf.get("conf", "date")
+        setattr(nc_id, "year", int(dt_date.strftime("%Y")))
+        setattr(nc_id, "month", int(dt_date.strftime("%m")))
+        setattr(nc_id, "day", int(dt_date.strftime("%d")))
 
     return None
 
@@ -180,17 +189,19 @@ def create_netcdf_dim(conf, data, nc_id, logger):
 
         # process only section concerning the output file
         try:
-            dim = conf.get(section, 'dim')
+            dim = conf.get(section, "dim")
             name = section
         except configparser.NoSectionError as err:
-            logger.warning("107 Unable to process section"
-                           " whilst creating netCDF file '{}'".format(conf.get('conf', 'output')) +
-                           repr(err))
+            logger.warning(
+                "107 Unable to process section"
+                " whilst creating netCDF file '{}'".format(conf.get("conf", "output"))
+                + repr(err)
+            )
             continue
 
         # try to get type of variable
         try:
-            type_var = conf.get(section, 'type')
+            type_var = conf.get(section, "type")
         except configparser.NoOptionError:
             pass
 
@@ -199,31 +210,28 @@ def create_netcdf_dim(conf, data, nc_id, logger):
             logger.debug("dimension found: " + section)
 
             # case where dimensions have no values
-            if conf.has_option(section, 'size'):
-                dim_size = conf.get(section, 'size')
+            if conf.has_option(section, "size"):
+                dim_size = conf.get(section, "size")
 
                 if KEY_READERDATA in dim_size:
-                    val_key = get_data_key(conf.get(section, 'size'))
+                    val_key = get_data_key(conf.get(section, "size"))
                     logger.debug("{} size : {:d}".format(name, data[val_key]))
                     nc_id.createDimension(dim, data[val_key])
                 else:
                     logger.debug("{} size : {:d}".format(name, int(dim_size)))
-                    nc_id.createDimension(dim,
-                                          int(dim_size))
-            elif type_var == '$time$':
+                    nc_id.createDimension(dim, int(dim_size))
+            elif type_var == "$time$":
                 # case of time var
 
                 create_netcdf_time_dim(section, nc_id, logger)
                 continue
 
-            elif KEY_READERDATA in conf.get(section, 'value'):
+            elif KEY_READERDATA in conf.get(section, "value"):
                 try:
-                    nc_id.createDimension(dim,
-                                          data[dim].size)
+                    nc_id.createDimension(dim, data[dim].size)
                 except:
-                    val_key = get_data_key(conf.get(section, 'value'))
-                    nc_id.createDimension(dim,
-                                          data[val_key].size)
+                    val_key = get_data_key(conf.get(section, "value"))
+                    nc_id.createDimension(dim, data[val_key].size)
             else:
                 nc_id.createDimension(dim, 1)
 
@@ -237,14 +245,14 @@ def create_netcdf_time_var(conf, var_name, data, nc_id, logger):
 
     has_calendar = False
 
-    units = conf.get(var_name, 'units')
+    units = conf.get(var_name, "units")
     try:
-        calendar = conf.get(var_name, 'calendar')
+        calendar = conf.get(var_name, "calendar")
         has_calendar = True
     except configparser.NoOptionError:
         pass
-    val_type = get_var_type(conf.get(var_name, 'type'), conf, logger)
-    dim = conf.get(var_name, 'dim')
+    val_type = get_var_type(conf.get(var_name, "type"), conf, logger)
+    dim = conf.get(var_name, "dim")
 
     args = [var_name, val_type]
     if dim != KEY_NODIM:
@@ -254,7 +262,7 @@ def create_netcdf_time_var(conf, var_name, data, nc_id, logger):
 
     logger.debug("converting time to CF compliant format")
     if var_name not in list(data.keys()):
-        tmp_var_name = get_data_key(conf.get(var_name, 'value'))
+        tmp_var_name = get_data_key(conf.get(var_name, "value"))
     else:
         tmp_var_name = var_name
 
@@ -274,29 +282,33 @@ def add_data_to_var(nc_var, var_name, conf, data, logger):
     add the values to a variables
     """
 
-    data_val = conf.get(var_name, 'value')
-    data_type = get_var_type(conf.get(var_name, 'type'), conf, logger)
+    data_val = conf.get(var_name, "value")
+    data_type = get_var_type(conf.get(var_name, "type"), conf, logger)
 
     logger.debug("adding data to " + var_name)
     logger.debug(str(data_type))
-    logger.debug(conf.get('conf', 'netcdf_format'))
+    logger.debug(conf.get("conf", "netcdf_format"))
     if KEY_READERDATA in data_val:
 
         # prevent problem with netCDF3 and strings
-        if (data_type == 'string' and
-           conf.get('conf', 'netcdf_format') == 'NETCDF3_CLASSIC'):
+        if (
+            data_type == "string"
+            and conf.get("conf", "netcdf_format") == "NETCDF3_CLASSIC"
+        ):
             logger.error(
-                "107 Error creating netCDF file '{}'".format(conf.get('conf', 'output')) +
-                "Raw2l1 is not able to manage string " +
-                "variables with netCDF3. " +
-                "You should use NETCDF4 option"
+                "107 Error creating netCDF file '{}'".format(conf.get("conf", "output"))
+                + "Raw2l1 is not able to manage string "
+                + "variables with netCDF3. "
+                + "You should use NETCDF4 option"
             )
         else:
             try:
                 data_key = get_data_key(data_val)
                 nc_var[:] = data[data_key]
             except KeyError:
-                msg = "107 Error creating netCDF file '{}'".format(format(conf.get('conf', 'output')))
+                msg = "107 Error creating netCDF file '{}'".format(
+                    format(conf.get("conf", "output"))
+                )
                 msg += " key %s does not exist in read data. Exiting program"
                 logger.critical(msg % data_key)
                 sys.exit(1)
@@ -306,8 +318,8 @@ def add_data_to_var(nc_var, var_name, conf, data, logger):
             nc_var[:] = read_overlap(over_fname, logger)
         except IOError as err:
             logger.error(
-                "107 problem encountered while reading overlap file " +
-                "'{}".format(over_fname)
+                "107 problem encountered while reading overlap file "
+                + "'{}".format(over_fname)
             )
             logger.error(repr(err))
     else:
@@ -317,9 +329,12 @@ def add_data_to_var(nc_var, var_name, conf, data, logger):
                 nc_var[:] = np.array(data_val, dtype=data_type)
         except ValueError as err:
             logger.error(
-                "107 Error creating netCDF file '{}'".format(conf.get('conf', 'output')) +
-                "impossible to convert value to " +
-                repr(data_type) + "for variable " + var_name)
+                "107 Error creating netCDF file '{}'".format(conf.get("conf", "output"))
+                + "impossible to convert value to "
+                + repr(data_type)
+                + "for variable "
+                + var_name
+            )
             logger.error(repr(err))
 
     return None
@@ -335,22 +350,23 @@ def add_attr_to_var(nc_var, data, conf, section, logger):
         if option not in common.RESERV_ATTR:
 
             # special case for missing value and _FillValue
-            data_type = get_var_type(conf.get(section, 'type'), conf, logger)
+            data_type = get_var_type(conf.get(section, "type"), conf, logger)
             if option == "missing_value" or option == "_FillValue":
                 try:
                     value = np.array(value, dtype=data_type)
                 except ValueError:
                     mess = (
                         "107 Error creating netCDF file '%s'"
-                        "impossible to convert missing_value %s. " +
-                        "Using nan or -9 depending on type")
-                    logger.error(mess % (conf.get('conf', 'output'), repr(value)))
+                        "impossible to convert missing_value %s. "
+                        + "Using nan or -9 depending on type"
+                    )
+                    logger.error(mess % (conf.get("conf", "output"), repr(value)))
                     if data_type == np.float32 or data_type == np.float64:
                         value = np.nan
                     else:
                         value = -9
 
-            elif option == "flag_values" or option == 'flag_masks':
+            elif option == "flag_values" or option == "flag_masks":
                 value = convert_attribute(value, logger)
                 if not isinstance(value, str):
                     value = np.array(value, dtype=data_type)
@@ -383,10 +399,10 @@ def create_netcdf_variables(conf, data, nc_id, logger):
     """
 
     # define variable in case user chose compression:
-    if conf.get('conf', 'netcdf_format') == 'NETCDF4':
+    if conf.get("conf", "netcdf_format") == "NETCDF4":
 
-        comp = conf.get('conf', 'netcdf4_compression')
-        comp_level = conf.getint('conf', 'netcdf4_compression_level')
+        comp = conf.get("conf", "netcdf4_compression")
+        comp_level = conf.getint("conf", "netcdf4_compression_level")
     else:
         comp = False
         comp_level = 0
@@ -396,45 +412,54 @@ def create_netcdf_variables(conf, data, nc_id, logger):
 
         var_name = section
         logger.debug("variable " + var_name)
-        dim = conf.get(section, 'dim')
+        dim = conf.get(section, "dim")
         logger.debug("dimension " + dim)
 
         # if variable has no type is it only a dimension
         # so we don't create the variable
         try:
-            val_type = get_var_type(conf.get(section, 'type'), conf, logger)
+            val_type = get_var_type(conf.get(section, "type"), conf, logger)
             logger.debug("type " + repr(val_type))
         except configparser.NoOptionError:
             continue
 
         # check if fill value is defined
-        if conf.has_option(section, '_FillValue'):
-            fill_value = conf.get(section, '_FillValue')
+        if conf.has_option(section, "_FillValue"):
+            fill_value = conf.get(section, "_FillValue")
         else:
             fill_value = None
 
         # create time variable
-        if conf.get(section, 'type') == '$time$':
+        if conf.get(section, "type") == "$time$":
             create_netcdf_time_var(conf, section, data, nc_id, logger)
             continue
 
         # case of string variable:
         # we have to get the precise type of data from the read variable
-        if (val_type == 'string' and conf.get('conf', 'netcdf_format') == 'NETCDF3_CLASSIC'):
-            msg = "107 Error creation netCDF file '{}".format(conf.get('conf', 'output'))
-            msg += " impossible to put string variable in netCDF3 files use netCDF4 format"
+        if (
+            val_type == "string"
+            and conf.get("conf", "netcdf_format") == "NETCDF3_CLASSIC"
+        ):
+            msg = "107 Error creation netCDF file '{}".format(
+                conf.get("conf", "output")
+            )
+            msg += (
+                " impossible to put string variable in netCDF3 files use netCDF4 format"
+            )
             logger.error(msg)
             continue
-        elif val_type == 'string':
+        elif val_type == "string":
             if var_name not in list(data.keys()):
-                tmp_var_name = get_data_key(conf.get(var_name, 'value'))
+                tmp_var_name = get_data_key(conf.get(var_name, "value"))
             else:
                 tmp_var_name = var_name
 
             try:
                 val_type = data[tmp_var_name].dtype
             except:
-                msg = "107 Error creating netCDF file '{}".format(format(conf.get('conf', 'output')))
+                msg = "107 Error creating netCDF file '{}".format(
+                    format(conf.get("conf", "output"))
+                )
                 msg += " impossible to determine size of string for %s"
                 logger.critical(msg % var_name)
                 sys.exit(1)
@@ -445,7 +470,7 @@ def create_netcdf_variables(conf, data, nc_id, logger):
                 val_type,
                 zlib=comp,
                 complevel=comp_level,
-                fill_value=fill_value
+                fill_value=fill_value,
             )
         else:
             nc_var = nc_id.createVariable(
@@ -454,14 +479,16 @@ def create_netcdf_variables(conf, data, nc_id, logger):
                 dim_to_tuple(dim),
                 zlib=comp,
                 complevel=comp_level,
-                fill_value=fill_value
+                fill_value=fill_value,
             )
 
         # Add values to the variable
-        if conf.has_option(var_name, 'value'):
+        if conf.has_option(var_name, "value"):
             add_data_to_var(nc_var, var_name, conf, data, logger)
         else:
-            msg = "107 Error creating netCDF file '{}'".format(conf.get('conf', 'output'))
+            msg = "107 Error creating netCDF file '{}'".format(
+                conf.get("conf", "output")
+            )
             msg += " No value option found for {}".format(var_name)
             msg += " - your configuration file might contains errors"
             logger.error(msg)
@@ -481,13 +508,17 @@ def create_netcdf(conf, data, logger):
 
     # open netCDF file
     # -------------------------------------------------------------------------
-    logger.info("create netCDF file " + conf.get('conf', 'output'))
+    logger.info("create netCDF file " + conf.get("conf", "output"))
     try:
-        nc_id = nc.Dataset(conf.get('conf', 'output'),
-                           'w',
-                           format=conf.get('conf', 'netcdf_format'))
+        nc_id = nc.Dataset(
+            conf.get("conf", "output"), "w", format=conf.get("conf", "netcdf_format")
+        )
     except IOError as err:
-        logger.critical("107 Error trying to create the netCDF file '{}".format(format(conf.get('conf', 'output'))))
+        logger.critical(
+            "107 Error trying to create the netCDF file '{}".format(
+                format(conf.get("conf", "output"))
+            )
+        )
         logger.critical(err)
         logger.critical("quitting raw2l1")
         sys.exit(1)
