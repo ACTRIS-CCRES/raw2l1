@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 # Compatibility with python 3
-from __future__ import print_function, division, absolute_import
+
 
 import os
 
@@ -28,9 +28,8 @@ def to_bool(s):
     adaptation of method getboolean of python ConfigParser module
     """
 
-    if s in ('1', 'y', 'yes', 't', 'true', 'on'):
+    if s in ("1", "y", "yes", "t", "true", "on"):
         return True
-    elif s in ('0', 'n', 'no', 'f', 'false', 'off'):
+    elif s in ("0", "n", "no", "f", "false", "off"):
         return False
-    raise ValueError(
-        "Could not convert %s a boolean (use true/false)" % s)
+    raise ValueError("Could not convert %s a boolean (use true/false)" % s)
