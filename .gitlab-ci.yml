@@ -1,7 +1,8 @@
-image: python:3.6
-
 variables:
   PIP_CACHE_DIR: "$CI_PROJECT_DIR/pip-cache"
+
+stages:
+  - test
 
 cache:
   paths:
@@ -13,7 +14,17 @@ before_script:
   - pip install -r requirements.txt
   - cd raw2l1
 
-test:
+test_py36:
+  stage: test
+  image: python:3.6
   script:
     - py.test --cov
   coverage: '/\d+\%\s*$/'
+
+test_py37:
+  stage: test
+  image: python:3.7
+  script:
+    - py.test --cov
+  coverage: '/\d+\%\s*$/'
+  allow_failure: true
