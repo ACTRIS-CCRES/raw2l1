@@ -1,4 +1,12 @@
-* V2.1.19
+* v3.0.0
+    + make raw2l1 compatible with python 3.6 and 3.7
+    + drop compatibility with python2
+    + uniformize source code format using black
+    + correct bugs with readers
+    + move repository on IN2P3s gitlab
+    + add continuous integration
+
+* v2.1.19
     + SIGMASPACE miniMPL reader
         - correct bug with `laser_energy`. 273.15 was added to the variable by mistake
 

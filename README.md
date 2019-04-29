@@ -1,3 +1,5 @@
+[![pipeline status](https://gitlab.in2p3.fr/ipsl/sirta/raw2l1/badges/master/pipeline.svg)](https://gitlab.in2p3.fr/ipsl/sirta/raw2l1/commits/master) [![coverage report](https://gitlab.in2p3.fr/ipsl/sirta/raw2l1/badges/master/coverage.svg)](https://gitlab.in2p3.fr/ipsl/sirta/raw2l1/commits/master)
+
 # raw2l1
 
 Code to convert raw LIDAR data into normalized netCDF files
@@ -16,7 +18,7 @@ see requirements.txt file
 
 the repository contains some example files allowing you to test the code
 
-- go to raw2l1 directory 
+- go to raw2l1 directory
 - you can get the list of input arguments using the command:
 
 ```
@@ -24,7 +26,7 @@ python raw2l1.py -h
 ```
 
 
-- to convert a LUFFT CHM15k file 
+- to convert a LUFFT CHM15k file
 
 ```
 python '20150427' raw2l1 conf/conf_lufft_chm15k-nimbus_toprof_netcdf4.ini test/input/Jenoptik_chm15k/20150427_SIRTA_CHM150101_000.nc test/output/test_lufft_sirta.nc
