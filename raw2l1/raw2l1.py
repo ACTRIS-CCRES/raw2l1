@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 # Compatibility with python 3
-from __future__ import print_function, division, absolute_import
+
 
 import sys
 from tools import lidar_reader as lr
@@ -12,10 +12,10 @@ from tools import conf
 from tools.check_conf import check_conf
 from tools import create_netcdf as cnc
 
-__author__ = 'Marc-Antoine Drouin'
-__version__ = '2.1.19'
+__author__ = "Marc-Antoine Drouin"
+__version__ = "2.1.19"
 
-NAME = 'raw2l1'
+NAME = "raw2l1"
 
 
 def welcome_msg():
@@ -52,23 +52,23 @@ def raw2l1(argv):
 
     # Start logger
     # -------------------------------------------------------------------------
-    logger = log.init(input_args, 'raw2l1')
-    logger.info('logs are saved in {!s}'.format(input_args['log']))
+    logger = log.init(input_args, "raw2l1")
+    logger.info("logs are saved in {!s}".format(input_args["log"]))
 
     # reading configuration file
     # -------------------------------------------------------------------------
-    logger.debug('reading configuration file ' + input_args['conf'].name)
+    logger.debug("reading configuration file " + input_args["conf"].name)
     setting = conf.init(input_args, __version__, logger)
-    logger.info('reading configuration file: OK')
+    logger.info("reading configuration file: OK")
 
     # check configuration file
-    logger.debug('checking configuration file')
+    logger.debug("checking configuration file")
     setting = check_conf(setting, logger)
 
     # Add directory containing reader to path
     # -------------------------------------------------------------------------
-    logger.debug("adding " + setting.get('conf', 'reader_dir') + " to path")
-    sys.path.append(setting.get('conf', 'reader_dir'))
+    logger.debug("adding " + setting.get("conf", "reader_dir") + " to path")
+    sys.path.append(setting.get("conf", "reader_dir"))
 
     # Reading lidar data using user defined reader
     # -------------------------------------------------------------------------
@@ -79,8 +79,8 @@ def raw2l1(argv):
 
     # checking read data if needed
     # -------------------------------------------------------------------------
-    if input_args['input_check_time']:
-        time_ok = lidar_data.timeliness_ok(input_args['input_max_age'], logger)
+    if input_args["input_check_time"]:
+        time_ok = lidar_data.timeliness_ok(input_args["input_max_age"], logger)
 
         if not time_ok:
             logger.critical("104 Data timeliness Error. Quitting raw2l1")
@@ -96,5 +96,6 @@ def raw2l1(argv):
     logger.info("end of processing")
     sys.exit(0)
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     raw2l1(sys.argv[1:])

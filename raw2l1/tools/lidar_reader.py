@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from __future__ import print_function, division, absolute_import
 
 import sys
 from importlib import import_module
@@ -11,9 +10,9 @@ import numpy as np
 
 from . import common
 
-READER_CONF = 'reader_conf'
-MISSING_FLOAT_KEY = 'missing_float'
-MISSING_INT_KEY = 'missing_int'
+READER_CONF = "reader_conf"
+MISSING_FLOAT_KEY = "missing_float"
+MISSING_INT_KEY = "missing_int"
 
 
 class RawDataReader(object):
@@ -27,15 +26,16 @@ class RawDataReader(object):
 
     def __load_reader__(self):
 
-        reader_dir = self.conf.get('conf', 'reader_dir')
-        reader_name = self.conf.get('conf', 'reader')
+        reader_dir = self.conf.get("conf", "reader_dir")
+        reader_name = self.conf.get("conf", "reader")
 
         self.logger.info("loading lidar data reader module: " + reader_name)
         try:
             reader_mod = import_module(
-                reader_dir + "." + self.conf.get('conf', 'reader'))
+                reader_dir + "." + self.conf.get("conf", "reader")
+            )
         except ImportError as err:
-            msg = '107 unable to load lidar data reader '
+            msg = "107 unable to load lidar data reader "
             self.logger.critical(msg + str(err))
             self.logger.critical("quitting raw2l1")
             sys.exit(1)
@@ -44,9 +44,9 @@ class RawDataReader(object):
 
         self.logger.info("loading read_data function from " + reader_name)
         try:
-            reader_fcn = getattr(reader_mod, 'read_data')
+            reader_fcn = getattr(reader_mod, "read_data")
         except AttributeError as err:
-            msg = '107 unable find read_data function '
+            msg = "107 unable find read_data function "
             self.logger.critical(msg + str(err))
             self.logger.critical("quitting raw2l1")
             sys.exit(1)
@@ -62,29 +62,41 @@ class RawDataReader(object):
 
         reader_conf = {}
         if self.conf.has_section(READER_CONF):
-            self.logger.debug('reader_conf section found')
+            self.logger.debug("reader_conf section found")
             for key, value in self.conf.items(READER_CONF):
                 reader_conf[key] = value
 
         # add date to process
-        reader_conf['date'] = self.conf.get('conf', 'date')
+        reader_conf["date"] = self.conf.get("conf", "date")
         # add list of ancillary files
-        reader_conf['ancillary'] = self.conf.get('conf', 'ancillary')
+        reader_conf["ancillary"] = self.conf.get("conf", "ancillary")
 
         # define missing values if they are not define in reader_conf section
         if MISSING_INT_KEY not in reader_conf:
-            logger.info("""no {} option define in {} section.
-                        Using default value : {}""".format(MISSING_INT_KEY, READER_CONF, common.MISSING_INTEGER))
+            logger.info(
+                """no {} option define in {} section.
+                        Using default value : {}""".format(
+                    MISSING_INT_KEY, READER_CONF, common.MISSING_INTEGER
+                )
+            )
             reader_conf[MISSING_INT_KEY] = common.MISSING_INTEGER
         else:
-            reader_conf[MISSING_INT_KEY] = np.int(self.conf.get(READER_CONF, MISSING_INT_KEY))
+            reader_conf[MISSING_INT_KEY] = np.int(
+                self.conf.get(READER_CONF, MISSING_INT_KEY)
+            )
 
         if MISSING_FLOAT_KEY not in reader_conf:
-            logger.info("""no {} option define in {} section.
-                        Using default value : {}""".format(MISSING_INT_KEY, READER_CONF, common.MISSING_INTEGER))
+            logger.info(
+                """no {} option define in {} section.
+                        Using default value : {}""".format(
+                    MISSING_INT_KEY, READER_CONF, common.MISSING_INTEGER
+                )
+            )
             reader_conf[MISSING_FLOAT_KEY] = common.MISSING_FLOAT
         else:
-            reader_conf[MISSING_FLOAT_KEY] = np.float(self.conf.get(READER_CONF, MISSING_FLOAT_KEY))
+            reader_conf[MISSING_FLOAT_KEY] = np.float(
+                self.conf.get(READER_CONF, MISSING_FLOAT_KEY)
+            )
 
         return reader_conf
 
@@ -96,17 +108,17 @@ class RawDataReader(object):
         return True if data timeliness is ok
         """
 
-        ERR_MSG = '104 Data timeliness Error'
+        ERR_MSG = "104 Data timeliness Error"
 
         now = dt.datetime.now()
 
         # check if data in the future
         logger.debug("Checking if any data in the future")
-        if np.any(self.data['time'] > now):
+        if np.any(self.data["time"] > now):
             logger.warning(ERR_MSG)
             return False
 
-        tmp = now - self.data['time']
+        tmp = now - self.data["time"]
         if np.any(tmp > max_age):
             logger.warning(ERR_MSG)
             return False
@@ -116,6 +128,5 @@ class RawDataReader(object):
     def read_data(self):
 
         self.data = self.reader_mod(
-            self.conf.get('conf', 'input'),
-            self.reader_conf,
-            self.logger)
+            self.conf.get("conf", "input"), self.reader_conf, self.logger
+        )

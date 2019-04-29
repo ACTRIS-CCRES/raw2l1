@@ -1,7 +1,5 @@
 # -*- coding: utf8 -*-
 
-from __future__ import print_function, division, absolute_import
-
 
 def correct_time_units(s):
     """correct the wrong format of time units of RPG into a compatible with
@@ -12,10 +10,17 @@ def correct_time_units(s):
 
     import re
 
-    date_fmt = '{} {} {:04d}-{:02d}-{:02d} {:02d}:{:02d}:{:02d}'
+    date_fmt = "{} {} {:04d}-{:02d}-{:02d} {:02d}:{:02d}:{:02d}"
 
-    unit, since, month, day, year, hours, minutes, seconds = re.split(r'[,.:\s]\s*', s)
+    unit, since, month, day, year, hours, minutes, seconds = re.split(r"[,.:\s]\s*", s)
 
-    return date_fmt.format(unit, since,
-                           int(year), int(month), int(day),
-                           int(hours), int(minutes), int(seconds))
+    return date_fmt.format(
+        unit,
+        since,
+        int(year),
+        int(month),
+        int(day),
+        int(hours),
+        int(minutes),
+        int(seconds),
+    )

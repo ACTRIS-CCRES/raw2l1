@@ -1,45 +1,30 @@
-image: continuumio/anaconda3:latest
-
 variables:
-  GIT_SSL_NO_VERIFY: "1"
+  PIP_CACHE_DIR: "$CI_PROJECT_DIR/pip-cache"
 
 stages:
   - test
 
-# Pick zero or more services to be used on all builds.
-# Only needed when using a docker container to run your tests in.
-# Check out: http://docs.gitlab.com/ce/ci/docker/using_docker_images.html#what-is-a-service
-#services:
-#  - mysql:latest
-#  - postgres:latest
+cache:
+  paths:
+    - "$CI_PROJECT_DIR/pip-cache"
+  key: "$CI_PROJECT_ID"
 
-# This folder is cached between builds
-# http://docs.gitlab.com/ce/ci/yaml/README.html#cache
-#cache:
-#  paths:
-#  - ~/.conda/
-
-# This is a basic example for a gem or script which doesn't use
-# services such as redis or postgres
 before_script:
   - python -V
-  - conda create -n raw2l1 python=2
-  - source activate raw2l1
-  - conda install --file requirements.txt
+  - pip install -r requirements.txt
   - cd raw2l1
 
-run_test:
+test_py36:
   stage: test
+  image: python:3.6
   script:
-    - nosetests
+    - py.test --cov
+  coverage: '/\d+\%\s*$/'
 
-coverage:
-    stage: test
-    script:
-        - nosetests -q --cover-html-dir=build --cover-html
-        - coverage report -m
-    coverage: '/TOTAL.+ ([0-9]{1,3}%)/'
-    artifacts:
-        paths:
-            - build
-        expire_in: 1 day
+test_py37:
+  stage: test
+  image: python:3.7
+  script:
+    - py.test --cov
+  coverage: '/\d+\%\s*$/'
+  allow_failure: true

@@ -16,8 +16,8 @@ def read_data(list_files, logger):
     logger.info(list_files)
 
     data = {}
-    data['a'] = 0
-    data['b'] = 1
+    data["a"] = 0
+    data["b"] = 1
 
     data = abc(data)
 
