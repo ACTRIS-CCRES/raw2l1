@@ -55,7 +55,7 @@ def check_input(conf, logger):
         logger.critical("101 reader_conf section MUST have a timestamp_fmt option")
         sys.exit(2)
 
-    logger.info("using timestamp format: %s" % timestamp_fmt)
+    logger.info("using timestamp format: %s", timestamp_fmt)
 
     return timestamp_fmt
 
@@ -68,10 +68,10 @@ def get_file_lines(filename, conf, logger):
 
     try:
         with open(filename, "r", encoding=conf["file_encoding"]) as f_id:
-            logger.debug("reading " + filename)
+            logger.debug("reading %s", filename)
             lines = chomp(f_id.readlines())
     except IOError:
-        logger.error("109 Impossible to open file " + filename)
+        logger.error("109 Impossible to open file %s", filename)
         return None
 
     return lines
@@ -96,7 +96,7 @@ def count_msg_to_read(list_files, date_fmt, conf, logger):
             except ValueError:
                 continue
 
-    logger.info("%d data messages to read" % n_data_msg)
+    logger.info("%d data messages to read", n_data_msg)
 
     return n_data_msg
 
@@ -164,7 +164,7 @@ def read_header(line, data, logger):
     if conf_str is not None:
         msg_found = True
         conf_msg = conf_str.group()
-        logger.debug("header message %s" % conf_msg)
+        logger.debug("header message %s", conf_msg)
         data["instrument_id"] = conf_msg[0:3]
         data["os"] = conf_msg[3:6]
         data["msg_type"] = int(conf_msg[6:9])
@@ -299,20 +299,20 @@ def is_msg_type_ok(msg_type, filename, logger):
 
     if 101 <= msg_type <= 112:
         logger.error(
-            "102 unable to read these data messages in '{}'. ".format(filename)
-            + "You should able to read it with vaisala CL51 reader"
+            "102 unable to read these data messages in '%s' You should able to read it with vaisala CL51 reader",
+            filename,
         )
         return False
     elif 113 <= msg_type <= 114:
         logger.error(
-            "102 unable to read these data messages in '{}'. ".format(filename)
-            + "You should able to read it with vaisala CL51 reader"
+            "102 unable to read these data messages in '%s'. You should able to read it with vaisala CL51 reader",
+            filename,
         )
         return False
     elif 1 <= msg_type <= 6:
         return True
     else:
-        logger.critical("103 data message type unknown in '{}'".format(filename))
+        logger.critical("103 data message type unknown in '%s'", filename)
 
 
 def get_msg_type(list_files, date_fmt, conf, logger):
@@ -338,8 +338,6 @@ def get_msg_type(list_files, date_fmt, conf, logger):
             if msg_found and is_msg_type_ok(msg_type, f, logger):
                 msg_type_found = True
                 break
-
-        logger.error("106 impossible to determine data messages type in '{}'".format(f))
 
     if msg_type_found:
         return msg_type
@@ -452,9 +450,9 @@ def read_data(list_files, conf, logger):
     time_dim = count_msg_to_read(list_files, t_stamp_fmt, conf, logger)
 
     msg_type = get_msg_type(list_files, t_stamp_fmt, conf, logger)
-    logger.debug("message type : %d" % (msg_type))
+    logger.debug("message type : %d", msg_type)
     msg_len = MSG_TYPE_LINES[msg_type]
-    logger.debug("message len : %d" % (msg_len))
+    logger.debug("message len : %d", msg_len)
 
     # initialize dict containing data
     logger.debug("initializing data arrays")
@@ -464,14 +462,14 @@ def read_data(list_files, conf, logger):
     time_ind = 0
     for file_nb, filename in enumerate(list_files):
 
-        logger.debug("reading file %02d" % (file_nb + 1))
+        logger.debug("reading file %02d", file_nb + 1)
         lines = get_file_lines(filename, conf, logger)
-        logger.debug("number of lines : %d" % len(lines))
+        logger.debug("number of lines : %d", len(lines))
 
         i_line = 0
         while i_line < len(lines):
 
-            logger.debug("i_line : %d" % (i_line))
+            logger.debug("i_line : %d", i_line)
 
             try:
                 timestamp = dt.datetime.strptime(lines[i_line], t_stamp_fmt)
@@ -479,8 +477,8 @@ def read_data(list_files, conf, logger):
                 i_line += 1
                 continue
 
-            logger.debug("reading timestep: %s" % repr(timestamp))
-            logger.debug("reading message: %d" % time_ind)
+            logger.debug("reading timestep: %s", repr(timestamp))
+            logger.debug("reading message: %d", time_ind)
 
             # reading one data message
             data["time"][time_ind] = timestamp
