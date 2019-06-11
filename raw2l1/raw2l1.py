@@ -13,7 +13,7 @@ from tools.check_conf import check_conf
 from tools import create_netcdf as cnc
 
 __author__ = "Marc-Antoine Drouin"
-__version__ = "3.0.0"
+__version__ = "3.0.1"
 
 NAME = "raw2l1"
 
