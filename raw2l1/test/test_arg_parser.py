@@ -48,9 +48,11 @@ class TestArgParser(unittest.TestCase):
             ],
             "output": os.path.abspath("test/output/dummy.nc"),
             "ancillary": [
-                "test/input/rpg_hatpro/hatpro_0a_z1Imwrad-TPB_v01_20150901_000412_712.nc",
-                "test/input/rpg_hatpro/hatpro_0a_z1Imwrad-TPB_v01_20150901_120108_716.nc",
-                "test/input/rpg_hatpro/hatpro_0a_z1Imwrad-TPB_v01_20150930_000020_1436.nc",
+                [
+                    "test/input/rpg_hatpro/hatpro_0a_z1Imwrad-TPB_v01_20150901_000412_712.nc",
+                    "test/input/rpg_hatpro/hatpro_0a_z1Imwrad-TPB_v01_20150901_120108_716.nc",
+                    "test/input/rpg_hatpro/hatpro_0a_z1Imwrad-TPB_v01_20150930_000020_1436.nc",
+                ]
             ],
             "log_level": "info",
             "log": "logs/raw2l1.log",

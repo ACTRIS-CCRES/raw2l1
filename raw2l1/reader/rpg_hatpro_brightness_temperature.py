@@ -1,5 +1,5 @@
 # -*- coding: utf8 -*-
-
+import sys
 
 import numpy as np
 import datetime as dt
@@ -17,6 +17,8 @@ TIME_VAR = "time"
 
 FLT_MISSING_VALUE = -999.0
 INT_MISSING_VALUE = -9
+
+C2K = 273.15
 
 
 def get_data_size(list_files, logger):
@@ -103,6 +105,26 @@ def init_meteo_data(vars_dim, logger):
     return meteo_data
 
 
+def init_irt_data(vars_dim, logger):
+    """initialize dict of irt data"""
+
+    irt_data = {}
+
+    irt_data["time"] = np.empty((vars_dim["time"],), dtype=np.dtype(dt.datetime))
+    irt_data["wl_irp"] = (
+        np.ones((vars_dim["n_wl_irp"]), dtype=np.float32) * FLT_MISSING_VALUE
+    )
+    irt_data["tb_irp"] = (
+        np.ones((vars_dim["time"], vars_dim["n_wl_irp"]), dtype=np.float32)
+        * FLT_MISSING_VALUE
+    )
+    irt_data["ele_irp"] = (
+        np.ones((vars_dim["time"],), dtype=np.float32) * FLT_MISSING_VALUE
+    )
+
+    return irt_data
+
+
 def read_time(nc_id, logger):
     """read time variable"""
 
@@ -121,20 +143,40 @@ def sync_meteo(data, meteo_data, logger):
         data["time"][:], meteo_data["time"][:], assume_unique=True
     )
 
-    logger.debug("common timesteps found : {:d}".format(common_time.size))
+    logger.debug("common timesteps found for meteo : {:d}".format(common_time.size))
 
     time_filter = np.array(
         [True if t in common_time else False for t in data["time"][:]]
     )
-    print("time elts :", np.count_nonzero(time_filter))
     meteo_time_filter = np.array(
         [True if t in common_time else False for t in meteo_data["time"][:]]
     )
-    print("meteo elts :", np.count_nonzero(meteo_time_filter))
 
     data["ta"][time_filter] = meteo_data["ta"][meteo_time_filter]
     data["pa"][time_filter] = meteo_data["pa"][meteo_time_filter]
     data["hur"][time_filter] = meteo_data["hur"][meteo_time_filter]
+
+    return data
+
+
+def sync_irt(data, irt_data, logger):
+    """find in irt data timestep corresponding to brightness data time"""
+
+    common_time = np.intersect1d(
+        data["time"][:], irt_data["time"][:], assume_unique=True
+    )
+
+    logger.debug("common timesteps found for irt : {:d}".format(common_time.size))
+
+    time_filter = np.array(
+        [True if t in common_time else False for t in data["time"][:]]
+    )
+    irt_time_filter = np.array(
+        [True if t in common_time else False for t in irt_data["time"][:]]
+    )
+
+    data["ele_irp"][time_filter] = irt_data["ele_irp"][irt_time_filter]
+    data["tb_irp"][time_filter, :] = irt_data["tb_irp"][irt_time_filter, :]
 
     return data
 
@@ -149,12 +191,21 @@ def read_data(list_files, conf, logger):
 
     meteo_avail = False
     # check if meteo data available
-    if "ancillary" in conf and len(conf["ancillary"]) != 0:
+    if "ancillary" in conf and conf["ancillary"][0]:
         meteo_avail = True
-        meteo_files = conf["ancillary"]
+        meteo_files = conf["ancillary"][0]
         logger.info("meteo data available")
         for f in meteo_files:
             logger.debug("files to read : {}".format(f))
+
+    # IRT files
+    irt_avail = False
+    try:
+        irt_files = conf["ancillary"][1]
+        irt_avail = True
+        logger.info("irt data available")
+    except IndexError:
+        pass
 
     # get variables size
     vars_dim = get_data_size(list_files, logger)
@@ -163,6 +214,9 @@ def read_data(list_files, conf, logger):
     vars_dim["n_wl_irp"] = int(conf["n_wl_irp"])
     if meteo_avail:
         meteo_vars_dim = get_data_size(meteo_files, logger)
+    if irt_avail:
+        irt_vars_dim = get_data_size(irt_files, logger)
+        irt_vars_dim["n_wl_irp"] = vars_dim["n_wl_irp"]
 
     # Initialize data
     data = init_data(vars_dim, logger)
@@ -221,6 +275,35 @@ def read_data(list_files, conf, logger):
 
         # synchronize meteo data from to brightness data
         data = sync_meteo(data, meteo_data, logger)
+
+    # irt data
+    if irt_avail:
+
+        irt_data = init_irt_data(irt_vars_dim, logger)
+
+        time_ind = 0
+        for i, f in enumerate(irt_files):
+
+            nc_id = nc.Dataset(f, "r")
+
+            time_size, time = read_time(nc_id, logger)
+
+            # determining index of data
+            ind_s = time_ind
+            ind_e = time_ind + time_size
+
+            irt_data["time"][ind_s:ind_e] = time
+            if i == 0:
+                data["wl_irp"] = nc_id.variables["frequencies"][:]
+            irt_data["tb_irp"][ind_s:ind_e, :] = nc_id.variables["IRR_data"][:] + C2K
+            irt_data["ele_irp"][ind_s:ind_e] = nc_id.variables["elevation_angle"][:]
+
+            nc_id.close()
+
+            time_ind += time_size
+
+        # synchronize meteo data from to brightness data
+        data = sync_irt(data, irt_data, logger)
 
     # produce time_bounds variable
     time_units = conf["time_units"]

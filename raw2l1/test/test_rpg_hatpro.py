@@ -149,7 +149,8 @@ class TestRunHatPro(unittest.TestCase):
 
         date = "20150901"
         test_ifile = self.IN_DIR + "hatpro_0a_z1Imwrad-BRT_v01_20150901*.nc"
-        test_afile = self.IN_DIR + "hatpro_0a_z1Imwrad-MET_v01_20150901_*.nc"
+        test_afile_met = self.IN_DIR + "hatpro_0a_z1Imwrad-MET_v01_20150901_*.nc"
+        test_afile_irt = self.IN_DIR + "hatpro_0a_z1Imwrad-IRT_v01_20150901_*.nc"
         test_ofile = TEST_OUT_DIR + "sups_sir_mwr00_l1_tb_v01_20150901000307.nc"
         test_cfile = CONF_DIR + "conf_rpg_hatpro_l1-tb_toprof_netcdf4.ini"
 
@@ -161,7 +162,9 @@ class TestRunHatPro(unittest.TestCase):
                 test_ifile,
                 test_ofile,
                 "-anc",
-                test_afile,
+                test_afile_met,
+                "-anc",
+                test_afile_irt,
                 "-log_level",
                 "debug",
                 "-v",
@@ -195,7 +198,6 @@ class TestRunHatPro(unittest.TestCase):
             ]
         )
 
-        print(resp)
         self.assertEqual(resp, 0)
 
 

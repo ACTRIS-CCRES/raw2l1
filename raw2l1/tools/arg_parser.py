@@ -10,7 +10,7 @@ import sys
 import os
 import glob
 from itertools import chain
-from tools.utils import check_dir
+from .utils import check_dir
 
 PROG_DESC = "Raw LIDAR data to netCDF converter"
 DATE_FMT = "%Y%m%d"
@@ -29,6 +29,27 @@ def check_date_format(input_date):
         raise argparse.ArgumentTypeError(msg)
 
     return dt_date
+
+
+def check_anc_lists_files(input_files):
+    """
+    Check input files lists and return a list of each input.
+
+    Parameters
+    ----------
+    input_files : list of str
+        The list of input files given by SIRTA workflow.
+
+    Returns
+    -------
+    list of list of str
+        The list of list of input files
+
+    """
+    # check if files exist
+    input_list = check_input_files(input_files)
+
+    return input_list
 
 
 def check_input_files(input_files):
@@ -112,7 +133,8 @@ def init_args_parser():
     parser.add_argument(
         "-anc",
         "--ancillary",
-        type=check_input_files,
+        type=check_anc_lists_files,
+        action="append",
         nargs="*",
         dest="ancillary",
         help="Name or pattern of the ancillary file(s) needed to do the conversion",
@@ -196,13 +218,12 @@ def get_input_args(argv):
         sys.exit(1)
 
     # check ancillary files
-    if parse_args.ancillary is None:
-        list_anc = []
-    else:
-        list_anc = check_input_file_size(
-            [f for f in chain.from_iterable(parse_args.ancillary)],
-            parse_args.file_min_size,
-        )
+    print("parse : ", parse_args.ancillary)
+    list_anc = []
+    if parse_args.ancillary:
+
+        for anc_list in parse_args.ancillary:
+            list_anc.append([f for f in chain.from_iterable(anc_list)])
 
     input_args = {}
     input_args["date"] = parse_args.date
