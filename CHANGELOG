@@ -1,3 +1,9 @@
+* v3.0.2
+    + hatpro reader
+        - improve syncing of brightness and meteo data
+    + WLS70 10 min reader
+        - correct bug when localization is not well formatted
+
 * v3.0.1
     + correct a bug converting `units = 1` into an integer attribute. Units are now always interpreted as string.
 

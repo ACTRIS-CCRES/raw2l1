@@ -136,8 +136,12 @@ def get_localization(value_str, conf, logger):
 
     # we have to parse the line
     tmp = re.split(LOCALIZATION_DELIMS, value_str)
-    lat = float(tmp[1]) / 100.0
-    lon = float(tmp[3]) / 100.0
+    try:
+        lat = float(tmp[1]) / 100.0
+        lon = float(tmp[3]) / 100.0
+    except ValueError:
+        lat = np.nan
+        lon = np.nan
 
     return lat, lon
 

@@ -151,9 +151,9 @@ def read_data(list_files, conf, logger):
 
     meteo_avail = False
     # check if meteo data available
-    if "ancillary" in conf and len(conf["ancillary"]) != 0:
+    if "ancillary" in conf and len(conf["ancillary"][0]) != 0:
         meteo_avail = True
-        meteo_files = conf["ancillary"]
+        meteo_files = conf["ancillary"][0]
         logger.info("meteo data available")
         for f in meteo_files:
             logger.debug("files to read : {}".format(f))

@@ -572,7 +572,7 @@ def read_data(list_files, conf, logger):
     # ------------------------------------------------------------------------
     overlap = None
     if "ancillary" in conf and len(conf["ancillary"]) != 0:
-        overlap = read_overlap(conf["ancillary"][0], conf["missing_float"], logger)
+        overlap = read_overlap(conf["ancillary"][0][0], conf["missing_float"], logger)
     elif "overlap_file" in conf:
         overlap = read_overlap(conf["overlap_file"], conf["missing_float"], logger)
 
