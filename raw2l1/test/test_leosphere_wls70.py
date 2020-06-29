@@ -93,6 +93,30 @@ class TestRunWLS70T10Min(unittest.TestCase):
 
         self.assertEqual(resp, 0)
 
+    def test_leosphere_wls70_bad_loc(self):
+        """test file with error in localization formatting"""
+
+        date = "20200623"
+        test_ifile = os.path.join(
+            self.IN_DIR, "wlscerea_0a_windLz1M10mn-HR_v01_20200623_121000_720.txt"
+        )
+        test_ofile = os.path.join(TEST_OUT_DIR, "Wls70-10min-bad-loc.nc")
+        test_cfile = os.path.join(CONF_DIR, "conf_leosphere_wls70_10min.ini")
+
+        resp = subprocess.call(
+            [
+                os.path.join(MAIN_DIR, PRGM),
+                date,
+                test_cfile,
+                test_ifile,
+                test_ofile,
+                "-v",
+                "debug",
+            ]
+        )
+
+        self.assertEqual(resp, 0)
+
 
 class TestRunWLS70T10S(unittest.TestCase):
     """test full run for leosphere WLS70 10s depending on input file version"""
