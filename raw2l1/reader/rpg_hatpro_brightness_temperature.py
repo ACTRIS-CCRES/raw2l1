@@ -4,7 +4,6 @@ import sys
 import numpy as np
 import datetime as dt
 import netCDF4 as nc
-
 from .libhatpro import correct_time_units
 
 # brand and model of the LIDAR
@@ -139,18 +138,11 @@ def read_time(nc_id, logger):
 def sync_meteo(data, meteo_data, logger):
     """find in meteo data timestep corresponding to brightness data time"""
 
-    common_time = np.intersect1d(
-        data["time"][:], meteo_data["time"][:], assume_unique=True
+    common_time, time_filter, meteo_time_filter = np.intersect1d(
+        data["time"][:], meteo_data["time"][:], return_indices=True
     )
 
     logger.debug("common timesteps found for meteo : {:d}".format(common_time.size))
-
-    time_filter = np.array(
-        [True if t in common_time else False for t in data["time"][:]]
-    )
-    meteo_time_filter = np.array(
-        [True if t in common_time else False for t in meteo_data["time"][:]]
-    )
 
     data["ta"][time_filter] = meteo_data["ta"][meteo_time_filter]
     data["pa"][time_filter] = meteo_data["pa"][meteo_time_filter]
@@ -162,17 +154,8 @@ def sync_meteo(data, meteo_data, logger):
 def sync_irt(data, irt_data, logger):
     """find in irt data timestep corresponding to brightness data time"""
 
-    common_time = np.intersect1d(
-        data["time"][:], irt_data["time"][:], assume_unique=True
-    )
-
-    logger.debug("common timesteps found for irt : {:d}".format(common_time.size))
-
-    time_filter = np.array(
-        [True if t in common_time else False for t in data["time"][:]]
-    )
-    irt_time_filter = np.array(
-        [True if t in common_time else False for t in irt_data["time"][:]]
+    common_time, time_filter, irt_time_filter = np.intersect1d(
+        data["time"][:], irt_data["time"][:], return_indices=True
     )
 
     data["ele_irp"][time_filter] = irt_data["ele_irp"][irt_time_filter]
@@ -190,7 +173,8 @@ def read_data(list_files, conf, logger):
         logger.debug("files to read : {}".format(f))
 
     meteo_avail = False
-    # check if meteo data available
+
+    # modif PM fourni par Marc-Antoine le 27/11/2019
     if "ancillary" in conf and conf["ancillary"][0]:
         meteo_avail = True
         meteo_files = conf["ancillary"][0]
@@ -301,7 +285,6 @@ def read_data(list_files, conf, logger):
             nc_id.close()
 
             time_ind += time_size
-
         # synchronize meteo data from to brightness data
         data = sync_irt(data, irt_data, logger)
 
