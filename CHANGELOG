@@ -1,3 +1,7 @@
+* v3.0.3
+    + update requirements.txt with more precise packages version
+    + VAISALA CL
+        - improve handling of incomplete messages. The reader won't crash now and skip the message.
 * v3.0.2
     + hatpro reader
         - improve syncing of brightness and meteo data
