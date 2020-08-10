@@ -640,7 +640,6 @@ def read_rcs_var(data, ind, msg, logger):
     """
     read the rcs value in a data msg
     """
-
     # get line a of the message containing RCS based on CL31 conf
     line_to_read = get_rcs_line_nb_in_msg(data["msg_type"])
     # size of the profile to read
@@ -660,6 +659,7 @@ def read_rcs_var(data, ind, msg, logger):
         )
     except ValueError:
         logger.error("Impossible to decode message. Profile is ignore")
+        success = False
         return data
 
     # Each sample is coded with a 20-bit HEX ASCII character set
@@ -693,7 +693,7 @@ def read_vars(lines, data, conf, time_ind, f_name, logger):
         # Try finding line with time stamp
         try:
             data["time"][time_ind] = dt.datetime.strptime(lines[i_line], FMT_DATE)
-        except:
+        except ValueError:
             i_line += 1
             continue
 
@@ -730,7 +730,8 @@ def read_vars(lines, data, conf, time_ind, f_name, logger):
         check_scale_value(data, conf, time_ind, f_name, logger)
 
         # Add number of line of a message to lines counter
-        i_line += msg_n_lines
+        # i_line += msg_n_lines
+        i_line += 1
         time_ind += 1
 
     return time_ind, data
