@@ -1,4 +1,9 @@
-* V3.0.4
+* v3.0.5
+    + VAISALA CL
+        - remove unneeded debugging print
+    + LEOSPHERE WLS70 10s
+        - wiper count variable is not read the right way
+* v3.0.4
     + VAISALA CL
         - correct bug when message line start with `/` (ligne was ignored)
         - try to improve handling of incomplete message

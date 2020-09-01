@@ -98,6 +98,16 @@ def convert_time_str(str_):
     return date
 
 
+def convert_wiper(str_):
+    """Convert wiper string to integer."""
+    if str_ == "Off":
+        return 0.0
+    elif str_ == "On":
+        return 1.0
+    else:
+        return np.nan
+
+
 def norm_value_name(name):
     """normalize name of values"""
 
@@ -248,7 +258,7 @@ def read_columns(file_, data, conf, logger):
         filling_values=conf["missing_float"],
         names=col_names,
         dtype=col_dtypes,
-        converters={0: convert_time_str},
+        converters={0: convert_time_str, 3: convert_wiper},
         invalid_raise=False,
     )
 
