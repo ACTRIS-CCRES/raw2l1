@@ -1,3 +1,7 @@
+* V3.0.4
+    + VAISALA CL
+        - correct bug when message line start with `/` (ligne was ignored)
+        - try to improve handling of incomplete message
 * v3.0.3
     + update requirements.txt with more precise packages version
     + VAISALA CL
