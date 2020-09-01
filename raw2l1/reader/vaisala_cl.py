@@ -569,11 +569,12 @@ def read_cbh_msg(data, ind, msg, logger):
     # get the number of cloud layer
     if elts[0][0] == "/":
         logger.warning("105 cloud data missing for message %d" % ind)
-        return data
+        nlayers = 0
     else:
         nlayers = int(elts[0][0])
 
     data["alarm"][ind] = elts[0][1]
+    print(elts[0][1])
 
     # flags
     data["info_flags"][ind] = elts[4]
