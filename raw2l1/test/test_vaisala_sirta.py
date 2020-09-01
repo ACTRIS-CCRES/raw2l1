@@ -84,6 +84,28 @@ class TestVaisalaBugSIRTA(unittest.TestCase):
 
         self.assertEqual(resp, 0, "CL SIRTA corrupted message")
 
+    def test_error_bck_mf(self):
+
+        date = "20200830"
+        test_ifile = self.IN_DIR + "07157_A202008300054_CL31-Roissy.dat"
+        test_ofile = TEST_OUT_DIR + "test_cl-roissy_20200830.nc"
+
+        resp = subprocess.check_call(
+            [
+                MAIN_DIR + PRGM,
+                date,
+                self.conf_file,
+                test_ifile,
+                test_ofile,
+                "-log_level",
+                "debug",
+                "-v",
+                "debug",
+            ]
+        )
+
+        self.assertEqual(resp, 0, "CL roissy corrupted bck")
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -546,8 +546,14 @@ def read_time_dep_vars(data, ind, msg, msg_type, logger):
     data["laser_temp"][ind] = np.float(params[4]) + DEG_TO_K
     data["window_transmission"][ind] = np.float(params[5])
     data["tilt_angle"][ind] = np.float(params[6])
-    data["bckgrd_rcs_0"][ind] = np.float(params[7])
-    data["integrated_rcs_0"][ind] = np.float(params[9]) * SUM_BCKSCATTER_FACTOR
+    try:
+        data["bckgrd_rcs_0"][ind] = np.float(params[7])
+    except IndexError:
+        data["bckgrd_rcs_0"][ind] = np.nan
+    try:
+        data["integrated_rcs_0"][ind] = np.float(params[9]) * SUM_BCKSCATTER_FACTOR
+    except IndexError:
+        data["integrated_rcs_0"][ind] = np.nan
 
     return data
 
@@ -645,7 +651,11 @@ def read_rcs_var(data, ind, msg, logger):
     # size of the profile to read
     rcs_size = data["range"].size
     # extract line containing rcs
-    rcs_line = msg[line_to_read]
+    try:
+        rcs_line = msg[line_to_read]
+    except IndexError:
+        logger.error("Impossible to decode message. Profile is ignore")
+        return data
 
     try:
         tmp = np.array(
