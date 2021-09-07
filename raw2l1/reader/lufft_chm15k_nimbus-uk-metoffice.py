@@ -447,7 +447,13 @@ def read_timedep_vars(data, nc_id, soft_vers, time_ind, time_size, logger):
     logger.debug("reading cloud base height variation (cbe)")
     data["cde"][ind_b:ind_e, :] = nc_id.variables["CBE"][:]
     logger.debug("reading beta_raw")
-    data["beta_raw"][ind_b:ind_e, :] = nc_id.variables["beta_raw"][:]
+    # for firmware > 1.05 variable can be changed to beta_att
+    try:
+        data["beta_raw"][ind_b:ind_e, :] = nc_id.variables["beta_att"][:]
+        logger.debug("using beta_att variable")
+    except KeyError:
+        data["beta_raw"][ind_b:ind_e, :] = nc_id.variables["beta_raw"][:]
+        logger.debug("using beta_raw variable")
     # case of MetOffice
     try:
         data["beta"][ind_b:ind_e, :] = nc_id.variables["beta"][:]
