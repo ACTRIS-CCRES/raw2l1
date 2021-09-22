@@ -15,90 +15,267 @@ NN2_FACTOR = 3e-5
 CONSTANT_P_CALC = 0.05
 RAW_DATA_MISSING_CLOUDS = -1
 
+# last version of firmware with valid compatibility
+LAST_KNOW_FW = 1.080
+
 ERR_HEX_MSG = [
-    {"hex": 0x00000001, "level": "ERROR", "msg": "Signal quality"},
-    {"hex": 0x00000002, "level": "ERROR", "msg": "Signal recording"},
-    {"hex": 0x00000004, "level": "ERROR", "msg": "Signal values null or void"},
+    # bit 0
+    {"hex": 0x00000001, "level": "ERROR", "msg": "Signal quality", "fw": LAST_KNOW_FW},
+    # bit 1
+    {
+        "hex": 0x00000002,
+        "level": "ERROR",
+        "msg": "Signal recording",
+        "fw": LAST_KNOW_FW,
+    },
+    # bit 2
+    {
+        "hex": 0x00000004,
+        "level": "ERROR",
+        "msg": "Signal values null or void",
+        "fw": LAST_KNOW_FW,
+    },
+    # bit 3
+    {
+        "hex": 0x00000008,
+        "level": "ERROR",
+        "msg": "Mainboard detection failed (APD bias) or firmware and CPU do not match",
+        "fw": LAST_KNOW_FW,
+    },
+    {
+        "hex": 0x00000008,
+        "level": "ERROR",
+        "msg": "Determination of mainboard version failed (APD bias)",
+        "fw": 1.06,
+    },
     {
         "hex": 0x00000008,
         "level": "ERROR",
         "msg": "Signal recording error channel 2 (not used for Nimbus)",
+        "fw": 0.725,
     },
-    {"hex": 0x00000010, "level": "ERROR", "msg": "Create new NetCDF file"},
-    {"hex": 0x00000020, "level": "ERROR", "msg": "Write / add to NetCDF"},
+    # bit 4
+    {
+        "hex": 0x00000010,
+        "level": "ERROR",
+        "msg": "Create new NetCDF file",
+        "fw": LAST_KNOW_FW,
+    },
+    # bit 5
+    {
+        "hex": 0x00000020,
+        "level": "ERROR",
+        "msg": "Write / add to NetCDF",
+        "fw": LAST_KNOW_FW,
+    },
+    # bit 6
     {
         "hex": 0x00000040,
         "level": "ERROR",
         "msg": "RS485 telegram can not be generated, transmitted",
+        "fw": LAST_KNOW_FW,
+    },
+    # bit 7
+    {
+        "hex": 0x00000080,
+        "level": "ERROR",
+        "msg": "SD card absent or defect, write to raw buffer failed",
+        "fw": LAST_KNOW_FW,
     },
     {
         "hex": 0x00000080,
         "level": "ERROR",
         "msg": "Mount SD card faile (test: write to raw buffer)",
+        "fw": 0.740,
     },
+    # bit 8
     {
         "hex": 0x00000100,
         "level": "ERROR",
         "msg": "Detector high voltage control failed / cable defect or absent",
+        "fw": LAST_KNOW_FW,
     },
+    # bit 9
     {
         "hex": 0x00000200,
         "level": "ERROR",
         "msg": "Inner housing temperature out of range",
+        "fw": LAST_KNOW_FW,
     },
+    # bit 10
     {
         "hex": 0x00000400,
         "level": "ERROR",
         "msg": "Laser optical unit temperature error",
+        "fw": 0.725,
     },
-    {"hex": 0x00000800, "level": "ERROR", "msg": "Laser trigger not detected"},
-    {"hex": 0x00001000, "level": "WARNING", "msg": "Laser driver board temperature"},
-    {"hex": 0x00002000, "level": "ERROR", "msg": "Laser interlock"},
-    {"hex": 0x00004000, "level": "ERROR", "msg": "Laser head temperature"},
-    {"hex": 0x00008000, "level": "WARNING", "msg": "Replace Laser - ageing"},
+    # bit 11
+    {
+        "hex": 0x00000800,
+        "level": "ERROR",
+        "msg": "Laser trigger not detected or laser disabled (safety-related)",
+        "fw": LAST_KNOW_FW,
+    },
+    {
+        "hex": 0x00000800,
+        "level": "ERROR",
+        "msg": "Laser trigger not detected",
+        "fw": 1.010,
+    },
+    # bit 12
+    {"hex": 0x00001000, "level": "STATUS", "msg": "NTP problem", "fw": LAST_KNOW_FW,},
+    {
+        "hex": 0x00001000,
+        "level": "ERROR",
+        "msg": "Firmware do not match with CPU version",
+        "fw": 1.060,
+    },
+    {
+        "hex": 0x00001000,
+        "level": "WARNING",
+        "msg": "Laser driver board temperature",
+        "fw": 0.733,
+    },
+    # bit 13
+    {
+        "hex": 0x00002000,
+        "level": "ERROR",
+        "msg": "Laser controler",
+        "fw": LAST_KNOW_FW,
+    },
+    {"hex": 0x00002000, "level": "ERROR", "msg": "Laser interlock", "fw": 0.733},
+    # bit 14
+    {
+        "hex": 0x00004000,
+        "level": "ERROR",
+        "msg": "Laser head temperature",
+        "fw": LAST_KNOW_FW,
+    },
+    # bit 15
+    {
+        "hex": 0x00008000,
+        "level": "WARNING",
+        "msg": "Replace Laser - ageing",
+        "fw": LAST_KNOW_FW,
+    },
+    # bit 16
     {
         "hex": 0x00010000,
         "level": "WARNING",
         "msg": "Signal quality – low signal/ noise level",
+        "fw": LAST_KNOW_FW,
     },
-    {"hex": 0x00020000, "level": "WARNING", "msg": "Windows contaminated"},
-    {"hex": 0x00040000, "level": "WARNING", "msg": "Signal processing"},
-    {"hex": 0x00080000, "level": "STATUS", "msg": "not used"},
+    # bit 17
+    {
+        "hex": 0x00020000,
+        "level": "WARNING",
+        "msg": "Windows contaminated",
+        "fw": LAST_KNOW_FW,
+    },
+    # bit 18
+    {
+        "hex": 0x00040000,
+        "level": "WARNING",
+        "msg": "Signal processing",
+        "fw": LAST_KNOW_FW,
+    },
+    # bit 19
+    {
+        "hex": 0x00080000,
+        "level": "WARNING",
+        "msg": "Laser detector misaligned or receiver window soiled",
+        "fw": LAST_KNOW_FW,
+    },
+    # bit 20
     {
         "hex": 0x00100000,
         "level": "WARNING",
         "msg": "File system, fsck repaired bad sectors",
+        "fw": LAST_KNOW_FW,
     },
+    # bit 21
     {
         "hex": 0x00200000,
         "level": "WARNING",
         "msg": "RS485 baud rate/ transfer mode reset",
+        "fw": LAST_KNOW_FW,
     },
-    {"hex": 0x00400000, "level": "WARNING", "msg": "AFD"},
-    {"hex": 0x00800000, "level": "WARNING", "msg": "configuration problem"},
-    {"hex": 0x01000000, "level": "WARNING", "msg": "Laser optical unit temperature"},
-    {"hex": 0x02000000, "level": "WARNING", "msg": "External temperature"},
-    {"hex": 0x04000000, "level": "WARNING", "msg": "Detector temperature out of range"},
-    {"hex": 0x08000000, "level": "WARNING", "msg": "General laser issue"},
+    # bit 22
+    {"hex": 0x00400000, "level": "WARNING", "msg": "AFD", "fw": LAST_KNOW_FW},
+    # bit 23
+    {
+        "hex": 0x00800000,
+        "level": "WARNING",
+        "msg": "configuration problem",
+        "fw": LAST_KNOW_FW,
+    },
+    # bit 24
+    {
+        "hex": 0x01000000,
+        "level": "WARNING",
+        "msg": "Laser optical unit temperature",
+        "fw": LAST_KNOW_FW,
+    },
+    # bit 25
+    {
+        "hex": 0x02000000,
+        "level": "WARNING",
+        "msg": "External temperature",
+        "fw": LAST_KNOW_FW,
+    },
+    # bit 26
+    {
+        "hex": 0x04000000,
+        "level": "WARNING",
+        "msg": "Detector temperature out of range",
+        "fw": LAST_KNOW_FW,
+    },
+    # bit 27
+    {
+        "hex": 0x08000000,
+        "level": "WARNING",
+        "msg": "General laser issue",
+        "fw": LAST_KNOW_FW,
+    },
+    # bit 28
     {
         "hex": 0x10000000,
         "level": "STATUS",
         "msg": "NOL > 3 and standard telegram selected",
+        "fw": LAST_KNOW_FW,
     },
-    {"hex": 0x20000000, "level": "STATUS", "msg": "Power save mode on"},
-    {"hex": 0x40000000, "level": "STATUS", "msg": "Standby mode on"},
+    # bit 29
+    {
+        "hex": 0x20000000,
+        "level": "STATUS",
+        "msg": "Power save mode on",
+        "fw": LAST_KNOW_FW,
+    },
+    {"hex": 0x20000000, "level": "STATUS", "msg": "Power save mode on", "fw": 0.754},
+    # bit 30
+    {
+        "hex": 0x40000000,
+        "level": "STATUS",
+        "msg": "Standby mode on",
+        "fw": LAST_KNOW_FW,
+    },
+    # bit 31
+    {"hex": 0x80000000, "level": "STATUS", "msg": "NTP problem", "fw": 1.060},
 ]
 
 
-def get_error_index(err_msg, logger):
+def get_error_index(err_msg, firmware, logger):
     """
     based on error error message read in file. return all indexes of related msg and level
     """
-
     err_ind = []
     err_int = err_msg
     for i, d in enumerate(ERR_HEX_MSG):
-        if bool(err_int & d["hex"]):
+        logger.debug(d["hex"])
+        # check if firmware known or if unknow still show the latest message
+        if bool(err_int & d["hex"]) and (
+            firmware <= d["fw"] or firmware > LAST_KNOW_FW
+        ):
             err_ind.append(i)
 
     return err_ind
@@ -107,7 +284,7 @@ def get_error_index(err_msg, logger):
 def store_error(data, err_msg, logger):
     """store errors msg and their count by type"""
 
-    err_ind = get_error_index(err_msg, logger)
+    err_ind = get_error_index(err_msg, data["firmware_version"], logger)
 
     for i in err_ind:
 
