@@ -237,6 +237,27 @@ class TestChm15k(unittest.TestCase):
 
         self.assertEqual(resp, 0, "Nimbus v0.738")
 
+    def test_chm15k_v1100(self):
+
+        date = "20210609"
+        test_ifile = os.path.join(self.IN_DIR, "chm15k_beta-att.nc",)
+        test_ofile = os.path.join(TEST_OUT_DIR, "chm15k_beta-att.nc")
+        test_cfile = os.path.join(CONF_DIR, "conf_lufft_chm15k-nimbus_eprofile.ini")
+
+        resp = subprocess.call(
+            [
+                MAIN_DIR + PRGM,
+                date,
+                test_cfile,
+                test_ifile,
+                test_ofile,
+                "-log_level",
+                "debug",
+            ]
+        )
+
+        self.assertEqual(resp, 0, "Nimbus v1.100 beta att")
+
 
 class TestChm15kOverlap(unittest.TestCase):
 
