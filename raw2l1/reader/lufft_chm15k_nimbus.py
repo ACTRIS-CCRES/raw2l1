@@ -792,6 +792,8 @@ def read_data(list_files, conf, logger):
             data["firmware_version"] = soft_vers
             data["instrument_id"] = raw_data.serlom
             logger.info("software version: %7.4f" % soft_vers)
+            if soft_vers > LAST_KNOW_FW:
+                logger.warning("firmware %7.4f is unkown. Update reader", soft_vers)
 
             # read dimensions
             # ----------------------------------------------------------------

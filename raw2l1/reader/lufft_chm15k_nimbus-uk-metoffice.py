@@ -122,7 +122,7 @@ ERR_HEX_MSG = [
         "fw": 1.010,
     },
     # bit 12
-    {"hex": 0x00001000, "level": "STATUS", "msg": "NTP problem", "fw": LAST_KNOW_FW,},
+    {"hex": 0x00001000, "level": "STATUS", "msg": "NTP problem", "fw": LAST_KNOW_FW},
     {
         "hex": 0x00001000,
         "level": "ERROR",
@@ -686,6 +686,8 @@ def read_data(list_files, conf, logger):
             data["firmware_version"] = soft_vers
             data["instrument_id"] = ""
             logger.info("software version: %7.4f" % soft_vers)
+            if soft_vers > LAST_KNOW_FW:
+                logger.warning("firmware %7.4f is unkown. Update reader", soft_vers)
 
             # read dimensions
             # ----------------------------------------------------------------
