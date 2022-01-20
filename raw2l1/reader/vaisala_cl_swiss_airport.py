@@ -580,6 +580,9 @@ def read_cbh_msg(data, ind, msg, logger):
         data["cbh"][ind, 1] = np.float(elts[2]) * coeff
     if 3 <= nlayers <= 4:
         data["cbh"][ind, 2] = np.float(elts[3]) * coeff
+    # vertical visibility
+    if nlayers == 4:
+        data["vertical_visibility"][ind] = np.float(elts[1]) * coeff
 
     return data
 
@@ -612,8 +615,6 @@ def read_clh_msg(data, ind, msg, logger):
             data["clh"][ind, level] = float(clh_str[level]) * coeff
         elif octa == 0:
             data["cloud_amount"][ind, level] = np.int(octa)
-        elif octa == 9:
-            data["vertical_visibility"][ind] = float(clh_str[level])
 
     return data
 
