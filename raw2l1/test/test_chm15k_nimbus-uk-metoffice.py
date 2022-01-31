@@ -1,13 +1,10 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
-
 import unittest
 import subprocess
 import os
 
 MAIN_DIR = os.path.dirname(os.path.dirname(__file__)) + os.sep
-CONF_DIR = os.path.join(MAIN_DIR, "conf")
 TEST_DIR = os.path.join(MAIN_DIR, "test")
+CONF_DIR = os.path.join(TEST_DIR, "conf")
 TEST_IN_DIR = os.path.join(TEST_DIR, "input")
 TEST_OUT_DIR = os.path.join(TEST_DIR, "output")
 PRGM = "raw2l1.py"
@@ -16,9 +13,7 @@ PRGM = "raw2l1.py"
 class TestChm15kMetOffice(unittest.TestCase):
 
     IN_DIR = os.path.join(TEST_IN_DIR, "jenoptik_chm15k")
-    conf_file = os.path.join(
-        CONF_DIR, "conf_lufft_chm15k-nimbus-uk-metoffice_eprofile.ini"
-    )
+    conf_file = os.path.join(CONF_DIR, "conf_lufft_chm15k-ukmo_eprofile.ini")
 
     def test_20160514(self):
 
@@ -28,9 +23,7 @@ class TestChm15kMetOffice(unittest.TestCase):
             "metoffice-jenoptick-chm15k-nimbus-ceilometer_aldergrove_201605140000.nc",
         )
         test_ofile = os.path.join(TEST_OUT_DIR, "test_chm15k_metoffice.nc")
-        test_cfile = os.path.join(
-            CONF_DIR, "conf_lufft_chm15k-nimbus-uk-metoffice_eprofile.ini"
-        )
+        test_cfile = os.path.join(CONF_DIR, "conf_lufft_chm15k-ukmo_eprofile.ini")
 
         resp = subprocess.call(
             [
