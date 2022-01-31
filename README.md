@@ -11,6 +11,7 @@ see requirements.txt file
 ## instrument compatibility
 
 - VAISALA CL31 and CL51 using clview acquisition software. If you are using your own acquisition softare, you may need to make some change to the reader
+- VAISALA CL61
 - JENOPTIK/LUFFT CHM15k
 - CAMPBELL SCIENTIFIC CS135
 
