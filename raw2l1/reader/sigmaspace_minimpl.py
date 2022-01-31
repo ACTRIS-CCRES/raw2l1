@@ -307,8 +307,8 @@ def read_data(list_files, conf, logger):
     # ------------------------------------------------------------------------
 
     # total rcs and background
-    data["total_nrb"] = data["copol_nrb"] + data["crosspol_nrb"]
-    data["bckgrd_total"] = data["bckgrd_copol"] + data["bckgrd_crosspol"]
+    data["total_nrb"] = data["copol_nrb"] + 2.0 * data["crosspol_nrb"]
+    data["bckgrd_total"] = data["bckgrd_copol"] + 2.0 * data["bckgrd_crosspol"]
 
     # start time
     data["start_time"] = data["time"] - dt.timedelta(seconds=data["time_resol"])
