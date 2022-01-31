@@ -14,11 +14,14 @@ PRGM = MAIN_DIR / "raw2l1.py"
 
 @pytest.mark.parametrize(
     "date, input_file, conf_file",
-    [("20210409", "cl61_20210409_090151.nc", "conf_vaisala_cl61_eprofile.ini"),],
+    [
+        ("20210409", "cl61_20210409_090151.nc", "conf_vaisala_cl61_eprofile.ini"),
+        ("20210409", "cl61_20211103*.nc", "conf_vaisala_cl61_eprofile.ini"),
+    ],
 )
 def test_vaisala_cl61(date, input_file, conf_file):
     """
-    Test conversion of vaisala CL61 files
+    Test conversion of vaisala CL61 files.
 
     Parameters
     ----------
@@ -31,7 +34,7 @@ def test_vaisala_cl61(date, input_file, conf_file):
 
     """
     in_file = TEST_IN_DIR / input_file
-    out_file = TEST_OUT_DIR / input_file
+    out_file = TEST_OUT_DIR / input_file.replace("*", "")
     conf_file = CONF_DIR / conf_file
 
     resp = subprocess.check_call(
