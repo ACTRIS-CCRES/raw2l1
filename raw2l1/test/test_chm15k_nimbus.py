@@ -1,6 +1,3 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
-
 import unittest
 import subprocess
 import os
@@ -12,8 +9,8 @@ import reader.lufft_chm15k_nimbus as reader
 
 
 MAIN_DIR = os.path.dirname(os.path.dirname(__file__)) + os.sep
-CONF_DIR = os.path.join(MAIN_DIR, "conf")
 TEST_DIR = os.path.join(MAIN_DIR, "test")
+CONF_DIR = os.path.join(TEST_DIR, "conf")
 TEST_IN_DIR = os.path.join(TEST_DIR, "input")
 TEST_OUT_DIR = os.path.join(TEST_DIR, "output")
 PRGM = "raw2l1.py"
@@ -50,7 +47,7 @@ class TestSoftVersionParsing(unittest.TestCase):
 class TestChm15k(unittest.TestCase):
 
     IN_DIR = os.path.join(TEST_IN_DIR, "jenoptik_chm15k")
-    conf_file = os.path.join(CONF_DIR, "conf_lufft_chm15k-nimbus_eprofile.ini")
+    conf_file = os.path.join(CONF_DIR, "conf_lufft_chm15k_eprofile.ini")
 
     def test_chm15k_v0536(self):
 
@@ -169,7 +166,7 @@ class TestChm15k(unittest.TestCase):
         date = "20150427"
         test_ifile = os.path.join(self.IN_DIR, "20150427_SIRTA_CHM150101_000.nc")
         test_ofile = os.path.join(TEST_OUT_DIR, "test_chm15k_20150427_sirta.nc")
-        test_cfile = os.path.join(CONF_DIR, "conf_lufft_chm15k-nimbus_eprofile.ini")
+        test_cfile = os.path.join(CONF_DIR, "conf_lufft_chm15k_eprofile.ini")
 
         resp = subprocess.check_call(
             [
@@ -195,7 +192,7 @@ class TestChm15k(unittest.TestCase):
             "ceilometer-eprofile_20151001000023_03963_A201509300000_MaceHead_CHM15K.nc",
         )
         test_ofile = os.path.join(TEST_OUT_DIR, "test_chm15k_v0235_20151001.nc")
-        test_cfile = os.path.join(CONF_DIR, "conf_lufft_chm15k-nimbus_eprofile.ini")
+        test_cfile = os.path.join(CONF_DIR, "conf_lufft_chm15k_eprofile.ini")
 
         resp = subprocess.check_call(
             [
@@ -221,7 +218,7 @@ class TestChm15k(unittest.TestCase):
         test_ofile = os.path.join(
             TEST_OUT_DIR, "eprofile_20160426110611_06348_A201604261055_CHM15k.nc"
         )
-        test_cfile = os.path.join(CONF_DIR, "conf_lufft_chm15k-nimbus_eprofile.ini")
+        test_cfile = os.path.join(CONF_DIR, "conf_lufft_chm15k_eprofile.ini")
 
         resp = subprocess.call(
             [
@@ -237,11 +234,32 @@ class TestChm15k(unittest.TestCase):
 
         self.assertEqual(resp, 0, "Nimbus v0.738")
 
+    def test_chm15k_v1100(self):
+
+        date = "20210609"
+        test_ifile = os.path.join(self.IN_DIR, "chm15k_beta-att.nc",)
+        test_ofile = os.path.join(TEST_OUT_DIR, "chm15k_beta-att.nc")
+        test_cfile = os.path.join(CONF_DIR, "conf_lufft_chm15k_eprofile.ini")
+
+        resp = subprocess.call(
+            [
+                MAIN_DIR + PRGM,
+                date,
+                test_cfile,
+                test_ifile,
+                test_ofile,
+                "-log_level",
+                "debug",
+            ]
+        )
+
+        self.assertEqual(resp, 0, "Nimbus v1.100 beta att")
+
 
 class TestChm15kOverlap(unittest.TestCase):
 
     IN_DIR = os.path.join(TEST_IN_DIR, "jenoptik_chm15k")
-    conf_file = os.path.join(CONF_DIR, "conf_lufft_chm15k-nimbus_eprofile.ini")
+    conf_file = os.path.join(CONF_DIR, "conf_lufft_chm15k_eprofile.ini")
 
     def test_chm15k_overlap_good(self):
 
@@ -251,7 +269,7 @@ class TestChm15kOverlap(unittest.TestCase):
         test_ofile = os.path.join(
             TEST_OUT_DIR, "test_chm15k_20150427_sirta_good-ovl.nc"
         )
-        test_cfile = os.path.join(CONF_DIR, "conf_lufft_chm15k-nimbus_eprofile.ini")
+        test_cfile = os.path.join(CONF_DIR, "conf_lufft_chm15k_eprofile.ini")
 
         resp = subprocess.check_call(
             [
@@ -281,7 +299,7 @@ class TestChm15kOverlap(unittest.TestCase):
         test_ofile = os.path.join(
             TEST_OUT_DIR, "test_chm15k_20150427_sirta_good-ovl-conf-file.nc"
         )
-        test_cfile = os.path.join(self.IN_DIR, "conf_lufft_chm15k-nimbus_eprofile.ini")
+        test_cfile = os.path.join(CONF_DIR, "conf_lufft_chm15k_eprofile.ini")
 
         resp = subprocess.check_call(
             [
@@ -305,7 +323,7 @@ class TestChm15kOverlap(unittest.TestCase):
         test_ifile = os.path.join(self.IN_DIR, "20150427_SIRTA_CHM150101_000.nc")
         test_ovl_file = os.path.join(self.IN_DIR, "jenoptik_chm15k_overlap.txt")
         test_ofile = os.path.join(TEST_OUT_DIR, "test_chm15k_20150427_sirta_bad-ovl.nc")
-        test_cfile = os.path.join(CONF_DIR, "conf_lufft_chm15k-nimbus_eprofile.ini")
+        test_cfile = os.path.join(CONF_DIR, "conf_lufft_chm15k_eprofile.ini")
 
         resp = subprocess.check_call(
             [
@@ -333,7 +351,7 @@ class TestChm15kOverlap(unittest.TestCase):
         test_ofile = os.path.join(
             TEST_OUT_DIR, "test_chm15k_20150427_sirta_empty-ovl.nc"
         )
-        test_cfile = os.path.join(CONF_DIR, "conf_lufft_chm15k-nimbus_eprofile.ini")
+        test_cfile = os.path.join(CONF_DIR, "conf_lufft_chm15k_eprofile.ini")
 
         resp = subprocess.check_call(
             [
@@ -365,7 +383,7 @@ class TestChm15kOverlap(unittest.TestCase):
             "ceilometer-eprofile_20161113193414_06610_A201611131920_CHM15k.nc",
         )
         test_ofile = os.path.join(TEST_OUT_DIR, "validation_cho.nc")
-        test_cfile = os.path.join(CONF_DIR, "conf_lufft_chm15k-nimbus_eprofile.ini")
+        test_cfile = os.path.join(CONF_DIR, "conf_lufft_chm15k_eprofile.ini")
 
         # create file using raw2l1
         subprocess.check_call(
