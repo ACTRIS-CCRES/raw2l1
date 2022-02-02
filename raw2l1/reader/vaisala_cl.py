@@ -658,19 +658,17 @@ def read_rcs_var(data, ind, msg, logger):
         logger.error("Impossible to decode message. Profile is ignore")
         return data
 
+    print(rcs_line, len(rcs_line), RCS_BYTES_SIZE)
+
     try:
-        tmp = np.array(
-            [
-                int(
-                    rcs_line[s * RCS_BYTES_SIZE : s * RCS_BYTES_SIZE + RCS_BYTES_SIZE],
-                    16,
-                )
-                for s in range(rcs_size)
-            ]
-        )
+        tmp = [
+            rcs_line[s * RCS_BYTES_SIZE : s * RCS_BYTES_SIZE + RCS_BYTES_SIZE]  # NOQA
+            for s in range(rcs_size)
+        ]
+        tmp = np.array([int(g, 16) if g != "" else np.nan for g in tmp])
+
     except ValueError:
         logger.error("Impossible to decode message. Profile is ignore")
-        success = False
         return data
 
     # Each sample is coded with a 20-bit HEX ASCII character set
