@@ -313,5 +313,35 @@ class TestUnitsInFeet(unittest.TestCase):
         )
 
 
+class TestVaisalaCL31Belgium(unittest.TestCase):
+
+    IN_DIR = os.path.join(TEST_IN_DIR, "vaisala_cl31")
+    conf_file = os.path.join(CONF_DIR, "conf_vaisala_cl31_eprofile.ini")
+
+    def test_cl31_belgium_file(self):
+
+        date = "20220119"
+        test_ifile = os.path.join(
+            self.IN_DIR, "06496_A202201191200_cl31_belgium-fmt.DAT"
+        )
+        test_ofile = os.path.join(
+            TEST_OUT_DIR, "06496_A202201191200_cl31_belgium-fmt.nc"
+        )
+
+        resp = subprocess.check_call(
+            [
+                os.path.join(MAIN_DIR, PRGM),
+                date,
+                self.conf_file,
+                test_ifile,
+                test_ofile,
+                "-log_level",
+                "debug",
+            ]
+        )
+
+        self.assertEqual(resp, 0, "CL51 one hour file")
+
+
 if __name__ == "__main__":
     unittest.main()
