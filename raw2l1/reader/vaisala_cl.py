@@ -658,8 +658,6 @@ def read_rcs_var(data, ind, msg, logger):
         logger.error("Impossible to decode message. Profile is ignore")
         return data
 
-    print(rcs_line, len(rcs_line), RCS_BYTES_SIZE)
-
     try:
         tmp = [
             rcs_line[s * RCS_BYTES_SIZE : s * RCS_BYTES_SIZE + RCS_BYTES_SIZE]  # NOQA

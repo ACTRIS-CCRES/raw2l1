@@ -1,3 +1,7 @@
+- v3.1.2
+  - VAISALA CL
+    - remove debug print in reader
+
 - v3.1.1
   - VAISALA CL
     - make the reader compatible with CL31 from belgium
