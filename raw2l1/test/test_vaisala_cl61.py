@@ -17,6 +17,7 @@ PRGM = MAIN_DIR / "raw2l1.py"
     [
         ("20210409", "cl61_20210409_090151.nc", "conf_vaisala_cl61_eprofile.ini"),
         ("20210409", "cl61_20211103*.nc", "conf_vaisala_cl61_eprofile.ini"),
+        ("20220623", "cl61-v1.1_*.nc", "conf_vaisala_cl61_eprofile.ini"),
     ],
 )
 def test_vaisala_cl61(date, input_file, conf_file):
