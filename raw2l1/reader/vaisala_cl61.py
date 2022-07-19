@@ -406,4 +406,12 @@ def read_data(list_files, conf, logger):
     data["temp_int"] += CELSIUS_TO_KELVIN
     data["laser_temp"] += CELSIUS_TO_KELVIN
 
+    # force localization if defined in conf file
+    if "lat" in conf:
+        data["station_lat"] = float(conf["lat"])
+    if "lon" in conf:
+        data["station_lon"] = float(conf["lon"])
+    if "alt" in conf:
+        data["station_alt"] = float(conf["alt"])
+
     return data

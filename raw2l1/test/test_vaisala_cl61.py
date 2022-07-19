@@ -5,9 +5,9 @@ from pathlib import Path
 import pytest
 
 MAIN_DIR = Path(__file__).resolve().parent.parent
-CONF_DIR = MAIN_DIR / "conf"
 TEST_DIR = MAIN_DIR / "test"
 TEST_IN_DIR = TEST_DIR / "input" / "vaisala_cl61"
+CONF_DIR = TEST_IN_DIR / "conf"
 TEST_OUT_DIR = TEST_DIR / "output"
 PRGM = MAIN_DIR / "raw2l1.py"
 
@@ -18,6 +18,7 @@ PRGM = MAIN_DIR / "raw2l1.py"
         ("20210409", "cl61_20210409_090151.nc", "conf_vaisala_cl61_eprofile.ini"),
         ("20210409", "cl61_20211103*.nc", "conf_vaisala_cl61_eprofile.ini"),
         ("20220623", "cl61-v1.1_*.nc", "conf_vaisala_cl61_eprofile.ini"),
+        ("20220623", "cl61-v1.1_*.nc", "conf_vaisala_cl61_eprofile_force-loc.ini"),
     ],
 )
 def test_vaisala_cl61(date, input_file, conf_file):
