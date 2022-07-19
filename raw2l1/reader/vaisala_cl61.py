@@ -13,6 +13,9 @@ MODEL = "CL61"
 MISSING_INT = -9
 MISSING_FLOAT = np.nan
 
+# physical constants
+CELSIUS_TO_KELVIN = 273.15
+
 
 def get_dimension_size(list_files, logger):
     """
@@ -43,10 +46,16 @@ def get_dimension_size(list_files, logger):
         if i_file == 0:
             data_dims["range"] = nc_id.dimensions["range"].size
             data_dims["layer"] = nc_id.dimensions["layer"].size
-            data_dims["time"] = nc_id.dimensions["profile"].size
+            try:
+                data_dims["time"] = nc_id.dimensions["time"].size
+            except KeyError:
+                data_dims["time"] = nc_id.dimensions["profile"].size
         else:
             # unlimited dimensions
-            data_dims["time"] += nc_id.dimensions["profile"].size
+            try:
+                data_dims["time"] += nc_id.dimensions["time"].size
+            except KeyError:
+                data_dims["time"] += nc_id.dimensions["profile"].size
 
         nc_id.close()
 
@@ -55,6 +64,36 @@ def get_dimension_size(list_files, logger):
         logger.debug("%s : %d", var_name, size)
 
     return data_dims
+
+
+def get_fw_version(nc_id, logger):
+    """
+    Get firmware version from netCDF file.
+
+    Parameters
+    ----------
+    nc_id : netCDF4.Dataset
+        NetCDF file object.
+    logger : logging.Logger
+        Logger object to log the progress.
+
+    Returns
+    -------
+    str
+        Firmware version.
+    float
+        major firmware version for comparison
+
+    """
+    logger.debug("reading firmware version")
+
+    fw_version = nc_id.history
+    logger.debug("firmware version: %s", fw_version)
+
+    # fw version can be x.x.x or x.x.x-rcx for first versions
+    fl_fw_version = float(".".join(fw_version.split("-")[0].split(".")[0:2]))
+
+    return fw_version, fl_fw_version
 
 
 def init(data, dims, conf, logger):
@@ -117,6 +156,15 @@ def init(data, dims, conf, logger):
     data["linear_depol_ratio"] = (
         np.ones((dims["time"], dims["range"]), dtype=np.float32) * missing_float
     )
+
+    # house keeping data variables
+    # -------------------------------------------------------------------------
+    data["rh_int"] = np.ones((dims["time"],), dtype="f4") * missing_float
+    data["temp_int"] = np.ones((dims["time"],), dtype="f4") * missing_float
+    data["pres_int"] = np.ones((dims["time"],), dtype="f4") * missing_float
+    data["laser_temp"] = np.ones((dims["time"],), dtype="f4") * missing_float
+    data["laser_energy"] = np.ones((dims["time"],), dtype="f4") * missing_float
+    data["window_transmission"] = np.ones((dims["time"],), dtype="f4") * missing_float
 
     return data
 
@@ -228,8 +276,6 @@ def read_timedep_vars(data, nc_id, time_ind, logger):
     data["lon"][ind_b:ind_e] = nc_id.variables["longitude"][:]
     data["alt"][ind_b:ind_e] = nc_id.variables["elevation"][:]
 
-    print(data["beta_noise"])
-
     # Time, layer dependant variables
     # -------------------------------------------------------------------------
     data["cbh"][ind_b:ind_e, :] = nc_id.variables["cloud_base_heights"][:]
@@ -242,6 +288,18 @@ def read_timedep_vars(data, nc_id, time_ind, logger):
     data["linear_depol_ratio"][ind_b:ind_e, :] = nc_id.variables["linear_depol_ratio"][
         :
     ]
+
+    # house keeping data variables
+    # -------------------------------------------------------------------------
+    # only available for firmware >= 1.1
+    if data["float_fw_version"] >= 1.1:
+        logger.debug("reading house keeping data")
+        data["rh_int"][ind_b:ind_e] = nc_id["monitoring"].internal_humidity
+        data["temp_int"][ind_b:ind_e] = nc_id["monitoring"].internal_temperature
+        data["pres_int"][ind_b:ind_e] = nc_id["monitoring"].internal_pressure
+        data["laser_temp"][ind_b:ind_e] = nc_id["monitoring"].laser_temperature
+        data["laser_energy"][ind_b:ind_e] = nc_id["monitoring"].laser_power_percent
+        data["window_transmission"][ind_b:ind_e] = nc_id["monitoring"].window_condition
 
     return time_size, data
 
@@ -303,6 +361,12 @@ def read_data(list_files, conf, logger):
         # Data which only need to be read in one file
         if nb_files_read == 1:
 
+            # reading firmware version
+            # ----------------------------------------------------------------
+            data["fw_version"], data["float_fw_version"] = get_fw_version(
+                raw_data, logger
+            )
+
             # read dimensions
             # ----------------------------------------------------------------
             logger.info("reading dimension variables")
@@ -337,5 +401,17 @@ def read_data(list_files, conf, logger):
 
     # start time of measurements
     data["start_time"] = data["time"] - dt.timedelta(seconds=int(data["time_resol"]))
+
+    # change of units
+    data["temp_int"] += CELSIUS_TO_KELVIN
+    data["laser_temp"] += CELSIUS_TO_KELVIN
+
+    # force localization if defined in conf file
+    if "lat" in conf:
+        data["station_lat"] = float(conf["lat"])
+    if "lon" in conf:
+        data["station_lon"] = float(conf["lon"])
+    if "alt" in conf:
+        data["station_alt"] = float(conf["alt"])
 
     return data

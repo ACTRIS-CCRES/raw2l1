@@ -20,6 +20,7 @@ MIN_2_SEC = 60
 # file format
 DEFAULT_ENCODING = "ISO-8859-1"
 FILE_SEP = "\t"
+DEFAULT_INVERSE_VERT_WIND = False
 
 # date format
 DATE_FMT = ["%d/%m/%Y %H:%M", "%d/%m/%Y %H:%M:%S"]
@@ -130,14 +131,18 @@ def get_localization(value_str, conf, logger):
     # check if value available
     if len(value_str) == 0:
         logger.warning("localization data unavailable")
-        lat = conf["missing_float"]
-        lon = conf["missing_float"]
+        lat = conf["lat"]
+        lon = conf["lon"]
         return lat, lon
 
     # we have to parse the line
     tmp = re.split(LOCALIZATION_DELIMS, value_str)
-    lat = float(tmp[1]) / 100.0
-    lon = float(tmp[3]) / 100.0
+    try:
+        lat = float(tmp[1]) / 100.0
+        lon = float(tmp[3]) / 100.0
+    except ValueError:
+        lat = conf["lat"]
+        lon = conf["lon"]
 
     return lat, lon
 
@@ -231,14 +236,15 @@ def read_header_data(file_, conf, data, logger):
 
 
 def read_columns(file_, data, conf, logger):
-    """read the data store as columns """
-
-    header = data["HeaderSize"]
-
+    """read the data store as columns"""
     # get the number of columns to fix types
     with open(file_, "r", encoding=conf["file_encoding"]) as f_id:
+        try:
+            header = int(f_id.readline().strip().split("=")[1])
+        except ValueError:
+            header = data["HeaderSize"]
         count = 0
-        while count <= header + 1:
+        while count <= header:
             line = f_id.readline()
             count += 1
 
@@ -380,6 +386,15 @@ def read_data(list_files, conf, logger):
     if "file_encoding" not in conf:
         logger.info("No encoding defined for using %s", DEFAULT_ENCODING)
         conf["file_encoding"] = DEFAULT_ENCODING
+    if "inverse_vert_wind" not in conf:
+        logger.info("No inverse_vert_wind defined using %s", DEFAULT_INVERSE_VERT_WIND)
+        conf["inverse_vert_wind"] = DEFAULT_INVERSE_VERT_WIND
+    if "lon" not in conf:
+        logger.error("default lon should be provided in conf file")
+        sys.exit(1)
+    if "lat" not in conf:
+        logger.error("default lat should be provided in conf file")
+        sys.exit(1)
 
     # read data from file(s)
     # ------------------------------------------------------------------------
@@ -431,5 +446,8 @@ def read_data(list_files, conf, logger):
     # W is given positive downward we prefer it upward
     # ------------------------------------------------------------------------
     data["w"] = -1.0 * data["w"]
+    if conf["inverse_vert_wind"]:
+        logger.debug("inverting vertical wind")
+        data["w"] = -1.0 * data["w"]
 
     return data
