@@ -131,14 +131,18 @@ def get_localization(value_str, conf, logger):
     # check if value available
     if len(value_str) == 0:
         logger.warning("localization data unavailable")
-        lat = conf["missing_float"]
-        lon = conf["missing_float"]
+        lat = conf["lat"]
+        lon = conf["lon"]
         return lat, lon
 
     # we have to parse the line
     tmp = re.split(LOCALIZATION_DELIMS, value_str)
-    lat = float(tmp[1]) / 100.0
-    lon = float(tmp[3]) / 100.0
+    try:
+        lat = float(tmp[1]) / 100.0
+        lon = float(tmp[3]) / 100.0
+    except ValueError:
+        lat = conf["lat"]
+        lon = conf["lon"]
 
     return lat, lon
 
@@ -385,6 +389,12 @@ def read_data(list_files, conf, logger):
     if "inverse_vert_wind" not in conf:
         logger.info("No inverse_vert_wind defined using %s", DEFAULT_INVERSE_VERT_WIND)
         conf["inverse_vert_wind"] = DEFAULT_INVERSE_VERT_WIND
+    if "lon" not in conf:
+        logger.error("default lon should be provided in conf file")
+        sys.exit(1)
+    if "lat" not in conf:
+        logger.error("default lat should be provided in conf file")
+        sys.exit(1)
 
     # read data from file(s)
     # ------------------------------------------------------------------------
