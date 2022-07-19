@@ -197,3 +197,30 @@ class TestRunWLS70T10S(unittest.TestCase):
         )
 
         self.assertEqual(resp, 0)
+
+    def test_leosphere_wls70_115rc1(self):
+        """test wrong format lat/lon"""
+
+        date = "20201217"
+        test_ifile = os.path.join(
+            self.IN_DIR,
+            "wlscerea_0a_windLz1R10s-HR_v01_20201217_120000_721.rtd",
+        )
+        test_ofile = os.path.join(
+            TEST_OUT_DIR, "wlscerea_0a_windLz1R10s-HR_v01_20201217_120000_721.nc"
+        )
+        test_cfile = os.path.join(CONF_DIR, "conf_leosphere_wls70_10s.ini")
+
+        resp = subprocess.call(
+            [
+                os.path.join(MAIN_DIR, PRGM),
+                date,
+                test_cfile,
+                test_ifile,
+                test_ofile,
+                "-v",
+                "debug",
+            ]
+        )
+
+        self.assertEqual(resp, 0)
