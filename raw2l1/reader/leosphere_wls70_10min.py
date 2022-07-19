@@ -236,14 +236,16 @@ def read_header_data(file_, conf, data, logger):
 
 
 def read_columns(file_, data, conf, logger):
-    """read the data store as columns """
-
-    header = data["HeaderSize"]
-
+    """read the data store as columns"""
     # get the number of columns to fix types
     with open(file_, "r", encoding=conf["file_encoding"]) as f_id:
+        # get size of header
+        try:
+            header = int(f_id.readline().strip().split("=")[1])
+        except ValueError:
+            header = data["HeaderSize"]
         count = 0
-        while count <= header + 1:
+        while count <= header:
             line = f_id.readline()
             count += 1
 
