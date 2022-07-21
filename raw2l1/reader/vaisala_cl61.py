@@ -11,7 +11,7 @@ MODEL = "CL61"
 
 # missing values
 MISSING_INT = -9
-MISSING_FLOAT = np.nan
+MISSING_FLOAT = -999.9
 
 # physical constants
 CELSIUS_TO_KELVIN = 273.15
@@ -117,9 +117,6 @@ def init(data, dims, conf, logger):
         Dictionary to store the data with variables initialized.
 
     """
-    # get missing values
-    missing_float = conf["missing_float"]
-
     # dimensions variables
     # ------------------------------------------------------------------------
     data["time"] = np.ones(dims["time"], dtype=np.dtype(dt.datetime))
@@ -128,43 +125,53 @@ def init(data, dims, conf, logger):
 
     # time dependant variables
     # ------------------------------------------------------------------------
-    data["vertical_visibility"] = np.ones((dims["time"],), dtype="f4") * missing_float
-    data["beta_sum"] = np.ones((dims["time"],), dtype="f4") * missing_float
-    data["beta_noise"] = np.ones((dims["time"],), dtype="f4") * missing_float
-    data["lat"] = np.ones((dims["time"],), dtype="f4") * missing_float
-    data["lon"] = np.ones((dims["time"],), dtype="f4") * missing_float
-    data["alt"] = np.ones((dims["time"],), dtype="f4") * missing_float
+    data["vertical_visibility"] = np.ones((dims["time"],), dtype="f4") * MISSING_FLOAT
+    data["beta_sum"] = np.ones((dims["time"],), dtype="f4") * MISSING_FLOAT
+    data["beta_noise"] = np.ones((dims["time"],), dtype="f4") * MISSING_FLOAT
+    data["lat"] = np.ones((dims["time"],), dtype="f4") * MISSING_FLOAT
+    data["lon"] = np.ones((dims["time"],), dtype="f4") * MISSING_FLOAT
+    data["alt"] = np.ones((dims["time"],), dtype="f4") * MISSING_FLOAT
 
     # Time, layer dependant variables
     # -------------------------------------------------------------------------
-    data["cbh"] = np.ones((dims["time"], dims["layer"]), dtype=np.int32) * missing_float
+    data["cbh"] = (
+        np.ones((dims["time"], dims["layer"]), dtype=np.float32) * MISSING_FLOAT
+    )
+    # starting fw 1.1.x
+    data["cloud_cover"] = np.ones((dims["time"]), dtype=np.int32) * MISSING_INT
+    data["cloud_layer_cover"] = (
+        np.ones((dims["time"], dims["layer"]), dtype=np.int32) * MISSING_INT
+    )
+    data["cloud_layer_height"] = (
+        np.ones((dims["time"], dims["layer"]), dtype=np.float32) * MISSING_FLOAT
+    )
 
     # Time, range dependent variables
     # -------------------------------------------------------------------------
     data["rcs_0"] = (
-        np.ones((dims["time"], dims["range"]), dtype=np.float32) * missing_float
+        np.ones((dims["time"], dims["range"]), dtype=np.float32) * MISSING_FLOAT
     )
     data["rcs_1"] = (
-        np.ones((dims["time"], dims["range"]), dtype=np.float32) * missing_float
+        np.ones((dims["time"], dims["range"]), dtype=np.float32) * MISSING_FLOAT
     )
     data["rcs_2"] = (
-        np.ones((dims["time"], dims["range"]), dtype=np.float32) * missing_float
+        np.ones((dims["time"], dims["range"]), dtype=np.float32) * MISSING_FLOAT
     )
     data["beta"] = (
-        np.ones((dims["time"], dims["range"]), dtype=np.float32) * missing_float
+        np.ones((dims["time"], dims["range"]), dtype=np.float32) * MISSING_FLOAT
     )
     data["linear_depol_ratio"] = (
-        np.ones((dims["time"], dims["range"]), dtype=np.float32) * missing_float
+        np.ones((dims["time"], dims["range"]), dtype=np.float32) * MISSING_FLOAT
     )
 
     # house keeping data variables
     # -------------------------------------------------------------------------
-    data["rh_int"] = np.ones((dims["time"],), dtype="f4") * missing_float
-    data["temp_int"] = np.ones((dims["time"],), dtype="f4") * missing_float
-    data["pres_int"] = np.ones((dims["time"],), dtype="f4") * missing_float
-    data["laser_temp"] = np.ones((dims["time"],), dtype="f4") * missing_float
-    data["laser_energy"] = np.ones((dims["time"],), dtype="f4") * missing_float
-    data["window_transmission"] = np.ones((dims["time"],), dtype="f4") * missing_float
+    data["rh_int"] = np.ones((dims["time"],), dtype="f4") * MISSING_FLOAT
+    data["temp_int"] = np.ones((dims["time"],), dtype="f4") * MISSING_FLOAT
+    data["pres_int"] = np.ones((dims["time"],), dtype="f4") * MISSING_FLOAT
+    data["laser_temp"] = np.ones((dims["time"],), dtype="f4") * MISSING_FLOAT
+    data["laser_energy"] = np.ones((dims["time"],), dtype="f4") * MISSING_FLOAT
+    data["window_transmission"] = np.ones((dims["time"],), dtype="f4") * MISSING_FLOAT
 
     return data
 
@@ -218,6 +225,8 @@ def read_scalar_vars(data, nc_id, logger):
     data["station_lat"] = nc_id.variables["latitude"][0]
     data["station_lon"] = nc_id.variables["longitude"][0]
     data["station_alt"] = nc_id.variables["elevation"][0]
+    if data["float_fw_version"] >= 1.1:
+        data["tilt_angle"] = nc_id.variables["tilt_angle"][0]
 
     # time resolution (has to be converted from global attributes)
     data["time_resol"] = nc_id.getncattr("time between consecutive profiles in seconds")
@@ -279,6 +288,17 @@ def read_timedep_vars(data, nc_id, time_ind, logger):
     # Time, layer dependant variables
     # -------------------------------------------------------------------------
     data["cbh"][ind_b:ind_e, :] = nc_id.variables["cloud_base_heights"][:]
+    # starting fw 1.1.x
+    if data["float_fw_version"] >= 1.1:
+        data["cloud_cover"][ind_b:ind_e] = nc_id.variables[
+            "sky_condition_total_cloud_cover"
+        ][:]
+        data["cloud_layer_cover"][ind_b:ind_e, :] = nc_id.variables[
+            "sky_condition_cloud_layer_covers"
+        ][:]
+        data["cloud_layer_height"][ind_b:ind_e, :] = nc_id.variables[
+            "sky_condition_cloud_layer_heights"
+        ][:]
 
     # Time, range dependent variables
     # -------------------------------------------------------------------------
@@ -403,8 +423,16 @@ def read_data(list_files, conf, logger):
     data["start_time"] = data["time"] - dt.timedelta(seconds=int(data["time_resol"]))
 
     # change of units
-    data["temp_int"] += CELSIUS_TO_KELVIN
-    data["laser_temp"] += CELSIUS_TO_KELVIN
+    data["temp_int"] = np.where(
+        data["temp_int"] != MISSING_FLOAT,
+        data["temp_int"] + CELSIUS_TO_KELVIN,
+        data["temp_int"],
+    )
+    data["laser_temp"] = np.where(
+        data["laser_temp"] != MISSING_FLOAT,
+        data["laser_temp"] + CELSIUS_TO_KELVIN,
+        data["laser_temp"],
+    )
 
     # force localization if defined in conf file
     if "lat" in conf:
@@ -413,5 +441,19 @@ def read_data(list_files, conf, logger):
         data["station_lon"] = float(conf["lon"])
     if "alt" in conf:
         data["station_alt"] = float(conf["alt"])
+
+    # correct problem of missing values for clouds and cover variables
+    cbh_filter = (data["cbh"] > 0) & (data["cbh"] < 20000)
+    data["cbh"] = np.where(cbh_filter, data["cbh"], MISSING_FLOAT)
+    cc_filter = data["cloud_cover"] > 0
+    data["cloud_cover"] = np.where(cc_filter, data["cloud_cover"], MISSING_INT)
+    cc_filter = data["cloud_layer_cover"] > 0
+    data["cloud_layer_cover"] = np.where(
+        cc_filter, data["cloud_layer_cover"], MISSING_INT
+    )
+    cc_filter = data["cloud_layer_height"] > 0
+    data["cloud_layer_height"] = np.where(
+        cc_filter, data["cloud_layer_height"], MISSING_FLOAT
+    )
 
     return data
