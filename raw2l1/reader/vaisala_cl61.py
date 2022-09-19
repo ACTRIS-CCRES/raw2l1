@@ -87,7 +87,11 @@ def get_fw_version(nc_id, logger):
     """
     logger.debug("reading firmware version")
 
-    fw_version = nc_id.history
+    try:
+        fw_version = nc_id.sw_version
+    except AttributeError:
+        fw_version = nc_id.history
+
     logger.debug("firmware version: %s", fw_version)
 
     # fw version can be x.x.x or x.x.x-rcx for first versions
