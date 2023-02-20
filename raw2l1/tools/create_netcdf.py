@@ -138,9 +138,7 @@ def create_netcdf_global(conf, nc_id, data, logger):
                 logger.debug("adding %s" % attr)
             except KeyError:
                 mess = (
-                    "107 Error creating netCDF file '{}'".format(
-                        conf.get("conf", "output")
-                    )
+                    "107 Error creating netCDF file '{}'".format(conf.get("conf", "output"))
                     + "no key %s in data read. Global var %s will be ignore."
                 )
                 logger.error(mess % (reader_key, attr))
@@ -194,8 +192,7 @@ def create_netcdf_dim(conf, data, nc_id, logger):
         except configparser.NoSectionError as err:
             logger.warning(
                 "107 Unable to process section"
-                " whilst creating netCDF file '{}'".format(conf.get("conf", "output"))
-                + repr(err)
+                " whilst creating netCDF file '{}'".format(conf.get("conf", "output")) + repr(err)
             )
             continue
 
@@ -291,10 +288,7 @@ def add_data_to_var(nc_var, var_name, conf, data, logger):
     if KEY_READERDATA in data_val:
 
         # prevent problem with netCDF3 and strings
-        if (
-            data_type == "string"
-            and conf.get("conf", "netcdf_format") == "NETCDF3_CLASSIC"
-        ):
+        if data_type == "string" and conf.get("conf", "netcdf_format") == "NETCDF3_CLASSIC":
             logger.error(
                 "107 Error creating netCDF file '{}'".format(conf.get("conf", "output"))
                 + "Raw2l1 is not able to manage string "
@@ -318,8 +312,7 @@ def add_data_to_var(nc_var, var_name, conf, data, logger):
             nc_var[:] = read_overlap(over_fname, logger)
         except IOError as err:
             logger.error(
-                "107 problem encountered while reading overlap file "
-                + "'{}".format(over_fname)
+                "107 problem encountered while reading overlap file " + "'{}".format(over_fname)
             )
             logger.error(repr(err))
     else:
@@ -436,16 +429,9 @@ def create_netcdf_variables(conf, data, nc_id, logger):
 
         # case of string variable:
         # we have to get the precise type of data from the read variable
-        if (
-            val_type == "string"
-            and conf.get("conf", "netcdf_format") == "NETCDF3_CLASSIC"
-        ):
-            msg = "107 Error creation netCDF file '{}".format(
-                conf.get("conf", "output")
-            )
-            msg += (
-                " impossible to put string variable in netCDF3 files use netCDF4 format"
-            )
+        if val_type == "string" and conf.get("conf", "netcdf_format") == "NETCDF3_CLASSIC":
+            msg = "107 Error creation netCDF file '{}".format(conf.get("conf", "output"))
+            msg += " impossible to put string variable in netCDF3 files use netCDF4 format"
             logger.error(msg)
             continue
         elif val_type == "string":
@@ -486,9 +472,7 @@ def create_netcdf_variables(conf, data, nc_id, logger):
         if conf.has_option(var_name, "value"):
             add_data_to_var(nc_var, var_name, conf, data, logger)
         else:
-            msg = "107 Error creating netCDF file '{}'".format(
-                conf.get("conf", "output")
-            )
+            msg = "107 Error creating netCDF file '{}'".format(conf.get("conf", "output"))
             msg += " No value option found for {}".format(var_name)
             msg += " - your configuration file might contains errors"
             logger.error(msg)

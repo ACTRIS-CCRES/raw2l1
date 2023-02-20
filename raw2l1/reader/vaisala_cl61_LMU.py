@@ -117,11 +117,11 @@ def init(data, dims, conf, logger):
         Dictionary to store the data with variables initialized.
 
     """
-    # dimensions variables
+    # dimensions
     # ------------------------------------------------------------------------
     data["time"] = np.ones(dims["time"], dtype=np.dtype(dt.datetime))
-    data["layer"] = np.ones(dims["layer"], dtype="i4")
-    data["range"] = np.ones(dims["range"], dtype="i4")
+    data["layer"] = np.ones(dims["layer"], dtype=np.uint8)
+    data["range"] = np.ones(dims["range"], dtype=np.float64)
 
     # time dependant variables
     # ------------------------------------------------------------------------
@@ -131,6 +131,8 @@ def init(data, dims, conf, logger):
     data["lat"] = np.ones((dims["time"],), dtype="f4") * MISSING_FLOAT
     data["lon"] = np.ones((dims["time"],), dtype="f4") * MISSING_FLOAT
     data["alt"] = np.ones((dims["time"],), dtype="f4") * MISSING_FLOAT
+    data["tilt_angle"] = np.ones((dims["time"],), dtype="f4") * MISSING_FLOAT
+    data["tilt_angle_correction"] = np.ones((dims["time"],), dtype=np.int16) * MISSING_INT
 
     # Time, layer dependant variables
     # -------------------------------------------------------------------------
@@ -148,18 +150,62 @@ def init(data, dims, conf, logger):
     data["rcs_1"] = np.ones((dims["time"], dims["range"]), dtype=np.float32) * MISSING_FLOAT
     data["rcs_2"] = np.ones((dims["time"], dims["range"]), dtype=np.float32) * MISSING_FLOAT
     data["beta"] = np.ones((dims["time"], dims["range"]), dtype=np.float32) * MISSING_FLOAT
-    data["linear_depol_ratio"] = (
-        np.ones((dims["time"], dims["range"]), dtype=np.float32) * MISSING_FLOAT
-    )
+    data["volume_ldr"] = np.ones((dims["time"], dims["range"]), dtype=np.float32) * MISSING_FLOAT
 
     # house keeping data variables
     # -------------------------------------------------------------------------
-    data["rh_int"] = np.ones((dims["time"],), dtype="f4") * MISSING_FLOAT
-    data["temp_int"] = np.ones((dims["time"],), dtype="f4") * MISSING_FLOAT
-    data["pres_int"] = np.ones((dims["time"],), dtype="f4") * MISSING_FLOAT
-    data["laser_temp"] = np.ones((dims["time"],), dtype="f4") * MISSING_FLOAT
-    data["laser_energy"] = np.ones((dims["time"],), dtype="f4") * MISSING_FLOAT
-    data["window_transmission"] = np.ones((dims["time"],), dtype="f4") * MISSING_FLOAT
+    data["hkd_rh_int"] = np.ones((dims["time"],), dtype="f4") * MISSING_FLOAT
+    data["hkd_temp_int"] = np.ones((dims["time"],), dtype="f4") * MISSING_FLOAT
+    data["hkd_pres_int"] = np.ones((dims["time"],), dtype="f4") * MISSING_FLOAT
+    data["hkd_temp_laser"] = np.ones((dims["time"],), dtype="f4") * MISSING_FLOAT
+    data["hkd_state_laser"] = np.ones((dims["time"],), dtype="f4") * MISSING_FLOAT
+    data["hkd_state_optics"] = np.ones((dims["time"],), dtype="f4") * MISSING_FLOAT
+    data["hkd_bkgd_radiance"] = np.ones((dims["time"],), dtype="f4") * MISSING_FLOAT
+
+    # Status variables (string)
+    # -------------------------------------------------------------------------
+    data["status_inside_heater"] = np.empty((dims["time"],), dtype="str")
+    data["status_window_blower_fan"] = np.empty((dims["time"],), dtype="str")
+    data["status_window_blower_heater"] = np.empty((dims["time"],), dtype="str")
+    data["status_window_blower_temperature_sensor"] = np.empty((dims["time"],), dtype="str")
+    data["status_device_controller_temperature"] = np.empty((dims["time"],), dtype="str")
+    data["status_device_controller_electronics"] = np.empty((dims["time"],), dtype="str")
+    data["status_device_controller_voltage"] = np.empty((dims["time"],), dtype="str")
+    data["status_device_controller_overall"] = np.empty((dims["time"],), dtype="str")
+    data["status_optics_unit_accelerometer"] = np.empty((dims["time"],), dtype="str")
+    data["status_optics_unit_electronics"] = np.empty((dims["time"],), dtype="str")
+    data["status_optics_unit_environmental_sensor"] = np.empty((dims["time"],), dtype="str")
+    data["status_optics_unit_overall"] = np.empty((dims["time"],), dtype="str")
+    data["status_optics_unit_memory"] = np.empty((dims["time"],), dtype="str")
+    data["status_optics_unit_tilt_angle"] = np.empty((dims["time"],), dtype="str")
+    data["status_receiver_electronics"] = np.empty((dims["time"],), dtype="str")
+    data["status_receiver_overall"] = np.empty((dims["time"],), dtype="str")
+    data["status_receiver_memory"] = np.empty((dims["time"],), dtype="str")
+    data["status_receiver_solar_saturation"] = np.empty((dims["time"],), dtype="str")
+    data["status_receiver_voltage"] = np.empty((dims["time"],), dtype="str")
+    data["status_window_blocking"] = np.empty((dims["time"],), dtype="str")
+    data["status_window_condition"] = np.empty((dims["time"],), dtype="str")
+    data["status_servo_drive_control"] = np.empty((dims["time"],), dtype="str")
+    data["status_servo_drive_electronics"] = np.empty((dims["time"],), dtype="str")
+    data["status_servo_drive_overall"] = np.empty((dims["time"],), dtype="str")
+    data["status_servo_drive_memory"] = np.empty((dims["time"],), dtype="str")
+    data["status_servo_drive_ready"] = np.empty((dims["time"],), dtype="str")
+    data["status_transmitter_electronics"] = np.empty((dims["time"],), dtype="str")
+    data["status_transmitter_light_source"] = np.empty((dims["time"],), dtype="str")
+    data["status_transmitter_light_source_power"] = np.empty((dims["time"],), dtype="str")
+    data["status_transmitter_light_source_safety"] = np.empty((dims["time"],), dtype="str")
+    data["status_transmitter_overall"] = np.empty((dims["time"],), dtype="str")
+    data["status_transmitter_memory"] = np.empty((dims["time"],), dtype="str")
+    data["status_transmitter_voltage"] = np.empty((dims["time"],), dtype="str")
+    data["status_hardware_overall"] = np.empty((dims["time"],), dtype="str")
+    data["status_maintenance_overall"] = np.empty((dims["time"],), dtype="str")
+    data["status_device_overall"] = np.empty((dims["time"],), dtype="str")
+    data["status_recently_started"] = np.empty((dims["time"],), dtype="str")
+    data["status_measurement_status"] = np.empty((dims["time"],), dtype="str")
+    data["status_datacom_overall"] = np.empty((dims["time"],), dtype="str")
+    data["status_data_generation_status"] = np.empty((dims["time"],), dtype="str")
+    data["status_data_sending_status"] = np.empty((dims["time"],), dtype="str")
+    data["status_measurement_data_destination_not_set"] = np.empty((dims["time"],), dtype="str")
 
     return data
 
@@ -210,11 +256,9 @@ def read_scalar_vars(data, nc_id, logger):
 
     """
     logger.debug("reading localization of the instrument")
-    data["station_lat"] = nc_id.variables["latitude"][0]
-    data["station_lon"] = nc_id.variables["longitude"][0]
-    data["station_alt"] = nc_id.variables["elevation"][0]
-    if data["float_fw_version"] >= 1.1:
-        data["tilt_angle"] = nc_id.variables["tilt_angle"][0]
+    data["station_lat"] = nc_id.variables["latitude"][:]
+    data["station_lon"] = nc_id.variables["longitude"][:]
+    data["station_alt"] = nc_id.variables["elevation"][:]
 
     # time resolution (has to be converted from global attributes)
     data["time_resol"] = nc_id.getncattr("time between consecutive profiles in seconds")
@@ -223,6 +267,7 @@ def read_scalar_vars(data, nc_id, logger):
     # instrument informations
     data["instrument_id"] = nc_id.title.split(",")[0]
     data["software_id"] = nc_id.history
+    data["site_location"] = nc_id.comment
 
     return data
 
@@ -267,9 +312,12 @@ def read_timedep_vars(data, nc_id, time_ind, logger):
     data["vertical_visibility"][ind_b:ind_e] = nc_id.variables["vertical_visibility"][:]
     data["beta_sum"][ind_b:ind_e] = nc_id.variables["beta_att_sum"][:]
     data["beta_noise"][ind_b:ind_e] = nc_id.variables["beta_att_noise_level"][:]
-    data["lat"][ind_b:ind_e] = nc_id.variables["latitude"][:]
-    data["lon"][ind_b:ind_e] = nc_id.variables["longitude"][:]
-    data["alt"][ind_b:ind_e] = nc_id.variables["elevation"][:]
+    # data["lat"][ind_b:ind_e] = nc_id.variables["latitude"][:]
+    # data["lon"][ind_b:ind_e] = nc_id.variables["longitude"][:]
+    # data["alt"][ind_b:ind_e] = nc_id.variables["elevation"][:]
+    if data["float_fw_version"] >= 1.1:
+        data["tilt_angle"][ind_b:ind_e] = nc_id.variables["tilt_angle"][:]
+        data["tilt_angle_correction"][ind_b:ind_e] = nc_id.variables["tilt_correction"][:]
 
     # Time, layer dependant variables
     # -------------------------------------------------------------------------
@@ -289,19 +337,118 @@ def read_timedep_vars(data, nc_id, time_ind, logger):
     data["rcs_1"][ind_b:ind_e, :] = nc_id.variables["p_pol"][:]
     data["rcs_2"][ind_b:ind_e, :] = nc_id.variables["x_pol"][:]
     data["beta"][ind_b:ind_e, :] = nc_id.variables["beta_att"][:]
-    data["linear_depol_ratio"][ind_b:ind_e, :] = nc_id.variables["linear_depol_ratio"][:]
+    data["volume_ldr"][ind_b:ind_e, :] = nc_id.variables["linear_depol_ratio"][:]
 
     # house keeping data variables
     # -------------------------------------------------------------------------
     # only available for firmware >= 1.1
     if data["float_fw_version"] >= 1.1:
         logger.debug("reading house keeping data")
-        data["rh_int"][ind_b:ind_e] = nc_id["monitoring"].internal_humidity
-        data["temp_int"][ind_b:ind_e] = nc_id["monitoring"].internal_temperature
-        data["pres_int"][ind_b:ind_e] = nc_id["monitoring"].internal_pressure
-        data["laser_temp"][ind_b:ind_e] = nc_id["monitoring"].laser_temperature
-        data["laser_energy"][ind_b:ind_e] = nc_id["monitoring"].laser_power_percent
-        data["window_transmission"][ind_b:ind_e] = nc_id["monitoring"].window_condition
+        data["hkd_bkgd_radiance"][ind_b:ind_e] = nc_id.variables["hkd_background_radiance"][:]
+        data["hkd_rh_int"][ind_b:ind_e] = nc_id.variables["hkd_internal_humidity"][:]
+        data["hkd_temp_int"][ind_b:ind_e] = nc_id.variables["hkd_internal_temperature"][:]
+        data["hkd_pres_int"][ind_b:ind_e] = nc_id.variables["hkd_internal_pressure"][:]
+        data["hkd_temp_laser"][ind_b:ind_e] = nc_id.variables["hkd_laser_temperature"][:]
+        data["hkd_state_laser"][ind_b:ind_e] = nc_id.variables["hkd_laser_power_percent"][:]
+        data["hkd_state_optics"][ind_b:ind_e] = nc_id.variables["hkd_window_condition"][:]
+
+    # status code variables
+    # -------------------------------------------------------------------------
+    logger.debug("reading status code variables")
+    data["status_inside_heater"][ind_b:ind_e] = nc_id.variables["status_inside_heater"][:]
+    data["status_window_blower_fan"][ind_b:ind_e] = nc_id.variables["status_window_blower_fan"][:]
+    data["status_window_blower_heater"][ind_b:ind_e] = nc_id.variables[
+        "status_window_blower_heater"
+    ][:]
+    data["status_window_blower_temperature_sensor"][ind_b:ind_e] = nc_id.variables[
+        "status_window_blower_temperature_sensor"
+    ][:]
+    data["status_device_controller_temperature"][ind_b:ind_e] = nc_id.variables[
+        "status_device_controller_temperature"
+    ][:]
+    data["status_device_controller_electronics"][ind_b:ind_e] = nc_id.variables[
+        "status_device_controller_electronics"
+    ][:]
+    data["status_device_controller_voltage"][ind_b:ind_e] = nc_id.variables[
+        "status_device_controller_voltage"
+    ][:]
+    data["status_device_controller_overall"][ind_b:ind_e] = nc_id.variables[
+        "status_device_controller_overall"
+    ][:]
+    data["status_optics_unit_accelerometer"][ind_b:ind_e] = nc_id.variables[
+        "status_optics_unit_accelerometer"
+    ][:]
+    data["status_optics_unit_electronics"][ind_b:ind_e] = nc_id.variables[
+        "status_optics_unit_electronics"
+    ][:]
+    data["status_optics_unit_environmental_sensor"][ind_b:ind_e] = nc_id.variables[
+        "status_optics_unit_environmental_sensor"
+    ][:]
+    data["status_optics_unit_overall"][ind_b:ind_e] = nc_id.variables["status_optics_unit_overall"][
+        :
+    ]
+    data["status_optics_unit_memory"][ind_b:ind_e] = nc_id.variables["status_optics_unit_memory"][:]
+    data["status_optics_unit_tilt_angle"][ind_b:ind_e] = nc_id.variables[
+        "status_optics_unit_tilt_angle"
+    ][:]
+    data["status_receiver_electronics"][ind_b:ind_e] = nc_id.variables[
+        "status_receiver_electronics"
+    ][:]
+    data["status_receiver_overall"][ind_b:ind_e] = nc_id.variables["status_receiver_overall"][:]
+    data["status_receiver_memory"][ind_b:ind_e] = nc_id.variables["status_receiver_memory"][:]
+    data["status_receiver_solar_saturation"][ind_b:ind_e] = nc_id.variables[
+        "status_receiver_solar_saturation"
+    ][:]
+    data["status_receiver_voltage"][ind_b:ind_e] = nc_id.variables["status_receiver_voltage"][:]
+    data["status_window_blocking"][ind_b:ind_e] = nc_id.variables["status_window_blocking"][:]
+    data["status_window_condition"][ind_b:ind_e] = nc_id.variables["status_window_condition"][:]
+    data["status_servo_drive_control"][ind_b:ind_e] = nc_id.variables["status_servo_drive_control"][
+        :
+    ]
+    data["status_servo_drive_electronics"][ind_b:ind_e] = nc_id.variables[
+        "status_servo_drive_electronics"
+    ][:]
+    data["status_servo_drive_overall"][ind_b:ind_e] = nc_id.variables["status_servo_drive_overall"][
+        :
+    ]
+    data["status_servo_drive_memory"][ind_b:ind_e] = nc_id.variables["status_servo_drive_memory"][:]
+    data["status_servo_drive_ready"][ind_b:ind_e] = nc_id.variables["status_servo_drive_ready"][:]
+    data["status_transmitter_electronics"][ind_b:ind_e] = nc_id.variables[
+        "status_transmitter_electronics"
+    ][:]
+    data["status_transmitter_light_source"][ind_b:ind_e] = nc_id.variables[
+        "status_transmitter_light_source"
+    ][:]
+    data["status_transmitter_light_source_power"][ind_b:ind_e] = nc_id.variables[
+        "status_transmitter_light_source_power"
+    ][:]
+    data["status_transmitter_light_source_safety"][ind_b:ind_e] = nc_id.variables[
+        "status_transmitter_light_source_safety"
+    ][:]
+    data["status_transmitter_overall"][ind_b:ind_e] = nc_id.variables["status_transmitter_overall"][
+        :
+    ]
+    data["status_transmitter_memory"][ind_b:ind_e] = nc_id.variables["status_transmitter_memory"][:]
+    data["status_transmitter_voltage"][ind_b:ind_e] = nc_id.variables["status_transmitter_voltage"][
+        :
+    ]
+    data["status_hardware_overall"][ind_b:ind_e] = nc_id.variables["status_hardware_overall"][:]
+    data["status_maintenance_overall"][ind_b:ind_e] = nc_id.variables["status_maintenance_overall"][
+        :
+    ]
+    data["status_device_overall"][ind_b:ind_e] = nc_id.variables["status_device_overall"][:]
+    data["status_recently_started"][ind_b:ind_e] = nc_id.variables["status_recently_started"][:]
+    data["status_measurement_status"][ind_b:ind_e] = nc_id.variables["status_measurement_status"][:]
+    data["status_datacom_overall"][ind_b:ind_e] = nc_id.variables["status_datacom_overall"][:]
+    data["status_data_generation_status"][ind_b:ind_e] = nc_id.variables[
+        "status_data_generation_status"
+    ][:]
+    data["status_data_sending_status"][ind_b:ind_e] = nc_id.variables["status_data_sending_status"][
+        :
+    ]
+    data["status_measurement_data_destination_not_set"][ind_b:ind_e] = nc_id.variables[
+        "status_measurement_data_destination_not_set"
+    ][:]
 
     return time_size, data
 
@@ -402,14 +549,14 @@ def read_data(list_files, conf, logger):
 
     # change of units
     data["temp_int"] = np.where(
-        data["temp_int"] != MISSING_FLOAT,
-        data["temp_int"] + CELSIUS_TO_KELVIN,
-        data["temp_int"],
+        data["hkd_temp_int"] != MISSING_FLOAT,
+        data["hkd_temp_int"] + CELSIUS_TO_KELVIN,
+        data["hkd_temp_int"],
     )
     data["laser_temp"] = np.where(
-        data["laser_temp"] != MISSING_FLOAT,
-        data["laser_temp"] + CELSIUS_TO_KELVIN,
-        data["laser_temp"],
+        data["hkd_temp_laser"] != MISSING_FLOAT,
+        data["hkd_temp_laser"] + CELSIUS_TO_KELVIN,
+        data["hkd_temp_laser"],
     )
 
     # force localization if defined in conf file
@@ -419,6 +566,10 @@ def read_data(list_files, conf, logger):
         data["station_lon"] = float(conf["lon"])
     if "alt" in conf:
         data["station_alt"] = float(conf["alt"])
+
+    # set site location if not yet in comments attribute
+    if data["site_location"] == "":
+        data["site_location"] = conf["site_location"]
 
     # correct problem of missing values for clouds and cover variables
     cbh_filter = (data["cbh"] > 0) & (data["cbh"] < 20000)
