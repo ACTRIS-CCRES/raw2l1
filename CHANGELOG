@@ -1,3 +1,7 @@
+- v3.1.5
+  - Lufft CHM15k
+    - Divide by `c_cal` for transformation from `beta_att` to `beta_raw`
+
 - v3.1.3
   - LEOSHERE WLS70
     - improve management of localization of intrument in header
