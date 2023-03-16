@@ -281,7 +281,6 @@ def add_data_to_var(nc_var, var_name, conf, data, logger):
 
     data_val = conf.get(var_name, "value")
     data_type = get_var_type(conf.get(var_name, "type"), conf, logger)
-
     logger.debug("adding data to " + var_name)
     logger.debug(str(data_type))
     logger.debug(conf.get("conf", "netcdf_format"))

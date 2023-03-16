@@ -22,7 +22,7 @@ def read_overlap(fname, logger):
         )
 
     except IOError as err:
-        logger.errot("107 Error Reading overlap file : " + fname)
+        logger.error("107 Error Reading overlap file : " + fname)
         logger.error(err)
         data = None
 

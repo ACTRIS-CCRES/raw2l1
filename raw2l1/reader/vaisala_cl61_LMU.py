@@ -147,6 +147,10 @@ def init(data, dims, conf, logger):
     data["tilt_angle"] = np.ones((dims["time"],), dtype="f4") * MISSING_FLOAT
     data["tilt_angle_correction"] = np.ones((dims["time"],), dtype=np.int16) * MISSING_INT
     data["cloud_cover"] = np.ones((dims["time"]), dtype=np.int32) * MISSING_INT
+    
+    # range dependent variables
+    # -------------------------------------------------------------------------
+    data["overlap_function"] = np.ones((dims["range"],), dtype="f4") * MISSING_FLOAT
 
     # Time, layer dependant variables
     # -------------------------------------------------------------------------
@@ -183,49 +187,49 @@ def init(data, dims, conf, logger):
 
     # Status variables (string)
     # -------------------------------------------------------------------------
-    data["status_inside_heater"] = np.empty((dims["time"],), dtype=np.int16)
-    data["status_window_blower_fan"] = np.empty((dims["time"],), dtype=np.int16)
-    data["status_window_blower_heater"] = np.empty((dims["time"],), dtype=np.int16)
-    # data["status_window_blower_temperature_sensor"] = np.empty((dims["time"],), dtype=np.int16)
-    data["status_device_controller_temperature"] = np.empty((dims["time"],), dtype=np.int16)
-    data["status_device_controller_electronics"] = np.empty((dims["time"],), dtype=np.int16)
-    # data["status_device_controller_voltage"] = np.empty((dims["time"],), dtype=np.int16)
-    data["status_device_controller_overall"] = np.empty((dims["time"],), dtype=np.int16)
-    data["status_optics_unit_accelerometer"] = np.empty((dims["time"],), dtype=np.int16)
-    data["status_optics_unit_electronics"] = np.empty((dims["time"],), dtype=np.int16)
-    # data["status_optics_unit_environmental_sensor"] = np.empty((dims["time"],), dtype=np.int16)
-    data["status_optics_unit_overall"] = np.empty((dims["time"],), dtype=np.int16)
-    data["status_optics_unit_memory"] = np.empty((dims["time"],), dtype=np.int16)
-    data["status_optics_unit_tilt_angle"] = np.empty((dims["time"],), dtype=np.int16)
-    data["status_receiver_electronics"] = np.empty((dims["time"],), dtype=np.int16)
-    data["status_receiver_overall"] = np.empty((dims["time"],), dtype=np.int16)
-    data["status_receiver_memory"] = np.empty((dims["time"],), dtype=np.int16)
-    data["status_receiver_solar_saturation"] = np.empty((dims["time"],), dtype=np.int16)
-    data["status_receiver_sensitivity"] = np.empty((dims["time"],), dtype=np.int16)
-    data["status_receiver_voltage"] = np.empty((dims["time"],), dtype=np.int16)
-    data["status_window_blocking"] = np.empty((dims["time"],), dtype=np.int16)
-    data["status_window_condition"] = np.empty((dims["time"],), dtype=np.int16)
-    data["status_servo_drive_control"] = np.empty((dims["time"],), dtype=np.int16)
-    data["status_servo_drive_electronics"] = np.empty((dims["time"],), dtype=np.int16)
-    data["status_servo_drive_overall"] = np.empty((dims["time"],), dtype=np.int16)
-    data["status_servo_drive_memory"] = np.empty((dims["time"],), dtype=np.int16)
-    data["status_servo_drive_ready"] = np.empty((dims["time"],), dtype=np.int16)
-    data["status_transmitter_electronics"] = np.empty((dims["time"],), dtype=np.int16)
-    data["status_transmitter_light_source"] = np.empty((dims["time"],), dtype=np.int16)
-    data["status_transmitter_light_source_power"] = np.empty((dims["time"],), dtype=np.int16)
-    data["status_transmitter_light_source_safety"] = np.empty((dims["time"],), dtype=np.int16)
-    data["status_transmitter_overall"] = np.empty((dims["time"],), dtype=np.int16)
-    data["status_transmitter_memory"] = np.empty((dims["time"],), dtype=np.int16)
-    # data["status_transmitter_voltage"] = np.empty((dims["time"],), dtype=np.int16)
-    # data["status_hardware_overall"] = np.empty((dims["time"],), dtype=np.int16)
-    data["status_maintenance_overall"] = np.empty((dims["time"],), dtype=np.int16)
-    data["status_device_overall"] = np.empty((dims["time"],), dtype=np.int16)
-    data["status_recently_started"] = np.empty((dims["time"],), dtype=np.int16)
-    data["status_measurement_status"] = np.empty((dims["time"],), dtype=np.int16)
-    data["status_datacom_overall"] = np.empty((dims["time"],), dtype=np.int16)
-    data["status_data_generation_status"] = np.empty((dims["time"],), dtype=np.int16)
-    # data["status_data_sending_status"] = np.empty((dims["time"],), dtype=np.int16)
-    data["status_measurement_data_destination_not_set"] = np.empty((dims["time"],), dtype=np.int16)
+    data["status_inside_heater"] = np.ones((dims["time"],), dtype=np.int16) * MISSING_INT
+    data["status_window_blower_fan"] = np.ones((dims["time"],), dtype=np.int16) * MISSING_INT
+    data["status_window_blower_heater"] = np.ones((dims["time"],), dtype=np.int16) * MISSING_INT
+    # data["status_window_blower_temperature_sensor"] = np.ones((dims["time"],), dtype=np.int16) * MISSING_INT
+    data["status_device_controller_temperature"] = np.ones((dims["time"],), dtype=np.int16) * MISSING_INT
+    data["status_device_controller_electronics"] = np.ones((dims["time"],), dtype=np.int16) * MISSING_INT
+    # data["status_device_controller_voltage"] = np.ones((dims["time"],), dtype=np.int16) * MISSING_INT
+    data["status_device_controller_overall"] = np.ones((dims["time"],), dtype=np.int16) * MISSING_INT
+    data["status_optics_unit_accelerometer"] = np.ones((dims["time"],), dtype=np.int16) * MISSING_INT
+    data["status_optics_unit_electronics"] = np.ones((dims["time"],), dtype=np.int16) * MISSING_INT
+    # data["status_optics_unit_environmental_sensor"] = np.ones((dims["time"],), dtype=np.int16) * MISSING_INT
+    data["status_optics_unit_overall"] = np.ones((dims["time"],), dtype=np.int16) * MISSING_INT
+    data["status_optics_unit_memory"] = np.ones((dims["time"],), dtype=np.int16) * MISSING_INT
+    data["status_optics_unit_tilt_angle"] = np.ones((dims["time"],), dtype=np.int16) * MISSING_INT
+    data["status_receiver_electronics"] = np.ones((dims["time"],), dtype=np.int16) * MISSING_INT
+    data["status_receiver_overall"] = np.ones((dims["time"],), dtype=np.int16) * MISSING_INT
+    data["status_receiver_memory"] = np.ones((dims["time"],), dtype=np.int16) * MISSING_INT
+    data["status_receiver_solar_saturation"] = np.ones((dims["time"],), dtype=np.int16) * MISSING_INT
+    data["status_receiver_sensitivity"] = np.ones((dims["time"],), dtype=np.int16) * MISSING_INT
+    data["status_receiver_voltage"] = np.ones((dims["time"],), dtype=np.int16) * MISSING_INT
+    data["status_window_blocking"] = np.ones((dims["time"],), dtype=np.int16) * MISSING_INT
+    data["status_window_condition"] = np.ones((dims["time"],), dtype=np.int16) * MISSING_INT
+    data["status_servo_drive_control"] = np.ones((dims["time"],), dtype=np.int16) * MISSING_INT
+    data["status_servo_drive_electronics"] = np.ones((dims["time"],), dtype=np.int16) * MISSING_INT
+    data["status_servo_drive_overall"] = np.ones((dims["time"],), dtype=np.int16) * MISSING_INT
+    data["status_servo_drive_memory"] = np.ones((dims["time"],), dtype=np.int16) * MISSING_INT
+    data["status_servo_drive_ready"] = np.ones((dims["time"],), dtype=np.int16) * MISSING_INT
+    data["status_transmitter_electronics"] = np.ones((dims["time"],), dtype=np.int16) * MISSING_INT
+    data["status_transmitter_light_source"] = np.ones((dims["time"],), dtype=np.int16) * MISSING_INT
+    data["status_transmitter_light_source_power"] = np.ones((dims["time"],), dtype=np.int16) * MISSING_INT
+    data["status_transmitter_light_source_safety"] = np.ones((dims["time"],), dtype=np.int16) * MISSING_INT
+    data["status_transmitter_overall"] = np.ones((dims["time"],), dtype=np.int16) * MISSING_INT
+    data["status_transmitter_memory"] = np.ones((dims["time"],), dtype=np.int16) * MISSING_INT
+    # data["status_transmitter_voltage"] = np.ones((dims["time"],), dtype=np.int16) * MISSING_INT
+    # data["status_hardware_overall"] = np.ones((dims["time"],), dtype=np.int16) * MISSING_INT
+    data["status_maintenance_overall"] = np.ones((dims["time"],), dtype=np.int16) * MISSING_INT
+    data["status_device_overall"] = np.ones((dims["time"],), dtype=np.int16) * MISSING_INT
+    data["status_recently_started"] = np.ones((dims["time"],), dtype=np.int16) * MISSING_INT
+    data["status_measurement_status"] = np.ones((dims["time"],), dtype=np.int16) * MISSING_INT
+    data["status_datacom_overall"] = np.ones((dims["time"],), dtype=np.int16) * MISSING_INT
+    data["status_data_generation_status"] = np.ones((dims["time"],), dtype=np.int16) * MISSING_INT
+    # data["status_data_sending_status"] = np.ones((dims["time"],), dtype=np.int16) * MISSING_INT
+    data["status_measurement_data_destination_not_set"] = np.ones((dims["time"],), dtype=np.int16) * MISSING_INT
 
     return data
 
@@ -281,16 +285,23 @@ def read_scalar_vars(data, nc_id, logger):
     data["station_alt"] = nc_id.variables["elevation"][:]
 
     # time resolution (has to be converted from global attributes)
-    data["time_resol"] = nc_id.getncattr("time between consecutive profiles in seconds")
     if data["float_fw_version"] <= 1.1:
+        data["time_resol"] = nc_id.getncattr("time between consecutive profiles in seconds")
         data["range_resol"] = np.mean(data["range"][1:] - data["range"][:-1])
     elif data["float_fw_version"] >= 1.2:
+        data["time_resol"] = nc_id.profile_interval_in_seconds
         data["range_resol"] = nc_id.variables["range_resolution"][:]
 
     # instrument informations
     if data["float_fw_version"] <= 1.1:
         data["instrument_id"] = 'U4850794'
+        data["azimuth_angle"] = MISSING_FLOAT
+        data["cloud_calibration_factor"] = MISSING_FLOAT
+        data["cloud_calibration_factor_user"] = MISSING_FLOAT
     elif data["float_fw_version"] >= 1.2:
+        data["cloud_calibration_factor"] = nc_id.variables['cloud_calibration_factor'][:]
+        data["cloud_calibration_factor_user"] = nc_id.variables['cloud_calibration_factor_user'][:]
+        data["azimuth_angle"] = nc_id.variables['azimuth_angle'][:]
         data["instrument_id"] = nc_id.instrument_serial_number
     data["software_id"] = nc_id.history
     data["site_location"] = nc_id.comment
@@ -389,17 +400,17 @@ def read_timedep_vars(data, nc_id, time_ind, logger):
         data["hkd_state_laser"][ind_b:ind_e] = nc_id.variables["hkd_laser_power_percent"][:]
         data["hkd_state_optics"][ind_b:ind_e] = nc_id.variables["hkd_window_condition"][:]
     if data["float_fw_version"] >= 1.2:
-        data["hkd_bkgd_radiance"][ind_b:ind_e] = nc_id.variables['monitoring']["background_radiance"][:]
-        data["hkd_rh_int"][ind_b:ind_e] = nc_id.variables['monitoring']["internal_humidity"][:]
-        data["hkd_temp_int"][ind_b:ind_e] = nc_id.variables['monitoring']["internal_temperature"][:]
-        data["hkd_temp_trans"][ind_b:ind_e] = nc_id.variables['monitoring']["transmitter_enclosure_temperature"][:]
-        data["hkd_pres_int"][ind_b:ind_e] = nc_id.variables['monitoring']["internal_pressure"][:]
-        data["hkd_temp_laser"][ind_b:ind_e] = nc_id.variables['monitoring']["laser_temperature"][:]
-        data["hkd_state_laser"][ind_b:ind_e] = nc_id.variables['monitoring']["laser_power_percent"][:]
-        data["hkd_state_optics"][ind_b:ind_e] = nc_id.variables['monitoring']["window_condition"][:]
-        data["hkd_heater_int"][ind_b:ind_e] = nc_id.variables['monitoring']["internal_heater"][:]
-        data["hkd_window_blower"][ind_b:ind_e] = nc_id.variables['monitoring']["window_blower"][:]
-        data["hkd_window_blower_heater"][ind_b:ind_e] = nc_id.variables['monitoring']["window_blower_heater"][:]
+        data["hkd_bkgd_radiance"][ind_b:ind_e] = nc_id['monitoring'].variables["background_radiance"][:]
+        data["hkd_rh_int"][ind_b:ind_e] = nc_id['monitoring'].variables["internal_humidity"][:]
+        data["hkd_temp_int"][ind_b:ind_e] = nc_id['monitoring'].variables["internal_temperature"][:]
+        data["hkd_temp_trans"][ind_b:ind_e] = nc_id['monitoring'].variables["transmitter_enclosure_temperature"][:]
+        data["hkd_pres_int"][ind_b:ind_e] = nc_id['monitoring'].variables["internal_pressure"][:]
+        data["hkd_temp_laser"][ind_b:ind_e] = nc_id['monitoring'].variables["laser_temperature"][:]
+        data["hkd_state_laser"][ind_b:ind_e] = nc_id['monitoring'].variables["laser_power_percent"][:]
+        data["hkd_state_optics"][ind_b:ind_e] = nc_id['monitoring'].variables["window_condition"][:]
+        data["hkd_heater_int"][ind_b:ind_e] = nc_id['monitoring'].variables["internal_heater"][:]
+        data["hkd_window_blower"][ind_b:ind_e] = nc_id['monitoring'].variables["window_blower"][:]
+        data["hkd_window_blower_heater"][ind_b:ind_e] = nc_id['monitoring'].variables["window_blower_heater"][:]
 
     # status code variables
     # -------------------------------------------------------------------------
@@ -501,83 +512,83 @@ def read_timedep_vars(data, nc_id, time_ind, logger):
         ][:])
     
     if data["float_fw_version"] >= 1.2:
-        data["status_inside_heater"][ind_b:ind_e] = nc_id.variables['status']["Inside_heater"][:]
-        data["status_window_blower_fan"][ind_b:ind_e] = nc_id.variables['status']["Window_blower_fan"][:]
-        data["status_window_blower_heater"][ind_b:ind_e] = nc_id.variables['status'][
+        data["status_inside_heater"][ind_b:ind_e] = nc_id['status'].variables["Inside_heater"][:]
+        data["status_window_blower_fan"][ind_b:ind_e] = nc_id['status'].variables["Window_blower_fan"][:]
+        data["status_window_blower_heater"][ind_b:ind_e] = nc_id['status'].variables[
             "Window_blower_heater"
         ][:]
-        data["status_device_controller_temperature"][ind_b:ind_e] = nc_id.variables['status'][
+        data["status_device_controller_temperature"][ind_b:ind_e] = nc_id['status'].variables[
             "Device_controller_temperature"
         ][:]
-        data["status_device_controller_electronics"][ind_b:ind_e] = nc_id.variables['status'][
+        data["status_device_controller_electronics"][ind_b:ind_e] = nc_id['status'].variables[
             "Device_controller_electronics"
         ][:]
-        data["status_device_controller_overall"][ind_b:ind_e] = nc_id.variables['status'][
+        data["status_device_controller_overall"][ind_b:ind_e] = nc_id['status'].variables[
             "Device_controller_overall"
         ][:]
-        data["status_optics_unit_accelerometer"][ind_b:ind_e] = nc_id.variables['status'][
+        data["status_optics_unit_accelerometer"][ind_b:ind_e] = nc_id['status'].variables[
             "Optics_unit_accelerometer"
         ][:]
-        data["status_optics_unit_electronics"][ind_b:ind_e] = nc_id.variables['status'][
+        data["status_optics_unit_electronics"][ind_b:ind_e] = nc_id['status'].variables[
             "Optics_unit_electronics"
         ][:]
-        data["status_optics_unit_overall"][ind_b:ind_e] = nc_id.variables['status']["Optics_unit_overall"][
+        data["status_optics_unit_overall"][ind_b:ind_e] = nc_id['status'].variables["Optics_unit_overall"][
             :
         ]
-        data["status_optics_unit_memory"][ind_b:ind_e] = nc_id.variables['status']["Optics_unit_memory"][:]
-        data["status_optics_unit_tilt_angle"][ind_b:ind_e] = nc_id.variables['status'][
+        data["status_optics_unit_memory"][ind_b:ind_e] = nc_id['status'].variables["Optics_unit_memory"][:]
+        data["status_optics_unit_tilt_angle"][ind_b:ind_e] = nc_id['status'].variables[
             "Optics_unit_tilt_angle"
         ][:]
-        data["status_receiver_electronics"][ind_b:ind_e] = nc_id.variables['status'][
+        data["status_receiver_electronics"][ind_b:ind_e] = nc_id['status'].variables[
             "Receiver_electronics"
         ][:]
-        data["status_receiver_overall"][ind_b:ind_e] = nc_id.variables['status']["Receiver_overall"][:]
-        data["status_receiver_memory"][ind_b:ind_e] = nc_id.variables['status']["Receiver_memory"][:]
-        data["status_receiver_solar_saturation"][ind_b:ind_e] = nc_id.variables['status'][
+        data["status_receiver_overall"][ind_b:ind_e] = nc_id['status'].variables["Receiver_overall"][:]
+        data["status_receiver_memory"][ind_b:ind_e] = nc_id['status'].variables["Receiver_memory"][:]
+        data["status_receiver_solar_saturation"][ind_b:ind_e] = nc_id['status'].variables[
             "Receiver_solar_saturation"
         ][:]
-        data["status_receiver_sensitivity"][ind_b:ind_e] = nc_id.variables['status']["Receiver_sensitivity"][:]
-        data["status_receiver_voltage"][ind_b:ind_e] = nc_id.variables['status']["Receiver_voltage"][:]
-        data["status_window_blocking"][ind_b:ind_e] = nc_id.variables['status']["Window_blocking"][:]
-        data["status_window_condition"][ind_b:ind_e] = nc_id.variables['status']["Window_condition"][:]
-        data["status_servo_drive_control"][ind_b:ind_e] = nc_id.variables['status']["Servo_drive_control"][
+        data["status_receiver_sensitivity"][ind_b:ind_e] = nc_id['status'].variables["Receiver_sensitivity"][:]
+        data["status_receiver_voltage"][ind_b:ind_e] = nc_id['status'].variables["Receiver_voltage"][:]
+        data["status_window_blocking"][ind_b:ind_e] = nc_id['status'].variables["Window_blocking"][:]
+        data["status_window_condition"][ind_b:ind_e] = nc_id['status'].variables["Window_condition"][:]
+        data["status_servo_drive_control"][ind_b:ind_e] = nc_id['status'].variables["Servo_drive_control"][
             :
         ]
-        data["status_servo_drive_electronics"][ind_b:ind_e] = nc_id.variables['status'][
+        data["status_servo_drive_electronics"][ind_b:ind_e] = nc_id['status'].variables[
             "Servo_drive_electronics"
         ][:]
-        data["status_servo_drive_overall"][ind_b:ind_e] = nc_id.variables['status']["Servo_drive_overall"][
+        data["status_servo_drive_overall"][ind_b:ind_e] = nc_id['status'].variables["Servo_drive_overall"][
             :
         ]
-        data["status_servo_drive_memory"][ind_b:ind_e] = nc_id.variables['status']["Servo_drive_memory"][:]
-        data["status_servo_drive_ready"][ind_b:ind_e] = nc_id.variables['status']["Servo_drive_ready"][:]
-        data["status_transmitter_electronics"][ind_b:ind_e] = nc_id.variables['status'][
+        data["status_servo_drive_memory"][ind_b:ind_e] = nc_id['status'].variables["Servo_drive_memory"][:]
+        data["status_servo_drive_ready"][ind_b:ind_e] = nc_id['status'].variables["Servo_drive_ready"][:]
+        data["status_transmitter_electronics"][ind_b:ind_e] = nc_id['status'].variables[
             "Transmitter_electronics"
         ][:]
-        data["status_transmitter_light_source"][ind_b:ind_e] = nc_id.variables['status'][
+        data["status_transmitter_light_source"][ind_b:ind_e] = nc_id['status'].variables[
             "Transmitter_light_source"
         ][:]
-        data["status_transmitter_light_source_power"][ind_b:ind_e] = nc_id.variables['status'][
+        data["status_transmitter_light_source_power"][ind_b:ind_e] = nc_id['status'].variables[
             "Transmitter_light_source_power"
         ][:]
-        data["status_transmitter_light_source_safety"][ind_b:ind_e] = nc_id.variables['status'][
+        data["status_transmitter_light_source_safety"][ind_b:ind_e] = nc_id['status'].variables[
             "Transmitter_light_source_safety"
         ][:]
-        data["status_transmitter_overall"][ind_b:ind_e] = nc_id.variables['status']["Transmitter_overall"][
+        data["status_transmitter_overall"][ind_b:ind_e] = nc_id['status'].variables["Transmitter_overall"][
             :
         ]
-        data["status_transmitter_memory"][ind_b:ind_e] = nc_id.variables['status']["Transmitter_memory"][:]
-        data["status_maintenance_overall"][ind_b:ind_e] = nc_id.variables['status']["Maintenance_overall"][
+        data["status_transmitter_memory"][ind_b:ind_e] = nc_id['status'].variables["Transmitter_memory"][:]
+        data["status_maintenance_overall"][ind_b:ind_e] = nc_id['status'].variables["Maintenance_overall"][
             :
         ]
-        data["status_device_overall"][ind_b:ind_e] = nc_id.variables['status']["Device_overall"][:]
-        data["status_recently_started"][ind_b:ind_e] = nc_id.variables['status']["Recently_started"][:]
-        data["status_measurement_status"][ind_b:ind_e] = nc_id.variables['status']["Measurement_status"][:]
-        data["status_datacom_overall"][ind_b:ind_e] = nc_id.variables['status']["Datacom_overall"][:]
-        data["status_data_generation_status"][ind_b:ind_e] = nc_id.variables['status'][
+        data["status_device_overall"][ind_b:ind_e] = nc_id['status'].variables["Device_overall"][:]
+        data["status_recently_started"][ind_b:ind_e] = nc_id['status'].variables["Recently_started"][:]
+        data["status_measurement_status"][ind_b:ind_e] = nc_id['status'].variables["Measurement_status"][:]
+        data["status_datacom_overall"][ind_b:ind_e] = nc_id['status'].variables["Datacom_overall"][:]
+        data["status_data_generation_status"][ind_b:ind_e] = nc_id['status'].variables[
             "Data_generation_status"
         ][:]
-        data["status_measurement_data_destination_not_set"][ind_b:ind_e] = nc_id.variables['status'][
+        data["status_measurement_data_destination_not_set"][ind_b:ind_e] = nc_id['status'].variables[
             "Measurement_data_destination_not_set"
         ][:]
 
@@ -654,6 +665,10 @@ def read_data(list_files, conf, logger):
             # ----------------------------------------------------------------
             logger.info("reading scalar variables")
             data = read_scalar_vars(data, raw_data, logger)
+            
+            # overlap function
+            if data["float_fw_version"] >= 1.2:
+                data['overlap_function'] = raw_data.variables['overlap_function'][:]
 
         if nb_files_read >= 1:
             # Time dependant variables
@@ -677,6 +692,9 @@ def read_data(list_files, conf, logger):
 
     # start time of measurements
     data["start_time"] = data["time"] - dt.timedelta(seconds=int(data["time_resol"]))
+      
+    # # overlap function
+    # data['overlap_function'] = raw_data
 
     # change of units
     data["hkd_temp_int"] = np.where(
