@@ -113,7 +113,7 @@ ERR_HEX_MSG = [
 
 def convert_str_to_int(array):
     """
-    Convert status strings to integer to be compatible between fw 1.1.0 and 1.2.7
+    Convert status strings to integer
     """
     int_array = np.zeros(len(array))
     conversion_dict = {"0": 0, "I": 1, "W": 2, "A": 3}
