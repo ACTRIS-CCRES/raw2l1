@@ -34,7 +34,7 @@ CLH_DIM = 5
 
 # constant
 RCS_BYTES_SIZE = 4
-RCS_FACTOR = 1e-8
+RCS_FACTOR = 1e-7
 DEG_TO_K = 273.15
 FEET_TO_METERS = 0.3048
 CLH_ALT_METERS_FACTOR = 10.0
@@ -676,11 +676,11 @@ def read_rcs_var(data, ind, msg, logger):
 
     # Each sample is coded with a 20-bit HEX ASCII character set
     # msb nibble and bit first, 2's complement
-    corr_2s_needed = tmp > 2 ** 19
+    corr_2s_needed = tmp > 2 ** 15
     if any(corr_2s_needed):
-        tmp[corr_2s_needed] = -(2 ** 20 - tmp[corr_2s_needed])
+        tmp[corr_2s_needed] = -(2 ** 16 - tmp[corr_2s_needed])
 
-    data["rcs_0"][ind][:] = np.array(tmp, dtype=np.float32)
+    data["rcs_0"][ind][:] = np.array(tmp, dtype=np.float32) * 10
 
     return data
 
