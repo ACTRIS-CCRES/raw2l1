@@ -186,7 +186,6 @@ def create_netcdf_dim(conf, data, nc_id, logger):
 
     # loop only over section concerning the netCDf file
     for section in filter_conf_sections(conf, logger):
-
         # process only section concerning the output file
         try:
             dim = conf.get(section, "dim")
@@ -206,7 +205,6 @@ def create_netcdf_dim(conf, data, nc_id, logger):
             pass
 
         if section not in common.CONF_SECTIONS and name == dim:
-
             logger.debug("dimension found: " + section)
 
             # case where dimensions have no values
@@ -289,7 +287,6 @@ def add_data_to_var(nc_var, var_name, conf, data, logger):
     logger.debug(str(data_type))
     logger.debug(conf.get("conf", "netcdf_format"))
     if KEY_READERDATA in data_val:
-
         # prevent problem with netCDF3 and strings
         if (
             data_type == "string"
@@ -348,7 +345,6 @@ def add_attr_to_var(nc_var, data, conf, section, logger):
     logger.debug("adding attributes to %s variable" % section)
     for option, value in conf.items(section):
         if option not in common.RESERV_ATTR:
-
             # special case for missing value and _FillValue
             data_type = get_var_type(conf.get(section, "type"), conf, logger)
             if option == "missing_value" or option == "_FillValue":
@@ -373,7 +369,6 @@ def add_attr_to_var(nc_var, data, conf, section, logger):
 
             # attributes we don't know if they are string
             if option not in common.STRING_ATTR:
-
                 if type(value) is str and KEY_READERDATA in value:
                     try:
                         data_key = get_data_key(value)
@@ -398,18 +393,8 @@ def create_netcdf_variables(conf, data, nc_id, logger):
     the configuration file
     """
 
-    # define variable in case user chose compression:
-    if conf.get("conf", "netcdf_format") == "NETCDF4":
-
-        comp = conf.get("conf", "netcdf4_compression")
-        comp_level = conf.getint("conf", "netcdf4_compression_level")
-    else:
-        comp = False
-        comp_level = 0
-
     # loop only over sections concerning the netCDf file
     for section in filter_conf_sections(conf, logger):
-
         var_name = section
         logger.debug("variable " + var_name)
         dim = conf.get(section, "dim")
@@ -428,6 +413,14 @@ def create_netcdf_variables(conf, data, nc_id, logger):
             fill_value = conf.get(section, "_FillValue")
         else:
             fill_value = None
+
+        # define variable in case user chose compression:
+        if conf.get("conf", "netcdf_format") == "NETCDF4" and val_type != "string":
+            comp = conf.get("conf", "netcdf4_compression")
+            comp_level = conf.getint("conf", "netcdf4_compression_level")
+        else:
+            comp = False
+            comp_level = 0
 
         # create time variable
         if conf.get(section, "type") == "$time$":
