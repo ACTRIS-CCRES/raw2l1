@@ -87,7 +87,6 @@ def count_msg_to_read(list_files, date_fmt, conf, logger):
     # loop over filenames to read to count the number of messages
     # data message start with a date which format is define in the conf file
     for ifile in list_files:
-
         lines = get_file_lines(ifile, conf, logger)
         for line in lines:
             try:
@@ -323,7 +322,6 @@ def get_msg_type(list_files, date_fmt, conf, logger):
     tmp = {}
     msg_type_found = False
     for f in list_files:
-
         lines = get_file_lines(f, conf, logger)
 
         for i, line in enumerate(lines):
@@ -459,14 +457,12 @@ def read_data(list_files, conf, logger):
     # loop over the list of files
     time_ind = 0
     for file_nb, filename in enumerate(list_files):
-
         logger.debug("reading file %02d", file_nb + 1)
         lines = get_file_lines(filename, conf, logger)
         logger.debug("number of lines : %d", len(lines))
 
         i_line = 0
         while i_line < len(lines):
-
             logger.debug("i_line : %d", i_line)
 
             try:
@@ -487,5 +483,5 @@ def read_data(list_files, conf, logger):
             # incrementing line number and timestep
             i_line += MSG_TYPE_LINES[msg_type] + 1
             time_ind += 1
-
+    data["start_time"] = data["time"] - dt.timedelta(seconds=conf["time_resol"])
     return data
