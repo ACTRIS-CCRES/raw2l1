@@ -87,7 +87,6 @@ def count_msg_to_read(list_files, date_fmt, conf, logger):
     # loop over filenames to read to count the number of messages
     # data message start with a date which format is define in the conf file
     for ifile in list_files:
-
         lines = get_file_lines(ifile, conf, logger)
         for line in lines:
             try:
@@ -126,27 +125,27 @@ def init_data(time_dim, conf, logger):
     data["mlh_layer"] = np.arange(MLH_DIM)
 
     # 1dim variables
-    data["scale"] = np.ones((time_dim,), dtype=np.int) * missing_int
-    data["laser_energy"] = np.ones((time_dim,), dtype=np.int) * missing_int
-    data["laser_temp"] = np.ones((time_dim,), dtype=np.float) * missing_float
-    data["tilt_angle"] = np.ones((time_dim,), dtype=np.int) * missing_int
-    data["bckgrd_rcs_0"] = np.ones((time_dim,), dtype=np.float) * missing_float
-    data["laser_pulse"] = np.ones((time_dim,), dtype=np.float) * missing_float
-    data["sample_rate"] = np.ones((time_dim,), dtype=np.int) * missing_int
-    data["integrated_rcs_0"] = np.ones((time_dim,), dtype=np.float) * missing_float
-    data["window_transmission"] = np.ones((time_dim,), dtype=np.int) * missing_int
-    data["vertical_visibility"] = np.ones((time_dim,), dtype=np.int) * missing_int
-    data["highest_signal_received"] = np.ones((time_dim,), dtype=np.int) * missing_int
+    data["scale"] = np.ones((time_dim,), dtype=int) * missing_int
+    data["laser_energy"] = np.ones((time_dim,), dtype=int) * missing_int
+    data["laser_temp"] = np.ones((time_dim,), dtype=float) * missing_float
+    data["tilt_angle"] = np.ones((time_dim,), dtype=int) * missing_int
+    data["bckgrd_rcs_0"] = np.ones((time_dim,), dtype=float) * missing_float
+    data["laser_pulse"] = np.ones((time_dim,), dtype=float) * missing_float
+    data["sample_rate"] = np.ones((time_dim,), dtype=int) * missing_int
+    data["integrated_rcs_0"] = np.ones((time_dim,), dtype=float) * missing_float
+    data["window_transmission"] = np.ones((time_dim,), dtype=int) * missing_int
+    data["vertical_visibility"] = np.ones((time_dim,), dtype=int) * missing_int
+    data["highest_signal_received"] = np.ones((time_dim,), dtype=int) * missing_int
     data["alarm"] = np.ndarray((time_dim,), dtype="S1")
     data["info_flags"] = np.ndarray((time_dim,), dtype="S12")
 
     # 2dim variables
-    data["cbh"] = np.ones((time_dim, CBH_DIM), dtype=np.int) * missing_int
-    data["clh"] = np.ones((time_dim, CLH_DIM), dtype=np.int) * missing_int
-    data["cloud_amount"] = np.ones((time_dim, CLH_DIM), dtype=np.int) * missing_int
-    data["mlh"] = np.ones((time_dim, MLH_DIM), dtype=np.int) * missing_int
-    data["mlh_qf"] = np.ones((time_dim, MLH_DIM), dtype=np.int) * missing_int
-    data["rcs_0"] = np.ones((time_dim, RANGE_DIM), dtype=np.float) * missing_float
+    data["cbh"] = np.ones((time_dim, CBH_DIM), dtype=int) * missing_int
+    data["clh"] = np.ones((time_dim, CLH_DIM), dtype=int) * missing_int
+    data["cloud_amount"] = np.ones((time_dim, CLH_DIM), dtype=int) * missing_int
+    data["mlh"] = np.ones((time_dim, MLH_DIM), dtype=int) * missing_int
+    data["mlh_qf"] = np.ones((time_dim, MLH_DIM), dtype=int) * missing_int
+    data["rcs_0"] = np.ones((time_dim, RANGE_DIM), dtype=float) * missing_float
 
     return data
 
@@ -182,20 +181,20 @@ def read_cbh(line, data, ind, logger):
 
     nlayers = int(elts[0][0])
     data["alarm"][ind] = elts[0][1]
-    data["window_transmission"][ind] = np.int(elts[1])
+    data["window_transmission"][ind] = int(elts[1])
 
     # number of CBH depends on nlayers value
     if 1 <= nlayers <= 4:
-        data["cbh"][ind, 0] = np.float(elts[2])
+        data["cbh"][ind, 0] = float(elts[2])
     if 2 <= nlayers <= 4:
-        data["cbh"][ind, 1] = np.float(elts[3])
+        data["cbh"][ind, 1] = float(elts[3])
     if 3 <= nlayers <= 4:
-        data["cbh"][ind, 2] = np.float(elts[4])
+        data["cbh"][ind, 2] = float(elts[4])
     if nlayers == 4:
-        data["cbh"][ind, 3] = np.float(elts[5])
+        data["cbh"][ind, 3] = float(elts[5])
     if nlayers == 5:
-        data["vertical_visibility"][ind] = np.float(elts[2])
-        data["highest_signal_received"][ind] = np.float(elts[3])
+        data["vertical_visibility"][ind] = float(elts[2])
+        data["highest_signal_received"][ind] = float(elts[3])
 
     # flags
     data["info_flags"][ind] = elts[6]
@@ -211,21 +210,21 @@ def read_laser(line, data, ind, logger):
 
     elts = line.split()
 
-    data["scale"][ind] = np.int(elts[0])
+    data["scale"][ind] = int(elts[0])
 
     # range_dim and range_resol are read but they seems to always be
     # 5m and 2048 gates
-    data["range_resol"] = np.int(elts[1])
-    data["range_dim"] = np.int(elts[2])
+    data["range_resol"] = int(elts[1])
+    data["range_dim"] = int(elts[2])
 
-    data["laser_energy"][ind] = np.int(elts[3])
-    data["laser_temp"][ind] = np.float(elts[4]) + DEG_TO_K
+    data["laser_energy"][ind] = int(elts[3])
+    data["laser_temp"][ind] = float(elts[4]) + DEG_TO_K
 
-    data["tilt_angle"] = np.int(elts[5])
-    data["bckgrd_rcs_0"][ind] = np.float(elts[6])
-    data["laser_pulse"][ind] = np.float(elts[7]) / PULSE_FACTOR
-    data["sample_rate"][ind] = np.int(elts[8])
-    data["integrated_rcs_0"][ind] = np.float(elts[9])
+    data["tilt_angle"] = int(elts[5])
+    data["bckgrd_rcs_0"][ind] = float(elts[6])
+    data["laser_pulse"][ind] = float(elts[7]) / PULSE_FACTOR
+    data["sample_rate"][ind] = int(elts[8])
+    data["integrated_rcs_0"][ind] = float(elts[9])
 
     return data
 
@@ -244,9 +243,9 @@ def read_profile(line, data, ind, logger):
 
     # Each sample is coded with a 20-bit HEX ASCII character set
     # msb nibble and bit first, 2's complement
-    corr_2s_needed = tmp > 2 ** 19
+    corr_2s_needed = tmp > 2**19
     if any(corr_2s_needed):
-        tmp[corr_2s_needed] = -(2 ** 20 - tmp[corr_2s_needed])
+        tmp[corr_2s_needed] = -(2**20 - tmp[corr_2s_needed])
 
     data["rcs_0"][ind, :] = np.array(tmp, dtype=np.float32)[:]
 
@@ -261,7 +260,7 @@ def read_sky_condition(line, data, ind, logger):
 
     elts = line.strip().split()
 
-    data["cloud_amount"][ind] = np.array(elts[0::2], dtype=np.int)
+    data["cloud_amount"][ind] = np.array(elts[0::2], dtype=int)
 
     tmp = elts[1::2]
 
@@ -323,7 +322,6 @@ def get_msg_type(list_files, date_fmt, conf, logger):
     tmp = {}
     msg_type_found = False
     for f in list_files:
-
         lines = get_file_lines(f, conf, logger)
 
         for i, line in enumerate(lines):
@@ -461,14 +459,12 @@ def read_data(list_files, conf, logger):
     # loop over the list of files
     time_ind = 0
     for file_nb, filename in enumerate(list_files):
-
         logger.debug("reading file %02d", file_nb + 1)
         lines = get_file_lines(filename, conf, logger)
         logger.debug("number of lines : %d", len(lines))
 
         i_line = 0
         while i_line < len(lines):
-
             logger.debug("i_line : %d", i_line)
 
             try:

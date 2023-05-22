@@ -25,7 +25,6 @@ class RawDataReader(object):
         self.data = {}
 
     def __load_reader__(self):
-
         reader_dir = self.conf.get("conf", "reader_dir")
         reader_name = self.conf.get("conf", "reader")
 
@@ -81,7 +80,7 @@ class RawDataReader(object):
             )
             reader_conf[MISSING_INT_KEY] = common.MISSING_INTEGER
         else:
-            reader_conf[MISSING_INT_KEY] = np.int(
+            reader_conf[MISSING_INT_KEY] = int(
                 self.conf.get(READER_CONF, MISSING_INT_KEY)
             )
 
@@ -94,7 +93,7 @@ class RawDataReader(object):
             )
             reader_conf[MISSING_FLOAT_KEY] = common.MISSING_FLOAT
         else:
-            reader_conf[MISSING_FLOAT_KEY] = np.float(
+            reader_conf[MISSING_FLOAT_KEY] = float(
                 self.conf.get(READER_CONF, MISSING_FLOAT_KEY)
             )
 
@@ -126,7 +125,6 @@ class RawDataReader(object):
         return True
 
     def read_data(self):
-
         self.data = self.reader_mod(
             self.conf.get("conf", "input"), self.reader_conf, self.logger
         )

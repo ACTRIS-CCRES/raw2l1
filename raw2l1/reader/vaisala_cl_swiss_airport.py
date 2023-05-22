@@ -131,7 +131,6 @@ def store_error(data, err_msg, logger):
     err_ind = get_error_index(err_msg, logger)
 
     for i in err_ind:
-
         if ERR_HEX_MSG[i]["msg"] in data["list_errors"]:
             data["list_errors"][ERR_HEX_MSG[i]["msg"]]["count"] += 1
         else:
@@ -145,14 +144,12 @@ def store_error(data, err_msg, logger):
 
 
 def log_error_msg(data, logger):
-
     msg_format = "\t- {} : {:d} message(s)"
 
     if len(data["list_errors"]) > 0:
         logger.info("summary of instruments messages")
 
     for msg in data["list_errors"]:
-
         if data["list_errors"][msg]["level"] == "STATUS":
             logger.info(msg_format.format(msg, data["list_errors"][msg]["count"]))
         elif data["list_errors"][msg]["level"] == "WARNING":
@@ -233,7 +230,6 @@ def count_msg_to_read(list_files, f_fmt, logger):
     # loop over filenames to read to count the number of messages
     # data message start with a date using the format "-%Y-%m-%d %H:%M:%S"
     for ifile in list_files:
-
         try:
             dt.datetime.strptime(basename(ifile), f_fmt)
             n_data_msg += 1
@@ -324,9 +320,9 @@ def calc_range(resol, n_gates):
     calculate range variable based on resolution and number of gates
     """
 
-    range_vect = np.array(list(range(1, n_gates + 1)), dtype=np.float)
+    range_vect = np.array(list(range(1, n_gates + 1)), dtype=float)
 
-    return range_vect * np.float(resol)
+    return range_vect * float(resol)
 
 
 def check_range(data, data_dim, filename, logger):
@@ -391,7 +387,6 @@ def get_acq_conf(filename, data, data_dim, f_fmt, conf, logger):
 
     conf_msg = None
     while i_line <= n_lines:
-
         conf_msg = get_conf_msg(lines[i_line], logger)
         if conf_msg is None:
             continue
@@ -524,7 +519,7 @@ def read_scalar_vars(data, msg, msg_type, logger):
     line_to_read = get_state_line_nb_in_msg(data["msg_type"])
     line = msg[line_to_read]
 
-    return np.float(line.split()[6])
+    return float(line.split()[6])
 
 
 def read_time_dep_vars(data, ind, msg, msg_type, logger):
@@ -536,13 +531,13 @@ def read_time_dep_vars(data, ind, msg, msg_type, logger):
     line_to_read = get_state_line_nb_in_msg(data["msg_type"])
     params = msg[line_to_read].split()
 
-    data["scale"][ind] = np.float(params[0])
-    data["laser_energy"][ind] = np.float(params[3])
-    data["laser_temp"][ind] = np.float(params[4]) + DEG_TO_K
-    data["window_transmission"][ind] = np.float(params[5])
-    data["tilt_angle"][ind] = np.float(params[6])
-    data["bckgrd_rcs_0"][ind] = np.float(params[7])
-    data["integrated_rcs_0"][ind] = np.float(params[9]) * SUM_BCKSCATTER_FACTOR
+    data["scale"][ind] = float(params[0])
+    data["laser_energy"][ind] = float(params[3])
+    data["laser_temp"][ind] = float(params[4]) + DEG_TO_K
+    data["window_transmission"][ind] = float(params[5])
+    data["tilt_angle"][ind] = float(params[6])
+    data["bckgrd_rcs_0"][ind] = float(params[7])
+    data["integrated_rcs_0"][ind] = float(params[9]) * SUM_BCKSCATTER_FACTOR
 
     return data
 
@@ -575,14 +570,14 @@ def read_cbh_msg(data, ind, msg, logger):
 
     # number of CBH depends on nlayers value
     if 1 <= nlayers <= 4:
-        data["cbh"][ind, 0] = np.float(elts[1]) * coeff
+        data["cbh"][ind, 0] = float(elts[1]) * coeff
     if 2 <= nlayers <= 4:
-        data["cbh"][ind, 1] = np.float(elts[2]) * coeff
+        data["cbh"][ind, 1] = float(elts[2]) * coeff
     if 3 <= nlayers <= 4:
-        data["cbh"][ind, 2] = np.float(elts[3]) * coeff
+        data["cbh"][ind, 2] = float(elts[3]) * coeff
     # vertical visibility
     if nlayers == 4:
-        data["vertical_visibility"][ind] = np.float(elts[1]) * coeff
+        data["vertical_visibility"][ind] = float(elts[1]) * coeff
 
     return data
 
@@ -611,10 +606,10 @@ def read_clh_msg(data, ind, msg, logger):
     # get cloud amount
     for level, octa in enumerate(octas):
         if 1 <= octa <= 8:
-            data["cloud_amount"][ind, level] = np.int(octa)
+            data["cloud_amount"][ind, level] = int(octa)
             data["clh"][ind, level] = float(clh_str[level]) * coeff
         elif octa == 0:
-            data["cloud_amount"][ind, level] = np.int(octa)
+            data["cloud_amount"][ind, level] = int(octa)
 
     return data
 
@@ -660,9 +655,9 @@ def read_rcs_var(data, ind, msg, logger):
 
     # Each sample is coded with a 20-bit HEX ASCII character set
     # msb nibble and bit first, 2's complement
-    corr_2s_needed = tmp > 2 ** 19
+    corr_2s_needed = tmp > 2**19
     if any(corr_2s_needed):
-        tmp[corr_2s_needed] = -(2 ** 20 - tmp[corr_2s_needed])
+        tmp[corr_2s_needed] = -(2**20 - tmp[corr_2s_needed])
 
     data["rcs_0"][ind][:] = np.array(tmp, dtype=np.float32)
 
@@ -682,7 +677,6 @@ def read_vars(lines, data, conf, time_ind, f_name, f_fmt, logger):
 
     # loop over the lines
     while i_line < n_lines:
-
         # reject header lines
         if lines[i_line] in FILE_HEADERS:
             i_line += 1
@@ -769,7 +763,6 @@ def read_data(list_files, conf, logger):
     time_ind = 0
     nb_files_read = 0
     for ifile in list_files:
-
         # try reading the file
         lines = get_file_lines(ifile, conf, logger)
         if lines is None:

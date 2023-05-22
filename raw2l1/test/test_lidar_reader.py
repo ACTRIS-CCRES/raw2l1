@@ -12,7 +12,7 @@ import tools.lidar_reader as lr
 
 
 def add_arg_options(conf):
-    """ add arguments needed to check loading of configuration file"""
+    """add arguments needed to check loading of configuration file"""
 
     conf.set("conf", "date", dt.datetime(2016, 6, 10))
     conf.set("conf", "ancillary", [])
@@ -22,7 +22,6 @@ def add_arg_options(conf):
 
 class TestLidarReader(unittest.TestCase):
     def test_no_missing_conf(self):
-
         logger = logging.getLogger("dummy")
 
         conf = configparser.RawConfigParser()
@@ -34,11 +33,10 @@ class TestLidarReader(unittest.TestCase):
 
         self.assertEqual(
             (reader.reader_conf["missing_float"], reader.reader_conf["missing_int"]),
-            (np.float(-999.0), np.int(-9)),
+            (float(-999.0), int(-9)),
         )
 
     def test_no_missing_int_conf(self):
-
         logger = logging.getLogger("dummy")
 
         conf = configparser.RawConfigParser()
@@ -50,11 +48,10 @@ class TestLidarReader(unittest.TestCase):
 
         self.assertEqual(
             (reader.reader_conf["missing_float"], reader.reader_conf["missing_int"]),
-            (np.float(-1337), np.int(-9)),
+            (float(-1337), int(-9)),
         )
 
     def test_no_missing_float_conf(self):
-
         logger = logging.getLogger("dummy")
 
         conf = configparser.RawConfigParser()
@@ -66,11 +63,10 @@ class TestLidarReader(unittest.TestCase):
 
         self.assertEqual(
             (reader.reader_conf["missing_float"], reader.reader_conf["missing_int"]),
-            (np.float(-999), np.int(-1337)),
+            (float(-999), int(-1337)),
         )
 
     def test_no_missing_nan_float_conf(self):
-
         logger = logging.getLogger("dummy")
 
         conf = configparser.RawConfigParser()

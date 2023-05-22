@@ -63,7 +63,6 @@ def merge_structured_arrays(list_arr):
     final = list_arr[0].copy()
 
     for arr in list_arr[1:]:
-
         final_size = final.size
         arr_size = arr.size
         final.resize(final_size + arr_size)
@@ -219,7 +218,6 @@ def read_header_data(file_, conf, data, logger):
 
         # special variable
         if value_name in HEADER_SPECIAL:
-
             if value_name == "GPS Localisation" or value_name == "GPS Location":
                 data["latitude"], data["longitude"] = get_localization(
                     value, conf, logger
@@ -242,7 +240,7 @@ def read_header_data(file_, conf, data, logger):
 
 
 def read_columns(file_, data, conf, logger):
-    """read the data store as columns """
+    """read the data store as columns"""
 
     header = data["HeaderSize"]
 
@@ -254,7 +252,7 @@ def read_columns(file_, data, conf, logger):
             count += 1
 
     col_names = [col for col in line.strip().split(FILE_SEP)]
-    col_dtypes = [np.float] * (len(col_names) - 1)
+    col_dtypes = [float] * (len(col_names) - 1)
     col_dtypes = [dt.datetime] + col_dtypes
 
     logger.debug("reading columns in %s", os.path.basename(file_))
@@ -281,7 +279,6 @@ def create_1d_var(raw_data, data, var_names, conf, logger):
     logger.debug("reading 1d variables")
 
     for var in var_names:
-
         name = var[0]
         col_names = var[1]
 
@@ -310,7 +307,6 @@ def create_2d_var(raw_data, data, list_vars, conf, logger):
     column_names = [col[0] for col in raw_data.dtype.descr]
 
     for var in list_vars:
-
         var_name = var[0]
         col_names = var[1]
 
@@ -322,7 +318,6 @@ def create_2d_var(raw_data, data, list_vars, conf, logger):
         # --------------------------------------------------------------------
         col_2_join = []
         for col_name in col_names:
-
             # get columns which have the string in their name
             col_2_join = col_2_join + [col for col in column_names if col_name in col]
 
@@ -391,7 +386,6 @@ def read_data(list_files, conf, logger):
     # ------------------------------------------------------------------------
     tmp_list = []
     for i_file, file_ in enumerate(list_files):
-
         if i_file == 0:
             data = read_header_data(file_, conf, data, logger)
 

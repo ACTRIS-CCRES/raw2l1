@@ -286,7 +286,6 @@ def store_error(data, err_msg, logger):
     err_ind = get_error_index(err_msg, data["firmware_version"], logger)
 
     for i in err_ind:
-
         if ERR_HEX_MSG[i]["msg"] in data["list_errors"]:
             data["list_errors"][ERR_HEX_MSG[i]["msg"]]["count"] += 1
         else:
@@ -300,14 +299,12 @@ def store_error(data, err_msg, logger):
 
 
 def log_error_msg(data, logger):
-
     msg_format = "{} : {:d} message(s)"
 
     if len(data["list_errors"]) > 0:
         logger.info("summary of instruments messages")
 
     for msg in data["list_errors"]:
-
         if data["list_errors"][msg]["level"] == "STATUS":
             logger.info(msg_format.format(msg, data["list_errors"][msg]["count"]))
         elif data["list_errors"][msg]["level"] == "WARNING":
@@ -410,7 +407,7 @@ def get_temp(nc_obj, logger):
     except TypeError:
         logger.debug("Correcting temperature scale problem")
         nc_obj.set_auto_maskandscale(False)
-        tmp = nc_obj[:] / np.float(nc_obj.scale_factor)
+        tmp = nc_obj[:] / float(nc_obj.scale_factor)
 
     return tmp
 
@@ -631,9 +628,13 @@ def read_timedep_vars(data, nc_id, soft_vers, time_ind, time_size, logger):
             c_cal = nc_id.variables["c_cal"][:]
         except KeyError:
             c_cal = 3.2e-12  # default calibration factor for Lufft instruments
-            logger.warning("c_cal not found in file although beta_att is there. assuming c_cal=3.2e-12")
+            logger.warning(
+                "c_cal not found in file although beta_att is there. assuming c_cal=3.2e-12"
+            )
         data["beta_raw"][ind_b:ind_e, :] = beta_att / c_cal
-        logger.debug("using beta_att variable divided by c_cal (undoing firmware pseudo-calibration)")
+        logger.debug(
+            "using beta_att variable divided by c_cal (undoing firmware pseudo-calibration)"
+        )
     except KeyError:
         data["beta_raw"][ind_b:ind_e, :] = nc_id.variables["beta_raw"][:]
         logger.debug("using beta_raw variable")
@@ -673,7 +674,6 @@ def read_data(list_files, conf, logger):
     time_ind = 0
     # Loop over the list of files
     for ifile in list_files:
-
         # Opening file
         try:
             raw_data = nc.Dataset(ifile, "r")
