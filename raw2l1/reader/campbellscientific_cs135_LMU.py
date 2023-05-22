@@ -483,5 +483,6 @@ def read_data(list_files, conf, logger):
             # incrementing line number and timestep
             i_line += MSG_TYPE_LINES[msg_type] + 1
             time_ind += 1
+    data["time_resolution"] = conf["time_resol"]
     data["start_time"] = data["time"] - dt.timedelta(seconds=conf["time_resol"])
     return data
