@@ -100,7 +100,7 @@ def count_msg_to_read(list_files, date_fmt, conf, logger):
     return n_data_msg
 
 
-def init_data(time_dim, conf, logger):
+def init_data(data, time_dim, conf, logger):
     """
     Initialize the arraies in data dict where data are read
     """
@@ -108,12 +108,10 @@ def init_data(time_dim, conf, logger):
     missing_int = conf["missing_int"]
     missing_float = conf["missing_float"]
 
-    data = {}
-
     # scalar variables
-    data["instrument_id"] = ""
-    data["os"] = ""
-    data["msg_type"] = -1
+    # data["instrument_id"] = ""
+    # data["os"] = ""
+    # data["msg_type"] = -1
     data["range_resol"] = -1
     data["range_dim"] = -1
 
@@ -246,8 +244,12 @@ def read_profile(line, data, ind, logger):
     corr_2s_needed = tmp > 2**19
     if any(corr_2s_needed):
         tmp[corr_2s_needed] = -(2**20 - tmp[corr_2s_needed])
+    
+    # corr_2s_needed = tmp > 1048575
+    # if any(corr_2s_needed):
+    #     tmp[corr_2s_needed] = tmp[corr_2s_needed] - 2**40
 
-    data["rcs_0"][ind, :] = np.array(tmp, dtype=np.float32)[:]
+    data["rcs_0"][ind, :] = np.array(tmp, dtype=np.float32)[:] * RCS_FACTOR
 
     return data
 
@@ -314,12 +316,12 @@ def is_msg_type_ok(msg_type, filename, logger):
         logger.critical("103 data message type unknown in '%s'", filename)
 
 
-def get_msg_type(list_files, date_fmt, conf, logger):
+def get_msg_type(data, list_files, date_fmt, conf, logger):
     """
     try to determine the type of data message
     """
 
-    tmp = {}
+    # tmp = {}
     msg_type_found = False
     for f in list_files:
         lines = get_file_lines(f, conf, logger)
@@ -330,7 +332,7 @@ def get_msg_type(list_files, date_fmt, conf, logger):
             except ValueError:
                 continue
 
-            msg_found, tmp = read_header(lines[i + 1], tmp, logger)
+            msg_found, tmp = read_header(lines[i + 1], data, logger)
             msg_type = tmp["msg_type"]
 
             if msg_found and is_msg_type_ok(msg_type, f, logger):
@@ -338,7 +340,7 @@ def get_msg_type(list_files, date_fmt, conf, logger):
                 break
 
     if msg_type_found:
-        return msg_type
+        return msg_type, data
     else:
         logger.critical("106 impossible to determine data messages type in any input file")
         sys.exit(2)
@@ -445,14 +447,16 @@ def read_data(list_files, conf, logger):
     logger.info("counting number of data messages to read")
     time_dim = count_msg_to_read(list_files, t_stamp_fmt, conf, logger)
 
-    msg_type = get_msg_type(list_files, t_stamp_fmt, conf, logger)
+    data = {}
+    
+    msg_type, data = get_msg_type(data, list_files, t_stamp_fmt, conf, logger)
     logger.debug("message type : %d", msg_type)
     msg_len = MSG_TYPE_LINES[msg_type]
     logger.debug("message len : %d", msg_len)
 
     # initialize dict containing data
     logger.debug("initializing data arrays")
-    data = init_data(time_dim, conf, logger)
+    data = init_data(data, time_dim, conf, logger)
 
     # loop over the list of files
     time_ind = 0
