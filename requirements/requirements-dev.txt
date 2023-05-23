@@ -7,7 +7,7 @@ pytest-cov
 pytest-xdist>=2.2.0
 coverage
 black==23.3.0
-flake8==6.0.0
+flake8
 isort>=5.2.1
 pre-commit>=2.15.0
 pyupgrade
