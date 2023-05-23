@@ -23,7 +23,7 @@ test:
   artifacts:
     when: always
     reports:
-      junit: report.xml
+      junit: raw2l1/report.xml
   parallel:
     matrix:
       - PYTHON_VERSION: ["3.7", "3.8", "3.9", "3.10"]
