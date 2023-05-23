@@ -8,6 +8,7 @@ dependencies:
   # required dependencies
   - numpy
   - netCDF4>=1.6
+  - gitpython
 
   # test dependencies
   - pytest>=7.0.0
@@ -19,14 +20,12 @@ dependencies:
   - black=23.3.0
   - flake8=6.0.0
   - isort>=5.2.1  # check that imports are in the right order
-  - mypy=1.2
   - pre-commit>=2.15.0
   - pyupgrade
   - pydocstyle
   - ruff=0.0.215
 
   # documentation
-  - gitpython
   - gitdb
   - sphinx
   - sphinx-rtd-theme
