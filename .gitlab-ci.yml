@@ -26,4 +26,4 @@ test:
       junit: raw2l1/report.xml
   parallel:
     matrix:
-      - PYTHON_VERSION: ["3.7", "3.8", "3.9", "3.10"]
+      - PYTHON_VERSION: ["3.7", "3.8", "3.9", "3.10", "3.11"]
