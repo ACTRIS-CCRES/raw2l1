@@ -134,10 +134,18 @@ if __name__ == "__main__":
         action="store_true",
         help="compare whether the two files are equivalent",
     )
+    argparser.add_argument(
+        "conda_fname",
+        help="Path to the conda environment file",
+    )
+    argparser.add_argument(
+        "pip_fname",
+        help="Path to the pip requirements file",
+    )
     args = argparser.parse_args()
 
-    conda_fname = "environment.yml"
-    pip_fname = "requirements-dev.txt"
+    conda_fname = args.conda_fname
+    pip_fname = args.pip_fname
     repo_path = pathlib.Path(__file__).parent.parent.absolute()
     res = generate_pip_from_conda(
         pathlib.Path(repo_path, conda_fname),
