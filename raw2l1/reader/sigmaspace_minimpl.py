@@ -34,7 +34,6 @@ def get_dimension_size(list_files, logger):
     logger.debug("determining size of data")
 
     for i_file, file_ in enumerate(list_files):
-
         logger.debug("reading {}".format(file_))
         nc_id = nc.Dataset(file_, "r")
 
@@ -198,7 +197,7 @@ def read_time(nc_id):
 
     tmp = []
     for y, m, d, hh, mm, ss in zip(year, month, day, hour, minute, second):
-        tmp.append(dt.datetime(y, m, d, hh, mm, ss))
+        tmp.append(dt.datetime(int(y), int(m), int(d), int(hh), int(mm), int(ss)))
 
     return np.array(tmp)
 
@@ -289,7 +288,6 @@ def read_data(list_files, conf, logger):
     # ------------------------------------------------------------------------
     time_ind = 0
     for i_file, file_ in enumerate(list_files):
-
         nc_id = nc.Dataset(file_, "r")
         nc_id.set_auto_mask(False)
 
