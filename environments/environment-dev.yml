@@ -1,4 +1,4 @@
-name: raw2l1
+name: raw2l1-dev
 channels:
   - conda-forge
 dependencies:
