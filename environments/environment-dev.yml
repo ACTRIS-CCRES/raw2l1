@@ -5,11 +5,6 @@ dependencies:
   - python>=3.7
   - pip
 
-  # required dependencies
-  - numpy
-  - netCDF4>=1.6
-  - gitpython
-
   # test dependencies
   - pytest>=7.0.0
   - pytest-cov
