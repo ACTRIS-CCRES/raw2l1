@@ -18,31 +18,12 @@ test:
   stage: test
   image: python:$PYTHON_VERSION
   script:
-    - py.test --cov
+    - py.test --junitxml=report.xml --cov
   coverage: '/\d+\%\s*$/'
-  allow_failure: true
+  artifacts:
+    when: always
+    reports:
+      junit: report.xml
   parallel:
     matrix:
       - PYTHON_VERSION: ["3.7", "3.8", "3.9", "3.10"]
-
-# test_py38:
-#   stage: test
-#   image: python:3.8
-#   script:
-#     - py.test
-#   allow_failure: true
-
-# test_py39:
-#   stage: test
-#   image: python:3.9
-#   script:
-#     - py.test
-#   allow_failure: true
-
-# test_py310:
-#   stage: test
-#   image: python:3.10
-#   script:
-#     - py.test --cov
-#   coverage: '/\d+\%\s*$/'
-#   allow_failure: true
