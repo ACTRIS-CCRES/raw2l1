@@ -9,6 +9,7 @@ pytest>=7.0.0
 pytest-cov
 pytest-xdist>=2.2.0
 coverage
+nose
 black==23.3.0
 flake8
 isort>=5.2.1

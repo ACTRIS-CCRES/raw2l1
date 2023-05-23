@@ -15,6 +15,7 @@ dependencies:
   - pytest-cov
   - pytest-xdist>=2.2.0
   - coverage
+  - nose
 
   # code checks
   - black=23.3.0
