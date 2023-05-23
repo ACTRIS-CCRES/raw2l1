@@ -2,6 +2,9 @@
 # See that file for comments about the need/usage of each dependency.
 
 pip
+numpy
+netCDF4>=1.6
+gitpython
 pytest>=7.0.0
 pytest-cov
 pytest-xdist>=2.2.0
