@@ -15,23 +15,24 @@ before_script:
   - pip install -r requirements/requirements-dev.txt
   - cd raw2l1
 
-# test:
-#   stage: test
-#   image: python:$PYTHON_VERSION
-#   script:
-#     - py.test --junitxml=report.xml --cov
-#   coverage: '/\d+\%\s*$/'
-#   artifacts:
-#     when: always
-#     reports:
-#       junit: raw2l1/report.xml
-#   parallel:
-#     matrix:
-#       - PYTHON_VERSION: ["3.7", "3.8", "3.9", "3.10", "3.11"]
+test:
+  stage: test
+  image: python:$PYTHON_VERSION
+  script:
+    - py.test --junitxml=report.xml --cov
+  coverage: '/\d+\%\s*$/'
+  artifacts:
+    when: always
+    reports:
+      junit: raw2l1/report.xml
+  parallel:
+    matrix:
+      - PYTHON_VERSION: ["3.7", "3.8", "3.9", "3.10", "3.11"]
 
 ruff:
   stage: quality
   image: python:3.11
+  needs: ["test"]
   script:
     - cd ..
     - ruff --format=gitlab raw2l1 > gl-code-quality-report.json
@@ -40,9 +41,10 @@ ruff:
     reports:
       codequality: gl-code-quality-report.json
 
-# black:
-#   stage: lint
-#   image: python:3.11
-#   script:
-#     - black --check .
-#   allow_failure: true
+black:
+  stage: lint
+  image: python:3.11
+  needs: ["test"]
+  script:
+    - black --check .
+  allow_failure: true
