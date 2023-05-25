@@ -1,14 +1,13 @@
-variables:
-  PIP_CACHE_DIR: "$CI_PROJECT_DIR/pip-cache"
-
 stages:
   - test
   - lint
 
+variables:
+  PIP_CACHE_DIR: "$CI_PROJECT_DIR/.cache/pip"
+
 cache:
   paths:
-    - "$CI_PROJECT_DIR/pip-cache"
-  key: "$CI_PROJECT_ID"
+    - .cache/pip
 
 before_script:
   - python -V
@@ -40,5 +39,5 @@ ruff:
   stage: lint
   image: python:3.11
   script:
-    - ruff raw2l1
+    - ruff --format=gitlab raw2l1
   allow_failure: true
