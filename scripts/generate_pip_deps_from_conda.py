@@ -3,6 +3,8 @@
 Convert the conda environment.yml to the pip requirements-dev.txt,
 or check that they have the same packages (for the CI)
 
+script (very) slightly modified from pandas github repo.
+
 Usage:
 
     Generate `requirements.txt`
