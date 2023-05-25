@@ -33,11 +33,12 @@ ruff:
   stage: quality
   image: python:3.11
   script:
-    - ruff --format=gitlab . > gl-code-quality-report.json
+    - cd ..
+    - ruff --format=gitlab raw2l1 > gl-code-quality-report.json
   allow_failure: true
   artifacts:
     reports:
-      codequality: raw2l1/gl-code-quality-report.json
+      codequality: gl-code-quality-report.json
 
 # black:
 #   stage: lint
