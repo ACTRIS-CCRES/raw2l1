@@ -221,7 +221,6 @@ def get_input_args(argv):
     print("parse : ", parse_args.ancillary)
     list_anc = []
     if parse_args.ancillary:
-
         for anc_list in parse_args.ancillary:
             list_anc.append([f for f in chain.from_iterable(anc_list)])
 

@@ -2,7 +2,6 @@
 
 
 def abc(data):
-
     data[2] = 2
     data[3] = 3
 
@@ -10,7 +9,6 @@ def abc(data):
 
 
 def read_data(list_files, logger):
-
     logger.info("test_reader")
     logger.info(list_files)
 

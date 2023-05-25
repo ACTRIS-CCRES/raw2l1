@@ -1,6 +1,3 @@
-
-
-
 import datetime as dt
 
 import netCDF4 as nc

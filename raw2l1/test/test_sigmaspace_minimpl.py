@@ -11,12 +11,10 @@ PRGM = "raw2l1.py"
 
 
 class TestSigmaSpaceMiniMPL(unittest.TestCase):
-
     IN_DIR = os.path.join(TEST_IN_DIR, "sigmaspace_minimpl")
     conf_file = os.path.join(CONF_DIR, "conf_sigmaspace_minimpl_eprofile.ini")
 
     def test_5min_file(self):
-
         date = "20160601"
         test_ifile = os.path.join(self.IN_DIR, "MPL_5030_201606010000.nc")
         test_ofile = os.path.join(TEST_OUT_DIR, "test_minimpl_20160601_5min.nc")
@@ -38,7 +36,6 @@ class TestSigmaSpaceMiniMPL(unittest.TestCase):
         self.assertEqual(resp, 0, "miniMPL one file")
 
     def test_1h_file(self):
-
         date = "20160601"
         test_ifile = os.path.join(self.IN_DIR, "MPL_5030_20160601*.nc")
         test_ofile = os.path.join(TEST_OUT_DIR, "test_minimpl_20160601_1h.nc")

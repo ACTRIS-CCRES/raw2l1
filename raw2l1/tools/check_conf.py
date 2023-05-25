@@ -48,7 +48,6 @@ def check_nc4_compression_option(conf, section, logger):
     # check compression value
     val = conf.get(section, opt)
     if val not in common.ALLOW_NC4_COMP:
-
         msg = "107 Error Reading config file '" + conf_file + "'"
         msg += (
             " authorized values for %s option in %s section is %s. Option set to false"

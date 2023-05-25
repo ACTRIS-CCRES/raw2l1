@@ -13,11 +13,9 @@ PRGM = "raw2l1.py"
 
 
 class TestRunHatPro(unittest.TestCase):
-
     IN_DIR = TEST_IN_DIR + "rpg_hatpro" + os.sep
 
     def test_rpg_hatpro_bl_ta_toprof(self):
-
         date = "20150930"
         test_ifile = (
             self.IN_DIR + "hatpro_0a_z1Imwrad-CMP-TPC_v01_20160427_000057_479.nc"
@@ -40,7 +38,6 @@ class TestRunHatPro(unittest.TestCase):
         self.assertEqual(resp, 0)
 
     def test_rpg_hatpro_bl_ta_toprof_multi_files(self):
-
         date = "20150901"
         test_ifile = self.IN_DIR + "hatpro_0a_z1Imwrad-CMP-TPC_v01_20160427_*.nc"
         test_ofile = TEST_OUT_DIR + "sups_sir_mwrBL00_l2_ta_v01_20150901000412.nc"
@@ -61,7 +58,6 @@ class TestRunHatPro(unittest.TestCase):
         self.assertEqual(resp, 0)
 
     def test_rpg_hatpro_ta_toprof(self):
-
         date = "20150930"
         test_ifile = self.IN_DIR + "hatpro_0a_z1Imwrad-TPC_v01_20150930_000542_1433.nc"
         test_ofile = TEST_OUT_DIR + "sups_sir_mwr00_l2_ta_v01_20150930000542.nc"
@@ -82,7 +78,6 @@ class TestRunHatPro(unittest.TestCase):
         self.assertEqual(resp, 0)
 
     def test_rpg_hatpro_hua_toprof(self):
-
         date = "20150930"
         test_ifile = self.IN_DIR + "hatpro_0a_z1Imwrad-HPC_v01_20150930_000542_1433.nc"
         test_ofile = TEST_OUT_DIR + "sups_sir_mwr00_l2_hua_v01_20150930000542.nc"
@@ -103,7 +98,6 @@ class TestRunHatPro(unittest.TestCase):
         self.assertEqual(resp, 0)
 
     def test_rpg_hatpro_clwvi_toprof(self):
-
         date = "20150930"
         test_ifile = self.IN_DIR + "hatpro_0a_z1Imwrad-LWP_v01_20150930_000307_1436.nc"
         test_ofile = TEST_OUT_DIR + "sups_sir_mwr00_l2_clwvi_v01_20130901000307.nc"
@@ -124,7 +118,6 @@ class TestRunHatPro(unittest.TestCase):
         self.assertEqual(resp, 0)
 
     def test_rpg_hatpro_prw_toprof(self):
-
         date = "20150930"
         test_ifile = self.IN_DIR + "hatpro_0a_z1Imwrad-IWV_v01_20150930_000307_1436.nc"
         test_ofile = TEST_OUT_DIR + "sups_sir_mwr00_l2_prw_v01_20130930000307.nc"
@@ -145,7 +138,6 @@ class TestRunHatPro(unittest.TestCase):
         self.assertEqual(resp, 0)
 
     def test_rpg_hatpro_tb_toprof(self):
-
         date = "20150901"
         test_ifile = self.IN_DIR + "hatpro_0a_z1Imwrad-BRT_v01_20150901*.nc"
         test_afile_met = self.IN_DIR + "hatpro_0a_z1Imwrad-MET_v01_20150901_*.nc"
@@ -174,7 +166,6 @@ class TestRunHatPro(unittest.TestCase):
         self.assertEqual(resp, 0)
 
     def test_rpg_hatpro_tb_bl_toprof(self):
-
         date = "20150901"
         test_ifile = self.IN_DIR + "hatpro_0a_z1Imwrad-BLB_v01_20150901_*.nc"
         test_afile = self.IN_DIR + "hatpro_0a_z1Imwrad-MET_v01_20150901_*.nc"

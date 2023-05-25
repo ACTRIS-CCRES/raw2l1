@@ -10,23 +10,19 @@ import tools.arg_parser as ag
 
 class TestArgParserDate(unittest.TestCase):
     def test_date_error(self):
-
         self.assertRaises(argparse.ArgumentTypeError, ag.check_date_format, "20150100")
 
     def test_date_format(self):
-
         self.assertRaises(
             argparse.ArgumentTypeError, ag.check_date_format, "2015-01-01"
         )
 
     def test_date_20150301(self):
-
         self.assertEqual(ag.check_date_format("20150301"), dt.datetime(2015, 3, 1))
 
 
 class TestArgParser(unittest.TestCase):
     def test_ancillary(self):
-
         argv = [
             "20160101",
             "test/conf/conf_dummy.ini",

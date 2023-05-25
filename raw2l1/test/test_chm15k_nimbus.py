@@ -44,12 +44,10 @@ class TestSoftVersionParsing(unittest.TestCase):
 
 
 class TestChm15k(unittest.TestCase):
-
     IN_DIR = os.path.join(TEST_IN_DIR, "jenoptik_chm15k")
     conf_file = os.path.join(CONF_DIR, "conf_lufft_chm15k_eprofile.ini")
 
     def test_chm15k_v0536(self):
-
         date = "20120306"
         test_ifile = os.path.join(
             self.IN_DIR, "20120306_hohenpeissenberg_CHM060028_000.nc"
@@ -73,7 +71,6 @@ class TestChm15k(unittest.TestCase):
         self.assertEqual(resp, 0, "CHM15K v0.536")
 
     def test_chm15k_v0556(self):
-
         date = "20130110"
         test_ifile = os.path.join(
             self.IN_DIR, "20130110_hohenpeissenberg_CHM060028_000.nc"
@@ -95,7 +92,6 @@ class TestChm15k(unittest.TestCase):
         self.assertEqual(resp, 0, "CHM15K v0.556")
 
     def test_chm15k_v0559(self):
-
         date = "20130718"
         test_ifile = os.path.join(
             self.IN_DIR, "20130718_hohenpeissenberg_CHM060028_000.nc"
@@ -117,7 +113,6 @@ class TestChm15k(unittest.TestCase):
         self.assertEqual(resp, 0)
 
     def test_chm15k_v0719(self):
-
         date = "20131212"
         test_ifile = os.path.join(
             self.IN_DIR, "20131212_hohenpeissenberg_CHM060028_000.nc"
@@ -139,7 +134,6 @@ class TestChm15k(unittest.TestCase):
         self.assertEqual(resp, 0, "test version v0.719")
 
     def test_chm15k_prob_time(self):
-
         date = "20120327"
         test_ifile = os.path.join(
             self.IN_DIR, "20131212_hohenpeissenberg_CHM060028_000.nc"
@@ -161,7 +155,6 @@ class TestChm15k(unittest.TestCase):
         self.assertEqual(resp, 0)
 
     def test_chm15k_sirta(self):
-
         date = "20150427"
         test_ifile = os.path.join(self.IN_DIR, "20150427_SIRTA_CHM150101_000.nc")
         test_ofile = os.path.join(TEST_OUT_DIR, "test_chm15k_20150427_sirta.nc")
@@ -184,7 +177,6 @@ class TestChm15k(unittest.TestCase):
         self.assertEqual(resp, 0)
 
     def test_chm15k_v0235(self):
-
         date = "20151001"
         test_ifile = os.path.join(
             self.IN_DIR,
@@ -208,7 +200,6 @@ class TestChm15k(unittest.TestCase):
         self.assertEqual(resp, 0)
 
     def test_chm15k_v0738(self):
-
         date = "20160426"
         test_ifile = os.path.join(
             self.IN_DIR,
@@ -234,9 +225,11 @@ class TestChm15k(unittest.TestCase):
         self.assertEqual(resp, 0, "Nimbus v0.738")
 
     def test_chm15k_v1100(self):
-
         date = "20210609"
-        test_ifile = os.path.join(self.IN_DIR, "chm15k_beta-att.nc",)
+        test_ifile = os.path.join(
+            self.IN_DIR,
+            "chm15k_beta-att.nc",
+        )
         test_ofile = os.path.join(TEST_OUT_DIR, "chm15k_beta-att.nc")
         test_cfile = os.path.join(CONF_DIR, "conf_lufft_chm15k_eprofile.ini")
 
@@ -256,12 +249,10 @@ class TestChm15k(unittest.TestCase):
 
 
 class TestChm15kOverlap(unittest.TestCase):
-
     IN_DIR = os.path.join(TEST_IN_DIR, "jenoptik_chm15k")
     conf_file = os.path.join(CONF_DIR, "conf_lufft_chm15k_eprofile.ini")
 
     def test_chm15k_overlap_good(self):
-
         date = "20150427"
         test_ifile = os.path.join(self.IN_DIR, "20150427_SIRTA_CHM150101_000.nc")
         test_ovl_file = os.path.join(self.IN_DIR, "TUB140013_20150211_4096.cfg")
@@ -317,7 +308,6 @@ class TestChm15kOverlap(unittest.TestCase):
         self.assertEqual(resp, 0, "reading overlap define conf file")
 
     def test_chm15k_overlap_bad(self):
-
         date = "20150427"
         test_ifile = os.path.join(self.IN_DIR, "20150427_SIRTA_CHM150101_000.nc")
         test_ovl_file = os.path.join(self.IN_DIR, "jenoptik_chm15k_overlap.txt")
@@ -343,7 +333,6 @@ class TestChm15kOverlap(unittest.TestCase):
         self.assertEqual(resp, 0, "bad overlap file but readable")
 
     def test_chm15k_overlap_empty(self):
-
         date = "20150427"
         test_ifile = os.path.join(self.IN_DIR, "20150427_SIRTA_CHM150101_000.nc")
         test_ovl_file = os.path.join(self.IN_DIR, "empty_overlap.txt")

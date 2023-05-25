@@ -1,5 +1,3 @@
-
-
 import configparser
 import datetime as dt
 import re

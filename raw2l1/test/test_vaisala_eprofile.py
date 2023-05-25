@@ -13,12 +13,10 @@ PRGM = "raw2l1.py"
 
 
 class TestVaisalaCL31MissingCBE(unittest.TestCase):
-
     IN_DIR = os.path.join(TEST_IN_DIR, "vaisala_cl", "eprofile")
     conf_file = os.path.join(CONF_DIR, "conf_vaisala_cl31_eprofile.ini")
 
     def test_20160523005942_c6052300(self):
-
         date = "20160523"
         test_ifile = os.path.join(self.IN_DIR, "ceilometer_20160523005942_c6052300.DAT")
         test_ofile = os.path.join(TEST_OUT_DIR, "ceilometer_20160523005942_c6052300.nc")
@@ -38,7 +36,6 @@ class TestVaisalaCL31MissingCBE(unittest.TestCase):
         self.assertEqual(resp, 0, "CL31 missing CBE c6052300")
 
     def test_20160523010011_P6052300(self):
-
         date = "20160523"
         test_ifile = os.path.join(self.IN_DIR, "ceilometer_20160523010011_P6052300.DAT")
         test_ofile = os.path.join(TEST_OUT_DIR, "ceilometer_20160523010011_P6052300.nc")
@@ -58,7 +55,6 @@ class TestVaisalaCL31MissingCBE(unittest.TestCase):
         self.assertEqual(resp, 0, "CL31 missing CBE ceilometer P6052300")
 
     def test_20160523010012_Q6052300(self):
-
         date = "20160523"
         test_ifile = os.path.join(self.IN_DIR, "ceilometer_20160523010012_Q6052300.DAT")
         test_ofile = os.path.join(TEST_OUT_DIR, "ceilometer_20160523010012_Q6052300.nc")
@@ -78,7 +74,6 @@ class TestVaisalaCL31MissingCBE(unittest.TestCase):
         self.assertEqual(resp, 0, "CL31 missing CBE ceilometer Q6052300")
 
     def test_20160523010012_T6052300(self):
-
         date = "20160523"
         test_ifile = os.path.join(self.IN_DIR, "ceilometer_20160523010012_T6052300.DAT")
         test_ofile = os.path.join(TEST_OUT_DIR, "ceilometer_20160523010012_T6052300.nc")
@@ -98,7 +93,6 @@ class TestVaisalaCL31MissingCBE(unittest.TestCase):
         self.assertEqual(resp, 0, "CL31 missing CBE ceilometer T6052300")
 
     def test_20160523100012_P6052309(self):
-
         date = "20160523"
         test_ifile = os.path.join(self.IN_DIR, "ceilometer_20160523100012_P6052309.DAT")
         test_ofile = os.path.join(TEST_OUT_DIR, "ceilometer_20160523100012_P6052309.nc")
@@ -119,12 +113,10 @@ class TestVaisalaCL31MissingCBE(unittest.TestCase):
 
 
 class TestVaisalaCL51MissingCBE(unittest.TestCase):
-
     IN_DIR = os.path.join(TEST_IN_DIR, "vaisala_cl", "eprofile")
     conf_file = os.path.join(CONF_DIR, "conf_vaisala_cl51_eprofile.ini")
 
     def test_20160523160107_06472_A201605231500(self):
-
         date = "20160523"
         test_ifile = os.path.join(
             self.IN_DIR,
@@ -153,12 +145,10 @@ class TestVaisalaCL51MissingCBE(unittest.TestCase):
 
 
 class TestVaisalaCL31EmptyFile(unittest.TestCase):
-
     IN_DIR = os.path.join(TEST_IN_DIR, "vaisala_cl", "eprofile")
     conf_file = os.path.join(CONF_DIR, "conf_vaisala_cl31_eprofile.ini")
 
     def test_20160427230032_h6042722(self):
-
         date = "20160427"
         test_ifile = os.path.join(self.IN_DIR, "ceilometer_20160427230032_h6042722.DAT")
         test_ofile = os.path.join(TEST_OUT_DIR, "ceilometer_20160427230032_h6042722.nc")
@@ -178,7 +168,6 @@ class TestVaisalaCL31EmptyFile(unittest.TestCase):
         self.assertEqual(resp, 1, "CL31 empty log file h6042722")
 
     def test_20160428200020_h6042819(self):
-
         date = "20160428"
         test_ifile = os.path.join(self.IN_DIR, "ceilometer_20160428200020_h6042819.DAT")
         test_ofile = os.path.join(TEST_OUT_DIR, "ceilometer_20160428200020_h6042819.nc")
@@ -199,12 +188,10 @@ class TestVaisalaCL31EmptyFile(unittest.TestCase):
 
 
 class TestVaisalaCL51EmptyFile(unittest.TestCase):
-
     IN_DIR = os.path.join(TEST_IN_DIR, "vaisala_cl", "eprofile")
     conf_file = os.path.join(CONF_DIR, "conf_vaisala_cl51_eprofile.ini")
 
     def test_20160517070311_06447_A201605170600(self):
-
         date = "20160517"
         test_ifile = os.path.join(
             self.IN_DIR,
@@ -231,12 +218,10 @@ class TestVaisalaCL51EmptyFile(unittest.TestCase):
 
 
 class TestVaisalaCL51IncompleteFile(unittest.TestCase):
-
     IN_DIR = os.path.join(TEST_IN_DIR, "vaisala_cl", "eprofile")
     conf_file = os.path.join(CONF_DIR, "conf_vaisala_cl51_eprofile.ini")
 
     def test_20160517120306_06447_A201605171100(self):
-
         date = "20160517"
         test_ifile = os.path.join(
             self.IN_DIR,
@@ -264,7 +249,6 @@ class TestVaisalaCL51IncompleteFile(unittest.TestCase):
         )
 
     def test_20160426210111_06418_A201604262000(self):
-
         date = "20160426"
         test_ifile = os.path.join(
             self.IN_DIR,

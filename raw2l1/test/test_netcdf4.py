@@ -11,12 +11,10 @@ PRGM = "raw2l1.py"
 
 
 class TestCampbellScientificCS135NetCDF4(unittest.TestCase):
-
     IN_DIR = os.path.join(TEST_IN_DIR, "campbell_cs135")
     conf_file = os.path.join(CONF_DIR, "conf_campbell_cs135_eprofile.ini")
 
     def test_cs135_dummy_file(self):
-
         date = "20141030"
         test_ifile = os.path.join(self.IN_DIR, "cs135-20150213-message006.txt")
         test_ofile = os.path.join(
