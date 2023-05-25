@@ -3,6 +3,7 @@ variables:
 
 stages:
   - test
+  - lint
 
 cache:
   paths:
@@ -27,3 +28,17 @@ test:
   parallel:
     matrix:
       - PYTHON_VERSION: ["3.7", "3.8", "3.9", "3.10", "3.11"]
+
+black:
+  stage: lint
+  image: python:3.11
+  script:
+    - black --check raw2l1
+  allow_failure: true
+
+ruff:
+  stage: lint
+  image: python:3.11
+  script:
+    - ruff raw2l1
+  allow_failure: true
