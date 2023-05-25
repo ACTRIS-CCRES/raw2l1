@@ -72,7 +72,7 @@ def get_channel_conf(conf, logger):
     # check if the lists have the same number of elements
     if len(tmp_rcs) != len(tmp_chan):
         logger.critical(
-            "error in configuration: 'channel' and 'rcs' options don't have the same number of elements. quitting"
+            "error in configuration: 'channel' and 'rcs' options don't have the same number of elements. quitting"  # NOQA
         )
         sys.exit(1)
 
@@ -428,7 +428,8 @@ def read_profiles(file_id, data, data_dim, index, logger):
             )
             data["units_{:02d}".format(i_chan)] = "mV"
         else:
-            # It coincides with the ASCII converted by the Advanced Licel.exe by it has no sense.
+            # It coincides with the ASCII converted by the Advanced Licel.exe
+            # but it has no sense.
             # See Licel programming manual.pdf. Bins-per-microseconds number
             # from technical specifications 20 bins/microsec.
             reduction_factor = data["range_resol"] / DEFAULT_RESOLUTION

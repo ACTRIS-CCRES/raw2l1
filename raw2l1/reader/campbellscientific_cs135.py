@@ -297,13 +297,15 @@ def is_msg_type_ok(msg_type, filename, logger):
 
     if 101 <= msg_type <= 112:
         logger.error(
-            "102 unable to read these data messages in '%s' You should able to read it with vaisala CL51 reader",
+            "102 unable to read these data messages in '%s'. "
+            "You should able to read it with vaisala CL51 reader",
             filename,
         )
         return False
     elif 113 <= msg_type <= 114:
         logger.error(
-            "102 unable to read these data messages in '%s'. You should able to read it with vaisala CL51 reader",
+            "102 unable to read these data messages in '%s'. "
+            "You should able to read it with vaisala CL51 reader",
             filename,
         )
         return False

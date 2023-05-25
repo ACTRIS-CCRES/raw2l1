@@ -112,9 +112,11 @@ ERR_HEX_MSG = [
 
 def get_error_index(err_msg, logger):
     """
-    based on error error message read in file. return all indexes of related msg and level
-    """
+    Based on error error message read in file.
 
+    Return all indexes of related msg and level
+
+    """
     err_ind = []
     err_int = int(err_msg, 16)
     for i, d in enumerate(ERR_HEX_MSG):
@@ -373,7 +375,7 @@ def get_acq_conf(filename, data, data_dim, f_fmt, conf, logger):
 
     try:
         dt.datetime.strptime(basename(filename), f_fmt)
-    except:
+    except ValueError:
         conf_msg = None
 
     lines = get_file_lines(filename, conf, logger)

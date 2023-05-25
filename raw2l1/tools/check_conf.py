@@ -57,7 +57,7 @@ def check_nc4_compression_option(conf, section, logger):
 
     # check if compression level is present
     opt = "netcdf4_compression_level"
-    err_msg = "107 Error Reading config file '%s'authorized value for %s option in %s section are %s. Option set to 4"
+    err_msg = "107 Error Reading config file '%s'authorized value for %s option in %s section are %s. Option set to 4"  # NOQA
     if not conf.has_option(section, opt):
         conf.set(section, opt, "4")
 

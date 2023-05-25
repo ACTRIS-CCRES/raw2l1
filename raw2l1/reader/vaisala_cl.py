@@ -112,9 +112,11 @@ ERR_HEX_MSG = [
 
 def get_error_index(err_msg, logger):
     """
-    based on error error message read in file. return all indexes of related msg and level
-    """
+    Based on error error message read in file.
 
+    Return all indexes of related msg and level.
+
+    """
     err_ind = []
     err_int = int(err_msg, 16)
     for i, d in enumerate(ERR_HEX_MSG):
@@ -126,7 +128,6 @@ def get_error_index(err_msg, logger):
 
 def store_error(data, err_msg, logger):
     """store errors msg and their count by type"""
-
     err_ind = get_error_index(err_msg, logger)
 
     for i in err_ind:
@@ -386,7 +387,7 @@ def get_acq_conf(filename, data, data_dim, conf, logger):
     while i_line <= n_lines:
         try:
             dt.datetime.strptime(lines[i_line], FMT_DATE)
-        except:
+        except ValueError:
             conf_msg = None
             i_line += 1
             continue
@@ -654,7 +655,9 @@ def read_rcs_var(data, ind, msg, logger):
 
     try:
         tmp = [
-            rcs_line[s * RCS_BYTES_SIZE : s * RCS_BYTES_SIZE + RCS_BYTES_SIZE]  # NOQA
+            rcs_line[
+                s * RCS_BYTES_SIZE : s * RCS_BYTES_SIZE + RCS_BYTES_SIZE
+            ]  # fmt: skip
             for s in range(rcs_size)
         ]
         tmp = np.array([int(g, 16) if g != "" else np.nan for g in tmp])
@@ -699,7 +702,7 @@ def read_vars(lines, data, conf, time_ind, f_name, logger):
 
         logger.debug("timestamp: {:%Y%m%d %H:%M:%S}".format(data["time"][time_ind]))
 
-        msg = lines[i_line : i_line + msg_n_lines]
+        msg = lines[i_line: i_line + msg_n_lines]  # fmt: skip
         logger.debug("processing data message %d" % (time_ind + 1))
 
         # check if there is no change in message number
@@ -708,9 +711,8 @@ def read_vars(lines, data, conf, time_ind, f_name, logger):
             i_line += 1
             time_ind += 1
             logger.error(
-                "100 Incorrect Header Information in '{}'. Message type change in file".format(
-                    f_name
-                )
+                "100 Incorrect Header Information in '%s'. Message type change in file",
+                f_name,
             )
             continue
 

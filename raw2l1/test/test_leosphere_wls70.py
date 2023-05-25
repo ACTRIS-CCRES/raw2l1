@@ -172,7 +172,7 @@ class TestRunWLS70T10S(unittest.TestCase):
 
         self.assertEqual(resp, 0)
 
-    def test_leosphere_wls70_115rc1(self):
+    def test_leosphere_wls70_115rc1_1(self):
         """test file version V1.1.5rc"""
 
         date = "20150908"
@@ -197,7 +197,7 @@ class TestRunWLS70T10S(unittest.TestCase):
 
         self.assertEqual(resp, 0)
 
-    def test_leosphere_wls70_115rc1(self):
+    def test_leosphere_wls70_115rc1_2(self):
         """test wrong format lat/lon"""
 
         date = "20201217"

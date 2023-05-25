@@ -268,7 +268,10 @@ ERR_HEX_MSG = [
 
 def get_error_index(err_msg, firmware, logger):
     """
-    based on error error message read in file. return all indexes of related msg and level
+    Based on error error message read in file.
+
+    Return all indexes of related msg and level.
+
     """
     err_ind = []
     err_int = err_msg
@@ -375,8 +378,8 @@ def get_vars_dim(list_files, logger):
         try:
             nc_id = nc.Dataset(ifile, "r")
             f_count += 1
-        except:
-            logger.error("109 error trying to open '{}'".format(ifile))
+        except OSError:
+            logger.error("109 error trying to open '%s'", ifile)
             continue
 
         if f_count == 1:
@@ -677,11 +680,13 @@ def read_timedep_vars(data, nc_id, soft_vers, time_ind, time_size, logger):
         except KeyError:
             c_cal = 3.2e-12  # default calibration factor for Lufft instruments
             logger.warning(
-                "c_cal not found in file although beta_att is there. assuming c_cal=3.2e-12"
+                "c_cal not found in file although beta_att is there. "
+                "assuming c_cal=3.2e-12"
             )
         data["beta_raw"][ind_b:ind_e, :] = beta_att / c_cal
         logger.debug(
-            "using beta_att variable divided by c_cal (undoing firmware pseudo-calibration)"
+            "using beta_att variable divided by c_cal "
+            "(undoing firmware pseudo-calibration)"
         )
     except KeyError:
         data["beta_raw"][ind_b:ind_e, :] = nc_id.variables["beta_raw"][:]

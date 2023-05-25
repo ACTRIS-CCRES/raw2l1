@@ -263,7 +263,10 @@ ERR_HEX_MSG = [
 
 def get_error_index(err_msg, firmware, logger):
     """
-    based on error error message read in file. return all indexes of related msg and level
+    Based on error error message read in file.
+
+    return all indexes of related msg and level.
+
     """
     err_ind = []
     err_int = err_msg
@@ -313,7 +316,6 @@ def log_error_msg(data, logger):
 
 def read_overlap(overlap_file, missing_float, logger):
     """read overlap from lufft TUB*.cfg file"""
-
     with open(overlap_file) as f_ovl:
         raw_ovl = f_ovl.readlines()[1]
 
@@ -331,7 +333,6 @@ def get_soft_version(str_version):
     """
     function to get the number of acquisition software version as a float
     """
-
     if type(str_version) == np.int16:
         version_nb = float(str_version) / 1000.0
     else:
@@ -365,8 +366,8 @@ def get_vars_dim(list_files, logger):
         try:
             nc_id = nc.Dataset(ifile, "r")
             f_count += 1
-        except:
-            logger.error("109 error trying to open '{}'".format(ifile))
+        except OSError:
+            logger.error("109 error trying to open '%s'", ifile)
             continue
 
         print("size :", nc_id.dimensions["nbases"])
@@ -627,11 +628,13 @@ def read_timedep_vars(data, nc_id, soft_vers, time_ind, time_size, logger):
         except KeyError:
             c_cal = 3.2e-12  # default calibration factor for Lufft instruments
             logger.warning(
-                "c_cal not found in file although beta_att is there. assuming c_cal=3.2e-12"
+                "c_cal not found in file although beta_att is there. "
+                "assuming c_cal=3.2e-12"
             )
         data["beta_raw"][ind_b:ind_e, :] = beta_att / c_cal
         logger.debug(
-            "using beta_att variable divided by c_cal (undoing firmware pseudo-calibration)"
+            "using beta_att variable divided by c_cal "
+            "(undoing firmware pseudo-calibration)"
         )
     except KeyError:
         data["beta_raw"][ind_b:ind_e, :] = nc_id.variables["beta_raw"][:]
@@ -676,7 +679,7 @@ def read_data(list_files, conf, logger):
         try:
             raw_data = nc.Dataset(ifile, "r")
             nb_files_read += 1
-        except:
+        except OSError:
             logger.error("109 unable to load " + ifile + " trying next one")
 
         nb_files += 1
