@@ -1,5 +1,4 @@
 # -*- coding: utf8 -*-
-import sys
 
 import numpy as np
 import datetime as dt

@@ -10,7 +10,6 @@ the file format is based on LICEL file format
 import sys
 import ast
 import datetime as dt
-from collections import OrderedDict
 
 import numpy as np
 import netCDF4 as nc
@@ -193,7 +192,7 @@ def get_data_size(list_files, logger):
 
         # try to parse date to check file is valid
         try:
-            timestamp = dt.datetime.strptime(datetime_str, DATE_FMT)
+            dt.datetime.strptime(datetime_str, DATE_FMT)
         except ValueError:
             logger.error("wrong time format in " + file_)
             continue
@@ -355,7 +354,7 @@ def read_header(file_id, data, data_dim, index, logger, date_only=False):
     # channels description
     # ------------------------------------------------------------------------
     for i_chan in range(data_dim["n_chan"]):
-        var_name = "rcs_{:02d}".format(i_chan)
+        "rcs_{:02d}".format(i_chan)
 
         line = file_id.readline().decode(DEFAULT_ENCODING)
         logger.debug("parsing : %s", line.strip())
@@ -441,7 +440,7 @@ def read_profiles(file_id, data, data_dim, index, logger):
             data["units_{:02d}".format(i_chan)] = "MHz"
 
         # jump over space between profiles
-        dummy = file_id.seek(file_id.tell() + 2)
+        file_id.seek(file_id.tell() + 2)
 
     return data
 
@@ -453,8 +452,8 @@ def read_data(list_files, conf, logger):
 
     # get conf parameters
     # ------------------------------------------------------------------------
-    missing_flt = conf["missing_float"]
-    missing_int = conf["missing_int"]
+    conf["missing_float"]
+    conf["missing_int"]
 
     # min and max alt for background signal calculation
     bck_min_alt, bck_max_alt = get_bck_alt(conf, logger)
