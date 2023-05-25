@@ -1,10 +1,10 @@
-# -*- coding: utf8 -*-
 
 
 
-import numpy as np
 import datetime as dt
+
 import netCDF4 as nc
+import numpy as np
 
 from .libhatpro import correct_time_units
 

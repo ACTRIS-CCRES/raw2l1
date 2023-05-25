@@ -1,4 +1,3 @@
-# -*- coding: utf8 -*-
 
 
 # raw2l1 configuration sections

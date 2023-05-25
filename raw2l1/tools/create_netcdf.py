@@ -1,16 +1,17 @@
-# -*- coding: utf-8 -*-
 
 # Compatibility with python 3
 
 
-import netCDF4 as nc
-import sys
-import datetime as dt
-import numpy as np
 import configparser
+import datetime as dt
+import sys
 from ast import literal_eval
-from tools.read_overlap import read_overlap
+
+import netCDF4 as nc
+import numpy as np
+
 from tools import common
+from tools.read_overlap import read_overlap
 
 KEY_READERDATA = "$reader_data$"
 KEY_OVERLAP = "$overlap$"
@@ -313,7 +314,7 @@ def add_data_to_var(nc_var, var_name, conf, data, logger):
         over_fname = get_overlap_filename(data_val)
         try:
             nc_var[:] = read_overlap(over_fname, logger)
-        except IOError as err:
+        except OSError as err:
             logger.error(
                 "107 problem encountered while reading overlap file "
                 + "'{}".format(over_fname)
@@ -506,7 +507,7 @@ def create_netcdf(conf, data, logger):
         nc_id = nc.Dataset(
             conf.get("conf", "output"), "w", format=conf.get("conf", "netcdf_format")
         )
-    except IOError as err:
+    except OSError as err:
         logger.critical(
             "107 Error trying to create the netCDF file '{}".format(
                 format(conf.get("conf", "output"))

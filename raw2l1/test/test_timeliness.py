@@ -1,9 +1,9 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*-
 
-import unittest
-import subprocess
 import os
+import subprocess
+import unittest
+
 from nose.tools import raises
 
 MAIN_DIR = os.path.dirname(os.path.dirname(__file__)) + os.sep

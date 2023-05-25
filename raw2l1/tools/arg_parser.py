@@ -1,15 +1,15 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*-
 
 # Compatibility with python 3
 
 
 import argparse
 import datetime as dt
-import sys
-import os
 import glob
+import os
+import sys
 from itertools import chain
+
 from .utils import check_dir
 
 PROG_DESC = "Raw LIDAR data to netCDF converter"

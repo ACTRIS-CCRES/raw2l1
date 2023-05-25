@@ -1,4 +1,3 @@
-# -*- coding: utf8 -*-
 
 
 def correct_time_units(s):

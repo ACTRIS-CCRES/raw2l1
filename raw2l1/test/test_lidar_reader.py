@@ -1,10 +1,9 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*-
 
-import unittest
 import configparser
 import datetime as dt
 import logging
+import unittest
 
 import numpy as np
 

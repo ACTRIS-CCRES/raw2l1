@@ -1,10 +1,9 @@
-# -*- coding: utf8 -*-
 
 
 import datetime as dt
 
-import numpy as np
 import netCDF4 as nc
+import numpy as np
 
 # brand and model of the LIDAR
 BRAND = "SigmaSpace"

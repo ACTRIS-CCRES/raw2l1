@@ -374,7 +374,7 @@ def read_data(list_files, conf, logger):
         try:
             raw_data = nc.Dataset(ifile, "r")
             nb_files_read += 1
-        except (RuntimeError, IOError):
+        except (RuntimeError, OSError):
             logger.error("109 unable to load " + ifile + " trying next one")
 
         nb_files += 1

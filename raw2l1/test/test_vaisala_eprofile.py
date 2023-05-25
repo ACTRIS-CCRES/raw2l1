@@ -1,9 +1,8 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*-
 
-import unittest
-import subprocess
 import os
+import subprocess
+import unittest
 
 MAIN_DIR = os.path.dirname(os.path.dirname(__file__))
 TEST_DIR = os.path.join(MAIN_DIR, "test")

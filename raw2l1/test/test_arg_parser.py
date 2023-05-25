@@ -1,11 +1,9 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*-
 
-import unittest
-
-import os
 import argparse
 import datetime as dt
+import os
+import unittest
 
 import tools.arg_parser as ag
 
@@ -40,7 +38,7 @@ class TestArgParser(unittest.TestCase):
 
         ref_inputs = {
             "date": dt.datetime(2016, 1, 1),
-            "conf": open("test/conf/conf_dummy.ini", "r"),
+            "conf": open("test/conf/conf_dummy.ini"),
             "input": [
                 "test/input/rpg_hatpro/hatpro_0a_z1Imwrad-TPB_v01_20150901_000412_712.nc",
                 "test/input/rpg_hatpro/hatpro_0a_z1Imwrad-TPB_v01_20150901_120108_716.nc",

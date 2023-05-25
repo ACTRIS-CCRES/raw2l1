@@ -1,10 +1,11 @@
-# -*- coding: utf8 -*-
 
+
+import datetime as dt
+import re
+import sys
 
 import numpy as np
-import datetime as dt
-import sys
-import re
+
 from tools.utils import chomp, to_bool
 
 # brand and model of the LIDAR
@@ -210,10 +211,10 @@ def get_file_lines(filename, conf, logger):
     """
 
     try:
-        with open(filename, "r", encoding=conf["file_encoding"]) as f_id:
+        with open(filename, encoding=conf["file_encoding"]) as f_id:
             logger.debug("reading " + filename)
             lines = chomp(f_id.readlines())
-    except IOError:
+    except OSError:
         logger.error("109 Impossible to open file " + filename)
         return None
 

@@ -1,12 +1,11 @@
 #!/usr/bin/env python
-# -*- encoding: utf-8 -*-
 
 
-import sys
-import os
-import re
 import ast
 import datetime as dt
+import os
+import re
+import sys
 
 import numpy as np
 
@@ -153,7 +152,7 @@ def read_file(file_, conf, logger):
     """read one file and return a list without newline character"""
 
     logger.debug("reading {}".format(os.path.basename(file_)))
-    with open(file_, "r", encoding=conf["file_encoding"]) as f_id:
+    with open(file_, encoding=conf["file_encoding"]) as f_id:
         raw_lines = f_id.readlines()
 
     # remove end of line character
@@ -232,7 +231,7 @@ def read_columns(file_, data, conf, logger):
     header = data["HeaderSize"]
 
     # get the number of columns to fix types
-    with open(file_, "r", encoding=conf["file_encoding"]) as f_id:
+    with open(file_, encoding=conf["file_encoding"]) as f_id:
         count = 0
         while count <= header + 1:
             line = f_id.readline()

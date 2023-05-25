@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*-
 
 """
 reader for raw data from SIRTA IPRAL LIDAR
@@ -7,13 +6,12 @@ the file format is based on LICEL file format
 """
 
 
-import sys
 import ast
 import datetime as dt
+import sys
 
-import numpy as np
 import netCDF4 as nc
-
+import numpy as np
 
 # brand and model of the LIDAR
 BRAND = "Gordien Stratos"
@@ -178,7 +176,7 @@ def get_data_size(list_files, logger):
     for i_file, file_ in enumerate(list_files):
         try:
             f_id = open(file_, "rb")
-        except IOError:
+        except OSError:
             logger.error("error trying to open %s", file_)
             continue
 
@@ -469,7 +467,7 @@ def read_data(list_files, conf, logger):
     for ind, file_ in enumerate(list_files):
         try:
             f_id = open(file_, "rb")
-        except IOError:
+        except OSError:
             logger.error("error trying to open " + file_)
             continue
 

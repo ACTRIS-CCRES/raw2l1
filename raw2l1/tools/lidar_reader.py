@@ -1,11 +1,10 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*-
 
 
+import datetime as dt
 import sys
 from importlib import import_module
 
-import datetime as dt
 import numpy as np
 
 from . import common
@@ -15,7 +14,7 @@ MISSING_FLOAT_KEY = "missing_float"
 MISSING_INT_KEY = "missing_int"
 
 
-class RawDataReader(object):
+class RawDataReader:
     def __init__(self, conf, logger):
         self.conf = conf
         self.logger = logger

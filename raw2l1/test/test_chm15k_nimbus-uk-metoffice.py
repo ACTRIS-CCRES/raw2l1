@@ -1,6 +1,6 @@
-import unittest
-import subprocess
 import os
+import subprocess
+import unittest
 
 MAIN_DIR = os.path.dirname(os.path.dirname(__file__)) + os.sep
 TEST_DIR = os.path.join(MAIN_DIR, "test")

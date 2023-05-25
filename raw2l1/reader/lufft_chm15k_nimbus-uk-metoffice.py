@@ -1,10 +1,10 @@
-# -*- coding: utf8 -*-
 
+
+import datetime as dt
+import sys
 
 import netCDF4 as nc
 import numpy as np
-import datetime as dt
-import sys
 
 # brand and model of the LIDAR
 BRAND = "jenoptik"
@@ -316,7 +316,7 @@ def log_error_msg(data, logger):
 def read_overlap(overlap_file, missing_float, logger):
     """read overlap from lufft TUB*.cfg file"""
 
-    with open(overlap_file, "r") as f_ovl:
+    with open(overlap_file) as f_ovl:
         raw_ovl = f_ovl.readlines()[1]
 
     try:

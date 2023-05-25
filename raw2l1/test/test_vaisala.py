@@ -1,9 +1,9 @@
-import unittest
-import subprocess
 import os
+import subprocess
+import unittest
 
-import numpy as np
 import netCDF4 as nc
+import numpy as np
 
 MAIN_DIR = os.path.dirname(os.path.dirname(__file__)) + os.sep
 TEST_DIR = os.path.join(MAIN_DIR, "test")
