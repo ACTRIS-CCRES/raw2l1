@@ -32,12 +32,12 @@ black:
   stage: lint
   image: python:3.11
   script:
-    - black --check raw2l1
+    - black --check .
   allow_failure: true
 
 ruff:
   stage: lint
   image: python:3.11
   script:
-    - ruff --format=gitlab raw2l1
+    - ruff --format=gitlab .
   allow_failure: true
