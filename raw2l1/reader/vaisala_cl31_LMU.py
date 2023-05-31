@@ -143,7 +143,6 @@ def store_error(data, err_msg, logger):
     err_ind = get_error_index(err_msg, logger)
 
     for i in err_ind:
-
         if ERR_HEX_MSG[i]["msg"] in data["list_errors"]:
             data["list_errors"][ERR_HEX_MSG[i]["msg"]]["count"] += 1
         else:
@@ -155,14 +154,12 @@ def store_error(data, err_msg, logger):
 
 
 def log_error_msg(data, logger):
-
     msg_format = "{} : {:d} message(s)"
 
     if len(data["list_errors"]) > 0:
         logger.info("summary of instruments messages")
 
     for msg in data["list_errors"]:
-
         if data["list_errors"][msg]["level"] == "STATUS":
             logger.info(msg_format.format(msg, data["list_errors"][msg]["count"]))
         elif data["list_errors"][msg]["level"] == "WARNING":
@@ -244,7 +241,6 @@ def count_msg_to_read(list_files, conf, logger):
     # loop over filenames to read to count the number of messages
     # data message start with a date using the format "-%Y-%m-%d %H:%M:%S"
     for ifile in list_files:
-
         lines = get_file_lines(ifile, conf, logger)
         for line in lines:
             try:
@@ -399,7 +395,6 @@ def get_acq_conf(filename, data, data_dim, conf, logger):
 
     conf_msg = None
     while i_line <= n_lines:
-
         try:
             dt.datetime.strptime(lines[i_line], FMT_DATE)
         except:
@@ -681,7 +676,6 @@ def read_vars(lines, data, conf, time_ind, f_name, logger):
 
     # loop over the lines
     while i_line < n_lines:
-
         # reject header lines
         if lines[i_line] in FILE_HEADERS:
             i_line += 1
@@ -777,7 +771,6 @@ def read_data(list_files, conf, logger):
     time_ind = 0
     nb_files_read = 0
     for ifile in list_files:
-
         # try reading the file
         lines = get_file_lines(ifile, conf, logger)
         if lines is None:
