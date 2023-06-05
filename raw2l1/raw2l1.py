@@ -1,19 +1,18 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*-
 
 # Compatibility with python 3
 
 
 import sys
-from tools import lidar_reader as lr
+
 from tools import arg_parser as ag
-from tools import log
-from tools import conf
-from tools.check_conf import check_conf
+from tools import conf, log
 from tools import create_netcdf as cnc
+from tools import lidar_reader as lr
+from tools.check_conf import check_conf
 
 __author__ = "Marc-Antoine Drouin"
-__version__ = "3.1.4"
+__version__ = "3.1.5b"
 
 NAME = "raw2l1"
 

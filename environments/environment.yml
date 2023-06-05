@@ -1,0 +1,11 @@
+name: raw2l1
+channels:
+  - conda-forge
+dependencies:
+  - python>=3.7
+  - pip
+
+  # required dependencies
+  - numpy
+  - netCDF4>=1.6
+  - gitpython

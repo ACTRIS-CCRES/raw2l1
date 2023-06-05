@@ -1,0 +1,31 @@
+name: raw2l1-dev
+channels:
+  - conda-forge
+dependencies:
+  - python>=3.7
+  - pip
+
+  # required dependencies
+  - numpy
+  - netCDF4>=1.6
+  - gitpython
+
+  # test dependencies
+  - pytest>=7.0.0
+  - pytest-cov
+  - pytest-xdist>=2.2.0
+  - coverage
+
+  # code checks
+  - black=23.3.0
+  - flake8
+  - isort>=5.2.1  # check that imports are in the right order
+  - pre-commit>=2.15.0
+  - pyupgrade
+  - pydocstyle
+  - ruff=0.0.215
+
+  # documentation
+  - gitdb
+  - sphinx
+  - sphinx-rtd-theme

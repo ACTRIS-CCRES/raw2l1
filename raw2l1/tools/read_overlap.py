@@ -1,5 +1,3 @@
-# -*- coding: utf8 -*-
-
 # Compatibility with python 3
 
 
@@ -14,14 +12,13 @@ def read_overlap(fname, logger):
     """
     function to read overlap function contains in a file with two columns:
     """
-
     logger.debug("reading overlap file: " + fname)
     try:
         data = np.genfromtxt(
             fname, dtype=OVER_DTYPE, comments=COMMENTS, filling_values=FILLING
         )
 
-    except IOError as err:
+    except OSError as err:
         logger.error("107 Error Reading overlap file : " + fname)
         logger.error(err)
         data = None

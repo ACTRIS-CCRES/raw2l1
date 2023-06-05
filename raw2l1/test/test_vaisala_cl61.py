@@ -19,6 +19,7 @@ PRGM = MAIN_DIR / "raw2l1.py"
         ("20210409", "cl61_20211103*.nc", "conf_vaisala_cl61_eprofile.ini"),
         ("20220623", "cl61-v1.1_*.nc", "conf_vaisala_cl61_eprofile.ini"),
         ("20220623", "cl61-v1.1_*.nc", "conf_vaisala_cl61_eprofile_force-loc.ini"),
+        ("20220912", "T3250605*.nc", "conf_vaisala_cl61_eprofile.ini"),
     ],
 )
 def test_vaisala_cl61(date, input_file, conf_file):
@@ -40,7 +41,17 @@ def test_vaisala_cl61(date, input_file, conf_file):
     conf_file = CONF_DIR / conf_file
 
     resp = subprocess.check_call(
-        [PRGM, date, conf_file, in_file, out_file, "-log_level", "debug", "-v", "debug"]
+        [
+            PRGM,
+            date,
+            conf_file,
+            in_file,
+            out_file,
+            "-log_level",
+            "debug",
+            "-v",
+            "debug",
+        ]
     )
 
     assert resp == 0, "CL61 20210409 single file conversion failed"

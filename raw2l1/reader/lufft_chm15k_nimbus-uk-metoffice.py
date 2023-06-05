@@ -1,10 +1,8 @@
-# -*- coding: utf8 -*-
-
+import datetime as dt
+import sys
 
 import netCDF4 as nc
 import numpy as np
-import datetime as dt
-import sys
 
 # brand and model of the LIDAR
 BRAND = "jenoptik"
@@ -265,7 +263,10 @@ ERR_HEX_MSG = [
 
 def get_error_index(err_msg, firmware, logger):
     """
-    based on error error message read in file. return all indexes of related msg and level
+    Based on error error message read in file.
+
+    return all indexes of related msg and level.
+
     """
     err_ind = []
     err_int = err_msg
@@ -286,7 +287,6 @@ def store_error(data, err_msg, logger):
     err_ind = get_error_index(err_msg, data["firmware_version"], logger)
 
     for i in err_ind:
-
         if ERR_HEX_MSG[i]["msg"] in data["list_errors"]:
             data["list_errors"][ERR_HEX_MSG[i]["msg"]]["count"] += 1
         else:
@@ -300,14 +300,12 @@ def store_error(data, err_msg, logger):
 
 
 def log_error_msg(data, logger):
-
     msg_format = "{} : {:d} message(s)"
 
     if len(data["list_errors"]) > 0:
         logger.info("summary of instruments messages")
 
     for msg in data["list_errors"]:
-
         if data["list_errors"][msg]["level"] == "STATUS":
             logger.info(msg_format.format(msg, data["list_errors"][msg]["count"]))
         elif data["list_errors"][msg]["level"] == "WARNING":
@@ -318,8 +316,7 @@ def log_error_msg(data, logger):
 
 def read_overlap(overlap_file, missing_float, logger):
     """read overlap from lufft TUB*.cfg file"""
-
-    with open(overlap_file, "r") as f_ovl:
+    with open(overlap_file) as f_ovl:
         raw_ovl = f_ovl.readlines()[1]
 
     try:
@@ -336,7 +333,6 @@ def get_soft_version(str_version):
     """
     function to get the number of acquisition software version as a float
     """
-
     if type(str_version) == np.int16:
         version_nb = float(str_version) / 1000.0
     else:
@@ -370,8 +366,8 @@ def get_vars_dim(list_files, logger):
         try:
             nc_id = nc.Dataset(ifile, "r")
             f_count += 1
-        except:
-            logger.error("109 error trying to open '{}'".format(ifile))
+        except OSError:
+            logger.error("109 error trying to open '%s'", ifile)
             continue
 
         print("size :", nc_id.dimensions["nbases"])
@@ -410,7 +406,7 @@ def get_temp(nc_obj, logger):
     except TypeError:
         logger.debug("Correcting temperature scale problem")
         nc_obj.set_auto_maskandscale(False)
-        tmp = nc_obj[:] / np.float(nc_obj.scale_factor)
+        tmp = nc_obj[:] / float(nc_obj.scale_factor)
 
     return tmp
 
@@ -626,8 +622,20 @@ def read_timedep_vars(data, nc_id, soft_vers, time_ind, time_size, logger):
     logger.debug("reading beta_raw")
     # for firmware > 1.05 variable can be changed to beta_att
     try:
-        data["beta_raw"][ind_b:ind_e, :] = nc_id.variables["beta_att"][:]
-        logger.debug("using beta_att variable")
+        beta_att = nc_id.variables["beta_att"][:]
+        try:
+            c_cal = nc_id.variables["c_cal"][:]
+        except KeyError:
+            c_cal = 3.2e-12  # default calibration factor for Lufft instruments
+            logger.warning(
+                "c_cal not found in file although beta_att is there. "
+                "assuming c_cal=3.2e-12"
+            )
+        data["beta_raw"][ind_b:ind_e, :] = beta_att / c_cal
+        logger.debug(
+            "using beta_att variable divided by c_cal "
+            "(undoing firmware pseudo-calibration)"
+        )
     except KeyError:
         data["beta_raw"][ind_b:ind_e, :] = nc_id.variables["beta_raw"][:]
         logger.debug("using beta_raw variable")
@@ -667,12 +675,11 @@ def read_data(list_files, conf, logger):
     time_ind = 0
     # Loop over the list of files
     for ifile in list_files:
-
         # Opening file
         try:
             raw_data = nc.Dataset(ifile, "r")
             nb_files_read += 1
-        except:
+        except OSError:
             logger.error("109 unable to load " + ifile + " trying next one")
 
         nb_files += 1

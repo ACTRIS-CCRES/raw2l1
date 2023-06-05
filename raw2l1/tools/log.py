@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*-
 
 # Compatibility with python 3
 
@@ -8,6 +7,7 @@ import logging
 import logging.config
 import os
 import sys
+
 from tools import utils
 
 LOG_FMT = "%(asctime)s - %(name)s - %(levelname)s - %(message)s"

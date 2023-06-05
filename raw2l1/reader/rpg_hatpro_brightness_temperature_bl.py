@@ -1,11 +1,7 @@
-# -*- coding: utf8 -*-
-
-
-import sys
-
-import numpy as np
 import datetime as dt
+
 import netCDF4 as nc
+import numpy as np
 
 from .libhatpro import correct_time_units
 
@@ -27,7 +23,6 @@ def get_data_size(list_files, logger, only_time=False):
     dim = {}
     dim["time"] = 0
     for i, f in enumerate(list_files):
-
         nc_id = nc.Dataset(f, "r")
 
         dim["time"] += len(nc_id.dimensions[TIME_DIM])
@@ -170,7 +165,6 @@ def read_data(list_files, conf, logger):
     # read data
     time_ind = 0
     for i, f in enumerate(list_files):
-
         nc_id = nc.Dataset(f, "r")
 
         time_size, time = read_time(nc_id, logger)
@@ -196,12 +190,10 @@ def read_data(list_files, conf, logger):
 
     # read meteo_data
     if meteo_avail:
-
         meteo_data = init_meteo_data(meteo_vars_dim, logger)
 
         time_ind = 0
         for i, f in enumerate(meteo_files):
-
             nc_id = nc.Dataset(f, "r")
 
             time_size, time = read_time(nc_id, logger)

@@ -1,6 +1,3 @@
-# -*- coding: utf8 -*-
-
-
 def correct_time_units(s):
     """correct the wrong format of time units of RPG into a compatible with
     CF convention and num2date and date2num netCDF4 modules

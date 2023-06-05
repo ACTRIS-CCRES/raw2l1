@@ -39,7 +39,6 @@ def get_dimension_size(list_files, logger):
     data_dims = {}
 
     for i_file, file_ in enumerate(list_files):
-
         logger.debug("reading {}".format(file_))
         nc_id = nc.Dataset(file_, "r")
 
@@ -87,7 +86,11 @@ def get_fw_version(nc_id, logger):
     """
     logger.debug("reading firmware version")
 
-    fw_version = nc_id.history
+    try:
+        fw_version = nc_id.sw_version
+    except AttributeError:
+        fw_version = nc_id.history
+
     logger.debug("firmware version: %s", fw_version)
 
     # fw version can be x.x.x or x.x.x-rcx for first versions
@@ -367,12 +370,11 @@ def read_data(list_files, conf, logger):
     time_ind = 0
     # Loop over the list of files
     for ifile in list_files:
-
         # Opening file
         try:
             raw_data = nc.Dataset(ifile, "r")
             nb_files_read += 1
-        except (RuntimeError, IOError):
+        except (RuntimeError, OSError):
             logger.error("109 unable to load " + ifile + " trying next one")
 
         nb_files += 1
@@ -380,7 +382,6 @@ def read_data(list_files, conf, logger):
 
         # Data which only need to be read in one file
         if nb_files_read == 1:
-
             # reading firmware version
             # ----------------------------------------------------------------
             data["fw_version"], data["float_fw_version"] = get_fw_version(
