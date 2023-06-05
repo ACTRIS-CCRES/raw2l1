@@ -1,0 +1,29 @@
+minimum_pre_commit_version: 2.15.0
+default_stages: [
+    commit,
+    merge-commit,
+    push,
+    prepare-commit-msg,
+    commit-msg,
+    post-checkout,
+    post-commit,
+    post-merge,
+    post-rewrite
+]
+repos:
+-   repo: local
+    hooks:
+    -   id: pip-to-conda
+        name: Generate pip dependency from conda
+        language: python
+        entry: python scripts/generate_pip_deps_from_conda.py environments/environment.yml requirements/requirements.txt
+        files: ^(environments/environment.yml|requirements/requirements.txt)$
+        pass_filenames: false
+        additional_dependencies: [tomli, pyyaml]
+    -   id: pip-to-conda-dev
+        name: Generate pip dependency from conda for dev
+        language: python
+        entry: python scripts/generate_pip_deps_from_conda.py environments/environment-dev.yml requirements/requirements-dev.txt
+        files: ^(environments/environment-dev.yml|requirements/requirements-dev.txt)$
+        pass_filenames: false
+        additional_dependencies: [tomli, pyyaml]

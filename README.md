@@ -4,16 +4,48 @@
 
 Code to convert raw LIDAR data into normalized netCDF files
 
-## required python modules
+## Dependencies install
 
-see requirements.txt file
-conf_vaisala_cl31_eprofile.ini
-## instrument compatibility
+### Using conda
 
-- VAISALA CL31 and CL51 using clview acquisition software. If you are using your own acquisition softare, you may need to make some change to the reader
-- VAISALA CL61
-- JENOPTIK/LUFFT CHM15k
-- CAMPBELL SCIENTIFIC CS135
+```bash
+conda env create -f environements/environment.yml
+```
+
+It will create a `raw2l1` environment. Activate before using raw2l1
+
+```bash
+conda activate raw2l1
+```
+
+### Using pip
+
+```bash
+pip install -r requirements/requirements.txt
+```
+
+## Instruments compatibility
+
+### VAISALA ceilometers
+
+You must use clview acquisition software. If you are using your own acquisition softare, you may need to make some change to the reader
+- CL31
+- CL51
+- CL61
+
+### JENOPTIK/LUFFT ceilometers
+
+- CHM8k
+- CHM15k
+
+### CAMPBELL SCIENTIFIC ceilometers
+
+- CS135
+
+### leosphere/vaisala doppler wind lidars
+
+- Windcube vls7v2
+- windcube wls70
 
 ## how to run
 
@@ -71,4 +103,4 @@ M.-A Drouin based on the first version of Y. Morille
 
 # Copyright
 
-2014-2022 CNRS/Ecole polytechnique
+2014-2023 CNRS/Ecole polytechnique

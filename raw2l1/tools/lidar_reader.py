@@ -1,11 +1,10 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*-
 
 
+import datetime as dt
 import sys
 from importlib import import_module
 
-import datetime as dt
 import numpy as np
 
 from . import common
@@ -15,7 +14,7 @@ MISSING_FLOAT_KEY = "missing_float"
 MISSING_INT_KEY = "missing_int"
 
 
-class RawDataReader(object):
+class RawDataReader:
     def __init__(self, conf, logger):
         self.conf = conf
         self.logger = logger
@@ -25,7 +24,6 @@ class RawDataReader(object):
         self.data = {}
 
     def __load_reader__(self):
-
         reader_dir = self.conf.get("conf", "reader_dir")
         reader_name = self.conf.get("conf", "reader")
 
@@ -81,7 +79,7 @@ class RawDataReader(object):
             )
             reader_conf[MISSING_INT_KEY] = common.MISSING_INTEGER
         else:
-            reader_conf[MISSING_INT_KEY] = np.int(
+            reader_conf[MISSING_INT_KEY] = int(
                 self.conf.get(READER_CONF, MISSING_INT_KEY)
             )
 
@@ -94,7 +92,7 @@ class RawDataReader(object):
             )
             reader_conf[MISSING_FLOAT_KEY] = common.MISSING_FLOAT
         else:
-            reader_conf[MISSING_FLOAT_KEY] = np.float(
+            reader_conf[MISSING_FLOAT_KEY] = float(
                 self.conf.get(READER_CONF, MISSING_FLOAT_KEY)
             )
 
@@ -126,7 +124,6 @@ class RawDataReader(object):
         return True
 
     def read_data(self):
-
         self.data = self.reader_mod(
             self.conf.get("conf", "input"), self.reader_conf, self.logger
         )

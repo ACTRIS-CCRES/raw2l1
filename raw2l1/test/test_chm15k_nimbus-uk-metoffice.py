@@ -1,6 +1,6 @@
-import unittest
-import subprocess
 import os
+import subprocess
+import unittest
 
 MAIN_DIR = os.path.dirname(os.path.dirname(__file__)) + os.sep
 TEST_DIR = os.path.join(MAIN_DIR, "test")
@@ -11,12 +11,10 @@ PRGM = "raw2l1.py"
 
 
 class TestChm15kMetOffice(unittest.TestCase):
-
     IN_DIR = os.path.join(TEST_IN_DIR, "jenoptik_chm15k")
     conf_file = os.path.join(CONF_DIR, "conf_lufft_chm15k-ukmo_eprofile.ini")
 
     def test_20160514(self):
-
         date = "20160514"
         test_ifile = os.path.join(
             self.IN_DIR,
