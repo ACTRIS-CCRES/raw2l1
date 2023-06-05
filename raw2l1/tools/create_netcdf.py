@@ -227,7 +227,7 @@ def create_netcdf_dim(conf, data, nc_id, logger):
             elif KEY_READERDATA in conf.get(section, "value"):
                 try:
                     nc_id.createDimension(dim, data[dim].size)
-                except:
+                except KeyError:
                     val_key = get_data_key(conf.get(section, "value"))
                     nc_id.createDimension(dim, data[val_key].size)
             else:
@@ -449,7 +449,7 @@ def create_netcdf_variables(conf, data, nc_id, logger):
 
             try:
                 val_type = data[tmp_var_name].dtype
-            except:
+            except KeyError:
                 msg = "107 Error creating netCDF file '{}".format(
                     format(conf.get("conf", "output"))
                 )
