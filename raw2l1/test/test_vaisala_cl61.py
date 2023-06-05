@@ -41,7 +41,17 @@ def test_vaisala_cl61(date, input_file, conf_file):
     conf_file = CONF_DIR / conf_file
 
     resp = subprocess.check_call(
-        [PRGM, date, conf_file, in_file, out_file, "-log_level", "debug", "-v", "debug"]
+        [
+            PRGM,
+            date,
+            conf_file,
+            in_file,
+            out_file,
+            "-log_level",
+            "debug",
+            "-v",
+            "debug",
+        ]
     )
 
     assert resp == 0, "CL61 20210409 single file conversion failed"
