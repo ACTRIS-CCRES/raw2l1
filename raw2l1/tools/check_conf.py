@@ -1,7 +1,7 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*-
 
 import sys
+
 from tools import common
 
 
@@ -48,7 +48,6 @@ def check_nc4_compression_option(conf, section, logger):
     # check compression value
     val = conf.get(section, opt)
     if val not in common.ALLOW_NC4_COMP:
-
         msg = "107 Error Reading config file '" + conf_file + "'"
         msg += (
             " authorized values for %s option in %s section is %s. Option set to false"
@@ -58,7 +57,7 @@ def check_nc4_compression_option(conf, section, logger):
 
     # check if compression level is present
     opt = "netcdf4_compression_level"
-    err_msg = "107 Error Reading config file '%s'authorized value for %s option in %s section are %s. Option set to 4"
+    err_msg = "107 Error Reading config file '%s'authorized value for %s option in %s section are %s. Option set to 4"  # NOQA
     if not conf.has_option(section, opt):
         conf.set(section, opt, "4")
 

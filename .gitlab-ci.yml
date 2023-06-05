@@ -1,30 +1,50 @@
-variables:
-  PIP_CACHE_DIR: "$CI_PROJECT_DIR/pip-cache"
-
 stages:
   - test
+  - quality
+  - lint
+
+variables:
+  PIP_CACHE_DIR: "$CI_PROJECT_DIR/.cache/pip"
 
 cache:
   paths:
-    - "$CI_PROJECT_DIR/pip-cache"
-  key: "$CI_PROJECT_ID"
+    - .cache/pip
 
 before_script:
   - python -V
-  - pip install -r requirements.txt
+  - pip install -r requirements/requirements-dev.txt
   - cd raw2l1
 
-test_py36:
+test:
   stage: test
-  image: python:3.6
+  image: python:$PYTHON_VERSION
   script:
-    - py.test --cov
+    - py.test --junitxml=report.xml --cov
   coverage: '/\d+\%\s*$/'
+  artifacts:
+    when: always
+    reports:
+      junit: raw2l1/report.xml
+  parallel:
+    matrix:
+      - PYTHON_VERSION: ["3.7", "3.8", "3.9", "3.10", "3.11"]
 
-test_py37:
-  stage: test
-  image: python:3.7
+ruff:
+  stage: quality
+  image: python:3.11
+  needs: ["test"]
   script:
-    - py.test --cov
-  coverage: '/\d+\%\s*$/'
+    - cd ..
+    - ruff --format=gitlab raw2l1 > gl-code-quality-report.json
+  allow_failure: true
+  artifacts:
+    reports:
+      codequality: gl-code-quality-report.json
+
+black:
+  stage: lint
+  image: python:3.11
+  needs: ["test"]
+  script:
+    - black --check .
   allow_failure: true

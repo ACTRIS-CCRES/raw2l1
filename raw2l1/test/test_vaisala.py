@@ -1,9 +1,9 @@
-import unittest
-import subprocess
 import os
+import subprocess
+import unittest
 
-import numpy as np
 import netCDF4 as nc
+import numpy as np
 
 MAIN_DIR = os.path.dirname(os.path.dirname(__file__)) + os.sep
 TEST_DIR = os.path.join(MAIN_DIR, "test")
@@ -14,12 +14,10 @@ PRGM = "raw2l1.py"
 
 
 class TestVaisalaCL31(unittest.TestCase):
-
     IN_DIR = os.path.join(TEST_IN_DIR, "vaisala_cl31")
     conf_file = os.path.join(CONF_DIR, "conf_vaisala_cl31_eprofile.ini")
 
     def test_cl31_onehour_file(self):
-
         date = "20141030"
         test_ifile = os.path.join(self.IN_DIR, "cl31_0a_z1R5mF3s_v01_20141030_*.asc")
         test_ofile = os.path.join(TEST_OUT_DIR, "test_cl31_20141030_000002.nc")
@@ -40,12 +38,10 @@ class TestVaisalaCL31(unittest.TestCase):
 
 
 class TestVaisalaMsg2(unittest.TestCase):
-
     IN_DIR = os.path.join(TEST_IN_DIR, "vaisala_cl")
     conf_file = os.path.join(CONF_DIR, "conf_vaisala_cl31_eprofile.ini")
 
     def test_cl_msg2(self):
-
         date = "20150617"
         test_ifile = os.path.join(self.IN_DIR, "vaisala_cl_msg2.txt")
         test_ofile = os.path.join(TEST_OUT_DIR, "test_cl31_20150617_000000.nc")
@@ -65,7 +61,6 @@ class TestVaisalaMsg2(unittest.TestCase):
         self.assertEqual(resp, 0, "CL31 one hour file")
 
     def test_cl_scale_error(self):
-
         date = "20150617"
         test_ifile = os.path.join(self.IN_DIR, "vaisala_cl_scale_error.txt")
         test_ofile = os.path.join(
@@ -88,12 +83,10 @@ class TestVaisalaMsg2(unittest.TestCase):
 
 
 class TestVaisalaCL51(unittest.TestCase):
-
     IN_DIR = os.path.join(TEST_IN_DIR, "vaisala_cl51")
     conf_file = os.path.join(CONF_DIR, "conf_vaisala_cl51_eprofile.ini")
 
     def test_cl51_oneday_file(self):
-
         date = "20140901"
         test_ifile = os.path.join(self.IN_DIR, "h4090100.dat")
         test_ofile = os.path.join(TEST_OUT_DIR, "test_cl51_20140901.nc")
@@ -114,12 +107,10 @@ class TestVaisalaCL51(unittest.TestCase):
 
 
 class TestVaisalaSwissAirport(unittest.TestCase):
-
     IN_DIR = os.path.join(TEST_IN_DIR, "vaisala_cl")
     conf_file = os.path.join(CONF_DIR, "conf_vaisala_cl31-swiss-airports_eprofile.ini")
 
     def test_2_files(self):
-
         date = "20150819"
         test_ifile = os.path.join(self.IN_DIR, "20150819*.log")
         test_ofile = os.path.join(TEST_OUT_DIR, "test_cl-swiss-airport_20150819.nc")
@@ -142,12 +133,10 @@ class TestVaisalaSwissAirport(unittest.TestCase):
 
 
 class TestVaisalaBugSIRTA(unittest.TestCase):
-
     IN_DIR = os.path.join(TEST_IN_DIR, "vaisala_cl31")
     conf_file = os.path.join(CONF_DIR, "conf_vaisala_cl31_eprofile.ini")
 
     def test_20150911(self):
-
         date = "20150911"
         test_ifile = os.path.join(self.IN_DIR, "cl31_0a_z1R5mF3s_v02_20150911_*.asc")
         test_ofile = os.path.join(TEST_OUT_DIR, "test_cl-sirta_20150911.nc")
@@ -169,7 +158,6 @@ class TestVaisalaBugSIRTA(unittest.TestCase):
         self.assertEqual(resp, 0, "CL SIRTA bug message type")
 
     def test_20150521(self):
-
         date = "20150521"
         test_ifile = os.path.join(self.IN_DIR, "cl31_0a_z1R5mF3s_v02_20150521_*.asc")
         test_ofile = os.path.join(TEST_OUT_DIR, "test_cl-sirta_20150521.nc")
@@ -191,7 +179,6 @@ class TestVaisalaBugSIRTA(unittest.TestCase):
         self.assertEqual(resp, 0, "CL SIRTA bug cbh full obscuration determined")
 
     def test_20150603(self):
-
         date = "20150603"
         test_ifile = os.path.join(self.IN_DIR, "cl31_0a_z1R5mF3s_v02_20150603_*.asc")
         test_ofile = os.path.join(TEST_OUT_DIR, "test_cl-sirta_20150603.nc")
@@ -314,12 +301,10 @@ class TestUnitsInFeet(unittest.TestCase):
 
 
 class TestVaisalaCL31Belgium(unittest.TestCase):
-
     IN_DIR = os.path.join(TEST_IN_DIR, "vaisala_cl31")
     conf_file = os.path.join(CONF_DIR, "conf_vaisala_cl31_eprofile.ini")
 
     def test_cl31_belgium_file(self):
-
         date = "20220119"
         test_ifile = os.path.join(
             self.IN_DIR, "06496_A202201191200_cl31_belgium-fmt.DAT"

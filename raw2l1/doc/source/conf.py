@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # Raw2L1 documentation build configuration file, created by
 # sphinx-quickstart on Thu Nov 13 16:29:33 2014.
@@ -12,8 +11,9 @@
 # All configuration values have a default; values that are commented out
 # serve to show the default.
 
-import sys
 import os
+import sys
+
 import sphinx_bootstrap_theme
 
 # If extensions (or modules to document with autodoc) are in another directory,

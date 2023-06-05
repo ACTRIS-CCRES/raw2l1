@@ -1,9 +1,8 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*-
 
-import unittest
-import subprocess
 import os
+import subprocess
+import unittest
 
 MAIN_DIR = os.path.dirname(os.path.dirname(__file__)) + os.sep
 CONF_DIR = MAIN_DIR + "conf" + os.sep
@@ -14,11 +13,9 @@ PRGM = "raw2l1.py"
 
 
 class TestLogs(unittest.TestCase):
-
     IN_DIR = TEST_IN_DIR + "rpg_hatpro" + os.sep
 
     def test_log_cinfo_finfo(self):
-
         date = "20150930"
         test_ifile = self.IN_DIR + "hatpro_0a_z1Imwrad-TPB_v01_20150930_000020_1436.nc"
         test_ofile = TEST_OUT_DIR + "sups_sir_mwrBL00_l2_ta_v01_201509300000020.nc"
