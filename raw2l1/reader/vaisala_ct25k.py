@@ -1,10 +1,11 @@
-# -*- coding: utf8 -*-
 # only support for vaisala message type 2
 
-import numpy as np
 import datetime as dt
-import sys
 import re
+import sys
+
+import numpy as np
+
 from tools.utils import chomp, to_bool
 
 # brand and model of the LIDAR
@@ -211,10 +212,10 @@ def get_file_lines(filename, conf, logger):
 
     """
     try:
-        with open(filename, "r", encoding=conf["file_encoding"]) as f_id:
+        with open(filename, encoding=conf["file_encoding"]) as f_id:
             logger.debug("reading " + filename)
             lines = chomp(f_id.readlines())
-    except IOError:
+    except OSError:
         logger.error("109 Impossible to open file " + filename)
         return None
 
@@ -287,7 +288,7 @@ def get_range_ngates(conf_msg, logger):
         range_ngates = RANGE_GATES[int_coding]
         logger.debug("number of vertical gates: %d" % range_ngates)
     except Exception as err:
-        logger.warning("105 Problem reading number of vertical gates " + repr(err))
+        logger.warning("105 Problem reading number of vertical gates %s", repr(err))
         return None
 
     return range_ngates
@@ -306,7 +307,7 @@ def get_msg_type(conf_msg, filename, logger):
     elif msg_type == 2:
         logger.info("file contains messages of type 2 (with sky state)")
     else:
-        logger.error("106 problem determining type of message '{}'".format(filename))
+        logger.error("106 problem determining type of message '%s'", filename)
         msg_type = None
 
     return msg_type
@@ -340,7 +341,7 @@ def check_range(data, data_dim, filename, logger):
     if data_dim["range"] == -9 or data["range_resol"] == -9:
         logger.error(
             "101 according to the configuration read "
-            + "the file {} doesn't contains retrodiffusion ".format(filename)
+            + f"the file {filename} doesn't contains retrodiffusion "
             + "profiles. Trying next message"
         )
         range_ok = False
@@ -348,7 +349,7 @@ def check_range(data, data_dim, filename, logger):
     elif data_dim["range"] is None or data["range_resol"] is None:
         logger.error(
             "101 problem encountered reading range configuration."
-            + " from {} Trying next message".format(filename)
+            + f" from {filename} Trying next message"
         )
         range_ok = False
     else:
@@ -638,7 +639,7 @@ def read_rcs_var(data, ind, msg, logger):
     read the rcs value in a data msg
     """
     # get line a of the message containing RCS based on CL31 conf
-    line_to_read = get_rcs_line_nb_in_msg(data["msg_type"])
+    get_rcs_line_nb_in_msg(data["msg_type"])
     # size of the profile to read
     rcs_size = data["range"].size
     # extract line containing rcs
@@ -709,9 +710,8 @@ def read_vars(lines, data, conf, time_ind, f_name, logger):
             i_line += 1
             time_ind += 1
             logger.error(
-                "100 Incorrect Header Information in '{}'. Message type change in file".format(
-                    f_name
-                )
+                "100 Incorrect Header Information in '%s'. Message type change in file",
+                f_name,
             )
             continue
 
@@ -784,9 +784,7 @@ def read_data(list_files, conf, logger):
         # try reading the file
         lines = get_file_lines(ifile, conf, logger)
         if lines is None:
-            logger.warning(
-                "102 No data found in the file '{}' trying next file".format(ifile)
-            )
+            logger.warning("102 No data found in the file '%s' trying next file", ifile)
             continue
 
         nb_files_read += 1
