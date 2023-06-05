@@ -2,7 +2,6 @@
 
 import os
 import subprocess
-import pytest
 import unittest
 
 MAIN_DIR = os.path.dirname(os.path.dirname(__file__)) + os.sep
