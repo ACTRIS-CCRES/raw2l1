@@ -327,9 +327,9 @@ def calc_range(resol, n_gates):
     calculate range variable based on resolution and number of gates.
 
     """
-    range_vect = np.array(list(range(1, n_gates + 1)), dtype=np.float)
+    range_vect = np.array(list(range(1, n_gates + 1)), dtype=np.float32)
 
-    return range_vect * np.float(resol)
+    return range_vect * float(resol)
 
 
 def check_range(data, data_dim, filename, logger):
@@ -524,7 +524,7 @@ def read_scalar_vars(data, msg, msg_type, logger):
     line_to_read = get_state_line_nb_in_msg(data["msg_type"])
     line = msg[line_to_read]
 
-    return np.float(line.split()[6])
+    return float(line.split()[6])
 
 
 def read_time_dep_vars(data, ind, msg, msg_type, logger):
@@ -535,17 +535,17 @@ def read_time_dep_vars(data, ind, msg, msg_type, logger):
     line_to_read = get_state_line_nb_in_msg(data["msg_type"])
     params = msg[line_to_read].split()
 
-    data["scale"][ind] = np.float(params[0])
-    data["laser_energy"][ind] = np.float(params[2])
-    data["laser_temp"][ind] = np.float(params[3]) + DEG_TO_K
-    data["window_transmission"][ind] = np.float(params[5])
-    data["tilt_angle"][ind] = np.float(params[6])
+    data["scale"][ind] = float(params[0])
+    data["laser_energy"][ind] = float(params[2])
+    data["laser_temp"][ind] = float(params[3]) + DEG_TO_K
+    data["window_transmission"][ind] = float(params[5])
+    data["tilt_angle"][ind] = float(params[6])
     try:
-        data["bckgrd_rcs_0"][ind] = np.float(params[7])
+        data["bckgrd_rcs_0"][ind] = float(params[7])
     except IndexError:
         data["bckgrd_rcs_0"][ind] = np.nan
     try:
-        data["integrated_rcs_0"][ind] = np.float(params[9]) * SUM_BCKSCATTER_FACTOR
+        data["integrated_rcs_0"][ind] = float(params[9]) * SUM_BCKSCATTER_FACTOR
     except IndexError:
         data["integrated_rcs_0"][ind] = np.nan
 
@@ -579,14 +579,14 @@ def read_cbh_msg(data, ind, msg, logger):
 
     # number of CBH depends on nlayers value
     if 1 <= nlayers < 4:
-        data["cbh"][ind, 0] = np.float(elts[1]) * coeff
+        data["cbh"][ind, 0] = float(elts[1]) * coeff
     if 2 <= nlayers < 4:
-        data["cbh"][ind, 1] = np.float(elts[2]) * coeff
+        data["cbh"][ind, 1] = float(elts[2]) * coeff
     if 3 <= nlayers < 4:
-        data["cbh"][ind, 2] = np.float(elts[3]) * coeff
+        data["cbh"][ind, 2] = float(elts[3]) * coeff
     # vertical visibility
     if nlayers == 4:
-        data["vertical_visibility"][ind] = np.float(elts[1]) * coeff
+        data["vertical_visibility"][ind] = float(elts[1]) * coeff
 
     return data
 
