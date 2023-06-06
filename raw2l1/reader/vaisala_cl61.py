@@ -419,18 +419,18 @@ def read_timedep_vars(data, nc_id, time_ind, logger):
     if data["float_fw_version"] >= 1.1:
         mon = nc_id["monitoring"]
 
+    # fw v1.1 HKD are attributes of the monitoring group
     if data["float_fw_version"] == 1.1:
-        # fmt: off
-        data["hkd_bkgd_radiance"][ind_b:ind_e] = mon.background_radiance  # noqa
+        data["hkd_bkgd_radiance"][ind_b:ind_e] = mon.background_radiance
         data["hkd_rh_int"][ind_b:ind_e] = mon.internal_humidity
-        data["hkd_temp_int"][ind_b:ind_e] = mon.internal_temperature  # noqa
+        data["hkd_temp_int"][ind_b:ind_e] = mon.internal_temperature
         data["hkd_pres_int"][ind_b:ind_e] = mon.internal_pressure
-        data["hkd_temp_laser"][ind_b:ind_e] = mon.laser_temperature  # noqa
-        data["hkd_state_laser"][ind_b:ind_e] = mon.laser_power_percent  # noqa
-        data["hkd_state_optics"][ind_b:ind_e] = mon.window_condition  # noqa
-        # fmt: on
+        data["hkd_temp_laser"][ind_b:ind_e] = mon.laser_temperature
+        data["hkd_state_laser"][ind_b:ind_e] = mon.laser_power_percent
+        data["hkd_state_optics"][ind_b:ind_e] = mon.window_condition
+
+    # fw v1.2 HKD are variables of the monitoring group
     if data["float_fw_version"] >= 1.2:
-        mon = nc_id["monitoring"]
         # fmt: off
         data["hkd_bkgd_radiance"][ind_b:ind_e] = mon.variables["background_radiance"][:]
         data["hkd_rh_int"][ind_b:ind_e] = mon.variables["internal_humidity"][:]
