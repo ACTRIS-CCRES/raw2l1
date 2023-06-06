@@ -21,7 +21,7 @@ BASE_URL = "https://gitlab.in2p3.fr/ipsl/sirta/raw2l1"
 # -- Project information -----------------------------------------------------
 
 project = "raw2l1"
-copyright = "CNRS/ecole polytechnique"
+copyright = "CNRS/IP Paris"
 author = "Marc-Antoine Drouin"
 
 LOGO_PATH = os.path.join(os.path.dirname(__file__), "assets/logo_sirta-ipsl.png")
