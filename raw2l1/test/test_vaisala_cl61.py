@@ -13,16 +13,47 @@ PRGM = MAIN_DIR / "raw2l1.py"
 
 
 @pytest.mark.parametrize(
-    "date, input_file, conf_file",
+    "date, input_file, conf_file, test_msg",
     [
-        ("20210409", "cl61_20210409_090151.nc", "conf_vaisala_cl61_eprofile.ini"),
-        ("20210409", "cl61_20211103*.nc", "conf_vaisala_cl61_eprofile.ini"),
-        ("20220623", "cl61-v1.1_*.nc", "conf_vaisala_cl61_eprofile.ini"),
-        ("20220623", "cl61-v1.1_*.nc", "conf_vaisala_cl61_eprofile_force-loc.ini"),
-        ("20220912", "T3250605*.nc", "conf_vaisala_cl61_eprofile.ini"),
+        (
+            "20210409",
+            "cl61_20210409_090151.nc",
+            "conf_vaisala_cl61_eprofile.ini",
+            "cl61 one file fw: 1.0.0-rc1",
+        ),
+        (
+            "20210409",
+            "cl61_20211103*.nc",
+            "conf_vaisala_cl61_eprofile.ini",
+            "cl61 several files fw: 1.0.0-rc1",
+        ),
+        (
+            "20220623",
+            "cl61-v1.1_*.nc",
+            "conf_vaisala_cl61_eprofile.ini",
+            "cl61 several files fw: 1.1.x",
+        ),
+        (
+            "20220623",
+            "cl61-v1.1_*.nc",
+            "conf_vaisala_cl61_eprofile_force-loc.ini",
+            "cl61 several files fw: 1.1.x, force location",
+        ),
+        (
+            "20220912",
+            "T3250605*.nc",
+            "conf_vaisala_cl61_eprofile.ini",
+            "cl61 one file fw: 1.2.7",
+        ),
+        (
+            "20220912",
+            "cl61-v1.2_*.nc",
+            "conf_vaisala_cl61_eprofile.ini",
+            "cl61 sevral files fw: 1.2.7",
+        ),
     ],
 )
-def test_vaisala_cl61(date, input_file, conf_file):
+def test_vaisala_cl61(date, input_file, conf_file, test_msg):
     """
     Test conversion of vaisala CL61 files.
 
@@ -54,4 +85,4 @@ def test_vaisala_cl61(date, input_file, conf_file):
         ]
     )
 
-    assert resp == 0, "CL61 20210409 single file conversion failed"
+    assert resp == 0, test_msg
