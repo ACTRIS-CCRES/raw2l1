@@ -27,4 +27,5 @@ dependencies:
   # documentation
   - gitdb
   - sphinx
-  - sphinx-rtd-theme
+  - sphinx-book-theme
+  - myst-parser

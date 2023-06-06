@@ -15,4 +15,5 @@ ruff
 types-pyyaml
 gitdb
 sphinx
-sphinx-rtd-theme
+sphinx-book-theme==0.3.3
+myst-parser
