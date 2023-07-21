@@ -688,8 +688,20 @@ def read_timedep_vars(data, nc_id, soft_vers, time_ind, time_size, logger):
     logger.debug("reading beta_raw")
     # for firmware > 1.05 variable can be changed to beta_att
     try:
-        data["beta_raw"][ind_b:ind_e, :] = nc_id.variables["beta_att"][:]
-        logger.debug("using beta_att variable")
+        # data["beta_raw"][ind_b:ind_e, :] = nc_id.variables["beta_att"][:]
+        # logger.debug("using beta_att variable")
+        beta_att = nc_id.variables["beta_att"][:]
+        try:
+            c_cal = nc_id.variables["c_cal"][:]
+        except KeyError:
+            c_cal = 3.2e-12  # default calibration factor for Lufft instruments
+            logger.warning(
+                "c_cal not found in file although beta_att is there. " "assuming c_cal=3.2e-12"
+            )
+        data["beta_raw"][ind_b:ind_e, :] = beta_att / c_cal
+        logger.debug(
+            "using beta_att variable divided by c_cal " "(undoing firmware pseudo-calibration)"
+        )
     except KeyError:
         data["beta_raw"][ind_b:ind_e, :] = nc_id.variables["beta_raw"][:]
         logger.debug("using beta_raw variable")
