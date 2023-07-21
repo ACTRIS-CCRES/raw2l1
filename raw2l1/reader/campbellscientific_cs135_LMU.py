@@ -174,25 +174,27 @@ def read_cbh(line, data, ind, logger):
     read the line containing alarm, cbh, window transmission and flags
     ex: 10 099 03733 ///// ///// ///// 000000000000
     """
-
     elts = line.split()
-
-    nlayers = int(elts[0][0])
     data["alarm"][ind] = elts[0][1]
-    data["window_transmission"][ind] = np.int(elts[1])
+    nlayers = elts[0][0]
+    if nlayers != "/":
+        # print(elts[0][0])
+        nlayers = int(elts[0][0])
 
-    # number of CBH depends on nlayers value
-    if 1 <= nlayers <= 4:
-        data["cbh"][ind, 0] = np.float(elts[2])
-    if 2 <= nlayers <= 4:
-        data["cbh"][ind, 1] = np.float(elts[3])
-    if 3 <= nlayers <= 4:
-        data["cbh"][ind, 2] = np.float(elts[4])
-    if nlayers == 4:
-        data["cbh"][ind, 3] = np.float(elts[5])
-    if nlayers == 5:
-        data["vertical_visibility"][ind] = np.float(elts[2])
-        data["highest_signal_received"][ind] = np.float(elts[3])
+        data["window_transmission"][ind] = np.int(elts[1])
+
+        # number of CBH depends on nlayers value
+        if 1 <= nlayers <= 4:
+            data["cbh"][ind, 0] = np.float(elts[2])
+        if 2 <= nlayers <= 4:
+            data["cbh"][ind, 1] = np.float(elts[3])
+        if 3 <= nlayers <= 4:
+            data["cbh"][ind, 2] = np.float(elts[4])
+        if nlayers == 4:
+            data["cbh"][ind, 3] = np.float(elts[5])
+        if nlayers == 5:
+            data["vertical_visibility"][ind] = np.float(elts[2])
+            data["highest_signal_received"][ind] = np.float(elts[3])
 
     # flags
     data["info_flags"][ind] = elts[6]
@@ -244,7 +246,7 @@ def read_profile(line, data, ind, logger):
     corr_2s_needed = tmp > 2**19
     if any(corr_2s_needed):
         tmp[corr_2s_needed] = -(2**20 - tmp[corr_2s_needed])
-    
+
     # corr_2s_needed = tmp > 1048575
     # if any(corr_2s_needed):
     #     tmp[corr_2s_needed] = tmp[corr_2s_needed] - 2**40
@@ -448,7 +450,7 @@ def read_data(list_files, conf, logger):
     time_dim = count_msg_to_read(list_files, t_stamp_fmt, conf, logger)
 
     data = {}
-    
+
     msg_type, data = get_msg_type(data, list_files, t_stamp_fmt, conf, logger)
     logger.debug("message type : %d", msg_type)
     msg_len = MSG_TYPE_LINES[msg_type]
