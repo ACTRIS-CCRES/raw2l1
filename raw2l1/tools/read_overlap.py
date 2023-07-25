@@ -12,7 +12,6 @@ def read_overlap(fname, logger):
     """
     function to read overlap function contains in a file with two columns:
     """
-
     logger.debug("reading overlap file: " + fname)
     try:
         data = np.genfromtxt(
@@ -20,7 +19,7 @@ def read_overlap(fname, logger):
         )
 
     except OSError as err:
-        logger.errot("107 Error Reading overlap file : " + fname)
+        logger.error("107 Error Reading overlap file : " + fname)
         logger.error(err)
         data = None
 
