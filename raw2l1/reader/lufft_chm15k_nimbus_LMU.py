@@ -578,13 +578,15 @@ def read_scalar_vars(data, nc_id, soft_vers, logger):
         data["azimuth"] = nc_id.variables["azimuth"][:]
         logger.debug("reading zenith")
         data["zenith"] = nc_id.variables["zenith"][:]
-    if soft_vers > 0.235:
-        logger.debug("reading cloud height offset (cho)")
-        data["cho"] = nc_id.variables["cho"][:]
     if soft_vers >= 0.7:
         logger.debug("reading scaling")
         data["scaling"] = nc_id.variables["scaling"][:]
-
+    
+    logger.debug("reading cloud height offset (cho)")
+    try:
+        data["cho"] = nc_id.variables["cho"][:]
+    except KeyError:
+        logger.warning("cho variable not available")
     logger.debug("reading c_cal")
     try:
         data["c_cal"] = nc_id.variables["c_cal"][:]
