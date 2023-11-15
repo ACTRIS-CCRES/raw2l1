@@ -29,12 +29,12 @@ jobs:
 
       - name: Install dependencies
         run: |
-          cd raw2l1
           pip install -r requirements/requirements-dev.txt
 
       - name: Run tests
         run: |
-          python -m pytest
+          cd raw2l1
+          python -m pytest --cov
 
       - name: Upload coverage data
         uses: actions/upload-artifact@v2
