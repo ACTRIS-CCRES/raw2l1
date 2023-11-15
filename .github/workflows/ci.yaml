@@ -40,7 +40,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: coverage-data
-          path: ./coverage/
+          path: ./raw2l1/coverage/
 
   coverage:
     needs: build
