@@ -12,7 +12,7 @@ def check_list_options(conf, section, list_opts, logger):
 
     for opt in list_opts:
         if not conf.has_option(section, opt):
-            logger.critical("107 %s option is missing in %s" % (opt, section))
+            logger.critical("107 %s option is missing in %s", opt, section)
             return False
 
     return True

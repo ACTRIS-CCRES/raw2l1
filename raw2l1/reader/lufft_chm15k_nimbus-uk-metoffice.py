@@ -748,7 +748,7 @@ def read_data(list_files, conf, logger):
 
     if nb_files_read == 0:
         for f in list_files:
-            logger.critical("109 Tried to read '{}'. No file could be read".format(f))
+            logger.critical(f"109 Tried to read '{f}'. No file could be read")
         sys.exit(1)
     else:
         return data

@@ -30,7 +30,7 @@ def get_dimension_size(list_files, logger):
     logger.debug("determining size of data")
 
     for i_file, file_ in enumerate(list_files):
-        logger.debug("reading {}".format(file_))
+        logger.debug(f"reading {file_}")
         nc_id = nc.Dataset(file_, "r")
 
         if i_file == 0:

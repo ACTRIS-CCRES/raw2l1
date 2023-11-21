@@ -78,7 +78,7 @@ def get_channel_conf(conf, logger):
 
     # when we know the order of the variables in files we well need to add an index
     chan_conf = {
-        "var_names": ["rcs_{:02d}".format(x) for x in tmp_rcs],
+        "var_names": [f"rcs_{x:02d}" for x in tmp_rcs],
         "channels": tmp_chan,
         "index": [None] * len(tmp_rcs),
     }
@@ -295,11 +295,11 @@ def init_data(data_dim, logger):
 
     # multi_dim vars
     for i_chan in range(data_dim["n_chan"]):
-        data["rcs_{:02d}".format(i_chan)] = (
+        data[f"rcs_{i_chan:02d}"] = (
             np.ones((data_dim["time"], data_dim["range"]), dtype=np.float32)
             * MISSING_FLOAT
         )
-        data["bckgrd_rcs_{:02d}".format(i_chan)] = (
+        data[f"bckgrd_rcs_{i_chan:02d}"] = (
             np.ones((data_dim["time"],), dtype=np.float32) * MISSING_FLOAT
         )
 
@@ -352,7 +352,7 @@ def read_header(file_id, data, data_dim, index, logger, date_only=False):
     # channels description
     # ------------------------------------------------------------------------
     for i_chan in range(data_dim["n_chan"]):
-        "rcs_{:02d}".format(i_chan)
+        f"rcs_{i_chan:02d}"
 
         line = file_id.readline().decode(DEFAULT_ENCODING)
         logger.debug("parsing : %s", line.strip())
@@ -423,20 +423,20 @@ def read_profiles(file_id, data, data_dim, index, logger):
         if data["detection_mode"][i_chan] == "analog":
             max_range = data["adc_range"][i_chan]
             adc = data["adc_bits"][i_chan]
-            data["rcs_{:02d}".format(i_chan)][index, :] = (
+            data[f"rcs_{i_chan:02d}"][index, :] = (
                 tmp_data / shots * max_range * 1000 / (2**adc - 1)
             )
-            data["units_{:02d}".format(i_chan)] = "mV"
+            data[f"units_{i_chan:02d}"] = "mV"
         else:
             # It coincides with the ASCII converted by the Advanced Licel.exe
             # but it has no sense.
             # See Licel programming manual.pdf. Bins-per-microseconds number
             # from technical specifications 20 bins/microsec.
             reduction_factor = data["range_resol"] / DEFAULT_RESOLUTION
-            data["rcs_{:02d}".format(i_chan)][index, :] = tmp_data / (
+            data[f"rcs_{i_chan:02d}"][index, :] = tmp_data / (
                 shots / (20 / reduction_factor)
             )
-            data["units_{:02d}".format(i_chan)] = "MHz"
+            data[f"units_{i_chan:02d}"] = "MHz"
 
         # jump over space between profiles
         file_id.seek(file_id.tell() + 2)
@@ -523,15 +523,11 @@ def read_data(list_files, conf, logger):
 
     # PR2 and background
     for i_chan in range(data_dim["n_chan"]):
-        profiles = data["rcs_{:02d}".format(i_chan)]
+        profiles = data[f"rcs_{i_chan:02d}"]
         square = np.square(data["range"])
 
-        data["bckgrd_rcs_{:02d}".format(i_chan)] = np.mean(
-            profiles[:, bck_filter], axis=1
-        )
-        data["rcs_{:02d}".format(i_chan)] = profiles * square
-        data["units_rcs_{:02d}".format(i_chan)] = (
-            data["units_{:02d}".format(i_chan)] + ".m^2"
-        )
+        data[f"bckgrd_rcs_{i_chan:02d}"] = np.mean(profiles[:, bck_filter], axis=1)
+        data[f"rcs_{i_chan:02d}"] = profiles * square
+        data[f"units_rcs_{i_chan:02d}"] = data[f"units_{i_chan:02d}"] + ".m^2"
 
     return data

@@ -301,7 +301,7 @@ def get_msg_type(conf_msg, filename, logger):
     elif msg_type == 2:
         logger.info("file contains messages of type 2 (with sky state)")
     else:
-        logger.error("106 problem determining type of message '{}'".format(filename))
+        logger.error(f"106 problem determining type of message '{filename}'")
         msg_type = None
 
     return msg_type
@@ -335,7 +335,7 @@ def check_range(data, data_dim, filename, logger):
     if data_dim["range"] == -9 or data["range_resol"] == -9:
         logger.error(
             "101 according to the configuration read "
-            + "the file {} doesn't contains retrodiffusion ".format(filename)
+            + f"the file {filename} doesn't contains retrodiffusion "
             + "profiles. Trying next message"
         )
         range_ok = False
@@ -343,7 +343,7 @@ def check_range(data, data_dim, filename, logger):
     elif data_dim["range"] is None or data["range_resol"] is None:
         logger.error(
             "101 problem encountered reading range configuration."
-            + " from {} Trying next message".format(filename)
+            + f" from {filename} Trying next message"
         )
         range_ok = False
     else:
@@ -767,9 +767,7 @@ def read_data(list_files, conf, logger):
         # try reading the file
         lines = get_file_lines(ifile, conf, logger)
         if lines is None:
-            logger.warning(
-                "102 No data found in the file '{}'trying next file".format(ifile)
-            )
+            logger.warning(f"102 No data found in the file '{ifile}'trying next file")
             continue
 
         nb_files_read += 1

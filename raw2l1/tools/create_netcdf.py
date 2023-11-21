@@ -101,8 +101,11 @@ def get_var_type(type_str, conf, logger):
         val_type = KEYS_VALTYPE[type_str]
     except KeyError:
         msg = (
-            "107 Type of data '" + type_str + "' unknown using default. "
-            "Check your configuration file '{}'".format(conf.get("conf", "conf"))
+            "107 Type of data '"
+            + type_str
+            + "' unknown using default. " "Check your configuration file '{}'".format(
+                conf.get("conf", "conf")
+            )
         )
         logger.error(msg)
         val_type = np.float64
@@ -213,10 +216,10 @@ def create_netcdf_dim(conf, data, nc_id, logger):
 
                 if KEY_READERDATA in dim_size:
                     val_key = get_data_key(conf.get(section, "size"))
-                    logger.debug("{} size : {:d}".format(name, data[val_key]))
+                    logger.debug(f"{name} size : {data[val_key]:d}")
                     nc_id.createDimension(dim, data[val_key])
                 else:
-                    logger.debug("{} size : {:d}".format(name, int(dim_size)))
+                    logger.debug(f"{name} size : {int(dim_size):d}")
                     nc_id.createDimension(dim, int(dim_size))
             elif type_var == "$time$":
                 # case of time var
@@ -315,8 +318,7 @@ def add_data_to_var(nc_var, var_name, conf, data, logger):
             nc_var[:] = read_overlap(over_fname, logger)
         except OSError as err:
             logger.error(
-                "107 problem encountered while reading overlap file "
-                + "'{}".format(over_fname)
+                "107 problem encountered while reading overlap file " + f"'{over_fname}"
             )
             logger.error(repr(err))
     else:
@@ -369,7 +371,7 @@ def add_attr_to_var(nc_var, data, conf, section, logger):
 
             # attributes we don't know if they are string
             if option not in common.STRING_ATTR:
-                if type(value) is str and KEY_READERDATA in value:
+                if isinstance(value, str) and KEY_READERDATA in value:
                     try:
                         data_key = get_data_key(value)
                         value = data[data_key]
@@ -381,7 +383,7 @@ def add_attr_to_var(nc_var, data, conf, section, logger):
                 else:
                     value = convert_attribute(value, logger)
 
-            logger.debug("adding %s attribute %s" % (option, repr(value)))
+            logger.debug("adding %s attribute %s", option, repr(value))
             setattr(nc_var, option, value)
 
     return None
@@ -482,7 +484,7 @@ def create_netcdf_variables(conf, data, nc_id, logger):
             msg = "107 Error creating netCDF file '{}'".format(
                 conf.get("conf", "output")
             )
-            msg += " No value option found for {}".format(var_name)
+            msg += f" No value option found for {var_name}"
             msg += " - your configuration file might contains errors"
             logger.error(msg)
 

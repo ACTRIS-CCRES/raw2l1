@@ -87,7 +87,7 @@ def read_data(list_files, conf, logger):
     # read data
     time_ind = 0
     for i, f in enumerate(list_files):
-        logger.debug("reading file : {}".format(f))
+        logger.debug(f"reading file : {f}")
 
         nc_id = nc.Dataset(f, "r")
 
@@ -97,7 +97,7 @@ def read_data(list_files, conf, logger):
         ind_s = time_ind
         ind_e = time_ind + time_size
 
-        logger.debug("storing data from index {} to {}".format(ind_s, ind_e))
+        logger.debug(f"storing data from index {ind_s} to {ind_e}")
 
         if i == 0:
             data["height"] = nc_id.variables[ALT_VAR][:]

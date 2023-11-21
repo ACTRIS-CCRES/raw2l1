@@ -19,10 +19,6 @@ import pathlib
 import re
 import sys
 
-if sys.version_info >= (3, 11):
-    import tomllib
-else:
-    import tomli as tomllib
 import yaml
 
 EXCLUDE = {"python", "c-compiler", "cxx-compiler"}

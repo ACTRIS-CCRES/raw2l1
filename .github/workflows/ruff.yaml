@@ -1,0 +1,15 @@
+name: Ruff
+on: [push, pull_request]
+jobs:
+  ruff:
+    concurrency:
+      # prevent concurrent runs of the same workflow
+      group: ${{ github.workflow }}-${{ github.head_ref || github.ref_name }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: chartboost/ruff-action@v1
+        with:
+          src: "./raw2l1"
+          version: 0.1.6
+          args: --output-format=github

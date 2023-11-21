@@ -1,8 +1,25 @@
-[![pipeline status](https://gitlab.in2p3.fr/ipsl/sirta/raw2l1/badges/master/pipeline.svg)](https://gitlab.in2p3.fr/ipsl/sirta/raw2l1/commits/master) [![coverage report](https://gitlab.in2p3.fr/ipsl/sirta/raw2l1/badges/master/coverage.svg)](https://gitlab.in2p3.fr/ipsl/sirta/raw2l1/commits/master)
+![main](https://github.com/ACTRIS-CCRES/raw2l1/actions/workflows/ci.yml/badge.svg?branch=master")
+![develop](https://github.com/ACTRIS-CCRES/raw2l1/actions/workflows/ci.yml/badge.svg?branch=develop")
+[![codecov](https://codecov.io/gh/ACTRIS-CCRES/raw2l1/graph/badge.svg?token=7BVO7V5IA8)](https://codecov.io/gh/ACTRIS-CCRES/raw2l1)
+[![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
 
 # raw2l1
 
 Code to convert raw LIDAR data into normalized netCDF files
+
+## Get code
+
+### Using ssh
+
+```bash
+git@github.com:ACTRIS-CCRES/raw2l1.git
+```
+
+### Using https
+
+```bash
+https://github.com/ACTRIS-CCRES/raw2l1.git
+```
 
 ## Dependencies install
 
@@ -20,8 +37,17 @@ conda activate raw2l1
 
 ### Using pip
 
+We recommand creating a virtual environment before installing the dependencies with
+
 ```bash
-pip install -r requirements/requirements.txt
+python -m venv path/env/raw2l1
+source activate path/env/raw2l1/bin/activate
+```
+
+Then install the dependencies with
+
+```bash
+python -m pip install -r requirements/requirements.txt
 ```
 
 ## Instruments compatibility
@@ -90,7 +116,7 @@ You will first need to create an account on gitlab.in2p3.fr (see [here](https://
 Then you can clone the repository
 
 ```bash
-git clone git@gitlab.in2p3.fr:ipsl/sirta/raw2l1.git
+git clone git@github.com:ACTRIS-CCRES/raw2l1.git
 ```
 
 ## Install
@@ -104,11 +130,26 @@ conda activate raw2l1-dev
 
 ### Using pip
 
+We recommand creating a virtual environment before installing the dependencies with
+
+```bash
+python -m venv path/env/raw2l1-dev
+source activate path/env/raw2l1-dev/bin/activate
+```
+
+Then install the dependencies with
+
 ```bash
 pip install -r requirements/requirements-dev.txt
 ```
 
-## run the test suite
+## Install pre-commit
+
+```bash
+pre-commit install
+```
+
+## Run the test suite
 
 To run the tests you will need more python modules see requirements.txt file
 
@@ -117,31 +158,39 @@ To run the tests you will need more python modules see requirements.txt file
 
 ```
 ce raw2l1
-pytest
+python -m pytest
 ```
 
-## Run the quality check
+## Run the linter and code formatter
 
-raw2l1 use [ruff](https://astral.sh/ruff) to check quality.
+raw2l1 use [ruff](https://astral.sh/ruff) for linting and code formatting.
+
+### Check code
 
 ```bash
-ruff --format=gitlab raw2l1
+ruff check raw2l1
 ```
+
+### Fix code
 
 You can also try to make ruff fix some of the issues it detected.
 
 ```bash
-ruff --format=gitlab --fix raw2l1
+ruff check --fix raw2l1
 ```
 
-# thanks
+### Format code
+
+When your `ruff check` is ok, you can user the formatter.
+
+```bash
+ruff format raw2l1
+```
+
+# Thanks
 
 This program was developped in the scope of [TOPROF](http://www.toprof.imaa.cnr.it/) (COST ACTION ES1303).
 Thanks to F.Wagner, I. Mattis, R. Leinweber for testing the software, providing example files and reporting bugs during the [CEILINEX](http://ceilinex2015.de)
-
-# authors
-
-M.-A Drouin based on the first version of Y. Morille
 
 # Copyright
 
