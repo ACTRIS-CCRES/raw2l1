@@ -2,8 +2,7 @@ name: CI
 
 on:
   pull_request:
-    branches:
-      - "**"
+    branches: [main, develop]
 
 jobs:
   test:
@@ -41,6 +40,11 @@ jobs:
         with:
           name: coverage-data
           path: ./raw2l1/coverage/
+
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v3
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
       - name: Run Ruff
         run: ruff check --output-format=github raw2l1
