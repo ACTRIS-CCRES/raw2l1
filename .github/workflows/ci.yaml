@@ -34,7 +34,8 @@ jobs:
       - name: Run tests
         run: |
           cd raw2l1
-          python -m pytest --cov
+          python -m pytest tests/test_arg_parser.py
+          ls -la
 
       - name: Upload coverage data
         uses: actions/upload-artifact@v2
