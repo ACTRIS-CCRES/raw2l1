@@ -120,7 +120,7 @@ def sync_meteo(data, meteo_data, logger):
         data["time"][:], meteo_data["time"][:], assume_unique=True
     )
 
-    logger.debug("common timesteps found : {:d}".format(common_time.size))
+    logger.debug(f"common timesteps found : {common_time.size:d}")
 
     time_filter = np.array(
         [True if t in common_time else False for t in data["time"][:]]
@@ -142,7 +142,7 @@ def read_data(list_files, conf, logger):
 
     logger.debug("start reading data using reader for " + BRAND + " " + MODEL)
     for f in list_files:
-        logger.debug("files to read : {}".format(f))
+        logger.debug(f"files to read : {f}")
 
     meteo_avail = False
     # check if meteo data available
@@ -151,7 +151,7 @@ def read_data(list_files, conf, logger):
         meteo_files = conf["ancillary"][0]
         logger.info("meteo data available")
         for f in meteo_files:
-            logger.debug("files to read : {}".format(f))
+            logger.debug(f"files to read : {f}")
 
     # get variables size
     vars_dim = get_data_size(list_files, logger, only_time=True)

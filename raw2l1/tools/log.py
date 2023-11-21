@@ -31,7 +31,7 @@ def init(opt, name):
         sys.exit(1)
 
     filename = os.path.join(log_dir, log_file)
-    print("debug file : {}".format(filename))
+    print(f"debug file : {filename}")
     print("console debug level : {}".format(opt["verbose"].upper()))
     print("file debug level : {}".format(opt["log_level"].upper()))
 

@@ -72,10 +72,8 @@ class RawDataReader:
         # define missing values if they are not define in reader_conf section
         if MISSING_INT_KEY not in reader_conf:
             logger.info(
-                """no {} option define in {} section.
-                        Using default value : {}""".format(
-                    MISSING_INT_KEY, READER_CONF, common.MISSING_INTEGER
-                )
+                f"""no {MISSING_INT_KEY} option define in {READER_CONF} section.
+                        Using default value : {common.MISSING_INTEGER}"""
             )
             reader_conf[MISSING_INT_KEY] = common.MISSING_INTEGER
         else:
@@ -85,10 +83,8 @@ class RawDataReader:
 
         if MISSING_FLOAT_KEY not in reader_conf:
             logger.info(
-                """no {} option define in {} section.
-                        Using default value : {}""".format(
-                    MISSING_INT_KEY, READER_CONF, common.MISSING_INTEGER
-                )
+                f"""no {MISSING_INT_KEY} option define in {READER_CONF} section.
+                        Using default value : {common.MISSING_INTEGER}"""
             )
             reader_conf[MISSING_FLOAT_KEY] = common.MISSING_FLOAT
         else:

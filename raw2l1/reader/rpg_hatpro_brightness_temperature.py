@@ -140,7 +140,7 @@ def sync_meteo(data, meteo_data, logger):
         data["time"][:], meteo_data["time"][:], return_indices=True
     )
 
-    logger.debug("common timesteps found for meteo : {:d}".format(common_time.size))
+    logger.debug(f"common timesteps found for meteo : {common_time.size:d}")
 
     data["ta"][time_filter] = meteo_data["ta"][meteo_time_filter]
     data["pa"][time_filter] = meteo_data["pa"][meteo_time_filter]
@@ -168,7 +168,7 @@ def read_data(list_files, conf, logger):
 
     logger.debug("start reading data using reader for " + BRAND + " " + MODEL)
     for f in list_files:
-        logger.debug("files to read : {}".format(f))
+        logger.debug(f"files to read : {f}")
 
     meteo_avail = False
 
@@ -178,7 +178,7 @@ def read_data(list_files, conf, logger):
         meteo_files = conf["ancillary"][0]
         logger.info("meteo data available")
         for f in meteo_files:
-            logger.debug("files to read : {}".format(f))
+            logger.debug(f"files to read : {f}")
 
     # IRT files
     irt_avail = False
