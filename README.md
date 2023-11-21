@@ -1,7 +1,7 @@
-![main](https://github.com/ACTRIS-CCRES/raw2l1/actions/workflows/ci.yml/badge.svg?branch=master")
-![develop](https://github.com/ACTRIS-CCRES/raw2l1/actions/workflows/ci.yml/badge.svg?branch=develop")
+![main](https://github.com/ACTRIS-CCRES/raw2l1/actions/workflows/ci.yaml/badge.svg?branch=master)
 [![codecov](https://codecov.io/gh/ACTRIS-CCRES/raw2l1/graph/badge.svg?token=7BVO7V5IA8)](https://codecov.io/gh/ACTRIS-CCRES/raw2l1)
 [![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
+[![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 
 # raw2l1
 
