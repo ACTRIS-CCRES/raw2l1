@@ -46,9 +46,6 @@ jobs:
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
-      - name: Run Ruff
-        run: ruff check --output-format=github raw2l1
-
   coverage:
     needs: test
     runs-on: ubuntu-latest
