@@ -46,7 +46,7 @@ jobs:
         run: ruff check --output-format=github raw2l1
 
   coverage:
-    needs: build
+    needs: test
     runs-on: ubuntu-latest
 
     steps:
