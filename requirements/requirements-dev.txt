@@ -9,13 +9,10 @@ pytest>=7.0.0
 pytest-cov
 pytest-xdist>=2.2.0
 coverage
-black==23.3.0
-flake8
-isort>=5.2.1
 pre-commit>=2.15.0
 pyupgrade
-pydocstyle
 ruff==0.1.6
+types-pyyaml
 gitdb
 sphinx
 sphinx-rtd-theme
