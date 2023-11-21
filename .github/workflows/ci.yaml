@@ -6,11 +6,11 @@ on:
       - "**"
 
 jobs:
-  build:
+  test:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: ["3.9", "3.10", "3.11", "3.12"]
+        python-version: ["3.8", "3.9", "3.10", "3.11", "3.12"]
 
     steps:
       - name: Checkout code
@@ -34,8 +34,7 @@ jobs:
       - name: Run tests
         run: |
           cd raw2l1
-          python -m pytest test/test_arg_parser.py
-          ls -la
+          python -m pytest
 
       - name: Upload coverage data
         uses: actions/upload-artifact@v3
