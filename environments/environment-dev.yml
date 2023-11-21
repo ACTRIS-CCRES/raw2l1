@@ -19,11 +19,11 @@ dependencies:
   # code checks
   - black=23.3.0
   - flake8
-  - isort>=5.2.1  # check that imports are in the right order
+  - isort>=5.2.1 # check that imports are in the right order
   - pre-commit>=2.15.0
   - pyupgrade
   - pydocstyle
-  - ruff=0.0.215
+  - ruff
 
   # documentation
   - gitdb
