@@ -526,12 +526,8 @@ def read_data(list_files, conf, logger):
         profiles = data[f"rcs_{i_chan:02d}"]
         square = np.square(data["range"])
 
-        data[f"bckgrd_rcs_{i_chan:02d}"] = np.mean(
-            profiles[:, bck_filter], axis=1
-        )
+        data[f"bckgrd_rcs_{i_chan:02d}"] = np.mean(profiles[:, bck_filter], axis=1)
         data[f"rcs_{i_chan:02d}"] = profiles * square
-        data[f"units_rcs_{i_chan:02d}"] = (
-            data[f"units_{i_chan:02d}"] + ".m^2"
-        )
+        data[f"units_rcs_{i_chan:02d}"] = data[f"units_{i_chan:02d}"] + ".m^2"
 
     return data

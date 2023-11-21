@@ -785,9 +785,7 @@ def read_data(list_files, conf, logger):
         # try reading the file
         lines = get_file_lines(ifile, conf, logger)
         if lines is None:
-            logger.warning(
-                f"102 No data found in the file '{ifile}' trying next file"
-            )
+            logger.warning(f"102 No data found in the file '{ifile}' trying next file")
             continue
 
         nb_files_read += 1

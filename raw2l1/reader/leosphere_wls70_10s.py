@@ -307,9 +307,7 @@ def create_2d_var(raw_data, data, list_vars, conf, logger):
         var_name = var[0]
         col_names = var[1]
 
-        logger.debug(
-            f"processing {var_name} variables (possible pattern {col_names})"
-        )
+        logger.debug(f"processing {var_name} variables (possible pattern {col_names})")
 
         # find corresponding columns
         # --------------------------------------------------------------------
@@ -336,9 +334,7 @@ def create_2d_var(raw_data, data, list_vars, conf, logger):
             # make sure the missing values are what we want
             var_2d[np.isnan(var_2d)] = conf["missing_float"]
         else:
-            logger.error(
-                f"no column found corresponding to {var_name} ({col_names})"
-            )
+            logger.error(f"no column found corresponding to {var_name} ({col_names})")
 
             logger.debug(f"remaining available columns {column_names}")
 

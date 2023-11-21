@@ -1,6 +1,3 @@
-# -*- coding: utf8 -*-
-
-
 CONF_MSG_REGEX = r"CL.\d{5}"
 MSG_NB_LINES = {1: 6, 2: 7}
 
