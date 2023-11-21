@@ -17,7 +17,7 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Set up Python 3.10
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v4
         with:
           python-version: "3.10"
 
@@ -34,7 +34,7 @@ jobs:
       - name: Run tests
         run: |
           cd raw2l1
-          python -m pytest
+          python -m pytest test/test_arg_parser.py
           ls -la
 
       - name: Upload coverage data
@@ -42,6 +42,9 @@ jobs:
         with:
           name: coverage-data
           path: ./raw2l1/coverage/
+
+      - name: Run Ruff
+        run: ruff check --output-format=github raw2l1
 
   coverage:
     needs: build
