@@ -15,6 +15,15 @@ TEST_OUT_DIR = os.path.join(TEST_DIR, "output")
 PRGM = "raw2l1.py"
 
 
+def get_scaling(file):
+    """Extract scaling factor from file."""
+    nc_file = nc.Dataset(file)
+    scaling = nc_file.variables["scaling"][:]
+    nc_file.close()
+
+    return scaling
+
+
 class TestSoftVersionParsing(unittest.TestCase):
     """check that the parsing of software version is working"""
 
@@ -91,26 +100,26 @@ class TestChm15k(unittest.TestCase):
 
         self.assertEqual(resp, 0, "CHM15K v0.556")
 
-    def test_chm15k_v0559(self):
-        date = "20130718"
-        test_ifile = os.path.join(
-            self.IN_DIR, "20130718_hohenpeissenberg_CHM060028_000.nc"
-        )
-        test_ofile = os.path.join(TEST_OUT_DIR, "test_chm15k_v0559_20130718.nc")
+        def test_chm15k_v0559(self):
+            date = "20130718"
+            test_ifile = os.path.join(
+                self.IN_DIR, "20130718_hohenpeissenberg_CHM060028_000.nc"
+            )
+            test_ofile = os.path.join(TEST_OUT_DIR, "test_chm15k_v0559_20130718.nc")
 
-        resp = subprocess.check_call(
-            [
-                MAIN_DIR + PRGM,
-                date,
-                self.conf_file,
-                test_ifile,
-                test_ofile,
-                "-log_level",
-                "debug",
-            ]
-        )
+            resp = subprocess.check_call(
+                [
+                    MAIN_DIR + PRGM,
+                    date,
+                    self.conf_file,
+                    test_ifile,
+                    test_ofile,
+                    "-log_level",
+                    "debug",
+                ]
+            )
 
-        self.assertEqual(resp, 0)
+            self.assertEqual(resp, 0)
 
     def test_chm15k_v0719(self):
         date = "20131212"
@@ -132,6 +141,11 @@ class TestChm15k(unittest.TestCase):
         )
 
         self.assertEqual(resp, 0, "test version v0.719")
+
+        # check if scaling is available
+        scaling = get_scaling(test_ofile)
+
+        self.assertFalse(np.isnan(scaling), "scaling factor is available")
 
     def test_chm15k_prob_time(self):
         date = "20120327"

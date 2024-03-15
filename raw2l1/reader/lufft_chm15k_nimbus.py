@@ -585,7 +585,6 @@ def read_scalar_vars(data, nc_id, soft_vers, logger):
         data["cho"] = nc_id.variables["cho"][:]
     if soft_vers >= 0.7:
         logger.debug("reading scaling")
-        print("scaling", nc_id.variables["scaling"][:])
         data["scaling"] = nc_id.variables["scaling"][:]
 
     return data
@@ -873,5 +872,5 @@ def read_data(list_files, conf, logger):
         for file_ in list_files:
             logger.critical(f"109 Tried to read '{file_}'. No file could be read")
         sys.exit(1)
-    else:
-        return data
+
+    return data
