@@ -276,7 +276,6 @@ def get_error_index(err_msg, firmware, logger):
     err_ind = []
     err_int = err_msg
     for i, d in enumerate(ERR_HEX_MSG):
-        logger.debug(d["hex"])
         # check if firmware known or if unknow still show the latest message
         if bool(err_int & d["hex"]) and (
             firmware <= d["fw"] or firmware > LAST_KNOW_FW
@@ -586,6 +585,7 @@ def read_scalar_vars(data, nc_id, soft_vers, logger):
         data["cho"] = nc_id.variables["cho"][:]
     if soft_vers >= 0.7:
         logger.debug("reading scaling")
+        print("scaling", nc_id.variables["scaling"][:])
         data["scaling"] = nc_id.variables["scaling"][:]
 
     return data
