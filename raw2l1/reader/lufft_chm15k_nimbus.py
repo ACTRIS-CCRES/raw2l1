@@ -732,7 +732,7 @@ def calc_pr2(data, soft_vers, logger):
         else:
             # if p_calc not available
             if not data["meta"]["is_p_calc"]:
-                if data["meta"]["is_nn2"]:
+                if data["meta"]["is_nn2"] and np.any(data["nn2"] != 0):
                     data["p_calc"] = data["nn2"] * NN2_FACTOR
                 else:
                     # if no nn2 : assume it is constant
