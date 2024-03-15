@@ -1,4 +1,5 @@
 """Test for VAISALA CL61 ceilometer."""
+
 import subprocess
 from pathlib import Path
 

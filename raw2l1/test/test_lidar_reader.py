@@ -32,7 +32,7 @@ class TestLidarReader(unittest.TestCase):
 
         self.assertEqual(
             (reader.reader_conf["missing_float"], reader.reader_conf["missing_int"]),
-            (float(-999.0), int(-9)),
+            (-999.0, -9),
         )
 
     def test_no_missing_int_conf(self):
@@ -47,7 +47,7 @@ class TestLidarReader(unittest.TestCase):
 
         self.assertEqual(
             (reader.reader_conf["missing_float"], reader.reader_conf["missing_int"]),
-            (float(-1337), int(-9)),
+            (float(-1337), -9),
         )
 
     def test_no_missing_float_conf(self):
@@ -62,7 +62,7 @@ class TestLidarReader(unittest.TestCase):
 
         self.assertEqual(
             (reader.reader_conf["missing_float"], reader.reader_conf["missing_int"]),
-            (float(-999), int(-1337)),
+            (float(-999), -1337),
         )
 
     def test_no_missing_nan_float_conf(self):

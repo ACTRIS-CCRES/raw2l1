@@ -19,7 +19,7 @@ dependencies:
   # code checks
   - pre-commit>=2.15.0
   - pyupgrade
-  - ruff=0.1.6
+  - ruff
 
   # mypy
   - types-pyyaml

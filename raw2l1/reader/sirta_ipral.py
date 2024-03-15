@@ -5,7 +5,6 @@ reader for raw data from SIRTA IPRAL LIDAR
 the file format is based on LICEL file format
 """
 
-
 import ast
 import datetime as dt
 import sys
