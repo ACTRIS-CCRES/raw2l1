@@ -7,9 +7,8 @@ jobs:
       group: ${{ github.workflow }}-${{ github.head_ref || github.ref_name }}
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - uses: chartboost/ruff-action@v1
         with:
           src: "./raw2l1"
-          version: 0.1.6
           args: --output-format=github
