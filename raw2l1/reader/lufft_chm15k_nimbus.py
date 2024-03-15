@@ -276,7 +276,6 @@ def get_error_index(err_msg, firmware, logger):
     err_ind = []
     err_int = err_msg
     for i, d in enumerate(ERR_HEX_MSG):
-        logger.debug(d["hex"])
         # check if firmware known or if unknow still show the latest message
         if bool(err_int & d["hex"]) and (
             firmware <= d["fw"] or firmware > LAST_KNOW_FW
@@ -732,7 +731,7 @@ def calc_pr2(data, soft_vers, logger):
         else:
             # if p_calc not available
             if not data["meta"]["is_p_calc"]:
-                if data["meta"]["is_nn2"]:
+                if data["meta"]["is_nn2"] and np.any(data["nn2"] != 0):
                     data["p_calc"] = data["nn2"] * NN2_FACTOR
                 else:
                     # if no nn2 : assume it is constant
@@ -873,5 +872,5 @@ def read_data(list_files, conf, logger):
         for file_ in list_files:
             logger.critical(f"109 Tried to read '{file_}'. No file could be read")
         sys.exit(1)
-    else:
-        return data
+
+    return data
