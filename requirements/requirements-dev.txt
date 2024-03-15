@@ -11,7 +11,7 @@ pytest-xdist>=2.2.0
 coverage
 pre-commit>=2.15.0
 pyupgrade
-ruff==0.1.6
+ruff
 types-pyyaml
 gitdb
 sphinx
