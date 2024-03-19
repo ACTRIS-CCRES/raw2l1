@@ -11,20 +11,15 @@
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 #
 import os
-import sys
 
-sys.path.insert(0, os.path.abspath("../.."))
-
-from docs.scripts.plot import make_plots
-
-BASE_URL = "https://gitlab.in2p3.fr/ipsl/sirta/raw2l1"
+BASE_URL = "https://github.com/ACTRIS-CCRES/raw2l1"
 # -- Project information -----------------------------------------------------
 
 project = "raw2l1"
 copyright = "CNRS/IP Paris"
-author = "Marc-Antoine Drouin"
+author = "CCRES-dev"
 
-LOGO_PATH = os.path.join(os.path.dirname(__file__), "assets/logo_sirta-ipsl.png")
+LOGO_PATH = os.path.join(os.path.dirname(__file__), "assets/logo_actris_ccres.png")
 
 # -- General configuration ---------------------------------------------------
 
@@ -86,13 +81,13 @@ templates_path = ["_templates"]
 # This pattern also affects html_static_path and html_extra_path.
 exclude_patterns = []
 
-html_sidebars = {
-    "**": [
-        "sidebar-logo.html",
-        "search-field.html",
-        "sbt-sidebar-nav.html",
-    ]
-}
+# html_sidebars = {
+#     "**": [
+#         "sidebar-logo.html",
+#         "search-field.html",
+#         "sbt-sidebar-nav.html",
+#     ]
+# }
 
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
@@ -120,7 +115,3 @@ html_css_files = [
 html_logo = LOGO_PATH
 html_favicon = LOGO_PATH
 html_title = "raw2l1"
-
-# -- Custom code to run -------------------------------------------------
-
-make_plots()
