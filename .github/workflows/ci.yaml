@@ -37,7 +37,7 @@ jobs:
       - name: Run tests
         run: |
           cd raw2l1
-          python -m pytest
+          python -m pytest -c ../pytest.ini --cov-config=../.coveragerc
 
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v4
