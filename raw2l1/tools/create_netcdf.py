@@ -4,10 +4,12 @@
 import configparser
 import datetime as dt
 import sys
+import tempfile
 from ast import literal_eval
 
 import netCDF4 as nc
 import numpy as np
+import xarray as xr
 
 from tools import common
 from tools.read_overlap import read_overlap
@@ -25,6 +27,9 @@ KEYS_VALTYPE = {
     "$time$": np.float64,
     "default": np.float64,
 }
+
+ALMOST_ONE_dAY = dt.timedelta(hours=23, minutes=59, seconds=59)
+DATE_FMT = "%Y-%m-%d"
 
 
 def dim_to_tuple(dim):
@@ -498,22 +503,23 @@ def create_netcdf(conf, data, logger):
     """
     Create and write in the netCDf file
     """
+    # check if we need to filter data
+    if conf.get("conf", "filter_day"):
+        output_file = tempfile.NamedTemporaryFile().name
+        date_start = conf.get("conf", "date")
+        date_end = date_start + ALMOST_ONE_dAY
+    else:
+        output_file = conf.get("conf", "output")
 
     status = 0
 
     # open netCDF file
     # -------------------------------------------------------------------------
-    logger.info("create netCDF file " + conf.get("conf", "output"))
+    logger.info("create netCDF file %s", output_file)
     try:
-        nc_id = nc.Dataset(
-            conf.get("conf", "output"), "w", format=conf.get("conf", "netcdf_format")
-        )
+        nc_id = nc.Dataset(output_file, "w", format=conf.get("conf", "netcdf_format"))
     except OSError as err:
-        logger.critical(
-            "107 Error trying to create the netCDF file '{}".format(
-                format(conf.get("conf", "output"))
-            )
-        )
+        logger.critical("107 Error trying to create the netCDF file '%s'", output_file)
         logger.critical(err)
         logger.critical("quitting raw2l1")
         sys.exit(1)
@@ -535,5 +541,18 @@ def create_netcdf(conf, data, logger):
     create_netcdf_variables(conf, data, nc_id, logger)
 
     nc_id.close()
+
+    # filter data if needed
+    # -------------------------------------------------------------------------
+    if conf.get("conf", "filter_day"):
+        logger.info("filtering data for %s", date_start.strftime(DATE_FMT))
+        output_final = conf.get("conf", "output")
+
+        data = xr.open_dataset(output_file)
+        data = data.sel(time=slice(date_start, date_end))
+
+        data.to_netcdf(output_final)
+
+        data.close()
 
     return status

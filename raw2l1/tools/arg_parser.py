@@ -166,6 +166,15 @@ def init_args_parser():
         "Default value is 2 hours. Option only for realtime processing",
     )
 
+    # reprocessing filter dates
+    parser.add_argument(
+        "--filter-day",
+        required=False,
+        action="store_true",
+        default=False,
+        help="Only keep timesteps of the processed day in output file",
+    )
+
     # logs related arguments
     parser.add_argument(
         "-log",
@@ -233,6 +242,7 @@ def get_input_args(argv):
     input_args["log"] = parse_args.log
     input_args["log_level"] = parse_args.log_level
     input_args["verbose"] = parse_args.v
+    input_args["filter_day"] = parse_args.filter_day
 
     # real time
     input_args["input_min_size"] = parse_args.file_min_size

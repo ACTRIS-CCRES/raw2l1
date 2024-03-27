@@ -9,3 +9,4 @@ dependencies:
   - numpy
   - netCDF4>=1.6
   - gitpython
+  - xarray

@@ -9,6 +9,7 @@ dependencies:
   - numpy
   - netCDF4>=1.6
   - gitpython
+  - xarray
 
   # test dependencies
   - pytest>=7.0.0
