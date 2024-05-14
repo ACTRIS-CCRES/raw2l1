@@ -5,6 +5,7 @@ pip
 numpy
 netCDF4>=1.6
 gitpython
+xarray
 pytest>=7.0.0
 pytest-cov
 pytest-xdist>=2.2.0
@@ -15,4 +16,5 @@ ruff
 types-pyyaml
 gitdb
 sphinx
-sphinx-rtd-theme
+sphinx-book-theme
+myst-parser

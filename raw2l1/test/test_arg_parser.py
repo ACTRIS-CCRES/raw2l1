@@ -54,6 +54,7 @@ class TestArgParser(unittest.TestCase):
             "input_min_size": 0,
             "input_check_time": False,
             "input_max_age": dt.timedelta(hours=2),
+            "filter_day": False,
         }
 
         inputs = ag.get_input_args(argv)

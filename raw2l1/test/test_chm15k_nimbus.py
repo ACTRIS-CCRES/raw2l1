@@ -100,26 +100,26 @@ class TestChm15k(unittest.TestCase):
 
         self.assertEqual(resp, 0, "CHM15K v0.556")
 
-        def test_chm15k_v0559(self):
-            date = "20130718"
-            test_ifile = os.path.join(
-                self.IN_DIR, "20130718_hohenpeissenberg_CHM060028_000.nc"
-            )
-            test_ofile = os.path.join(TEST_OUT_DIR, "test_chm15k_v0559_20130718.nc")
+    def test_chm15k_v0559(self):
+        date = "20130718"
+        test_ifile = os.path.join(
+            self.IN_DIR, "20130718_hohenpeissenberg_CHM060028_000.nc"
+        )
+        test_ofile = os.path.join(TEST_OUT_DIR, "test_chm15k_v0559_20130718.nc")
 
-            resp = subprocess.check_call(
-                [
-                    MAIN_DIR + PRGM,
-                    date,
-                    self.conf_file,
-                    test_ifile,
-                    test_ofile,
-                    "-log_level",
-                    "debug",
-                ]
-            )
+        resp = subprocess.check_call(
+            [
+                MAIN_DIR + PRGM,
+                date,
+                self.conf_file,
+                test_ifile,
+                test_ofile,
+                "-log_level",
+                "debug",
+            ]
+        )
 
-            self.assertEqual(resp, 0)
+        self.assertEqual(resp, 0)
 
     def test_chm15k_v0719(self):
         date = "20131212"
