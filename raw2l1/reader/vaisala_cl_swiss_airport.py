@@ -250,7 +250,7 @@ def get_conf_msg(line, logger):
     conf_str = re.search(CONF_MSG_REGEX, line)
     if conf_str is not None:
         conf_msg = conf_str.group()
-        logger.debug("conf message %s" % conf_msg)
+        logger.debug("conf message %s", conf_msg)
     else:
         conf_msg = None
 

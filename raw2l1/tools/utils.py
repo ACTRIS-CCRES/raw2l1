@@ -31,4 +31,4 @@ def to_bool(s):
         return True
     elif s in ("0", "n", "no", "f", "false", "off"):
         return False
-    raise ValueError("Could not convert %s a boolean (use true/false)" % s)
+    raise ValueError(f"Could not convert {s} a boolean (use true/false)")

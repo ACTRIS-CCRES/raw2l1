@@ -143,7 +143,7 @@ def create_netcdf_global(conf, nc_id, data, logger):
             reader_key = get_data_key(value)
             try:
                 setattr(nc_id, attr, data[reader_key])
-                logger.debug("adding %s" % attr)
+                logger.debug("adding %s", attr)
             except KeyError:
                 mess = (
                     "107 Error creating netCDF file '{}'".format(
@@ -160,7 +160,7 @@ def create_netcdf_global(conf, nc_id, data, logger):
                 value += " raw2l1 " + conf.get("conf", "version")
 
             setattr(nc_id, attr, value)
-            logger.debug("adding %s" % attr)
+            logger.debug("adding %s", attr)
 
     # Add year, month day for STRAT compatibility
     add_date = False
@@ -349,7 +349,7 @@ def add_attr_to_var(nc_var, data, conf, section, logger):
     add attribute to the variable of the netCDF file
     """
 
-    logger.debug("adding attributes to %s variable" % section)
+    logger.debug("adding attributes to %s variable", section)
     for option, value in conf.items(section):
         if option not in common.RESERV_ATTR:
             # special case for missing value and _FillValue

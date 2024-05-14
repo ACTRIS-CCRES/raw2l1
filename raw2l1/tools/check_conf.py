@@ -90,7 +90,7 @@ def check_conf_options(conf, logger):
     # check netcdf format
     option = "netcdf_format"
     if conf.get(section, option) not in common.ALLOW_NC_FMT:
-        logger.critical("107 allow netCDF format are : %s" % repr(common.ALLOW_NC_FMT))
+        logger.critical("107 allow netCDF format are : %s", repr(common.ALLOW_NC_FMT))
         return False
 
     # if format is NETCDF4 check compression option

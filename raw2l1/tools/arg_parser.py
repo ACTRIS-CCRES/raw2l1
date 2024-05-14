@@ -25,7 +25,7 @@ def check_date_format(input_date):
     try:
         dt_date = dt.datetime.strptime(input_date, DATE_FMT)
     except ValueError:
-        msg = "%r has not the required format (YYYYMMDD)" % input_date
+        msg = f"{input_date} has not the required format (YYYYMMDD)"
         raise argparse.ArgumentTypeError(msg)
 
     return dt_date

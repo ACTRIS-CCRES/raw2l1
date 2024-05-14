@@ -692,7 +692,7 @@ def read_data(list_files, conf, logger):
             soft_vers = get_soft_version(raw_data.firmware_version)
             data["firmware_version"] = soft_vers
             data["instrument_id"] = ""
-            logger.info("software version: %7.4f" % soft_vers)
+            logger.info("software version: %7.4f", soft_vers)
             if soft_vers > LAST_KNOW_FW:
                 logger.warning("firmware %7.4f is unkown. Update reader", soft_vers)
 
