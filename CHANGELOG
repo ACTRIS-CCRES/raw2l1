@@ -1,8 +1,11 @@
 - v3.2.0
-  - Update to make raw2l1 compatible with python > 3.7 and numpy > 1.20
-    - Add requirements files for production and development for pip and conda
-    - Run tests for python 3.7 to 3.11
-    - Replace use of `np.float` by `float`
+  - core
+    - Update to make raw2l1 compatible with python > 3.7 and numpy < 2.0.0
+      - Add requirements files for production and development for pip and conda
+      - Run tests for python 3.7 to 3.11
+      - Replace use of `np.float` by `float`
+    - add option `--filter-day` to only keep the files of the processed day
+      - xarray has been added as a dependency
   - Lufft CHM15k
     - Divide by `c_cal` for transformation from `beta_att` to `beta_raw`
   - VAISALA CT25k

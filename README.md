@@ -59,7 +59,7 @@ python -m pip install -r requirements/requirements.txt
 
 ### VAISALA ceilometers
 
-You must use clview acquisition software. If you are using your own acquisition softare, you may need to make some change to the reader
+You must use clview acquisition software. If you are using your own acquisition software, you may need to make some change to the reader
 - CL31
 - CL51
 - CL61
@@ -88,6 +88,7 @@ the repository contains some example files allowing you to test the code
 - you can get the list of input arguments using the command:
 
 ```
+cd raw2l1
 python raw2l1.py -h
 ```
 
@@ -103,6 +104,10 @@ python '20150427' raw2l1 conf/conf_lufft_chm15k_eprofile.ini test/input/Jenoptik
 ```
  python raw2l1 '20141030' conf/conf_vaisala_cl31_eprofile.ini 'test/input/vaisala_cl31/cl31_0a_z1R5mF3s_v01_20141030_*.asc' test/output/test_cl31.nc
 ```
+
+### Filtering data
+
+You can filter data to only keep data of date provided as arguments using `--filter-day` option.
 
 # Realtime production
 
@@ -199,4 +204,4 @@ Thanks to F.Wagner, I. Mattis, R. Leinweber for testing the software, providing 
 
 # Copyright
 
-2014-2023 CNRS/Ecole polytechnique
+2014-2024 CNRS/Ecole polytechnique
