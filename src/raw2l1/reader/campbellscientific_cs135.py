@@ -4,7 +4,6 @@ import re
 import sys
 
 import numpy as np
-
 from tools.utils import chomp
 
 # brand and model of the LIDAR

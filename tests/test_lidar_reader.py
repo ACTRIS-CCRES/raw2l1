@@ -6,7 +6,6 @@ import logging
 import unittest
 
 import numpy as np
-
 import tools.lidar_reader as lr
 
 

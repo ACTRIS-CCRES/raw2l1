@@ -1,41 +1,38 @@
-# only support for vaisala message type 2
-
 import datetime as dt
 import re
 import sys
+from os.path import basename
 
 import numpy as np
-
 from tools.utils import chomp, to_bool
 
 # brand and model of the LIDAR
 BRAND = "vaisala"
-MODEL = "CT25K"
+MODEL = "CL31 & CL51 swiss airport"
 
 # Parameters
-FMT_DATE = "-%Y-%m-%d %H:%M:%S"
 FILE_HEADERS = ["-Ceilometer Logfile", "-File created:"]
-CONF_MSG_REGEX = r"CT.\d{4}"
-MSG_NB_LINES = {2: 20}
+CONF_MSG_REGEX = r"CL.\d{5}"
+MSG_NB_LINES = {1: 5, 2: 6}
 DEFAULT_ENCODING = "utf8"
 
 # link between integer in acquisition configuration line and real values
 # range resolution in meters
-RANGE_RESOL = {2: 30}
+RANGE_RESOL = {1: 10, 2: 20, 3: 5, 4: 5, 5: -9, 6: 10, 8: -9}
 # number of vertical gates
-RANGE_GATES = {2: 240}
+RANGE_GATES = {1: 770, 2: 385, 3: 1500, 4: 770, 5: -9, 6: 1540, 8: -9}
 
 # line of data according to data message type
-STATE_MSG_LINE = {2: 3}
-RCS_MSG_START_LINE = {2: 4}
+STATE_MSG_LINE = {1: 2, 2: 3}
+RCS_MSG_LINE = {1: 3, 2: 4}
 
 # Fixed variables dimensions
 CBH_DIM = 3
 CLH_DIM = 5
 
 # constant
-RCS_BYTES_SIZE = 4
-RCS_FACTOR = 1e-7
+RCS_BYTES_SIZE = 5
+RCS_FACTOR = 1e-8
 DEG_TO_K = 273.15
 FEET_TO_METERS = 0.3048
 CLH_ALT_METERS_FACTOR = 10.0
@@ -116,7 +113,7 @@ def get_error_index(err_msg, logger):
     """
     Based on error error message read in file.
 
-    Return all indexes of related msg and level.
+    Return all indexes of related msg and level
 
     """
     err_ind = []
@@ -129,7 +126,8 @@ def get_error_index(err_msg, logger):
 
 
 def store_error(data, err_msg, logger):
-    """Store errors msg and their count by type."""
+    """store errors msg and their count by type"""
+
     err_ind = get_error_index(err_msg, logger)
 
     for i in err_ind:
@@ -146,7 +144,7 @@ def store_error(data, err_msg, logger):
 
 
 def log_error_msg(data, logger):
-    msg_format = "{} : {:d} message(s)"
+    msg_format = "\t- {} : {:d} message(s)"
 
     if len(data["list_errors"]) > 0:
         logger.info("summary of instruments messages")
@@ -162,26 +160,25 @@ def log_error_msg(data, logger):
 
 def are_units_meters(err_msg, logger):
     """
-    Based on status message, determine what are the units of CLH and CBH.
-
+    based on status message, determine what are the units of CLH and CBH
     """
+
     err_ind = get_error_index(err_msg, logger)
 
     for i in err_ind:
         if ERR_HEX_MSG[i]["msg"] == "Units are meters if on, else feet":
-            logger.debug("units are in meters")
             return True
 
-    logger.debug("units are in feet")
+    logger.info("Units are feets")
 
     return False
 
 
 def get_conversion_coeff(are_units_meters):
     """
-    based on the status message return the coefficient to convert feet to meters.
-
+    based on the status message return the coefficient to convert feet to meters
     """
+
     coeff = 1.0
     if not are_units_meters:
         coeff = FEET_TO_METERS
@@ -191,9 +188,9 @@ def get_conversion_coeff(are_units_meters):
 
 def check_scale_value(data, conf, ind, f_name, logger):
     """
-    Check scale value. If value is not 100%, message is voided.
-
+    check scale value. If value is not 100%, message is voided.
     """
+
     msg = "101 Instrument Calibration Issues in '{}'. "
     msg += "Values for {:%Y-%m-%d %H:%M:%S} will be replaced by missing value"
 
@@ -207,10 +204,10 @@ def check_scale_value(data, conf, ind, f_name, logger):
 
 def get_file_lines(filename, conf, logger):
     """
-    Read all lines of a given file and remove carriage return from
-    all lines.
-
+    read all lines of a given file and remove carriage return from
+    all lines
     """
+
     try:
         with open(filename, encoding=conf["file_encoding"]) as f_id:
             logger.debug("reading " + filename)
@@ -222,24 +219,22 @@ def get_file_lines(filename, conf, logger):
     return lines
 
 
-def count_msg_to_read(list_files, conf, logger):
+def count_msg_to_read(list_files, f_fmt, logger):
     """
     to a first reading of the CL31 file to determine the number
     of data messages which need to be read
-
     """
+
     n_data_msg = 0
 
     # loop over filenames to read to count the number of messages
     # data message start with a date using the format "-%Y-%m-%d %H:%M:%S"
     for ifile in list_files:
-        lines = get_file_lines(ifile, conf, logger)
-        for line in lines:
-            try:
-                dt.datetime.strptime(line, FMT_DATE)
-                n_data_msg += 1
-            except ValueError:
-                continue
+        try:
+            dt.datetime.strptime(basename(ifile), f_fmt)
+            n_data_msg += 1
+        except ValueError:
+            continue
 
     logger.info("%d data messages to read" % n_data_msg)
 
@@ -248,9 +243,9 @@ def count_msg_to_read(list_files, conf, logger):
 
 def get_conf_msg(line, logger):
     """
-    Extract conf message.
-
+    Extract conf message
     """
+
     conf_str = re.search(CONF_MSG_REGEX, line)
     if conf_str is not None:
         conf_msg = conf_str.group()
@@ -263,11 +258,10 @@ def get_conf_msg(line, logger):
 
 def get_range_resol(conf_msg, logger):
     """
-    Extract vertical range resolution from configuration message line.
-
+    Extract vertical range resolution from configuration message line
     """
     try:
-        int_coding = int(conf_msg[-2])
+        int_coding = int(conf_msg[7:8])
         range_resol = RANGE_RESOL[int_coding]
         logger.debug("range resolution: %d m" % range_resol)
     except Exception as err:
@@ -279,16 +273,15 @@ def get_range_resol(conf_msg, logger):
 
 def get_range_ngates(conf_msg, logger):
     """
-    Extract the number of gates from configuration message line.
-
+    Extract the number of gates from configuration message line
     """
+
     try:
-        int_coding = int(conf_msg[-2])
-        print(conf_msg)
+        int_coding = int(conf_msg[7:8])
         range_ngates = RANGE_GATES[int_coding]
         logger.debug("number of vertical gates: %d" % range_ngates)
     except Exception as err:
-        logger.warning("105 Problem reading number of vertical gates %s", repr(err))
+        logger.warning("105 Problem reading number of vertical gates " + repr(err))
         return None
 
     return range_ngates
@@ -297,17 +290,17 @@ def get_range_ngates(conf_msg, logger):
 def get_msg_type(conf_msg, filename, logger):
     """
     Extract from acquisition configuration line if the file contains
-    message of type 1 or 2 (without or with sky state).
-
+    message of type 1 or 2 (without or with sky state)
     """
-    msg_type = int(conf_msg[-2])
+
+    msg_type = int(conf_msg[6:7])
 
     if msg_type == 1:
         logger.info("file contains messages of type 1 (without sky state)")
     elif msg_type == 2:
         logger.info("file contains messages of type 2 (with sky state)")
     else:
-        logger.error("106 problem determining type of message '%s'", filename)
+        logger.error(f"106 problem determining type of message '{filename}'")
         msg_type = None
 
     return msg_type
@@ -315,28 +308,28 @@ def get_msg_type(conf_msg, filename, logger):
 
 def get_msg_nb_lines(msg_number):
     """
-    Based ont the configuration read return the number of lines of a data
-    message.
-
+    based ont the configuration read return the number of lines of a data
+    message
     """
+
     return MSG_NB_LINES[msg_number]
 
 
 def calc_range(resol, n_gates):
     """
-    calculate range variable based on resolution and number of gates.
-
+    calculate range variable based on resolution and number of gates
     """
-    range_vect = np.array(list(range(1, n_gates + 1)), dtype=np.float32)
+
+    range_vect = np.array(list(range(1, n_gates + 1)), dtype=float)
 
     return range_vect * float(resol)
 
 
 def check_range(data, data_dim, filename, logger):
     """
-    check we determining range was a success.
-
+    check we determining range was a success
     """
+
     # Test if the msg contains retrodiffusion profiles
     if data_dim["range"] == -9 or data["range_resol"] == -9:
         logger.error(
@@ -360,9 +353,9 @@ def check_range(data, data_dim, filename, logger):
 
 def check_msg_type(data, logger):
     """
-    Check if determining message type was a success.
-
+    check if determining message type was a success
     """
+
     # test if message type could be determine
     if data["msg_type"] is None:
         msg_ok = False
@@ -373,12 +366,17 @@ def check_msg_type(data, logger):
     return msg_ok, data
 
 
-def get_acq_conf(filename, data, data_dim, conf, logger):
+def get_acq_conf(filename, data, data_dim, f_fmt, conf, logger):
     """
-    Extract acquisition configuration from a data message
-    (range resolution and number of vertical gates).
+    extract acquisition configuration from a data message
+    (range resolution and number of vertical gates)
+    """
 
-    """
+    try:
+        dt.datetime.strptime(basename(filename), f_fmt)
+    except ValueError:
+        conf_msg = None
+
     lines = get_file_lines(filename, conf, logger)
     n_lines = len(lines)
     i_line = 0
@@ -389,14 +387,7 @@ def get_acq_conf(filename, data, data_dim, conf, logger):
 
     conf_msg = None
     while i_line <= n_lines:
-        try:
-            dt.datetime.strptime(lines[i_line], FMT_DATE)
-        except ValueError:
-            conf_msg = None
-            i_line += 1
-            continue
-
-        conf_msg = get_conf_msg(lines[i_line + 1], logger)
+        conf_msg = get_conf_msg(lines[i_line], logger)
         if conf_msg is None:
             continue
 
@@ -443,6 +434,7 @@ def init_data(data, data_dim, conf, logger):
     """
     declare size of the numpy arraies and initialiase it
     """
+
     # get missing values
     missing_int = conf["missing_int"]
     missing_float = conf["missing_float"]
@@ -451,7 +443,7 @@ def init_data(data, data_dim, conf, logger):
     # -------------------------------------------------------------------------
     data["time"] = np.ones((data_dim["time"],), dtype=np.dtype(dt.datetime)) * np.nan
     data["cbh_layer"] = np.array([x + 1 for x in range(CBH_DIM)])
-    # data["clh_layer"] = np.array([x + 1 for x in range(CLH_DIM)])
+    data["clh_layer"] = np.array([x + 1 for x in range(CLH_DIM)])
 
     # Time dependant variables
     # -------------------------------------------------------------------------
@@ -479,7 +471,7 @@ def init_data(data, data_dim, conf, logger):
     # Time, layer dependant variables
     # -------------------------------------------------------------------------
     data["cbh"] = np.ones((data_dim["time"], CBH_DIM), dtype=np.int32) * missing_int
-    # data["clh"] = np.ones((data_dim["time"], CLH_DIM), dtype=np.int32) * missing_int
+    data["clh"] = np.ones((data_dim["time"], CLH_DIM), dtype=np.int32) * missing_int
     data["cloud_amount"] = (
         np.ones((data_dim["time"], CLH_DIM), dtype=np.int16) * missing_int
     )
@@ -506,6 +498,7 @@ def get_state_line_nb_in_msg(msg_type):
     based on the configuration of the message type return the
     line number in data message containing ceilometer state
     """
+
     return STATE_MSG_LINE[msg_type]
 
 
@@ -514,13 +507,15 @@ def get_rcs_line_nb_in_msg(msg_type):
     based on the configuration of the message type return the
     line number in data message containing ceilometer state
     """
-    return RCS_MSG_START_LINE[msg_type]
+
+    return RCS_MSG_LINE[msg_type]
 
 
 def read_scalar_vars(data, msg, msg_type, logger):
     """
     extract scalar variables from data message
     """
+
     line_to_read = get_state_line_nb_in_msg(data["msg_type"])
     line = msg[line_to_read]
 
@@ -532,22 +527,17 @@ def read_time_dep_vars(data, ind, msg, msg_type, logger):
     read time only dependent variables
     ex: 00100 10 0770 098 +34 099 12 621 L0112HN15 139↵
     """
+
     line_to_read = get_state_line_nb_in_msg(data["msg_type"])
     params = msg[line_to_read].split()
 
     data["scale"][ind] = float(params[0])
-    data["laser_energy"][ind] = float(params[2])
-    data["laser_temp"][ind] = float(params[3]) + DEG_TO_K
+    data["laser_energy"][ind] = float(params[3])
+    data["laser_temp"][ind] = float(params[4]) + DEG_TO_K
     data["window_transmission"][ind] = float(params[5])
     data["tilt_angle"][ind] = float(params[6])
-    try:
-        data["bckgrd_rcs_0"][ind] = float(params[7])
-    except IndexError:
-        data["bckgrd_rcs_0"][ind] = np.nan
-    try:
-        data["integrated_rcs_0"][ind] = float(params[9]) * SUM_BCKSCATTER_FACTOR
-    except IndexError:
-        data["integrated_rcs_0"][ind] = np.nan
+    data["bckgrd_rcs_0"][ind] = float(params[7])
+    data["integrated_rcs_0"][ind] = float(params[9]) * SUM_BCKSCATTER_FACTOR
 
     return data
 
@@ -557,12 +547,13 @@ def read_cbh_msg(data, ind, msg, logger):
     extract CBH
     ex: 30 01230 12340 23450 FEDCBA987654↵
     """
-    elts = msg[2].split()
+
+    elts = msg[1].split()
 
     # get the number of cloud layer
     if elts[0][0] == "/":
         logger.warning("105 cloud data missing for message %d" % ind)
-        nlayers = 0
+        return data
     else:
         nlayers = int(elts[0][0])
 
@@ -573,16 +564,16 @@ def read_cbh_msg(data, ind, msg, logger):
     # get unit of CBH
     data["are_unit_meter"][ind] = are_units_meters(elts[4], logger)
 
-    coeff = get_conversion_coeff(data["are_unit_meter"][ind])
-
     data = store_error(data, elts[4], logger)
 
+    coeff = get_conversion_coeff(data["are_unit_meter"][ind])
+
     # number of CBH depends on nlayers value
-    if 1 <= nlayers < 4:
+    if 1 <= nlayers <= 4:
         data["cbh"][ind, 0] = float(elts[1]) * coeff
-    if 2 <= nlayers < 4:
+    if 2 <= nlayers <= 4:
         data["cbh"][ind, 1] = float(elts[2]) * coeff
-    if 3 <= nlayers < 4:
+    if 3 <= nlayers <= 4:
         data["cbh"][ind, 2] = float(elts[3]) * coeff
     # vertical visibility
     if nlayers == 4:
@@ -595,6 +586,7 @@ def read_clh_msg(data, ind, msg, logger):
     """
     extract CLH, cloud amount and visibility
     """
+
     # split lines to get each elements
     # even elements are cloud amount
     # odd elements are CLH
@@ -614,10 +606,10 @@ def read_clh_msg(data, ind, msg, logger):
     # get cloud amount
     for level, octa in enumerate(octas):
         if 1 <= octa <= 8:
-            data["cloud_amount"][ind, level] = np.int(octa)
+            data["cloud_amount"][ind, level] = int(octa)
             data["clh"][ind, level] = float(clh_str[level]) * coeff
         elif octa == 0:
-            data["cloud_amount"][ind, level] = np.int(octa)
+            data["cloud_amount"][ind, level] = int(octa)
 
     return data
 
@@ -626,10 +618,11 @@ def read_cbh_vars(data, ind, msg, logger):
     """
     Read the altitude of the 3 cloud layer in a data message
     """
+
     # reading of CBH depends on the kind of data message type
     data = read_cbh_msg(data, ind, msg, logger)
-    # if data["msg_type"] == 2:
-    #    data = read_clh_msg(data, ind, msg, logger)
+    if data["msg_type"] == 2:
+        data = read_clh_msg(data, ind, msg, logger)
 
     return data
 
@@ -638,50 +631,46 @@ def read_rcs_var(data, ind, msg, logger):
     """
     read the rcs value in a data msg
     """
+
     # get line a of the message containing RCS based on CL31 conf
-    get_rcs_line_nb_in_msg(data["msg_type"])
+    line_to_read = get_rcs_line_nb_in_msg(data["msg_type"])
     # size of the profile to read
     rcs_size = data["range"].size
     # extract line containing rcs
-    try:
-        # rcs_line = msg[line_to_read]
-        # rcs_line = "".join(msg[4:])
-        rcs_line = ""
-        for line in msg[4:]:
-            rcs_line = rcs_line + line[3:]
-    except IndexError:
-        logger.error("Impossible to decode message. Profile is ignore")
-        return data
+    rcs_line = msg[line_to_read]
 
     try:
-        tmp = [
-            rcs_line[
-                s * RCS_BYTES_SIZE : s * RCS_BYTES_SIZE
-                + RCS_BYTES_SIZE  # fmt: skip
+        tmp = np.array(
+            [
+                int(
+                    rcs_line[s * RCS_BYTES_SIZE : s * RCS_BYTES_SIZE + RCS_BYTES_SIZE],
+                    16,
+                )
+                for s in range(rcs_size)
             ]
-            for s in range(rcs_size)
-        ]
-        tmp = np.array([int(g, 16) if g != "" else np.nan for g in tmp])
-
+        )
     except ValueError:
         logger.error("Impossible to decode message. Profile is ignore")
         return data
 
     # Each sample is coded with a 20-bit HEX ASCII character set
     # msb nibble and bit first, 2's complement
-    corr_2s_needed = tmp > 2**15
+    corr_2s_needed = tmp > 2**19
     if any(corr_2s_needed):
-        tmp[corr_2s_needed] = -(2**16 - tmp[corr_2s_needed])
+        tmp[corr_2s_needed] = -(2**20 - tmp[corr_2s_needed])
 
-    data["rcs_0"][ind][:] = np.array(tmp, dtype=np.float32) * 10
+    data["rcs_0"][ind][:] = np.array(tmp, dtype=np.float32)
 
     return data
 
 
-def read_vars(lines, data, conf, time_ind, f_name, logger):
+def read_vars(lines, data, conf, time_ind, f_name, f_fmt, logger):
     """
     read all available variables in one file
     """
+
+    # get timestamp
+    data["time"][time_ind] = dt.datetime.strptime(basename(f_name), f_fmt)
     n_lines = len(lines)
     i_line = 0
     msg_n_lines = get_msg_nb_lines(data["msg_type"])
@@ -693,28 +682,8 @@ def read_vars(lines, data, conf, time_ind, f_name, logger):
             i_line += 1
             continue
 
-        # Try finding line with time stamp
-        try:
-            data["time"][time_ind] = dt.datetime.strptime(lines[i_line], FMT_DATE)
-        except ValueError:
-            i_line += 1
-            continue
-
-        logger.debug("timestamp: {:%Y%m%d %H:%M:%S}".format(data["time"][time_ind]))
-
-        msg = lines[i_line: i_line + msg_n_lines]  # fmt: skip
+        msg = lines[i_line : i_line + msg_n_lines]
         logger.debug("processing data message %d" % (time_ind + 1))
-
-        # check if there is no change in message number
-        cur_msg_type = get_msg_type(get_conf_msg(msg[1], logger), f_name, logger)
-        if cur_msg_type != data["msg_type"]:
-            i_line += 1
-            time_ind += 1
-            logger.error(
-                "100 Incorrect Header Information in '%s'. Message type change in file",
-                f_name,
-            )
-            continue
 
         # read time only dependent variables
         logger.debug("reading time only dependent variables")
@@ -732,8 +701,7 @@ def read_vars(lines, data, conf, time_ind, f_name, logger):
         check_scale_value(data, conf, time_ind, f_name, logger)
 
         # Add number of line of a message to lines counter
-        # i_line += msg_n_lines
-        i_line += 1
+        i_line += msg_n_lines
         time_ind += 1
 
     return time_ind, data
@@ -741,14 +709,32 @@ def read_vars(lines, data, conf, time_ind, f_name, logger):
 
 def read_data(list_files, conf, logger):
     """
-    Raw2L1 plugin to read data of the vaisala CL31.
-
+    Raw2L1 plugin to read data of the vaisala CL31
     """
+
+    # check if file format is available in conf file
+    # -------------------------------------------------------------------------
+    try:
+        filename_fmt = conf["filename_fmt"]
+    except KeyError:
+        logger.critical(
+            "107 Error of configuration. Configuration should contain "
+            "key 'filename_fmt' in 'reader_conf' section"
+        )
+        sys.exit(1)
+
+    # analyse file to read to determine the size of the time variable
+    # -------------------------------------------------------------------------
+    data = {}
+    data_dim = {}
+    logger.info("analysing input files to get the configuration")
+    data_dim["time"] = count_msg_to_read(list_files, filename_fmt, logger)
+
     # checking conf parameters
     # -------------------------------------------------------------------------
     try:
         conf["check_scale"] = to_bool(conf["check_scale"])
-    except (ValueError, KeyError):
+    except ValueError:
         conf["check_scale"] = False
 
     try:
@@ -762,16 +748,11 @@ def read_data(list_files, conf, logger):
         logger.info("No encoding defined for using %s", DEFAULT_ENCODING)
         conf["file_encoding"] = DEFAULT_ENCODING
 
-    # analyse file to read to determine the size of the time variable
-    # -------------------------------------------------------------------------
-    data = {}
-    data_dim = {}
-    logger.info("analysing input files to get the configuration")
-    data_dim["time"] = count_msg_to_read(list_files, conf, logger)
-
     # Get range and vertical resolution from first file
     logger.info("analyzing first file to determine acquisition configuration")
-    data, data_dim = get_acq_conf(list_files[0], data, data_dim, conf, logger)
+    data, data_dim = get_acq_conf(
+        list_files[0], data, data_dim, filename_fmt, conf, logger
+    )
 
     logger.info("initialising data arrays")
     data = init_data(data, data_dim, conf, logger)
@@ -785,13 +766,15 @@ def read_data(list_files, conf, logger):
         # try reading the file
         lines = get_file_lines(ifile, conf, logger)
         if lines is None:
-            logger.warning("102 No data found in the file '%s' trying next file", ifile)
+            logger.warning(f"102 No data found in the file '{ifile}'trying next file")
             continue
 
         nb_files_read += 1
 
         # reading data in the file
-        time_ind, data = read_vars(lines, data, conf, time_ind, ifile, logger)
+        time_ind, data = read_vars(
+            lines, data, conf, time_ind, ifile, filename_fmt, logger
+        )
 
     # add start_time and time resolution variable
     # ------------------------------------------------------------------------
