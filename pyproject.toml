@@ -24,6 +24,13 @@ dependencies = ["gitpython", "netCDF4", "numpy<2", "xarray"]
 dev = ["pre-commit", "pytest", "pytest-cov", "ruff"]
 docs = ["myst-parser", "sphinx", "pydata-sphinx-theme"]
 
+[project.urls]
+homepage = "https://github.com/ACTRIS-CCRES/raw2l1"
+documentation = "https://raw2l1/en/latest/?version=latest"
+repository = "https://github.com/ACTRIS-CCRES/raw2l1"
+changelog = "https://github.com/ACTRIS-CCRES/raw2l1/blob/main/CHANGELOG.md"
+"Bug Tracker" = "https://github.com/ACTRIS-CCRES/raw2l1/issues"
+
 [tool.release-version]
 filename = "src/raw2l1/version.py"
 pattern = [
