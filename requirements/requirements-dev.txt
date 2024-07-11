@@ -1,0 +1,20 @@
+# This file is auto-generated from environment-dev.yml, do not modify.
+# See that file for comments about the need/usage of each dependency.
+
+pip
+numpy<2
+netCDF4>=1.6
+gitpython
+xarray
+pytest>=7.0.0
+pytest-cov
+pytest-xdist>=2.2.0
+coverage
+pre-commit>=2.15.0
+pyupgrade
+ruff
+types-pyyaml
+gitdb
+sphinx
+sphinx-book-theme
+myst-parser

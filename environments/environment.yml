@@ -1,0 +1,12 @@
+name: raw2l1
+channels:
+  - conda-forge
+dependencies:
+  - python>=3.10
+  - pip
+
+  # required dependencies
+  - numpy<2
+  - netCDF4>=1.6
+  - gitpython
+  - xarray

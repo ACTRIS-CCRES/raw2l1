@@ -1,19 +1,18 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*-
 
 # Compatibility with python 3
 
 
 import sys
-from tools import lidar_reader as lr
+
 from tools import arg_parser as ag
-from tools import log
-from tools import conf
-from tools.check_conf import check_conf
+from tools import conf, log
 from tools import create_netcdf as cnc
+from tools import lidar_reader as lr
+from tools.check_conf import check_conf
 
 __author__ = "Marc-Antoine Drouin"
-__version__ = "3.1.4"
+__version__ = "3.2.0"
 
 NAME = "raw2l1"
 
@@ -32,7 +31,7 @@ def welcome_msg():
     print(r"|_|_\_||_|!_/ \_!|___|___||_| ")
     print(r"")
     print(r"version: " + __version__)
-    print(r"SIRTA IPSL/CNRS/EP 2014-2022")
+    print(r"SIRTA IPSL/CNRS/EP 2014-2024")
     print(r"--------------------------------------------------")
     print(r"")
 

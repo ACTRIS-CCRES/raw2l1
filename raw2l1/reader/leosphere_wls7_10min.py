@@ -1,12 +1,11 @@
 #!/usr/bin/env python
-# -*- encoding: utf-8 -*-
 
 
-import sys
-import os
-import re
 import ast
 import datetime as dt
+import os
+import re
+import sys
 
 import numpy as np
 
@@ -70,7 +69,6 @@ def merge_structured_arrays(list_arr):
     final = list_arr[0].copy()
 
     for arr in list_arr[1:]:
-
         final_size = final.size
         arr_size = arr.size
         final.resize(final_size + arr_size)
@@ -111,7 +109,7 @@ def norm_value_name(name):
 def get_localization(value_str, conf, logger):
     """extract latitude and longitude"""
 
-    logger.debug("try parsing {}".format(value_str))
+    logger.debug(f"try parsing {value_str}")
 
     # check if value available
     if len(value_str) == 0 or len(value_str) == "Not Available":
@@ -145,7 +143,7 @@ def get_altitude(value_str, logger):
 
     alt = [float(val) for val in value_str.split()]
 
-    logger.debug("list of altitudes: {}".format(alt))
+    logger.debug(f"list of altitudes: {alt}")
 
     return np.array(alt)
 
@@ -153,8 +151,8 @@ def get_altitude(value_str, logger):
 def read_file(file_, conf, logger):
     """read one file and return a list without newline character"""
 
-    logger.debug("reading {}".format(os.path.basename(file_)))
-    with open(file_, "r", encoding=conf["file_encoding"]) as f_id:
+    logger.debug(f"reading {os.path.basename(file_)}")
+    with open(file_, encoding=conf["file_encoding"]) as f_id:
         raw_lines = f_id.readlines()
 
     # remove end of line character
@@ -172,7 +170,7 @@ def get_header_size(lines, logger):
         if HEADER_TAG in line:
             header_found = True
             header_size = int(line.split("=")[1])
-            logger.debug("size of header {}".format(header_size))
+            logger.debug(f"size of header {header_size}")
 
             return header_size
 
@@ -201,12 +199,11 @@ def read_header_data(file_, conf, data, logger):
 
         # case value contain ')'
         if ")" in value:
-            logger.debug("unwanted parenthesis in {} {}".format(value_name, value))
+            logger.debug(f"unwanted parenthesis in {value_name} {value}")
             value = re.sub(r"\)", "", value)
 
         # special variable
         if value_name in HEADER_SPECIAL:
-
             if value_name == "GPS Localisation" or value_name == "GPS Location":
                 data["latitude"], data["longitude"] = get_localization(
                     value, conf, logger
@@ -217,7 +214,7 @@ def read_header_data(file_, conf, data, logger):
             continue
 
         # others variables. clean name et convert value
-        logger.debug("try parsing {} {}".format(value_name, value))
+        logger.debug(f"try parsing {value_name} {value}")
         value_name = norm_value_name(value_name)
         try:
             value = ast.literal_eval(value)
@@ -229,19 +226,19 @@ def read_header_data(file_, conf, data, logger):
 
 
 def read_columns(file_, data, conf, logger):
-    """read the data store as columns """
+    """read the data store as columns"""
 
     header = data["HeaderSize"]
 
     # get the number of columns to fix types
-    with open(file_, "r", encoding=conf["file_encoding"]) as f_id:
+    with open(file_, encoding=conf["file_encoding"]) as f_id:
         count = 0
         while count <= header + 1:
             line = f_id.readline()
             count += 1
 
     col_names = [col for col in line.strip().split(FILE_SEP)]
-    col_dtypes = [np.float] * (len(col_names) - 1)
+    col_dtypes = [float] * (len(col_names) - 1)
     col_dtypes = [dt.datetime] + col_dtypes
 
     logger.debug("reading columns")
@@ -268,20 +265,19 @@ def create_1d_var(raw_data, data, var_names, conf, logger):
     logger.debug("reading 1d variables")
 
     for var in var_names:
-
         name = var[0]
         col_names = var[1]
 
-        logger.debug("reading {}".format(name))
+        logger.debug(f"reading {name}")
 
         for col in col_names:
             try:
                 data[name] = raw_data[col]
             except ValueError:
-                logger.debug("column {} not found".format(col))
+                logger.debug(f"column {col} not found")
                 continue
 
-            logger.debug("column {} found".format(col))
+            logger.debug(f"column {col} found")
 
         # case column was not found
         if name not in data:
@@ -297,19 +293,15 @@ def create_2d_var(raw_data, data, list_vars, conf, logger):
     column_names = [col[0] for col in raw_data.dtype.descr]
 
     for var in list_vars:
-
         var_name = var[0]
         col_names = var[1]
 
-        logger.debug(
-            "processing {} variables (possible pattern {})".format(var_name, col_names)
-        )
+        logger.debug(f"processing {var_name} variables (possible pattern {col_names})")
 
         # find corresponding columns
         # --------------------------------------------------------------------
         col_2_join = []
         for col_name in col_names:
-
             # get columns which have the string in their name
             col_2_join = col_2_join + [col for col in column_names if col_name in col]
 
@@ -320,20 +312,18 @@ def create_2d_var(raw_data, data, list_vars, conf, logger):
         )
 
         if len(col_2_join) != 0:
-            logger.debug("corresponding columns found : {}".format(col_2_join))
+            logger.debug(f"corresponding columns found : {col_2_join}")
             for index, col in enumerate(col_2_join):
                 var_2d[:, index] = raw_data[col]
-                logger.debug("removing column {} from processing".format(col))
+                logger.debug(f"removing column {col} from processing")
                 column_names.remove(col)
 
             # make sure the missing values are what we want
             var_2d[np.isnan(var_2d)] = conf["missing_float"]
         else:
-            logger.error(
-                "no column found corresponding to {} ({})".format(var_name, col_names)
-            )
+            logger.error(f"no column found corresponding to {var_name} ({col_names})")
 
-            logger.debug("remaining available columns {}".format(column_names))
+            logger.debug(f"remaining available columns {column_names}")
 
         data[var_name] = var_2d
 
@@ -346,10 +336,10 @@ def extract_time(raw_data, logger):
     for time_var in VAR_TIME:
         try:
             data = raw_data[time_var]
-            logger.debug("using {} column for time".format(time_var))
+            logger.debug(f"using {time_var} column for time")
             return data
         except ValueError:
-            logger.debug("column {} doesn't exists".format(time_var))
+            logger.debug(f"column {time_var} doesn't exists")
             continue
 
     # if we reach this point, it means we didn't
@@ -378,7 +368,6 @@ def read_data(list_files, conf, logger):
     # ------------------------------------------------------------------------
     tmp_list = []
     for i_file, file_ in enumerate(list_files):
-
         if i_file == 0:
             data = read_header_data(file_, conf, data, logger)
 

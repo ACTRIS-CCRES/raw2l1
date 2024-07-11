@@ -1,5 +1,3 @@
-# -*- coding: utf8 -*-
-
 # Compatibility with python 3
 
 
@@ -21,7 +19,7 @@ def read_overlap(fname, logger):
             fname, dtype=OVER_DTYPE, comments=COMMENTS, filling_values=FILLING
         )
 
-    except IOError as err:
+    except OSError as err:
         logger.errot("107 Error Reading overlap file : " + fname)
         logger.error(err)
         data = None

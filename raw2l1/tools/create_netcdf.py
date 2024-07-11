@@ -1,16 +1,18 @@
-# -*- coding: utf-8 -*-
-
 # Compatibility with python 3
 
 
-import netCDF4 as nc
-import sys
-import datetime as dt
-import numpy as np
 import configparser
+import datetime as dt
+import sys
+import tempfile
 from ast import literal_eval
-from tools.read_overlap import read_overlap
+
+import netCDF4 as nc
+import numpy as np
+import xarray as xr
+
 from tools import common
+from tools.read_overlap import read_overlap
 
 KEY_READERDATA = "$reader_data$"
 KEY_OVERLAP = "$overlap$"
@@ -25,6 +27,9 @@ KEYS_VALTYPE = {
     "$time$": np.float64,
     "default": np.float64,
 }
+
+ALMOST_ONE_dAY = dt.timedelta(hours=23, minutes=59, seconds=59)
+DATE_FMT = "%Y-%m-%d"
 
 
 def dim_to_tuple(dim):
@@ -101,8 +106,11 @@ def get_var_type(type_str, conf, logger):
         val_type = KEYS_VALTYPE[type_str]
     except KeyError:
         msg = (
-            "107 Type of data '" + type_str + "' unknown using default. "
-            "Check your configuration file '{}'".format(conf.get("conf", "conf"))
+            "107 Type of data '"
+            + type_str
+            + "' unknown using default. " "Check your configuration file '{}'".format(
+                conf.get("conf", "conf")
+            )
         )
         logger.error(msg)
         val_type = np.float64
@@ -135,7 +143,7 @@ def create_netcdf_global(conf, nc_id, data, logger):
             reader_key = get_data_key(value)
             try:
                 setattr(nc_id, attr, data[reader_key])
-                logger.debug("adding %s" % attr)
+                logger.debug("adding %s", attr)
             except KeyError:
                 mess = (
                     "107 Error creating netCDF file '{}'".format(
@@ -152,7 +160,7 @@ def create_netcdf_global(conf, nc_id, data, logger):
                 value += " raw2l1 " + conf.get("conf", "version")
 
             setattr(nc_id, attr, value)
-            logger.debug("adding %s" % attr)
+            logger.debug("adding %s", attr)
 
     # Add year, month day for STRAT compatibility
     add_date = False
@@ -186,7 +194,6 @@ def create_netcdf_dim(conf, data, nc_id, logger):
 
     # loop only over section concerning the netCDf file
     for section in filter_conf_sections(conf, logger):
-
         # process only section concerning the output file
         try:
             dim = conf.get(section, "dim")
@@ -206,7 +213,6 @@ def create_netcdf_dim(conf, data, nc_id, logger):
             pass
 
         if section not in common.CONF_SECTIONS and name == dim:
-
             logger.debug("dimension found: " + section)
 
             # case where dimensions have no values
@@ -215,10 +221,10 @@ def create_netcdf_dim(conf, data, nc_id, logger):
 
                 if KEY_READERDATA in dim_size:
                     val_key = get_data_key(conf.get(section, "size"))
-                    logger.debug("{} size : {:d}".format(name, data[val_key]))
+                    logger.debug(f"{name} size : {data[val_key]:d}")
                     nc_id.createDimension(dim, data[val_key])
                 else:
-                    logger.debug("{} size : {:d}".format(name, int(dim_size)))
+                    logger.debug(f"{name} size : {int(dim_size):d}")
                     nc_id.createDimension(dim, int(dim_size))
             elif type_var == "$time$":
                 # case of time var
@@ -229,7 +235,7 @@ def create_netcdf_dim(conf, data, nc_id, logger):
             elif KEY_READERDATA in conf.get(section, "value"):
                 try:
                     nc_id.createDimension(dim, data[dim].size)
-                except:
+                except KeyError:
                     val_key = get_data_key(conf.get(section, "value"))
                     nc_id.createDimension(dim, data[val_key].size)
             else:
@@ -289,7 +295,6 @@ def add_data_to_var(nc_var, var_name, conf, data, logger):
     logger.debug(str(data_type))
     logger.debug(conf.get("conf", "netcdf_format"))
     if KEY_READERDATA in data_val:
-
         # prevent problem with netCDF3 and strings
         if (
             data_type == "string"
@@ -316,10 +321,9 @@ def add_data_to_var(nc_var, var_name, conf, data, logger):
         over_fname = get_overlap_filename(data_val)
         try:
             nc_var[:] = read_overlap(over_fname, logger)
-        except IOError as err:
+        except OSError as err:
             logger.error(
-                "107 problem encountered while reading overlap file "
-                + "'{}".format(over_fname)
+                "107 problem encountered while reading overlap file " + f"'{over_fname}"
             )
             logger.error(repr(err))
     else:
@@ -345,10 +349,9 @@ def add_attr_to_var(nc_var, data, conf, section, logger):
     add attribute to the variable of the netCDF file
     """
 
-    logger.debug("adding attributes to %s variable" % section)
+    logger.debug("adding attributes to %s variable", section)
     for option, value in conf.items(section):
         if option not in common.RESERV_ATTR:
-
             # special case for missing value and _FillValue
             data_type = get_var_type(conf.get(section, "type"), conf, logger)
             if option == "missing_value" or option == "_FillValue":
@@ -373,8 +376,7 @@ def add_attr_to_var(nc_var, data, conf, section, logger):
 
             # attributes we don't know if they are string
             if option not in common.STRING_ATTR:
-
-                if type(value) is str and KEY_READERDATA in value:
+                if isinstance(value, str) and KEY_READERDATA in value:
                     try:
                         data_key = get_data_key(value)
                         value = data[data_key]
@@ -386,7 +388,7 @@ def add_attr_to_var(nc_var, data, conf, section, logger):
                 else:
                     value = convert_attribute(value, logger)
 
-            logger.debug("adding %s attribute %s" % (option, repr(value)))
+            logger.debug("adding %s attribute %s", option, repr(value))
             setattr(nc_var, option, value)
 
     return None
@@ -398,18 +400,8 @@ def create_netcdf_variables(conf, data, nc_id, logger):
     the configuration file
     """
 
-    # define variable in case user chose compression:
-    if conf.get("conf", "netcdf_format") == "NETCDF4":
-
-        comp = conf.get("conf", "netcdf4_compression")
-        comp_level = conf.getint("conf", "netcdf4_compression_level")
-    else:
-        comp = False
-        comp_level = 0
-
     # loop only over sections concerning the netCDf file
     for section in filter_conf_sections(conf, logger):
-
         var_name = section
         logger.debug("variable " + var_name)
         dim = conf.get(section, "dim")
@@ -428,6 +420,14 @@ def create_netcdf_variables(conf, data, nc_id, logger):
             fill_value = conf.get(section, "_FillValue")
         else:
             fill_value = None
+
+        # define variable in case user chose compression:
+        if conf.get("conf", "netcdf_format") == "NETCDF4" and val_type != "string":
+            comp = conf.get("conf", "netcdf4_compression")
+            comp_level = conf.getint("conf", "netcdf4_compression_level")
+        else:
+            comp = False
+            comp_level = 0
 
         # create time variable
         if conf.get(section, "type") == "$time$":
@@ -456,7 +456,7 @@ def create_netcdf_variables(conf, data, nc_id, logger):
 
             try:
                 val_type = data[tmp_var_name].dtype
-            except:
+            except KeyError:
                 msg = "107 Error creating netCDF file '{}".format(
                     format(conf.get("conf", "output"))
                 )
@@ -489,7 +489,7 @@ def create_netcdf_variables(conf, data, nc_id, logger):
             msg = "107 Error creating netCDF file '{}'".format(
                 conf.get("conf", "output")
             )
-            msg += " No value option found for {}".format(var_name)
+            msg += f" No value option found for {var_name}"
             msg += " - your configuration file might contains errors"
             logger.error(msg)
 
@@ -503,22 +503,23 @@ def create_netcdf(conf, data, logger):
     """
     Create and write in the netCDf file
     """
+    # check if we need to filter data
+    if conf.get("conf", "filter_day"):
+        output_file = tempfile.NamedTemporaryFile().name
+        date_start = conf.get("conf", "date")
+        date_end = date_start + ALMOST_ONE_dAY
+    else:
+        output_file = conf.get("conf", "output")
 
     status = 0
 
     # open netCDF file
     # -------------------------------------------------------------------------
-    logger.info("create netCDF file " + conf.get("conf", "output"))
+    logger.info("create netCDF file %s", output_file)
     try:
-        nc_id = nc.Dataset(
-            conf.get("conf", "output"), "w", format=conf.get("conf", "netcdf_format")
-        )
-    except IOError as err:
-        logger.critical(
-            "107 Error trying to create the netCDF file '{}".format(
-                format(conf.get("conf", "output"))
-            )
-        )
+        nc_id = nc.Dataset(output_file, "w", format=conf.get("conf", "netcdf_format"))
+    except OSError as err:
+        logger.critical("107 Error trying to create the netCDF file '%s'", output_file)
         logger.critical(err)
         logger.critical("quitting raw2l1")
         sys.exit(1)
@@ -540,5 +541,18 @@ def create_netcdf(conf, data, logger):
     create_netcdf_variables(conf, data, nc_id, logger)
 
     nc_id.close()
+
+    # filter data if needed
+    # -------------------------------------------------------------------------
+    if conf.get("conf", "filter_day"):
+        logger.info("filtering data for %s", date_start.strftime(DATE_FMT))
+        output_final = conf.get("conf", "output")
+
+        data = xr.open_dataset(output_file)
+        data = data.sel(time=slice(date_start, date_end))
+
+        data.to_netcdf(output_final)
+
+        data.close()
 
     return status

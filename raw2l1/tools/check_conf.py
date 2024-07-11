@@ -1,7 +1,7 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*-
 
 import sys
+
 from tools import common
 
 
@@ -12,7 +12,7 @@ def check_list_options(conf, section, list_opts, logger):
 
     for opt in list_opts:
         if not conf.has_option(section, opt):
-            logger.critical("107 %s option is missing in %s" % (opt, section))
+            logger.critical("107 %s option is missing in %s", opt, section)
             return False
 
     return True
@@ -48,7 +48,6 @@ def check_nc4_compression_option(conf, section, logger):
     # check compression value
     val = conf.get(section, opt)
     if val not in common.ALLOW_NC4_COMP:
-
         msg = "107 Error Reading config file '" + conf_file + "'"
         msg += (
             " authorized values for %s option in %s section is %s. Option set to false"
@@ -58,7 +57,7 @@ def check_nc4_compression_option(conf, section, logger):
 
     # check if compression level is present
     opt = "netcdf4_compression_level"
-    err_msg = "107 Error Reading config file '%s'authorized value for %s option in %s section are %s. Option set to 4"
+    err_msg = "107 Error Reading config file '%s'authorized value for %s option in %s section are %s. Option set to 4"  # NOQA
     if not conf.has_option(section, opt):
         conf.set(section, opt, "4")
 
@@ -91,7 +90,7 @@ def check_conf_options(conf, logger):
     # check netcdf format
     option = "netcdf_format"
     if conf.get(section, option) not in common.ALLOW_NC_FMT:
-        logger.critical("107 allow netCDF format are : %s" % repr(common.ALLOW_NC_FMT))
+        logger.critical("107 allow netCDF format are : %s", repr(common.ALLOW_NC_FMT))
         return False
 
     # if format is NETCDF4 check compression option

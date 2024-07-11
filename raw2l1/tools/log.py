@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*-
 
 # Compatibility with python 3
 
@@ -8,6 +7,7 @@ import logging
 import logging.config
 import os
 import sys
+
 from tools import utils
 
 LOG_FMT = "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
@@ -31,7 +31,7 @@ def init(opt, name):
         sys.exit(1)
 
     filename = os.path.join(log_dir, log_file)
-    print("debug file : {}".format(filename))
+    print(f"debug file : {filename}")
     print("console debug level : {}".format(opt["verbose"].upper()))
     print("file debug level : {}".format(opt["log_level"].upper()))
 

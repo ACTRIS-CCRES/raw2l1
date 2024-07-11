@@ -1,11 +1,8 @@
-# -*- coding: utf8 -*-
-
-import os
+import datetime as dt
+import sys
 
 import netCDF4 as nc
 import numpy as np
-import datetime as dt
-import sys
 
 # brand and model of the LIDAR
 BRAND = "jenoptik"
@@ -123,7 +120,12 @@ ERR_HEX_MSG = [
         "fw": 1.010,
     },
     # bit 12
-    {"hex": 0x00001000, "level": "STATUS", "msg": "NTP problem", "fw": LAST_KNOW_FW,},
+    {
+        "hex": 0x00001000,
+        "level": "STATUS",
+        "msg": "NTP problem",
+        "fw": LAST_KNOW_FW,
+    },
     {
         "hex": 0x00001000,
         "level": "ERROR",
@@ -266,12 +268,14 @@ ERR_HEX_MSG = [
 
 def get_error_index(err_msg, firmware, logger):
     """
-    based on error error message read in file. return all indexes of related msg and level
+    Based on error error message read in file.
+
+    Return all indexes of related msg and level.
+
     """
     err_ind = []
     err_int = err_msg
     for i, d in enumerate(ERR_HEX_MSG):
-        logger.debug(d["hex"])
         # check if firmware known or if unknow still show the latest message
         if bool(err_int & d["hex"]) and (
             firmware <= d["fw"] or firmware > LAST_KNOW_FW
@@ -287,7 +291,6 @@ def store_error(data, err_msg, logger):
     err_ind = get_error_index(err_msg, data["firmware_version"], logger)
 
     for i in err_ind:
-
         if ERR_HEX_MSG[i]["msg"] in data["list_errors"]:
             data["list_errors"][ERR_HEX_MSG[i]["msg"]]["count"] += 1
         else:
@@ -301,14 +304,12 @@ def store_error(data, err_msg, logger):
 
 
 def log_error_msg(data, logger):
-
     msg_format = "{} : {:d} message(s)"
 
     if len(data["list_errors"]) > 0:
         logger.info("summary of instruments messages")
 
     for msg in data["list_errors"]:
-
         if data["list_errors"][msg]["level"] == "STATUS":
             logger.info(msg_format.format(msg, data["list_errors"][msg]["count"]))
         elif data["list_errors"][msg]["level"] == "WARNING":
@@ -320,10 +321,10 @@ def log_error_msg(data, logger):
 def read_overlap(overlap_file, missing_float, logger):
     """read overlap from lufft TUB*.cfg file"""
     try:
-        with open(overlap_file, "r") as f_ovl:
+        with open(overlap_file) as f_ovl:
             f_ovl.readline()
             raw_ovl = f_ovl.readline()
-    except IOError as err:
+    except OSError as err:
         logger.error("impossible to read %s", overlap_file)
         logger.error(err)
         sys.exit(1)
@@ -376,8 +377,8 @@ def get_vars_dim(list_files, logger):
         try:
             nc_id = nc.Dataset(ifile, "r")
             f_count += 1
-        except:
-            logger.error("109 error trying to open '{}'".format(ifile))
+        except OSError:
+            logger.error("109 error trying to open '%s'", ifile)
             continue
 
         if f_count == 1:
@@ -414,7 +415,7 @@ def get_temp(nc_obj, logger):
     except TypeError:
         logger.debug("Correcting temperature scale problem")
         nc_obj.set_auto_maskandscale(False)
-        tmp = nc_obj[:] / np.float(nc_obj.scale_factor)
+        tmp = nc_obj[:] / float(nc_obj.scale_factor)
 
     return tmp
 
@@ -672,8 +673,20 @@ def read_timedep_vars(data, nc_id, soft_vers, time_ind, time_size, logger):
     logger.debug("reading beta_raw")
     # for firmware > 1.05 variable can be changed to beta_att
     try:
-        data["beta_raw"][ind_b:ind_e, :] = nc_id.variables["beta_att"][:]
-        logger.debug("using beta_att variable")
+        beta_att = nc_id.variables["beta_att"][:]
+        try:
+            c_cal = nc_id.variables["c_cal"][:]
+        except KeyError:
+            c_cal = 3.2e-12  # default calibration factor for Lufft instruments
+            logger.warning(
+                "c_cal not found in file although beta_att is there. "
+                "assuming c_cal=3.2e-12"
+            )
+        data["beta_raw"][ind_b:ind_e, :] = beta_att / c_cal
+        logger.debug(
+            "using beta_att variable divided by c_cal "
+            "(undoing firmware pseudo-calibration)"
+        )
     except KeyError:
         data["beta_raw"][ind_b:ind_e, :] = nc_id.variables["beta_raw"][:]
         logger.debug("using beta_raw variable")
@@ -711,17 +724,14 @@ def calc_pr2(data, soft_vers, logger):
     # Pr²
     logger.debug("calculing Pr2 using:")
     if soft_vers < 0.7:
-
         # check if it is a MetOffice
         if data["meta"]["is_metoffice"]:
             logger.debug("using beta to get rcs_0 (MetOffice)")
             data["rcs_0"] = data["beta"]
         else:
-
             # if p_calc not available
             if not data["meta"]["is_p_calc"]:
-
-                if data["meta"]["is_nn2"]:
+                if data["meta"]["is_nn2"] and np.any(data["nn2"] != 0):
                     data["p_calc"] = data["nn2"] * NN2_FACTOR
                 else:
                     # if no nn2 : assume it is constant
@@ -773,7 +783,6 @@ def read_data(list_files, conf, logger):
     time_ind = 0
     # Loop over the list of files
     for ifile in list_files:
-
         # Opening file
         try:
             raw_data = nc.Dataset(ifile, "r")
@@ -791,7 +800,7 @@ def read_data(list_files, conf, logger):
             soft_vers = get_soft_version(raw_data.software_version)
             data["firmware_version"] = soft_vers
             data["instrument_id"] = raw_data.serlom
-            logger.info("software version: %7.4f" % soft_vers)
+            logger.info("software version: %7.4f", soft_vers)
             if soft_vers > LAST_KNOW_FW:
                 logger.warning("firmware %7.4f is unkown. Update reader", soft_vers)
 
@@ -808,7 +817,6 @@ def read_data(list_files, conf, logger):
             # store overlap if available
             # ----------------------------------------------------------------
             if overlap is not None:
-
                 if overlap.size < data["range"].size:
                     logger.error("overlap data don't have enough elements")
                     logger.error("overlap file is ignore")
@@ -862,9 +870,7 @@ def read_data(list_files, conf, logger):
 
     if nb_files_read == 0:
         for file_ in list_files:
-            logger.critical(
-                "109 Tried to read '{}'. No file could be read".format(file_)
-            )
+            logger.critical(f"109 Tried to read '{file_}'. No file could be read")
         sys.exit(1)
-    else:
-        return data
+
+    return data

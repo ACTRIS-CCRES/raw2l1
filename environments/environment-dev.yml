@@ -1,0 +1,32 @@
+name: raw2l1-dev
+channels:
+  - conda-forge
+dependencies:
+  - python>=3.10
+  - pip
+
+  # required dependencies
+  - numpy<2
+  - netCDF4>=1.6
+  - gitpython
+  - xarray
+
+  # test dependencies
+  - pytest>=7.0.0
+  - pytest-cov
+  - pytest-xdist>=2.2.0
+  - coverage
+
+  # code checks
+  - pre-commit>=2.15.0
+  - pyupgrade
+  - ruff
+
+  # mypy
+  - types-pyyaml
+
+  # documentation
+  - gitdb
+  - sphinx
+  - sphinx-book-theme
+  - myst-parser

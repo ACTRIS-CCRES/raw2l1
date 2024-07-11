@@ -1,20 +1,16 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*-
 
 """
 reader for raw data from SIRTA IPRAL LIDAR
 the file format is based on LICEL file format
 """
 
-
-import sys
 import ast
 import datetime as dt
-from collections import OrderedDict
+import sys
 
-import numpy as np
 import netCDF4 as nc
-
+import numpy as np
 
 # brand and model of the LIDAR
 BRAND = "Gordien Stratos"
@@ -75,13 +71,13 @@ def get_channel_conf(conf, logger):
     # check if the lists have the same number of elements
     if len(tmp_rcs) != len(tmp_chan):
         logger.critical(
-            "error in configuration: 'channel' and 'rcs' options don't have the same number of elements. quitting"
+            "error in configuration: 'channel' and 'rcs' options don't have the same number of elements. quitting"  # NOQA
         )
         sys.exit(1)
 
     # when we know the order of the variables in files we well need to add an index
     chan_conf = {
-        "var_names": ["rcs_{:02d}".format(x) for x in tmp_rcs],
+        "var_names": [f"rcs_{x:02d}" for x in tmp_rcs],
         "channels": tmp_chan,
         "index": [None] * len(tmp_rcs),
     }
@@ -142,7 +138,6 @@ def get_channel_index(file_id, n_chan, chan_conf, logger):
         print(i, line.strip())
 
     for i_chan in range(n_chan):
-
         line = file_id.readline()
         line_id = line.split()[-1]
 
@@ -178,10 +173,9 @@ def get_data_size(list_files, logger):
 
     # loop over list of files
     for i_file, file_ in enumerate(list_files):
-
         try:
             f_id = open(file_, "rb")
-        except IOError:
+        except OSError:
             logger.error("error trying to open %s", file_)
             continue
 
@@ -195,7 +189,7 @@ def get_data_size(list_files, logger):
 
         # try to parse date to check file is valid
         try:
-            timestamp = dt.datetime.strptime(datetime_str, DATE_FMT)
+            dt.datetime.strptime(datetime_str, DATE_FMT)
         except ValueError:
             logger.error("wrong time format in " + file_)
             continue
@@ -277,34 +271,34 @@ def init_data(data_dim, logger):
     data["latitude"] = MISSING_FLOAT
     data["altitude"] = MISSING_FLOAT
 
-    data["active"] = np.ones((n_chan,), dtype=np.int) * MISSING_INT
-    data["detection_mode_ind"] = np.ones((n_chan,), dtype=np.int) * MISSING_INT
+    data["active"] = np.ones((n_chan,), dtype=int) * MISSING_INT
+    data["detection_mode_ind"] = np.ones((n_chan,), dtype=int) * MISSING_INT
     data["detection_mode"] = np.array(["photocounting"] * n_chan)
-    data["telescope"] = np.ones((n_chan,), dtype=np.int) * MISSING_INT
-    data["n_range"] = np.ones((n_chan,), dtype=np.int) * MISSING_INT
-    data["number_one"] = np.ones((n_chan,), dtype=np.int) * MISSING_INT
+    data["telescope"] = np.ones((n_chan,), dtype=int) * MISSING_INT
+    data["n_range"] = np.ones((n_chan,), dtype=int) * MISSING_INT
+    data["number_one"] = np.ones((n_chan,), dtype=int) * MISSING_INT
     data["voltage"] = np.ones((n_chan,), dtype=np.float32) * MISSING_FLOAT
     data["range_resol_vect"] = np.ones((n_chan,), dtype=np.float32) * MISSING_FLOAT
     data["wavelength"] = np.ones((n_chan,), dtype=np.float32) * MISSING_FLOAT
-    data["polarization"] = np.array([str(MISSING_INT)] * n_chan, dtype=np.str)
+    data["polarization"] = np.array([str(MISSING_INT)] * n_chan, dtype=str)
     data["filter_wheel_position"] = (
-        np.ones((n_chan,), dtype=np.int) * MISSING_INT
+        np.ones((n_chan,), dtype=int) * MISSING_INT
     )  # speficfic for IPRAL
     # unused column
-    data["bin_shift"] = np.ones((n_chan,), dtype=np.int) * MISSING_INT
-    data["bin_shift_dec"] = np.ones((n_chan,), dtype=np.int) * MISSING_INT
-    data["adc_bits"] = np.ones((n_chan,), dtype=np.int) * MISSING_INT
-    data["n_shots"] = np.ones((n_chan,), dtype=np.int) * MISSING_INT
-    data["discriminator_level"] = np.ones((n_chan,), dtype=np.int) * MISSING_FLOAT
+    data["bin_shift"] = np.ones((n_chan,), dtype=int) * MISSING_INT
+    data["bin_shift_dec"] = np.ones((n_chan,), dtype=int) * MISSING_INT
+    data["adc_bits"] = np.ones((n_chan,), dtype=int) * MISSING_INT
+    data["n_shots"] = np.ones((n_chan,), dtype=int) * MISSING_INT
+    data["discriminator_level"] = np.ones((n_chan,), dtype=int) * MISSING_FLOAT
     data["adc_range"] = np.ones((n_chan,), dtype=np.float32) * MISSING_FLOAT
 
     # multi_dim vars
     for i_chan in range(data_dim["n_chan"]):
-        data["rcs_{:02d}".format(i_chan)] = (
+        data[f"rcs_{i_chan:02d}"] = (
             np.ones((data_dim["time"], data_dim["range"]), dtype=np.float32)
             * MISSING_FLOAT
         )
-        data["bckgrd_rcs_{:02d}".format(i_chan)] = (
+        data[f"bckgrd_rcs_{i_chan:02d}"] = (
             np.ones((data_dim["time"],), dtype=np.float32) * MISSING_FLOAT
         )
 
@@ -341,8 +335,8 @@ def read_header(file_id, data, data_dim, index, logger, date_only=False):
     data["time_resol"] = (
         data["time_bounds"][index, 1] - data["time_bounds"][index, 0]
     ).total_seconds()
-    data["altitude"] = np.float(elts[5])
-    data["latitude"] = np.float(elts[6])
+    data["altitude"] = float(elts[5])
+    data["latitude"] = float(elts[6])
     data["longitude"] = float(elts[7])
     data["zenith"] = float(elts[8])
 
@@ -350,15 +344,14 @@ def read_header(file_id, data, data_dim, index, logger, date_only=False):
     # ------------------------------------------------------------------------
     line = file_id.readline().decode(DEFAULT_ENCODING)
     elts = line.split()
-    data["type1_shots"] = np.float(elts[0])
-    data["frequency"] = np.float(elts[1])
-    data["type2_shots"] = np.float(elts[2])
+    data["type1_shots"] = float(elts[0])
+    data["frequency"] = float(elts[1])
+    data["type2_shots"] = float(elts[2])
 
     # channels description
     # ------------------------------------------------------------------------
     for i_chan in range(data_dim["n_chan"]):
-
-        var_name = "rcs_{:02d}".format(i_chan)
+        f"rcs_{i_chan:02d}"
 
         line = file_id.readline().decode(DEFAULT_ENCODING)
         logger.debug("parsing : %s", line.strip())
@@ -418,7 +411,6 @@ def read_profiles(file_id, data, data_dim, index, logger):
         logger.debug("%2d %s", i, line.strip())
 
     for i_chan in range(data_dim["n_chan"]):
-
         # check of channel is active
         if data["active"][i_chan] == 0:
             continue
@@ -430,22 +422,23 @@ def read_profiles(file_id, data, data_dim, index, logger):
         if data["detection_mode"][i_chan] == "analog":
             max_range = data["adc_range"][i_chan]
             adc = data["adc_bits"][i_chan]
-            data["rcs_{:02d}".format(i_chan)][index, :] = (
-                tmp_data / shots * max_range * 1000 / (2 ** adc - 1)
+            data[f"rcs_{i_chan:02d}"][index, :] = (
+                tmp_data / shots * max_range * 1000 / (2**adc - 1)
             )
-            data["units_{:02d}".format(i_chan)] = "mV"
+            data[f"units_{i_chan:02d}"] = "mV"
         else:
-            # It coincides with the ASCII converted by the Advanced Licel.exe by it has no sense.
+            # It coincides with the ASCII converted by the Advanced Licel.exe
+            # but it has no sense.
             # See Licel programming manual.pdf. Bins-per-microseconds number
             # from technical specifications 20 bins/microsec.
             reduction_factor = data["range_resol"] / DEFAULT_RESOLUTION
-            data["rcs_{:02d}".format(i_chan)][index, :] = tmp_data / (
+            data[f"rcs_{i_chan:02d}"][index, :] = tmp_data / (
                 shots / (20 / reduction_factor)
             )
-            data["units_{:02d}".format(i_chan)] = "MHz"
+            data[f"units_{i_chan:02d}"] = "MHz"
 
         # jump over space between profiles
-        dummy = file_id.seek(file_id.tell() + 2)
+        file_id.seek(file_id.tell() + 2)
 
     return data
 
@@ -457,8 +450,8 @@ def read_data(list_files, conf, logger):
 
     # get conf parameters
     # ------------------------------------------------------------------------
-    missing_flt = conf["missing_float"]
-    missing_int = conf["missing_int"]
+    conf["missing_float"]
+    conf["missing_int"]
 
     # min and max alt for background signal calculation
     bck_min_alt, bck_max_alt = get_bck_alt(conf, logger)
@@ -472,10 +465,9 @@ def read_data(list_files, conf, logger):
     data_dim = get_data_size(list_files, logger)
 
     for ind, file_ in enumerate(list_files):
-
         try:
             f_id = open(file_, "rb")
-        except IOError:
+        except OSError:
             logger.error("error trying to open " + file_)
             continue
 
@@ -530,16 +522,11 @@ def read_data(list_files, conf, logger):
 
     # PR2 and background
     for i_chan in range(data_dim["n_chan"]):
-
-        profiles = data["rcs_{:02d}".format(i_chan)]
+        profiles = data[f"rcs_{i_chan:02d}"]
         square = np.square(data["range"])
 
-        data["bckgrd_rcs_{:02d}".format(i_chan)] = np.mean(
-            profiles[:, bck_filter], axis=1
-        )
-        data["rcs_{:02d}".format(i_chan)] = profiles * square
-        data["units_rcs_{:02d}".format(i_chan)] = (
-            data["units_{:02d}".format(i_chan)] + ".m^2"
-        )
+        data[f"bckgrd_rcs_{i_chan:02d}"] = np.mean(profiles[:, bck_filter], axis=1)
+        data[f"rcs_{i_chan:02d}"] = profiles * square
+        data[f"units_rcs_{i_chan:02d}"] = data[f"units_{i_chan:02d}"] + ".m^2"
 
     return data

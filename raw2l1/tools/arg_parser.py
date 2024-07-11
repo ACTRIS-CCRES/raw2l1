@@ -1,15 +1,15 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*-
 
 # Compatibility with python 3
 
 
 import argparse
 import datetime as dt
-import sys
-import os
 import glob
+import os
+import sys
 from itertools import chain
+
 from .utils import check_dir
 
 PROG_DESC = "Raw LIDAR data to netCDF converter"
@@ -24,8 +24,8 @@ def check_date_format(input_date):
 
     try:
         dt_date = dt.datetime.strptime(input_date, DATE_FMT)
-    except:
-        msg = "%r has not the required format (YYYYMMDD)" % input_date
+    except ValueError:
+        msg = f"{input_date} has not the required format (YYYYMMDD)"
         raise argparse.ArgumentTypeError(msg)
 
     return dt_date
@@ -146,7 +146,7 @@ def init_args_parser():
         required=False,
         type=int,
         default=0,
-        help="Minimum size of input files in bytes. Files with lower size will be rejected",
+        help="Minimum size of input files in bytes. Files with lower size will be rejected",  # NOQA
     )
     parser.add_argument(
         "--check_timeliness",
@@ -162,8 +162,17 @@ def init_args_parser():
         required=False,
         type=int,
         default=2,
-        help="Maximum age of data in input files. Warning will be logged if older data are found. "
+        help="Maximum age of data in input files. Warning will be logged if older data are found."  # NOQA
         "Default value is 2 hours. Option only for realtime processing",
+    )
+
+    # reprocessing filter dates
+    parser.add_argument(
+        "--filter-day",
+        required=False,
+        action="store_true",
+        default=False,
+        help="Only keep timesteps of the processed day in output file",
     )
 
     # logs related arguments
@@ -221,7 +230,6 @@ def get_input_args(argv):
     print("parse : ", parse_args.ancillary)
     list_anc = []
     if parse_args.ancillary:
-
         for anc_list in parse_args.ancillary:
             list_anc.append([f for f in chain.from_iterable(anc_list)])
 
@@ -234,6 +242,7 @@ def get_input_args(argv):
     input_args["log"] = parse_args.log
     input_args["log_level"] = parse_args.log_level
     input_args["verbose"] = parse_args.v
+    input_args["filter_day"] = parse_args.filter_day
 
     # real time
     input_args["input_min_size"] = parse_args.file_min_size
