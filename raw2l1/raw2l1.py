@@ -12,7 +12,7 @@ from tools import lidar_reader as lr
 from tools.check_conf import check_conf
 
 __author__ = "Marc-Antoine Drouin"
-__version__ = "3.1.5b"
+__version__ = "3.2.0"
 
 NAME = "raw2l1"
 
@@ -31,7 +31,7 @@ def welcome_msg():
     print(r"|_|_\_||_|!_/ \_!|___|___||_| ")
     print(r"")
     print(r"version: " + __version__)
-    print(r"SIRTA IPSL/CNRS/EP 2014-2022")
+    print(r"SIRTA IPSL/CNRS/EP 2014-2024")
     print(r"--------------------------------------------------")
     print(r"")
 
