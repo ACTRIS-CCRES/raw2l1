@@ -6,7 +6,7 @@ dependencies:
   - pip
 
   # required dependencies
-  - numpy
+  - numpy<2
   - netCDF4>=1.6
   - gitpython
   - xarray

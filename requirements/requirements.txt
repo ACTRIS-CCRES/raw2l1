@@ -2,7 +2,7 @@
 # See that file for comments about the need/usage of each dependency.
 
 pip
-numpy
+numpy<2
 netCDF4>=1.6
 gitpython
 xarray
