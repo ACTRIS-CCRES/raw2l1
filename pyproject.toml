@@ -1,0 +1,60 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "raw2l1"
+authors = [{ name = "Marc-Antoine Drouin", email = "ccres-dev@listes.ipsl.fr" }]
+maintainers = [{ name = "All the contributors" }]
+description = "A package to convert raw data from LIDAR to netCDF"
+keywords = ["netCDF", "ALC", "LIDAR", "e-profile"]
+readme = "README.md"
+classifiers = [
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Scientific/Engineering",
+    "License :: OSI Approved :: GPLv3 License",
+    "Operating System :: OS Independent",
+]
+dynamic = ["version"]
+dependencies = ["gitpython", "netCDF4", "numpy<2", "xarray"]
+
+[project.optional-dependencies]
+dev = ["pre-commit", "pytest", "pytest-cov", "ruff"]
+docs = ["myst-parser", "sphinx", "pydata-sphinx-theme"]
+
+[tool.release-version]
+filename = "src/raw2l1/version.py"
+pattern = [
+    "MAJOR = (?P<major>\\d+)",
+    "MINOR = (?P<minor>\\d+)",
+    "PATCH = (?P<patch>\\d+)",
+]
+changelog = "CHANGELOG.md"
+
+[tool.ruff]
+line-length = 88
+indent-width = 4
+
+target-version = "py311"
+
+[tool.ruff.lint]
+select = [
+    "E", # pycodestyle errors
+    "W", # pycodestyle warnings
+    "F", # pyflakes. "E" + "W" + "F" + "C90" (mccabe complexity) is equivalent to flake8
+    "I", # isort
+]
+ignore = []
+
+fixable = ["ALL"]
+unfixable = []
+
+dummy-variable-rgx = "^(_+|(_+[a-zA-Z0-9_]*[a-zA-Z0-9]+?))$"
+
+[tool.ruff.lint.mccabe]
+max-complexity = 10
+
+[tool.ruff.lint.pydocstyle]
+convention = "numpy"
