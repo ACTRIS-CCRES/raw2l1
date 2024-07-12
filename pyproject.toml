@@ -1,5 +1,5 @@
 [build-system]
-requires = ["setuptools>=61"]
+requires = ["setuptools>=61", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
@@ -21,7 +21,7 @@ dynamic = ["version"]
 dependencies = ["gitpython", "netCDF4", "numpy<2", "xarray"]
 
 [project.optional-dependencies]
-dev = ["pre-commit", "pytest", "pytest-cov", "ruff"]
+dev = ["pre-commit", "pytest", "pytest-cov", "release-version", "ruff"]
 docs = [
     "ablog",
     "numpydoc",
@@ -40,6 +40,9 @@ docs = [
     "sphinxcontrib-youtube",
     "sphinxext-opengraph",
 ]
+
+[project.scripts]
+raw2l1 = "raw2l1.raw2l1:cli"
 
 [project.urls]
 homepage = "https://github.com/ACTRIS-CCRES/raw2l1"
@@ -117,3 +120,6 @@ max-complexity = 10
 
 [tool.ruff.lint.pydocstyle]
 convention = "numpy"
+
+[tool.ruff.isort]
+known-first-party = ["raw2l1"]
