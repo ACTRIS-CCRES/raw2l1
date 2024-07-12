@@ -22,7 +22,24 @@ dependencies = ["gitpython", "netCDF4", "numpy<2", "xarray"]
 
 [project.optional-dependencies]
 dev = ["pre-commit", "pytest", "pytest-cov", "ruff"]
-docs = ["myst-parser", "sphinx", "pydata-sphinx-theme"]
+docs = [
+    "ablog",
+    "numpydoc",
+    "myst-nb",
+    "sphinx",
+    "sphinx-autobuild",
+    "sphinx-book-theme",
+    "sphinx-design",
+    "sphinx-examples",
+    "sphinx-copybutton",
+    "sphinx-serve",
+    "sphinx-tabs",
+    "sphinx-togglebutton",
+    "sphinx-thebe",
+    "sphinxcontrib-bibtex",
+    "sphinxcontrib-youtube",
+    "sphinxext-opengraph",
+]
 
 [project.urls]
 homepage = "https://github.com/ACTRIS-CCRES/raw2l1"
