@@ -148,7 +148,9 @@ def store_error(data, err_msg, logger):
         else:
             data["list_errors"][ERR_HEX_MSG[i]["msg"]] = {}
             data["list_errors"][ERR_HEX_MSG[i]["msg"]]["count"] = 1
-            data["list_errors"][ERR_HEX_MSG[i]["msg"]]["level"] = ERR_HEX_MSG[i]["level"]
+            data["list_errors"][ERR_HEX_MSG[i]["msg"]]["level"] = ERR_HEX_MSG[i][
+                "level"
+            ]
 
     return data
 
@@ -333,9 +335,9 @@ def calc_range(resol, n_gates):
     calculate range variable based on resolution and number of gates
     """
 
-    range_vect = np.array(list(range(1, n_gates + 1)), dtype=np.float)
+    range_vect = np.array(list(range(1, n_gates + 1)), dtype=float)
 
-    return range_vect * np.float(resol)
+    return range_vect * float(resol)
 
 
 def check_range(data, data_dim, filename, logger):
@@ -424,11 +426,15 @@ def get_acq_conf(filename, data, data_dim, conf, logger):
     # if we are not able to read range in the file
     if not range_ok:
         logger.critical(
-            "107 Impossible to read range configuration in '" + filename + "'. Stopping Raw2L1"
+            "107 Impossible to read range configuration in '"
+            + filename
+            + "'. Stopping Raw2L1"
         )
     if not msg_ok:
         logger.critical(
-            "106 impossible to determine type of message in '" + filename + "'. Stopping Raw2L1"
+            "106 impossible to determine type of message in '"
+            + filename
+            + "'. Stopping Raw2L1"
         )
 
     if not range_ok or not msg_ok:
@@ -460,25 +466,43 @@ def init_data(data, data_dim, conf, logger):
     # -------------------------------------------------------------------------
     data["scale"] = np.ones((data_dim["time"],), dtype=np.float32) * missing_float
     data["laser_temp"] = np.ones((data_dim["time"],), dtype=np.float32) * missing_float
-    data["hkd_state_laser"] = np.ones((data_dim["time"],), dtype=np.float32) * missing_float
-    data["bckgrd_rcs_0"] = np.ones((data_dim["time"],), dtype=np.float32) * missing_float
-    data["hkd_state_optics"] = np.ones((data_dim["time"],), dtype=np.float32) * missing_float
+    data["hkd_state_laser"] = (
+        np.ones((data_dim["time"],), dtype=np.float32) * missing_float
+    )
+    data["bckgrd_rcs_0"] = (
+        np.ones((data_dim["time"],), dtype=np.float32) * missing_float
+    )
+    data["hkd_state_optics"] = (
+        np.ones((data_dim["time"],), dtype=np.float32) * missing_float
+    )
     data["tilt_angle"] = np.ones((data_dim["time"],), dtype=np.float32) * missing_float
-    data["beta_att_sum"] = np.ones((data_dim["time"],), dtype=np.float32) * missing_float
-    data["vertical_visibility"] = np.ones((data_dim["time"],), dtype=np.int32) * missing_int
-    data["status_self_check"] = np.ones((data_dim["time"],), dtype=np.int16) * missing_int
+    data["beta_att_sum"] = (
+        np.ones((data_dim["time"],), dtype=np.float32) * missing_float
+    )
+    data["vertical_visibility"] = (
+        np.ones((data_dim["time"],), dtype=np.int32) * missing_int
+    )
+    data["status_self_check"] = (
+        np.ones((data_dim["time"],), dtype=np.int16) * missing_int
+    )
     data["info_flags"] = np.ndarray((data_dim["time"],), dtype="S12")
 
     # Time, layer dependant variables
     # -------------------------------------------------------------------------
     data["cbh"] = np.ones((data_dim["time"], CBH_DIM), dtype=np.int32) * missing_int
     data["clh"] = np.ones((data_dim["time"], CLH_DIM), dtype=np.int32) * missing_int
-    data["cloud_amount"] = np.ones((data_dim["time"], CLH_DIM), dtype=np.int16) * missing_int
+    data["cloud_amount"] = (
+        np.ones((data_dim["time"], CLH_DIM), dtype=np.int16) * missing_int
+    )
 
     # Time, range dependent variables
     # -------------------------------------------------------------------------
-    data["rcs_0"] = np.ones((data_dim["time"], data_dim["range"]), dtype=np.float32) * missing_float
-    data["pr2"] = np.ones((data_dim["time"], data_dim["range"]), dtype=np.float32) * missing_float
+    data["rcs_0"] = (
+        np.ones((data_dim["time"], data_dim["range"]), dtype=np.float32) * missing_float
+    )
+    data["pr2"] = (
+        np.ones((data_dim["time"], data_dim["range"]), dtype=np.float32) * missing_float
+    )
 
     # Special variable to store for each message the unit of CBH and CLH
     # -------------------------------------------------------------------------
@@ -514,7 +538,7 @@ def read_scalar_vars(data, msg, msg_type, logger):
     line_to_read = get_state_line_nb_in_msg(data["msg_type"])
     line = msg[line_to_read]
 
-    return np.float(line.split()[6])
+    return float(line.split()[6])
 
 
 def read_time_dep_vars(data, ind, msg, msg_type, logger):
@@ -526,17 +550,17 @@ def read_time_dep_vars(data, ind, msg, msg_type, logger):
     line_to_read = get_state_line_nb_in_msg(data["msg_type"])
     params = msg[line_to_read].split()
 
-    data["scale"][ind] = np.float(params[0])
-    data["hkd_state_laser"][ind] = np.float(params[3])
-    data["laser_temp"][ind] = np.float(params[4]) + DEG_TO_K
-    data["hkd_state_optics"][ind] = np.float(params[5])
-    data["tilt_angle"][ind] = np.float(params[6])
+    data["scale"][ind] = float(params[0])
+    data["hkd_state_laser"][ind] = float(params[3])
+    data["laser_temp"][ind] = float(params[4]) + DEG_TO_K
+    data["hkd_state_optics"][ind] = float(params[5])
+    data["tilt_angle"][ind] = float(params[6])
     try:
-        data["bckgrd_rcs_0"][ind] = np.float(params[7])
+        data["bckgrd_rcs_0"][ind] = float(params[7])
     except IndexError:
         data["bckgrd_rcs_0"][ind] = np.nan
     try:
-        data["beta_att_sum"][ind] = np.float(params[9]) * SUM_BCKSCATTER_FACTOR
+        data["beta_att_sum"][ind] = float(params[9]) * SUM_BCKSCATTER_FACTOR
     except IndexError:
         data["beta_att_sum"][ind] = np.nan
 
@@ -571,14 +595,14 @@ def read_cbh_msg(data, ind, msg, logger):
 
     # number of CBH depends on nlayers value
     if 1 <= nlayers < 4:
-        data["cbh"][ind, 0] = np.float(elts[1]) * coeff
+        data["cbh"][ind, 0] = float(elts[1]) * coeff
     if 2 <= nlayers < 4:
-        data["cbh"][ind, 1] = np.float(elts[2]) * coeff
+        data["cbh"][ind, 1] = float(elts[2]) * coeff
     if 3 <= nlayers < 4:
-        data["cbh"][ind, 2] = np.float(elts[3]) * coeff
+        data["cbh"][ind, 2] = float(elts[3]) * coeff
     # vertical visibility
     if nlayers == 4:
-        data["vertical_visibility"][ind] = np.float(elts[1]) * coeff
+        data["vertical_visibility"][ind] = float(elts[1]) * coeff
 
     return data
 
@@ -774,7 +798,9 @@ def read_data(list_files, conf, logger):
         # try reading the file
         lines = get_file_lines(ifile, conf, logger)
         if lines is None:
-            logger.warning("102 No data found in the file '{}' trying next file".format(ifile))
+            logger.warning(
+                "102 No data found in the file '{}' trying next file".format(ifile)
+            )
             continue
 
         nb_files_read += 1

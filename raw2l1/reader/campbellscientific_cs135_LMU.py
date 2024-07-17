@@ -125,12 +125,12 @@ def init_data(data, time_dim, conf, logger):
     # 1dim variables
     data["scale"] = np.ones((time_dim,), dtype=np.int) * missing_int
     data["laser_energy"] = np.ones((time_dim,), dtype=np.int) * missing_int
-    data["laser_temp"] = np.ones((time_dim,), dtype=np.float) * missing_float
+    data["laser_temp"] = np.ones((time_dim,), dtype=np.float32) * missing_float
     data["tilt_angle"] = np.ones((time_dim,), dtype=np.int) * missing_int
-    data["bckgrd_rcs_0"] = np.ones((time_dim,), dtype=np.float) * missing_float
-    data["laser_pulse"] = np.ones((time_dim,), dtype=np.float) * missing_float
+    data["bckgrd_rcs_0"] = np.ones((time_dim,), dtype=np.float32) * missing_float
+    data["laser_pulse"] = np.ones((time_dim,), dtype=np.float32) * missing_float
     data["sample_rate"] = np.ones((time_dim,), dtype=np.int) * missing_int
-    data["integrated_rcs_0"] = np.ones((time_dim,), dtype=np.float) * missing_float
+    data["integrated_rcs_0"] = np.ones((time_dim,), dtype=np.float32) * missing_float
     data["window_transmission"] = np.ones((time_dim,), dtype=np.int) * missing_int
     data["vertical_visibility"] = np.ones((time_dim,), dtype=np.int) * missing_int
     data["highest_signal_received"] = np.ones((time_dim,), dtype=np.int) * missing_int
@@ -143,7 +143,7 @@ def init_data(data, time_dim, conf, logger):
     data["cloud_amount"] = np.ones((time_dim, CLH_DIM), dtype=np.int) * missing_int
     data["mlh"] = np.ones((time_dim, MLH_DIM), dtype=np.int) * missing_int
     data["mlh_qf"] = np.ones((time_dim, MLH_DIM), dtype=np.int) * missing_int
-    data["rcs_0"] = np.ones((time_dim, RANGE_DIM), dtype=np.float) * missing_float
+    data["rcs_0"] = np.ones((time_dim, RANGE_DIM), dtype=np.float32) * missing_float
 
     return data
 
@@ -185,16 +185,16 @@ def read_cbh(line, data, ind, logger):
 
         # number of CBH depends on nlayers value
         if 1 <= nlayers <= 4:
-            data["cbh"][ind, 0] = np.float(elts[2])
+            data["cbh"][ind, 0] = float(elts[2])
         if 2 <= nlayers <= 4:
-            data["cbh"][ind, 1] = np.float(elts[3])
+            data["cbh"][ind, 1] = float(elts[3])
         if 3 <= nlayers <= 4:
-            data["cbh"][ind, 2] = np.float(elts[4])
+            data["cbh"][ind, 2] = float(elts[4])
         if nlayers == 4:
-            data["cbh"][ind, 3] = np.float(elts[5])
+            data["cbh"][ind, 3] = float(elts[5])
         if nlayers == 5:
-            data["vertical_visibility"][ind] = np.float(elts[2])
-            data["highest_signal_received"][ind] = np.float(elts[3])
+            data["vertical_visibility"][ind] = float(elts[2])
+            data["highest_signal_received"][ind] = float(elts[3])
 
     # flags
     data["info_flags"][ind] = elts[6]
@@ -218,13 +218,13 @@ def read_laser(line, data, ind, logger):
     data["range_dim"] = np.int(elts[2])
 
     data["laser_energy"][ind] = np.int(elts[3])
-    data["laser_temp"][ind] = np.float(elts[4]) + DEG_TO_K
+    data["laser_temp"][ind] = float(elts[4]) + DEG_TO_K
 
     data["tilt_angle"] = np.int(elts[5])
-    data["bckgrd_rcs_0"][ind] = np.float(elts[6])
-    data["laser_pulse"][ind] = np.float(elts[7]) / PULSE_FACTOR
+    data["bckgrd_rcs_0"][ind] = float(elts[6])
+    data["laser_pulse"][ind] = float(elts[7]) / PULSE_FACTOR
     data["sample_rate"][ind] = np.int(elts[8])
-    data["integrated_rcs_0"][ind] = np.float(elts[9])
+    data["integrated_rcs_0"][ind] = float(elts[9])
 
     return data
 
@@ -344,7 +344,9 @@ def get_msg_type(data, list_files, date_fmt, conf, logger):
     if msg_type_found:
         return msg_type, data
     else:
-        logger.critical("106 impossible to determine data messages type in any input file")
+        logger.critical(
+            "106 impossible to determine data messages type in any input file"
+        )
         sys.exit(2)
 
 
@@ -490,5 +492,7 @@ def read_data(list_files, conf, logger):
             i_line += MSG_TYPE_LINES[msg_type] + 1
             time_ind += 1
     data["time_resolution"] = int(conf["time_resolution"])
-    data["start_time"] = data["time"] - dt.timedelta(seconds=int(conf["time_resolution"]))
+    data["start_time"] = data["time"] - dt.timedelta(
+        seconds=int(conf["time_resolution"])
+    )
     return data

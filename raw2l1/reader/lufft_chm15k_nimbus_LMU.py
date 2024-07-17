@@ -282,7 +282,9 @@ def get_error_index(err_msg, firmware, logger):
     for i, d in enumerate(ERR_HEX_MSG):
         logger.debug(d["hex"])
         # check if firmware known or if unknow still show the latest message
-        if bool(err_int & d["hex"]) and (firmware <= d["fw"] or firmware > LAST_KNOW_FW):
+        if bool(err_int & d["hex"]) and (
+            firmware <= d["fw"] or firmware > LAST_KNOW_FW
+        ):
             err_ind.append(i)
 
     return err_ind
@@ -299,7 +301,9 @@ def store_error(data, err_msg, logger):
         else:
             data["list_errors"][ERR_HEX_MSG[i]["msg"]] = {}
             data["list_errors"][ERR_HEX_MSG[i]["msg"]]["count"] = 1
-            data["list_errors"][ERR_HEX_MSG[i]["msg"]]["level"] = ERR_HEX_MSG[i]["level"]
+            data["list_errors"][ERR_HEX_MSG[i]["msg"]]["level"] = ERR_HEX_MSG[i][
+                "level"
+            ]
 
     return data
 
@@ -327,7 +331,9 @@ def read_overlap(fname, missing_float, logger):
     COMMENTS = "#"
     FILLING = np.nan
     try:
-        ovl = np.genfromtxt(fname, dtype=OVER_DTYPE, comments=COMMENTS, filling_values=FILLING)
+        ovl = np.genfromtxt(
+            fname, dtype=OVER_DTYPE, comments=COMMENTS, filling_values=FILLING
+        )
 
     except IOError as err:
         logger.error("107 Error Reading overlap file : " + fname)
@@ -417,7 +423,7 @@ def get_temp(nc_obj, logger):
     except TypeError:
         logger.debug("Correcting temperature scale problem")
         nc_obj.set_auto_maskandscale(False)
-        tmp = nc_obj[:] / np.float(nc_obj.scale_factor)
+        tmp = nc_obj[:] / float(nc_obj.scale_factor)
 
     return tmp
 
@@ -486,19 +492,33 @@ def init_data(vars_dim, conf, logger):
     data["temp_det"] = np.ones((vars_dim["time"],), dtype=np.float32) * missing_float
     data["laser_pulses"] = np.ones((vars_dim["time"],), dtype=np.int32) * missing_int
     data["bcc"] = np.ones((vars_dim["time"],), dtype=np.int8) * missing_int
-    data["bckgrd_rcs_0"] = np.ones((vars_dim["time"],), dtype=np.float32) * missing_float
+    data["bckgrd_rcs_0"] = (
+        np.ones((vars_dim["time"],), dtype=np.float32) * missing_float
+    )
     data["average_time"] = np.ones((vars_dim["time"],), dtype=np.int32) * missing_int
     data["p_calc"] = np.ones((vars_dim["time"],), dtype=np.float32) * missing_float
     data["overlap"] = np.ones((vars_dim["range"],), dtype=np.float32) * missing_float
 
     # Time, layer dependent variables
     # -------------------------------------------------------------------------
-    data["pbs"] = np.ones((vars_dim["time"], vars_dim["layer"]), dtype=np.int8) * missing_int
-    data["pbl"] = np.ones((vars_dim["time"], vars_dim["layer"]), dtype=np.int16) * missing_int
-    data["cdp"] = np.ones((vars_dim["time"], vars_dim["layer"]), dtype=np.int16) * missing_int
-    data["cde"] = np.ones((vars_dim["time"], vars_dim["layer"]), dtype=np.int16) * missing_int
-    data["cbh"] = np.ones((vars_dim["time"], vars_dim["layer"]), dtype=np.int16) * missing_int
-    data["cbe"] = np.ones((vars_dim["time"], vars_dim["layer"]), dtype=np.int16) * missing_int
+    data["pbs"] = (
+        np.ones((vars_dim["time"], vars_dim["layer"]), dtype=np.int8) * missing_int
+    )
+    data["pbl"] = (
+        np.ones((vars_dim["time"], vars_dim["layer"]), dtype=np.int16) * missing_int
+    )
+    data["cdp"] = (
+        np.ones((vars_dim["time"], vars_dim["layer"]), dtype=np.int16) * missing_int
+    )
+    data["cde"] = (
+        np.ones((vars_dim["time"], vars_dim["layer"]), dtype=np.int16) * missing_int
+    )
+    data["cbh"] = (
+        np.ones((vars_dim["time"], vars_dim["layer"]), dtype=np.int16) * missing_int
+    )
+    data["cbe"] = (
+        np.ones((vars_dim["time"], vars_dim["layer"]), dtype=np.int16) * missing_int
+    )
 
     data["list_errors"] = {}
 
@@ -506,11 +526,15 @@ def init_data(vars_dim, conf, logger):
     # -------------------------------------------------------------------------
 
     # for MetOffice data
-    data["beta"] = np.ones((vars_dim["time"], vars_dim["range"]), dtype=np.float32) * missing_float
+    data["beta"] = (
+        np.ones((vars_dim["time"], vars_dim["range"]), dtype=np.float32) * missing_float
+    )
     data["beta_raw"] = (
         np.ones((vars_dim["time"], vars_dim["range"]), dtype=np.float32) * missing_float
     )
-    data["rcs_0"] = np.ones((vars_dim["time"], vars_dim["range"]), dtype=np.float32) * missing_float
+    data["rcs_0"] = (
+        np.ones((vars_dim["time"], vars_dim["range"]), dtype=np.float32) * missing_float
+    )
 
     return data
 
@@ -581,7 +605,7 @@ def read_scalar_vars(data, nc_id, soft_vers, logger):
     if soft_vers >= 0.7:
         logger.debug("reading scaling")
         data["scaling"] = nc_id.variables["scaling"][:]
-    
+
     logger.debug("reading cloud height offset (cho)")
     try:
         data["cho"] = nc_id.variables["cho"][:]
@@ -698,11 +722,13 @@ def read_timedep_vars(data, nc_id, soft_vers, time_ind, time_size, logger):
         except KeyError:
             c_cal = 3.2e-12  # default calibration factor for Lufft instruments
             logger.warning(
-                "c_cal not found in file although beta_att is there. " "assuming c_cal=3.2e-12"
+                "c_cal not found in file although beta_att is there. "
+                "assuming c_cal=3.2e-12"
             )
         data["beta_raw"][ind_b:ind_e, :] = beta_att / c_cal
         logger.debug(
-            "using beta_att variable divided by c_cal " "(undoing firmware pseudo-calibration)"
+            "using beta_att variable divided by c_cal "
+            "(undoing firmware pseudo-calibration)"
         )
     except KeyError:
         data["beta_raw"][ind_b:ind_e, :] = nc_id.variables["beta_raw"][:]
@@ -751,12 +777,14 @@ def calc_pr2(data, soft_vers, logger):
 
         logger.debug("P = (beta_raw*stddev)*p_calc")
         print("0 value P_CALC :", np.any(data["p_calc"] == 0))
-        data["rcs_0"] = ((data["beta_raw"].T * data["stddev"]) / data["p_calc"]).T * np.square(
-            data["range"]
-        )
+        data["rcs_0"] = (
+            (data["beta_raw"].T * data["stddev"]) / data["p_calc"]
+        ).T * np.square(data["range"])
     else:
         # find a way to pass the overlap
-        logger.debug("P = (beta_raw/r2*ovl*p_calc*scaling+base)" + "*laser_pulses*range_scale")
+        logger.debug(
+            "P = (beta_raw/r2*ovl*p_calc*scaling+base)" + "*laser_pulses*range_scale"
+        )
         # Warning: For this type of file we do not correct the overlap function
         # as it is not available in the netCDf file
         data["rcs_0"] = data["beta_raw"]
@@ -825,7 +853,9 @@ def read_data(list_files, conf, logger):
             else:
                 overlap_file_info = None
                 data["overlap_file_status"] = "not available"
-                logger.warning("Overlap file information is not included in this fw version")
+                logger.warning(
+                    "Overlap file information is not included in this fw version"
+                )
 
             # check if overlap file for processed date available and read it if available
             # ------------------------------------------------------------------------
@@ -838,7 +868,9 @@ def read_data(list_files, conf, logger):
                 ovl_file_path = ovl_base_folder + ovl_file_name
                 print(ovl_file_path)
                 try:
-                    data["overlap"] = read_overlap(ovl_file_path, conf["missing_float"], logger)
+                    data["overlap"] = read_overlap(
+                        ovl_file_path, conf["missing_float"], logger
+                    )
                     data["overlap_file_status"] = "included"
                 except:
                     logger.warning("Overlap file could not be loaded")
@@ -872,7 +904,9 @@ def read_data(list_files, conf, logger):
     # ------------------------------------------------------------------------
 
     # convert average__time into timedelta object
-    tmp = np.array([dt.timedelta(seconds=value / 1000) for value in data["average_time"]])
+    tmp = np.array(
+        [dt.timedelta(seconds=value / 1000) for value in data["average_time"]]
+    )
 
     data["start_time"] = data["time"] - tmp
 
@@ -891,7 +925,9 @@ def read_data(list_files, conf, logger):
 
     if nb_files_read == 0:
         for file_ in list_files:
-            logger.critical("109 Tried to read '{}'. No file could be read".format(file_))
+            logger.critical(
+                "109 Tried to read '{}'. No file could be read".format(file_)
+            )
         sys.exit(1)
     else:
         return data
