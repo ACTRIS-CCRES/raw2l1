@@ -123,26 +123,26 @@ def init_data(data, time_dim, conf, logger):
     data["mlh_layer"] = np.arange(MLH_DIM)
 
     # 1dim variables
-    data["scale"] = np.ones((time_dim,), dtype=np.int) * missing_int
-    data["laser_energy"] = np.ones((time_dim,), dtype=np.int) * missing_int
+    data["scale"] = np.ones((time_dim,), dtype=int) * missing_int
+    data["laser_energy"] = np.ones((time_dim,), dtype=int) * missing_int
     data["laser_temp"] = np.ones((time_dim,), dtype=np.float32) * missing_float
-    data["tilt_angle"] = np.ones((time_dim,), dtype=np.int) * missing_int
+    data["tilt_angle"] = np.ones((time_dim,), dtype=int) * missing_int
     data["bckgrd_rcs_0"] = np.ones((time_dim,), dtype=np.float32) * missing_float
     data["laser_pulse"] = np.ones((time_dim,), dtype=np.float32) * missing_float
-    data["sample_rate"] = np.ones((time_dim,), dtype=np.int) * missing_int
+    data["sample_rate"] = np.ones((time_dim,), dtype=int) * missing_int
     data["integrated_rcs_0"] = np.ones((time_dim,), dtype=np.float32) * missing_float
-    data["window_transmission"] = np.ones((time_dim,), dtype=np.int) * missing_int
-    data["vertical_visibility"] = np.ones((time_dim,), dtype=np.int) * missing_int
-    data["highest_signal_received"] = np.ones((time_dim,), dtype=np.int) * missing_int
+    data["window_transmission"] = np.ones((time_dim,), dtype=int) * missing_int
+    data["vertical_visibility"] = np.ones((time_dim,), dtype=int) * missing_int
+    data["highest_signal_received"] = np.ones((time_dim,), dtype=int) * missing_int
     data["alarm"] = np.ndarray((time_dim,), dtype="S1")
     data["info_flags"] = np.ndarray((time_dim,), dtype="S12")
 
     # 2dim variables
-    data["cbh"] = np.ones((time_dim, CBH_DIM), dtype=np.int) * missing_int
-    data["clh"] = np.ones((time_dim, CLH_DIM), dtype=np.int) * missing_int
-    data["cloud_amount"] = np.ones((time_dim, CLH_DIM), dtype=np.int) * missing_int
-    data["mlh"] = np.ones((time_dim, MLH_DIM), dtype=np.int) * missing_int
-    data["mlh_qf"] = np.ones((time_dim, MLH_DIM), dtype=np.int) * missing_int
+    data["cbh"] = np.ones((time_dim, CBH_DIM), dtype=int) * missing_int
+    data["clh"] = np.ones((time_dim, CLH_DIM), dtype=int) * missing_int
+    data["cloud_amount"] = np.ones((time_dim, CLH_DIM), dtype=int) * missing_int
+    data["mlh"] = np.ones((time_dim, MLH_DIM), dtype=int) * missing_int
+    data["mlh_qf"] = np.ones((time_dim, MLH_DIM), dtype=int) * missing_int
     data["rcs_0"] = np.ones((time_dim, RANGE_DIM), dtype=np.float32) * missing_float
 
     return data
@@ -181,7 +181,7 @@ def read_cbh(line, data, ind, logger):
         # print(elts[0][0])
         nlayers = int(elts[0][0])
 
-        data["window_transmission"][ind] = np.int(elts[1])
+        data["window_transmission"][ind] = int(elts[1])
 
         # number of CBH depends on nlayers value
         if 1 <= nlayers <= 4:
@@ -210,20 +210,20 @@ def read_laser(line, data, ind, logger):
 
     elts = line.split()
 
-    data["scale"][ind] = np.int(elts[0])
+    data["scale"][ind] = int(elts[0])
 
     # range_dim and range_resol are read but they seems to always be
     # 5m and 2048 gates
-    data["range_resol"] = np.int(elts[1])
-    data["range_dim"] = np.int(elts[2])
+    data["range_resol"] = int(elts[1])
+    data["range_dim"] = int(elts[2])
 
-    data["laser_energy"][ind] = np.int(elts[3])
+    data["laser_energy"][ind] = int(elts[3])
     data["laser_temp"][ind] = float(elts[4]) + DEG_TO_K
 
-    data["tilt_angle"] = np.int(elts[5])
+    data["tilt_angle"] = int(elts[5])
     data["bckgrd_rcs_0"][ind] = float(elts[6])
     data["laser_pulse"][ind] = float(elts[7]) / PULSE_FACTOR
-    data["sample_rate"][ind] = np.int(elts[8])
+    data["sample_rate"][ind] = int(elts[8])
     data["integrated_rcs_0"][ind] = float(elts[9])
 
     return data
@@ -264,7 +264,7 @@ def read_sky_condition(line, data, ind, logger):
 
     elts = line.strip().split()
 
-    data["cloud_amount"][ind] = np.array(elts[0::2], dtype=np.int)
+    data["cloud_amount"][ind] = np.array(elts[0::2], dtype=int)
 
     tmp = elts[1::2]
 
