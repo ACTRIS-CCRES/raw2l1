@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-
 import os
 import subprocess
 import unittest
@@ -18,8 +16,7 @@ class TestRunWLS70T10Min(unittest.TestCase):
     IN_DIR = os.path.join(TEST_IN_DIR, "wls70_10min")
 
     def test_leosphere_wls70_102(self):
-        """test file version V1.0.2"""
-
+        """Test file version V1.0.2"""
         date = "20150930"
         test_ifile = os.path.join(
             self.IN_DIR,
@@ -43,8 +40,7 @@ class TestRunWLS70T10Min(unittest.TestCase):
         self.assertEqual(resp, 0)
 
     def test_leosphere_wls70_114(self):
-        """test file version V1.1.4"""
-
+        """Test file version V1.1.4"""
         date = "20150704"
         test_ifile = os.path.join(
             self.IN_DIR,
@@ -68,8 +64,7 @@ class TestRunWLS70T10Min(unittest.TestCase):
         self.assertEqual(resp, 0)
 
     def test_leosphere_wls70_115rc1(self):
-        """test file version V1.0.2"""
-
+        """Test file version V1.0.2"""
         date = "20150908"
         test_ifile = os.path.join(
             self.IN_DIR,
@@ -93,8 +88,7 @@ class TestRunWLS70T10Min(unittest.TestCase):
         self.assertEqual(resp, 0)
 
     def test_leosphere_wls70_bad_loc(self):
-        """test file with error in localization formatting"""
-
+        """Test file with error in localization formatting"""
         date = "20200623"
         test_ifile = os.path.join(
             self.IN_DIR, "wlscerea_0a_windLz1M10mn-HR_v01_20200623_121000_720.txt"
@@ -123,8 +117,7 @@ class TestRunWLS70T10S(unittest.TestCase):
     IN_DIR = os.path.join(TEST_IN_DIR, "wls70_10s")
 
     def test_leosphere_wls70_102(self):
-        """test file version V1.0.2"""
-
+        """Test file version V1.0.2"""
         date = "20150930"
         test_ifile = os.path.join(
             self.IN_DIR,
@@ -148,8 +141,7 @@ class TestRunWLS70T10S(unittest.TestCase):
         self.assertEqual(resp, 0)
 
     def test_leosphere_wls70_114(self):
-        """test file version V1.1.4"""
-
+        """Test file version V1.1.4"""
         date = "20150704"
         test_ifile = os.path.join(
             self.IN_DIR,
@@ -173,8 +165,7 @@ class TestRunWLS70T10S(unittest.TestCase):
         self.assertEqual(resp, 0)
 
     def test_leosphere_wls70_115rc1_1(self):
-        """test file version V1.1.5rc"""
-
+        """Test file version V1.1.5rc"""
         date = "20150908"
         test_ifile = os.path.join(
             self.IN_DIR,
@@ -198,8 +189,7 @@ class TestRunWLS70T10S(unittest.TestCase):
         self.assertEqual(resp, 0)
 
     def test_leosphere_wls70_115rc1_2(self):
-        """test wrong format lat/lon"""
-
+        """Test wrong format lat/lon"""
         date = "20201217"
         test_ifile = os.path.join(
             self.IN_DIR,

@@ -1,6 +1,3 @@
-# Compatibility with python 3
-
-
 import numpy as np
 
 OVER_DTYPE = [("range", "f4"), ("overlap", "f4")]
@@ -12,7 +9,6 @@ def read_overlap(fname, logger):
     """
     function to read overlap function contains in a file with two columns:
     """
-
     logger.debug("reading overlap file: " + fname)
     try:
         data = np.genfromtxt(

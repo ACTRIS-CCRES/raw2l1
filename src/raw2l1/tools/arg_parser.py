@@ -1,8 +1,3 @@
-#!/usr/bin/env python
-
-# Compatibility with python 3
-
-
 import argparse
 import datetime as dt
 import glob
@@ -10,7 +5,7 @@ import os
 import sys
 from itertools import chain
 
-from .utils import check_dir
+from raw2l1.tools.utils import check_dir
 
 PROG_DESC = "Raw LIDAR data to netCDF converter"
 DATE_FMT = "%Y%m%d"
@@ -21,7 +16,6 @@ def check_date_format(input_date):
     """
     Check the format of the date argument
     """
-
     try:
         dt_date = dt.datetime.strptime(input_date, DATE_FMT)
     except ValueError:
@@ -56,7 +50,6 @@ def check_input_files(input_files):
     """
     check if the input files exist and return a list of the input files found
     """
-
     list_files = glob.glob(input_files)
 
     if len(list_files) == 0:
@@ -71,7 +64,6 @@ def check_output_dir(output_file):
     """
     check if the directory provided for the output file is writable
     """
-
     output_file = os.path.abspath(output_file)
     out_dir = os.path.dirname(output_file)
 
@@ -87,7 +79,6 @@ def check_input_file_size(list_files, size_limit):
     """
     check size of input files. If files have a lower size they are rejected
     """
-
     err_msg = "WARNING -102 No Usable data in the input file '{}'"
 
     final_list = []
@@ -105,7 +96,6 @@ def init_args_parser():
     Configure the argument parser to read and do basic check on input
     arguments
     """
-
     parser = argparse.ArgumentParser(description=PROG_DESC)
 
     # Data processing related arguments
@@ -118,7 +108,7 @@ def init_args_parser():
         help="Name of the INI configuration file to use",
     )
     parser.add_argument(
-        "input_file",
+        "input_files",
         type=check_input_files,
         nargs="*",
         help="Name or pattern of the file(s) to convert",
@@ -204,13 +194,11 @@ def get_input_args(argv):
     """
     return input arguments into a dictionnary
     """
-
     # init argument parser
     parser = init_args_parser()
 
     try:
         parse_args = parser.parse_args(argv)
-        print(parse_args.ancillary)
     except argparse.ArgumentError as exc:
         print("\n", exc.argument)
         sys.exit(1)

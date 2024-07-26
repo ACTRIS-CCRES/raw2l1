@@ -21,8 +21,7 @@ MIN_2_SEC = 60
 
 
 def get_dimension_size(list_files, logger):
-    """determine size of data"""
-
+    """Determine size of data"""
     data = {}
     data_dims = {}
     data_dims["time"] = 0
@@ -62,7 +61,6 @@ def get_dimension_size(list_files, logger):
 
 def init(data, dims, conf, logger):
     """Init data dict with size of data"""
-
     logger.debug("init data variable")
 
     # scalar values
@@ -158,8 +156,7 @@ def init(data, dims, conf, logger):
 
 
 def read_scalar_values(data, nc_id, logger):
-    """read scalar values from file. These values need to be read only one time"""
-
+    """Read scalar values from file. These values need to be read only one time"""
     logger.debug("reading serial number")
     data["serial_number"] = nc_id.device_serial_number
     logger.debug("reading instrument type")
@@ -182,8 +179,7 @@ def read_scalar_values(data, nc_id, logger):
 
 
 def read_time(nc_id):
-    """convert time format of file into datetime object"""
-
+    """Convert time format of file into datetime object"""
     year = nc_id.variables["year"][:]
     month = nc_id.variables["month"][:]
     day = nc_id.variables["day"][:]
@@ -192,15 +188,16 @@ def read_time(nc_id):
     second = nc_id.variables["second"][:]
 
     tmp = []
-    for y, m, d, hh, mm, ss in zip(year, month, day, hour, minute, second):
+    for y, m, d, hh, mm, ss in zip(
+        year, month, day, hour, minute, second, strict=False
+    ):
         tmp.append(dt.datetime(int(y), int(m), int(d), int(hh), int(mm), int(ss)))
 
     return np.array(tmp)
 
 
 def read_nd_values(data, nc_id, time_ind, logger):
-    """function to read n dimensions variables"""
-
+    """Function to read n dimensions variables"""
     # determining size of data
     time_size = nc_id.dimensions["time"].size
 
@@ -262,7 +259,6 @@ def read_data(list_files, conf, logger):
     """
     Raw2L1 plugin to read raw data of SigmaSpace MiniMPL
     """
-
     logger.debug("Start reading of data using reader for " + BRAND + " " + MODEL)
 
     # update missing values

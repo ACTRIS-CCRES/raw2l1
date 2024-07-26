@@ -1,73 +1,92 @@
-#!/usr/bin/env python
+"""Tests input arguments parsing."""
 
 import argparse
 import datetime as dt
-import os
-import unittest
+import io
 
-import tools.arg_parser as ag
+import pytest
 
-
-class TestArgParserDate(unittest.TestCase):
-    def test_date_error(self):
-        self.assertRaises(argparse.ArgumentTypeError, ag.check_date_format, "20150100")
-
-    def test_date_format(self):
-        self.assertRaises(
-            argparse.ArgumentTypeError, ag.check_date_format, "2015-01-01"
-        )
-
-    def test_date_20150301(self):
-        self.assertEqual(ag.check_date_format("20150301"), dt.datetime(2015, 3, 1))
+import raw2l1.tools.arg_parser as ag
 
 
-class TestArgParser(unittest.TestCase):
-    def test_ancillary(self):
-        argv = [
-            "20160101",
-            "test/conf/conf_dummy.ini",
-            "test/input/rpg_hatpro/hatpro_0a_z1Imwrad-TPB_v01_*.nc",
-            "test/output/dummy.nc",
-            "-anc",
-            "test/input/rpg_hatpro/hatpro_0a_z1Imwrad-TPB_v01_*.nc",
-        ]
-
-        ref_inputs = {
-            "date": dt.datetime(2016, 1, 1),
-            "conf": open("test/conf/conf_dummy.ini"),
-            "input": [
-                "test/input/rpg_hatpro/hatpro_0a_z1Imwrad-TPB_v01_20150901_000412_712.nc",
-                "test/input/rpg_hatpro/hatpro_0a_z1Imwrad-TPB_v01_20150901_120108_716.nc",
-                "test/input/rpg_hatpro/hatpro_0a_z1Imwrad-TPB_v01_20150930_000020_1436.nc",
-            ],
-            "output": os.path.abspath("test/output/dummy.nc"),
-            "ancillary": [
-                [
-                    "test/input/rpg_hatpro/hatpro_0a_z1Imwrad-TPB_v01_20150901_000412_712.nc",
-                    "test/input/rpg_hatpro/hatpro_0a_z1Imwrad-TPB_v01_20150901_120108_716.nc",
-                    "test/input/rpg_hatpro/hatpro_0a_z1Imwrad-TPB_v01_20150930_000020_1436.nc",
-                ]
-            ],
-            "log_level": "info",
-            "log": "logs/raw2l1.log",
-            "verbose": "info",
-            "input_min_size": 0,
-            "input_check_time": False,
-            "input_max_age": dt.timedelta(hours=2),
-            "filter_day": False,
-        }
-
-        inputs = ag.get_input_args(argv)
-
-        for key in list(inputs.keys()):
-            if key != "conf":
-                self.assertEqual(inputs[key], ref_inputs[key])
-
-            # TODO : test conf element
-            # conf is not tested because it is a file pointer.
-            # don't know how to do it
-            print((ref_inputs[key], inputs[key]))
+def test_args_date_impossible():
+    """
+    Test ArgumentTypeError is raised for non-existing date.
+    """
+    with pytest.raises(argparse.ArgumentTypeError):
+        ag.check_date_format("20150100")
 
 
-if __name__ == "__main__":
-    unittest.main()
+def test_args_date_bad_format():
+    """
+    Test ArgumentTypeError is raised for unrecognized format.
+    """
+    with pytest.raises(argparse.ArgumentTypeError):
+        ag.check_date_format("2015-01-01")
+
+
+@pytest.mark.parametrize("date_str, date_dt", [("20150301", dt.datetime(2015, 3, 1))])
+def test_args_date_parse(date_str, date_dt):
+    """
+    Test parsing of dates.
+    """
+    assert ag.check_date_format(date_str) == date_dt
+
+
+def test_args_parsing(conf_dir, instr_dir_hatpro, output_dir):
+    """
+    Check full parsing of arguments.
+    """
+    args = [
+        "20160101",
+        str(conf_dir / "conf_dummy.ini"),
+        str(instr_dir_hatpro / "hatpro_0a_z1Imwrad-TPB_v01_*.nc"),
+        str(output_dir / "dummy.nc"),
+        "-anc",
+        str(instr_dir_hatpro / "hatpro_0a_z1Imwrad-TPB_v01_*.nc"),
+    ]
+
+    expected_args = {
+        "date": dt.datetime(2016, 1, 1),
+        "conf": open(conf_dir / "conf_dummy.ini"),
+        "input": [
+            str(instr_dir_hatpro / "hatpro_0a_z1Imwrad-TPB_v01_20150901_000412_712.nc"),
+            str(instr_dir_hatpro / "hatpro_0a_z1Imwrad-TPB_v01_20150901_120108_716.nc"),
+            str(
+                instr_dir_hatpro / "hatpro_0a_z1Imwrad-TPB_v01_20150930_000020_1436.nc"
+            ),
+        ],
+        "output": str(output_dir / "dummy.nc"),
+        "ancillary": [
+            [
+                str(
+                    instr_dir_hatpro
+                    / "hatpro_0a_z1Imwrad-TPB_v01_20150901_000412_712.nc"
+                ),
+                str(
+                    instr_dir_hatpro
+                    / "hatpro_0a_z1Imwrad-TPB_v01_20150901_120108_716.nc"
+                ),
+                str(
+                    instr_dir_hatpro
+                    / "hatpro_0a_z1Imwrad-TPB_v01_20150930_000020_1436.nc"
+                ),
+            ]
+        ],
+        "log_level": "info",
+        "log": "logs/raw2l1.log",
+        "verbose": "info",
+        "input_min_size": 0,
+        "input_check_time": False,
+        "input_max_age": dt.timedelta(hours=2),
+        "filter_day": False,
+    }
+
+    result_args = ag.get_input_args(args)
+
+    for key, val in expected_args.items():
+        # TODO: find a way to check io.TextIOWrapper open(conf_dir / "conf_dummy.ini")
+        if isinstance(val, io.TextIOWrapper):
+            continue
+
+        assert val == result_args[key]

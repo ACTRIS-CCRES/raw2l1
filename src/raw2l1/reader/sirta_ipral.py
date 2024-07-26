@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-
 """
 reader for raw data from SIRTA IPRAL LIDAR
 the file format is based on LICEL file format
@@ -39,14 +37,12 @@ BCK_COMMENT_FMT = "calcultated between {:5d} m and {:5d} m"
 
 
 def date_to_dt(date_num, date_units):
-    """convert date np.array from datenum to datetime.datetime"""
-
+    """Convert date np.array from datenum to datetime.datetime"""
     return nc.num2date(date_num, units=date_units, calendar="standard")
 
 
 def get_channel_conf(conf, logger):
-    """check configuration of channels and build the conf dict"""
-
+    """Check configuration of channels and build the conf dict"""
     # associate channels to a number
     try:
         tmp_rcs = ast.literal_eval(conf["rcs"])
@@ -89,9 +85,9 @@ def get_channel_conf(conf, logger):
 
 
 def get_bck_alt(conf, logger):
-    """get value of maximum and minimum altitude for background signal calculation
-    if not define, use default value"""
-
+    """Get value of maximum and minimum altitude for background signal calculation
+    if not define, use default value
+    """
     try:
         min_alt = ast.literal_eval(conf[BCK_MIN_ALT_KEY])
     except KeyError:
@@ -130,8 +126,7 @@ def get_bck_alt(conf, logger):
 
 
 def get_channel_index(file_id, n_chan, chan_conf, logger):
-    """associate id of channel with rcs_XX variable of channels"""
-
+    """Associate id of channel with rcs_XX variable of channels"""
     # skip header
     for i in range(N_HEADER_LINE):
         line = file_id.readline()
@@ -162,8 +157,7 @@ def get_channel_index(file_id, n_chan, chan_conf, logger):
 
 
 def get_data_size(list_files, logger):
-    """determine size of data to read"""
-
+    """Determine size of data to read"""
     # create dimensions dict
     data_dim = {}
     data_dim["time"] = 0
@@ -247,8 +241,7 @@ def get_data_size(list_files, logger):
 
 
 def init_data(data_dim, logger):
-    """initialize dict containing ndarrays based on data dimension"""
-
+    """Initialize dict containing ndarrays based on data dimension"""
     n_chan = data_dim["n_chan"]
 
     data = {}
@@ -307,7 +300,6 @@ def init_data(data_dim, logger):
 
 def read_header(file_id, data, data_dim, index, logger, date_only=False):
     """Extract data from file ASCII header"""
-
     # first line: filename (we don't need it)
     # ------------------------------------------------------------------------
     file_id.readline()
@@ -403,8 +395,7 @@ def read_header(file_id, data, data_dim, index, logger, date_only=False):
 
 
 def read_profiles(file_id, data, data_dim, index, logger):
-    """read profile for each channel"""
-
+    """Read profile for each channel"""
     # skip header and channels descriptions
     for i in range(N_HEADER_LINE + data_dim["n_chan"] + 1):
         line = file_id.readline()
@@ -445,7 +436,6 @@ def read_profiles(file_id, data, data_dim, index, logger):
 
 def read_data(list_files, conf, logger):
     """Raw2L1 plugin to read raw data of SIRTA IPRAL LIDAR"""
-
     logger.info("Start reading of data using reader for %s %s", BRAND, MODEL)
 
     # get conf parameters

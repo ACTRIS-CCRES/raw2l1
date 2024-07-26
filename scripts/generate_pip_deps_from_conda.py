@@ -49,14 +49,14 @@ def conda_package_to_pip(package: str):
         if compare in package:
             pkg, version = package.split(compare)
             if pkg in EXCLUDE:
-                return
+                return None
             if pkg in REMAP_VERSION:
                 return "".join((pkg, compare, REMAP_VERSION[pkg]))
             if pkg in RENAME:
                 return "".join((RENAME[pkg], compare, version))
 
     if package in EXCLUDE:
-        return
+        return None
 
     if package in RENAME:
         return RENAME[package]

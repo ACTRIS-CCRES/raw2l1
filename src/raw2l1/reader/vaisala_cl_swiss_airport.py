@@ -126,8 +126,7 @@ def get_error_index(err_msg, logger):
 
 
 def store_error(data, err_msg, logger):
-    """store errors msg and their count by type"""
-
+    """Store errors msg and their count by type"""
     err_ind = get_error_index(err_msg, logger)
 
     for i in err_ind:
@@ -162,7 +161,6 @@ def are_units_meters(err_msg, logger):
     """
     based on status message, determine what are the units of CLH and CBH
     """
-
     err_ind = get_error_index(err_msg, logger)
 
     for i in err_ind:
@@ -178,7 +176,6 @@ def get_conversion_coeff(are_units_meters):
     """
     based on the status message return the coefficient to convert feet to meters
     """
-
     coeff = 1.0
     if not are_units_meters:
         coeff = FEET_TO_METERS
@@ -190,7 +187,6 @@ def check_scale_value(data, conf, ind, f_name, logger):
     """
     check scale value. If value is not 100%, message is voided.
     """
-
     msg = "101 Instrument Calibration Issues in '{}'. "
     msg += "Values for {:%Y-%m-%d %H:%M:%S} will be replaced by missing value"
 
@@ -207,7 +203,6 @@ def get_file_lines(filename, conf, logger):
     read all lines of a given file and remove carriage return from
     all lines
     """
-
     try:
         with open(filename, encoding=conf["file_encoding"]) as f_id:
             logger.debug("reading " + filename)
@@ -224,7 +219,6 @@ def count_msg_to_read(list_files, f_fmt, logger):
     to a first reading of the CL31 file to determine the number
     of data messages which need to be read
     """
-
     n_data_msg = 0
 
     # loop over filenames to read to count the number of messages
@@ -245,7 +239,6 @@ def get_conf_msg(line, logger):
     """
     Extract conf message
     """
-
     conf_str = re.search(CONF_MSG_REGEX, line)
     if conf_str is not None:
         conf_msg = conf_str.group()
@@ -275,7 +268,6 @@ def get_range_ngates(conf_msg, logger):
     """
     Extract the number of gates from configuration message line
     """
-
     try:
         int_coding = int(conf_msg[7:8])
         range_ngates = RANGE_GATES[int_coding]
@@ -292,7 +284,6 @@ def get_msg_type(conf_msg, filename, logger):
     Extract from acquisition configuration line if the file contains
     message of type 1 or 2 (without or with sky state)
     """
-
     msg_type = int(conf_msg[6:7])
 
     if msg_type == 1:
@@ -311,7 +302,6 @@ def get_msg_nb_lines(msg_number):
     based ont the configuration read return the number of lines of a data
     message
     """
-
     return MSG_NB_LINES[msg_number]
 
 
@@ -319,7 +309,6 @@ def calc_range(resol, n_gates):
     """
     calculate range variable based on resolution and number of gates
     """
-
     range_vect = np.array(list(range(1, n_gates + 1)), dtype=float)
 
     return range_vect * float(resol)
@@ -329,7 +318,6 @@ def check_range(data, data_dim, filename, logger):
     """
     check we determining range was a success
     """
-
     # Test if the msg contains retrodiffusion profiles
     if data_dim["range"] == -9 or data["range_resol"] == -9:
         logger.error(
@@ -355,7 +343,6 @@ def check_msg_type(data, logger):
     """
     check if determining message type was a success
     """
-
     # test if message type could be determine
     if data["msg_type"] is None:
         msg_ok = False
@@ -371,7 +358,6 @@ def get_acq_conf(filename, data, data_dim, f_fmt, conf, logger):
     extract acquisition configuration from a data message
     (range resolution and number of vertical gates)
     """
-
     try:
         dt.datetime.strptime(basename(filename), f_fmt)
     except ValueError:
@@ -434,7 +420,6 @@ def init_data(data, data_dim, conf, logger):
     """
     declare size of the numpy arraies and initialiase it
     """
-
     # get missing values
     missing_int = conf["missing_int"]
     missing_float = conf["missing_float"]
@@ -498,7 +483,6 @@ def get_state_line_nb_in_msg(msg_type):
     based on the configuration of the message type return the
     line number in data message containing ceilometer state
     """
-
     return STATE_MSG_LINE[msg_type]
 
 
@@ -507,7 +491,6 @@ def get_rcs_line_nb_in_msg(msg_type):
     based on the configuration of the message type return the
     line number in data message containing ceilometer state
     """
-
     return RCS_MSG_LINE[msg_type]
 
 
@@ -515,7 +498,6 @@ def read_scalar_vars(data, msg, msg_type, logger):
     """
     extract scalar variables from data message
     """
-
     line_to_read = get_state_line_nb_in_msg(data["msg_type"])
     line = msg[line_to_read]
 
@@ -527,7 +509,6 @@ def read_time_dep_vars(data, ind, msg, msg_type, logger):
     read time only dependent variables
     ex: 00100 10 0770 098 +34 099 12 621 L0112HN15 139↵
     """
-
     line_to_read = get_state_line_nb_in_msg(data["msg_type"])
     params = msg[line_to_read].split()
 
@@ -547,7 +528,6 @@ def read_cbh_msg(data, ind, msg, logger):
     extract CBH
     ex: 30 01230 12340 23450 FEDCBA987654↵
     """
-
     elts = msg[1].split()
 
     # get the number of cloud layer
@@ -586,7 +566,6 @@ def read_clh_msg(data, ind, msg, logger):
     """
     extract CLH, cloud amount and visibility
     """
-
     # split lines to get each elements
     # even elements are cloud amount
     # odd elements are CLH
@@ -618,7 +597,6 @@ def read_cbh_vars(data, ind, msg, logger):
     """
     Read the altitude of the 3 cloud layer in a data message
     """
-
     # reading of CBH depends on the kind of data message type
     data = read_cbh_msg(data, ind, msg, logger)
     if data["msg_type"] == 2:
@@ -631,7 +609,6 @@ def read_rcs_var(data, ind, msg, logger):
     """
     read the rcs value in a data msg
     """
-
     # get line a of the message containing RCS based on CL31 conf
     line_to_read = get_rcs_line_nb_in_msg(data["msg_type"])
     # size of the profile to read
@@ -668,7 +645,6 @@ def read_vars(lines, data, conf, time_ind, f_name, f_fmt, logger):
     """
     read all available variables in one file
     """
-
     # get timestamp
     data["time"][time_ind] = dt.datetime.strptime(basename(f_name), f_fmt)
     n_lines = len(lines)
@@ -711,7 +687,6 @@ def read_data(list_files, conf, logger):
     """
     Raw2L1 plugin to read data of the vaisala CL31
     """
-
     # check if file format is available in conf file
     # -------------------------------------------------------------------------
     try:

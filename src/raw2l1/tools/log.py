@@ -1,14 +1,9 @@
-#!/usr/bin/env python
-
-# Compatibility with python 3
-
-
 import logging
 import logging.config
 import os
 import sys
 
-from tools import utils
+from raw2l1.tools import utils
 
 LOG_FMT = "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
 LOG_DATE_FMT = "%Y-%m-%d %H:%M:%S"
@@ -16,14 +11,13 @@ LOG_DIR = "logs"
 LOG_FILENAME = "raw2l1.log"
 
 
-def init(opt, name):
+def init(log_file: str, log_level: str, verbose: str, name: str):
     """
     Configure the logger and start it
     """
-
     # Check the logs directory
-    log_dir = os.path.dirname(os.path.abspath(opt["log"]))
-    log_file = os.path.basename(opt["log"])
+    log_dir = os.path.dirname(os.path.abspath(log_file))
+    log_file = os.path.basename(log_file)
     dir_ok = utils.check_dir(log_dir)
     if not dir_ok:
         print("critical - " + log_dir + " doesn't exist or is not writable")
@@ -32,8 +26,8 @@ def init(opt, name):
 
     filename = os.path.join(log_dir, log_file)
     print(f"debug file : {filename}")
-    print("console debug level : {}".format(opt["verbose"].upper()))
-    print("file debug level : {}".format(opt["log_level"].upper()))
+    print(f"console debug level : {verbose.upper()}")
+    print(f"file debug level : {log_level.upper()}")
 
     log_dict = {
         "version": 1,
@@ -42,13 +36,13 @@ def init(opt, name):
         "handlers": {
             "console": {
                 "class": "logging.StreamHandler",
-                "level": opt["verbose"].upper(),
+                "level": verbose.upper(),
                 "formatter": "simple",
                 "stream": "ext://sys.stdout",
             },
             "file_handler": {
                 "class": "logging.handlers.RotatingFileHandler",
-                "level": opt["log_level"].upper(),
+                "level": log_level.upper(),
                 "formatter": "simple",
                 "filename": filename,
                 "maxBytes": 10_485_760,

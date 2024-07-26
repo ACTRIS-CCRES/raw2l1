@@ -42,7 +42,6 @@ def check_input(conf, logger):
     """
     check if the required parameter are available
     """
-
     # check if the timestamp format in available in conf file
     try:
         timestamp_fmt = conf["timestamp_fmt"]
@@ -63,7 +62,6 @@ def get_file_lines(filename, conf, logger):
     read all lines of a given file and remove carriage return from
     all lines
     """
-
     try:
         with open(filename, encoding=conf["file_encoding"]) as f_id:
             logger.debug("reading %s", filename)
@@ -79,7 +77,6 @@ def count_msg_to_read(list_files, date_fmt, conf, logger):
     """
     count the number of data message in all files to read
     """
-
     n_data_msg = 0
 
     # loop over filenames to read to count the number of messages
@@ -102,7 +99,6 @@ def init_data(time_dim, conf, logger):
     """
     Initialize the arraies in data dict where data are read
     """
-
     missing_int = conf["missing_int"]
     missing_float = conf["missing_float"]
 
@@ -153,7 +149,6 @@ def read_header(line, data, logger):
     Read header of message:
     ex: \x01CS0008006\x02
     """
-
     msg_found = False
 
     # get conf string
@@ -174,7 +169,6 @@ def read_cbh(line, data, ind, logger):
     read the line containing alarm, cbh, window transmission and flags
     ex: 10 099 03733 ///// ///// ///// 000000000000
     """
-
     elts = line.split()
 
     nlayers = int(elts[0][0])
@@ -205,7 +199,6 @@ def read_laser(line, data, ind, logger):
     read the line containing data about the laser
     ex: 00100 05 2048 100 +39 06 0028 0020 30 000
     """
-
     elts = line.split()
 
     data["scale"][ind] = int(elts[0])
@@ -231,7 +224,6 @@ def read_profile(line, data, ind, logger):
     """
     read profile data line (2048 x 5 bytes) 20-bit HEX ASCII
     """
-
     tmp = np.array(
         [
             int(line[s * RCS_BYTES_SIZE : s * RCS_BYTES_SIZE + RCS_BYTES_SIZE], 16)
@@ -255,7 +247,6 @@ def read_sky_condition(line, data, ind, logger):
     read sky condition line
     ex: 8 0037  0 ////  0 ////  0 ////  0 ////
     """
-
     elts = line.strip().split()
 
     data["cloud_amount"][ind] = np.array(elts[0::2], dtype=int)
@@ -275,7 +266,6 @@ def read_mlh(line, data, ind, logger):
     read MLH line
     ex: 01076 00003 02740 00003 ///// 00000
     """
-
     elts = line.split()
 
     data["mlh_qf"] = elts[1::2]
@@ -293,15 +283,7 @@ def is_msg_type_ok(msg_type, filename, logger):
     """
     check type of message to read
     """
-
-    if 101 <= msg_type <= 112:
-        logger.error(
-            "102 unable to read these data messages in '%s'. "
-            "You should able to read it with vaisala CL51 reader",
-            filename,
-        )
-        return False
-    elif 113 <= msg_type <= 114:
+    if 101 <= msg_type <= 112 or 113 <= msg_type <= 114:
         logger.error(
             "102 unable to read these data messages in '%s'. "
             "You should able to read it with vaisala CL51 reader",
@@ -318,7 +300,6 @@ def get_msg_type(list_files, date_fmt, conf, logger):
     """
     try to determine the type of data message
     """
-
     tmp = {}
     msg_type_found = False
     for f in list_files:
@@ -350,7 +331,6 @@ def read_msg_001(msg, data, ind, logger):
     """
     read data message 001
     """
-
     data = read_cbh(msg[1], data, ind, logger)
 
     return data
@@ -360,7 +340,6 @@ def read_msg_002(msg, data, ind, logger):
     """
     read data message 002
     """
-
     data = read_cbh(msg[1], data, ind, logger)
     data = read_laser(msg[2], data, ind, logger)
     data = read_profile(msg[3], data, ind, logger)
@@ -372,7 +351,6 @@ def read_msg_003(msg, data, ind, logger):
     """
     read data message 003
     """
-
     data = read_cbh(msg[1], data, ind, logger)
     data = read_sky_condition(msg[2], data, ind, logger)
 
@@ -383,7 +361,6 @@ def read_msg_004(msg, data, ind, logger):
     """
     read data message 004
     """
-
     data = read_cbh(msg[1], data, ind, logger)
     logger.debug("cbh read")
     data = read_sky_condition(msg[2], data, ind, logger)
@@ -400,7 +377,6 @@ def read_msg_005(msg, data, ind, logger):
     """
     read data message 005
     """
-
     data = read_cbh(msg[1], data, ind, logger)
     data = read_sky_condition(msg[2], data, ind, logger)
     data = read_mlh(msg[3], data, ind, logger)
@@ -412,7 +388,6 @@ def read_msg_006(msg, data, ind, logger):
     """
     read data message 006
     """
-
     data = read_cbh(msg[1], data, ind, logger)
     data = read_sky_condition(msg[2], data, ind, logger)
     data = read_laser(msg[3], data, ind, logger)
@@ -426,7 +401,6 @@ def read_data(list_files, conf, logger):
     """
     Raw2L1 plugin to read data of the campbell scientific CS135
     """
-
     MSG_TYPE_READER = {
         1: read_msg_001,
         2: read_msg_002,

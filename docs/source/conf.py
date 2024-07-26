@@ -18,6 +18,7 @@ BASE_URL = "https://github.com/ACTRIS-CCRES/raw2l1"
 project = "raw2l1"
 copyright = "CNRS/IP Paris"
 author = "CCRES-dev"
+release = "3.2.0"
 
 LOGO_PATH = os.path.join(os.path.dirname(__file__), "assets/logo_actris_ccres.png")
 

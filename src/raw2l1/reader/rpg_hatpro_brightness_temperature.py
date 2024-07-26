@@ -20,8 +20,7 @@ C2K = 273.15
 
 
 def get_data_size(list_files, logger):
-    """based on all files to read determine the size of the data"""
-
+    """Based on all files to read determine the size of the data"""
     dim = {}
     dim["time"] = 0
     for i, f in enumerate(list_files):
@@ -37,8 +36,7 @@ def get_data_size(list_files, logger):
 
 
 def init_data(vars_dim, logger):
-    """initialize data dictionary"""
-
+    """Initialize data dictionary"""
     data = {}
 
     data["time"] = np.empty((vars_dim["time"],), dtype=np.dtype(dt.datetime))
@@ -84,8 +82,7 @@ def init_data(vars_dim, logger):
 
 
 def init_meteo_data(vars_dim, logger):
-    """initialize dict of meteo data"""
-
+    """Initialize dict of meteo data"""
     meteo_data = {}
 
     meteo_data["time"] = np.empty((vars_dim["time"],), dtype=np.dtype(dt.datetime))
@@ -103,8 +100,7 @@ def init_meteo_data(vars_dim, logger):
 
 
 def init_irt_data(vars_dim, logger):
-    """initialize dict of irt data"""
-
+    """Initialize dict of irt data"""
     irt_data = {}
 
     irt_data["time"] = np.empty((vars_dim["time"],), dtype=np.dtype(dt.datetime))
@@ -123,8 +119,7 @@ def init_irt_data(vars_dim, logger):
 
 
 def read_time(nc_id, logger):
-    """read time variable"""
-
+    """Read time variable"""
     time = nc_id.variables[TIME_VAR][:]
     units = correct_time_units(nc_id.variables[TIME_VAR].units)
 
@@ -134,8 +129,7 @@ def read_time(nc_id, logger):
 
 
 def sync_meteo(data, meteo_data, logger):
-    """find in meteo data timestep corresponding to brightness data time"""
-
+    """Find in meteo data timestep corresponding to brightness data time"""
     common_time, time_filter, meteo_time_filter = np.intersect1d(
         data["time"][:], meteo_data["time"][:], return_indices=True
     )
@@ -150,8 +144,7 @@ def sync_meteo(data, meteo_data, logger):
 
 
 def sync_irt(data, irt_data, logger):
-    """find in irt data timestep corresponding to brightness data time"""
-
+    """Find in irt data timestep corresponding to brightness data time"""
     common_time, time_filter, irt_time_filter = np.intersect1d(
         data["time"][:], irt_data["time"][:], return_indices=True
     )
@@ -164,8 +157,8 @@ def sync_irt(data, irt_data, logger):
 
 def read_data(list_files, conf, logger):
     """raw2l1 plugin to read raw data of RPG hatpro
-    bloundary layer temperature"""
-
+    bloundary layer temperature
+    """
     logger.debug("start reading data using reader for " + BRAND + " " + MODEL)
     for f in list_files:
         logger.debug(f"files to read : {f}")

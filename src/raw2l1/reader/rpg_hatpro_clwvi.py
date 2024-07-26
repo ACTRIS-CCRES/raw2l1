@@ -19,8 +19,7 @@ UNIT_CONVERT_FACTOR = 1.0e-3
 
 
 def get_data_size(list_files, logger):
-    """based on all files to read determine the size of the data"""
-
+    """Based on all files to read determine the size of the data"""
     dim = {}
     dim["time"] = 0
     for i, f in enumerate(list_files):
@@ -36,8 +35,7 @@ def get_data_size(list_files, logger):
 
 
 def init_data(vars_dim, logger):
-    """initialize data dictionary"""
-
+    """Initialize data dictionary"""
     data = {}
 
     data["time"] = np.empty((vars_dim["time"],), dtype=np.dtype(dt.datetime))
@@ -68,8 +66,7 @@ def init_data(vars_dim, logger):
 
 
 def read_time(nc_id, logger):
-    """read time variable"""
-
+    """Read time variable"""
     time = nc_id.variables[TIME_VAR][:]
     units = correct_time_units(nc_id.variables[TIME_VAR].units)
 
@@ -80,8 +77,8 @@ def read_time(nc_id, logger):
 
 def read_data(list_files, conf, logger):
     """raw2l1 plugin to read raw data of RPG hatpro
-    bloundary layer temperature"""
-
+    bloundary layer temperature
+    """
     logger.debug("start reading data using reader for " + BRAND + " " + MODEL)
 
     # get variables size

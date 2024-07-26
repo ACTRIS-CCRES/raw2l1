@@ -1,15 +1,12 @@
-#!/usr/bin/env python
-
 import sys
 
-from tools import common
+from raw2l1.tools import common
 
 
 def check_list_options(conf, section, list_opts, logger):
     """
     check that one section has all required options
     """
-
     for opt in list_opts:
         if not conf.has_option(section, opt):
             logger.critical("107 %s option is missing in %s", opt, section)
@@ -22,7 +19,6 @@ def check_required_sections(conf, logger):
     """
     Check that section needed to configure raw2l1 are available
     """
-
     logger.debug("checking required configuration sections")
     for section in common.CONF_SECTIONS:
         if not conf.has_section(section):
@@ -36,7 +32,6 @@ def check_nc4_compression_option(conf, section, logger):
     """
     check options and values for netCDF4 compression
     """
-
     # get name of the config file in case of error/warning
     conf_file = conf.get("conf", "conf")
 
@@ -79,7 +74,6 @@ def check_conf_options(conf, logger):
     """
     check that conf section has required options
     """
-
     section = "conf"
 
     # check list of options
@@ -104,7 +98,6 @@ def check_conf(conf, logger):
     """
     Check the data entered in the configuration file
     """
-
     # require sections of the configuration file
     if not check_required_sections(conf, logger):
         sys.exit(3)

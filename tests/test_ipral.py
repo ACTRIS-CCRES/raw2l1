@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-
 import os
 import subprocess
 import unittest
@@ -19,8 +17,7 @@ class TestRunIpral(unittest.TestCase):
     conf_file = os.path.join(TEST_IN_DIR, "conf", "conf_ipral_test_00.ini")
 
     def test_run_ipral_one_file(self):
-        """test ipral reader with one file"""
-
+        """Test ipral reader with one file"""
         date = "20170621"
         test_ifile = os.path.join(self.IN_DIR, "RM1762107.030037")
         test_ofile = os.path.join(TEST_OUT_DIR, "test_ipral_one_file.nc")
@@ -42,8 +39,7 @@ class TestRunIpral(unittest.TestCase):
         self.assertEqual(resp, 0, "run IPRAL one file")
 
     def test_run_ipral_several_files(self):
-        """test ipral reader with several files"""
-
+        """Test ipral reader with several files"""
         date = "20170621"
         test_ifile = os.path.join(self.IN_DIR, "RM17621*")
         test_ofile = os.path.join(TEST_OUT_DIR, "test_ipral_several_files.nc")

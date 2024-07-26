@@ -1,13 +1,10 @@
-#!/usr/bin/env python
-
-
 import datetime as dt
 import sys
 from importlib import import_module
 
 import numpy as np
 
-from . import common
+from raw2l1.tools import common
 
 READER_CONF = "reader_conf"
 MISSING_FLOAT_KEY = "missing_float"
@@ -24,13 +21,12 @@ class RawDataReader:
         self.data = {}
 
     def __load_reader__(self):
-        reader_dir = self.conf.get("conf", "reader_dir")
         reader_name = self.conf.get("conf", "reader")
 
         self.logger.info("loading lidar data reader module: " + reader_name)
         try:
             reader_mod = import_module(
-                reader_dir + "." + self.conf.get("conf", "reader")
+                f"raw2l1.reader.{self.conf.get("conf", "reader")}"
             )
         except ImportError as err:
             msg = "107 unable to load lidar data reader "
@@ -42,7 +38,7 @@ class RawDataReader:
 
         self.logger.info("loading read_data function from " + reader_name)
         try:
-            reader_fcn = getattr(reader_mod, "read_data")
+            reader_fcn = reader_mod.read_data
         except AttributeError as err:
             msg = "107 unable find read_data function "
             self.logger.critical(msg + str(err))
@@ -57,7 +53,6 @@ class RawDataReader:
         Check is configuration contains a [reader_conf] section
         If one is found it is converted into a dictionnary
         """
-
         reader_conf = {}
         if self.conf.has_section(READER_CONF):
             self.logger.debug("reader_conf section found")
@@ -101,7 +96,6 @@ class RawDataReader:
 
         return True if data timeliness is ok
         """
-
         ERR_MSG = "104 Data timeliness Error"
 
         now = dt.datetime.now()

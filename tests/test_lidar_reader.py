@@ -1,17 +1,15 @@
-#!/usr/bin/env python
-
 import configparser
 import datetime as dt
 import logging
 import unittest
 
 import numpy as np
-import tools.lidar_reader as lr
+
+import raw2l1.tools.lidar_reader as lr
 
 
 def add_arg_options(conf):
-    """add arguments needed to check loading of configuration file"""
-
+    """Add arguments needed to check loading of configuration file"""
     conf.set("conf", "date", dt.datetime(2016, 6, 10))
     conf.set("conf", "ancillary", [])
 

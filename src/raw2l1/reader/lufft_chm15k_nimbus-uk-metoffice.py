@@ -282,8 +282,7 @@ def get_error_index(err_msg, firmware, logger):
 
 
 def store_error(data, err_msg, logger):
-    """store errors msg and their count by type"""
-
+    """Store errors msg and their count by type"""
     err_ind = get_error_index(err_msg, data["firmware_version"], logger)
 
     for i in err_ind:
@@ -315,7 +314,7 @@ def log_error_msg(data, logger):
 
 
 def read_overlap(overlap_file, missing_float, logger):
-    """read overlap from lufft TUB*.cfg file"""
+    """Read overlap from lufft TUB*.cfg file"""
     with open(overlap_file) as f_ovl:
         raw_ovl = f_ovl.readlines()[1]
 
@@ -345,7 +344,6 @@ def date_to_dt(date_num, date_units):
     """
     convert date np.array from datenum to datetime.datetime
     """
-
     return nc.num2date(date_num, units=date_units, calendar="standard")
 
 
@@ -354,7 +352,6 @@ def get_vars_dim(list_files, logger):
     analyse the files to be read to determine the size of the final
     time dimension
     """
-
     data_dim = {}
     data_dim["time"] = 0
     data_dim["range"] = 0
@@ -400,7 +397,6 @@ def get_temp(nc_obj, logger):
     set_auto_maskandscale(false)
     - the scale factor is wrong. It has a value of 10 and should be 0.1
     """
-
     try:
         tmp = nc_obj[:]
     except TypeError:
@@ -416,7 +412,6 @@ def init_data(vars_dim, conf, logger):
     based on the analysing of the file to read initialize the np.array of
     the output data dictionnary
     """
-
     missing_int = conf["missing_int"]
     missing_float = conf["missing_float"]
 
@@ -522,7 +517,6 @@ def read_time_var(data, nc_id, time_ind, logger):
     """
     Add data to the time variable dimension
     """
-
     logger.debug("convert time variable into datetime object")
     tmp = nc_id.variables["time"][:]
     time_size = len(tmp)
@@ -539,7 +533,6 @@ def read_dim_vars(data, nc_id, logger):
     """
     read dimension variables of the netCDf file
     """
-
     # get time variable size
     tmp = nc_id.variables["time"][:]
     time_size = len(tmp)
@@ -560,7 +553,6 @@ def read_scalar_vars(data, nc_id, soft_vers, logger):
     """
     read scalar variables of the netCDF file
     """
-
     logger.debug("reading zenith")
     data["zenith"] = nc_id.variables["zenith"][:]
     logger.debug("reading wavelength as l0_wavelength")
@@ -587,7 +579,6 @@ def read_timedep_vars(data, nc_id, soft_vers, time_ind, time_size, logger):
     """
     read time depedant variables in the netCDf files
     """
-
     ind_b = time_ind
     ind_e = time_ind + time_size
 
@@ -658,7 +649,6 @@ def read_data(list_files, conf, logger):
     """
     Raw2L1 plugin to read raw data of Jenoptik CHM15K
     """
-
     logger.debug("Start reading of data using reader for " + BRAND + " " + MODEL)
 
     # analyse the files to read to get the complete size of data

@@ -1,6 +1,3 @@
-# Compatibility with python 3
-
-
 import configparser
 import datetime as dt
 import sys
@@ -11,8 +8,8 @@ import netCDF4 as nc
 import numpy as np
 import xarray as xr
 
-from tools import common
-from tools.read_overlap import read_overlap
+from raw2l1.tools import common
+from raw2l1.tools.read_overlap import read_overlap
 
 KEY_READERDATA = "$reader_data$"
 KEY_OVERLAP = "$overlap$"
@@ -37,7 +34,6 @@ def dim_to_tuple(dim):
     convert a list of dimension into a tuple compatible with netCDF4 module
     syntax
     """
-
     list_dim = dim.replace(" ", "").split(",")
 
     return tuple(list_dim)
@@ -47,7 +43,6 @@ def get_n_dim(dim):
     """
     return the number of dimension of a variable
     """
-
     return len(dim.split(","))
 
 
@@ -56,7 +51,6 @@ def get_overlap_filename(option):
     return the name of the overlap file to read based on the option value
     in the configuration file
     """
-
     return option.split(",")[1].strip(" ")
 
 
@@ -65,7 +59,6 @@ def get_data_key(option):
     Extract key name of data dictionnary which value will be written in
     the netCDF variable
     """
-
     return option.split(",")[1].strip(" ")
 
 
@@ -74,7 +67,6 @@ def filter_conf_sections(conf, logger):
     Remove unneeded sections of configuration file for the creation of
     the netCDF file and sections with special processing (time)
     """
-
     sections_to_rm = common.CONF_SECTIONS
     for sec in common.SPEC_SECTIONS:
         sections_to_rm.append(sec)
@@ -101,7 +93,6 @@ def get_var_type(type_str, conf, logger):
     """
     Get numpy type based on type given conf file
     """
-
     try:
         val_type = KEYS_VALTYPE[type_str]
     except KeyError:
@@ -122,7 +113,6 @@ def convert_attribute(value, logger):
     """
     Try to convert an attribute read in configuration into a python variable
     """
-
     try:
         value = literal_eval(value)
         msg = "converting attribute to %s"
@@ -137,7 +127,6 @@ def create_netcdf_global(conf, nc_id, data, logger):
     """
     Create the global attribute of the netCDF file
     """
-
     for attr, value in conf.items("global"):
         if KEY_READERDATA in value:
             reader_key = get_data_key(value)
@@ -169,29 +158,27 @@ def create_netcdf_global(conf, nc_id, data, logger):
 
     if add_date:
         dt_date = conf.get("conf", "date")
-        setattr(nc_id, "year", int(dt_date.strftime("%Y")))
-        setattr(nc_id, "month", int(dt_date.strftime("%m")))
-        setattr(nc_id, "day", int(dt_date.strftime("%d")))
+        nc_id.year = int(dt_date.strftime("%Y"))
+        nc_id.month = int(dt_date.strftime("%m"))
+        nc_id.day = int(dt_date.strftime("%d"))
 
-    return None
+    return
 
 
 def create_netcdf_time_dim(section, nc_id, logger):
     """
     Special function to create time dimension as its dimension is unlimited
     """
-
     logger.debug("dimension found: time")
     nc_id.createDimension(section, None)
 
-    return None
+    return
 
 
 def create_netcdf_dim(conf, data, nc_id, logger):
     """
     Create the dimensions of the netCDF file
     """
-
     # loop only over section concerning the netCDf file
     for section in filter_conf_sections(conf, logger):
         # process only section concerning the output file
@@ -241,14 +228,13 @@ def create_netcdf_dim(conf, data, nc_id, logger):
             else:
                 nc_id.createDimension(dim, 1)
 
-    return None
+    return
 
 
 def create_netcdf_time_var(conf, var_name, data, nc_id, logger):
     """
     Special fonction to create the time variable
     """
-
     has_calendar = False
 
     units = conf.get(var_name, "units")
@@ -280,14 +266,13 @@ def create_netcdf_time_var(conf, var_name, data, nc_id, logger):
     logger.debug("adding attributes to time variable")
     add_attr_to_var(nc_var, data, conf, var_name, logger)
 
-    return None
+    return
 
 
 def add_data_to_var(nc_var, var_name, conf, data, logger):
     """
     add the values to a variables
     """
-
     data_val = conf.get(var_name, "value")
     data_type = get_var_type(conf.get(var_name, "type"), conf, logger)
 
@@ -341,14 +326,13 @@ def add_data_to_var(nc_var, var_name, conf, data, logger):
             )
             logger.error(repr(err))
 
-    return None
+    return
 
 
 def add_attr_to_var(nc_var, data, conf, section, logger):
     """
     add attribute to the variable of the netCDF file
     """
-
     logger.debug("adding attributes to %s variable", section)
     for option, value in conf.items(section):
         if option not in common.RESERV_ATTR:
@@ -391,7 +375,7 @@ def add_attr_to_var(nc_var, data, conf, section, logger):
             logger.debug("adding %s attribute %s", option, repr(value))
             setattr(nc_var, option, value)
 
-    return None
+    return
 
 
 def create_netcdf_variables(conf, data, nc_id, logger):
@@ -399,7 +383,6 @@ def create_netcdf_variables(conf, data, nc_id, logger):
     create netCDF variable and add attributes found in
     the configuration file
     """
-
     # loop only over sections concerning the netCDf file
     for section in filter_conf_sections(conf, logger):
         var_name = section
@@ -496,7 +479,7 @@ def create_netcdf_variables(conf, data, nc_id, logger):
         # add attributes to the variable
         add_attr_to_var(nc_var, data, conf, section, logger)
 
-    return None
+    return
 
 
 def create_netcdf(conf, data, logger):

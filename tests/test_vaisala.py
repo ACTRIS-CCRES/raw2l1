@@ -206,8 +206,7 @@ class TestUnitsInFeet(unittest.TestCase):
     IN_DIR = os.path.join(TEST_IN_DIR, "vaisala_cl")
 
     def test_cl31_feet(self):
-        """test using data from station 08360 in feet"""
-
+        """Test using data from station 08360 in feet"""
         wanted_cbh_values = [
             7397,
             7562,
@@ -265,8 +264,7 @@ class TestUnitsInFeet(unittest.TestCase):
         )
 
     def test_cl31_meters(self):
-        """test using data from station 08360 in feet"""
-
+        """Test using data from station 08360 in feet"""
         wanted_cbh_values = [3450, 3455, 3455, 3455, 3460, 3460, 3465, 3470, 3470, 3470]
 
         date = "20141030"

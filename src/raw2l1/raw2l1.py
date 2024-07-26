@@ -1,18 +1,14 @@
 #!/usr/bin/env python
-
-# Compatibility with python 3
-
-
+import datetime as dt
+import io
 import sys
 
-from tools import arg_parser as ag
-from tools import conf, log
-from tools import create_netcdf as cnc
-from tools import lidar_reader as lr
-from tools.check_conf import check_conf
-
-__author__ = "Marc-Antoine Drouin"
-__version__ = "3.2.0"
+from raw2l1.tools import arg_parser as ag
+from raw2l1.tools import conf, log
+from raw2l1.tools import create_netcdf as cnc
+from raw2l1.tools import lidar_reader as lr
+from raw2l1.tools.check_conf import check_conf
+from raw2l1.version import __version__
 
 NAME = "raw2l1"
 
@@ -21,43 +17,65 @@ def welcome_msg():
     """
     print a welcome message in the terminal
     """
-
-    print(r"")
+    print()
     print(r"--------------------------------------------------")
     print(NAME)
     print(r" ___  __   _   _  ___ _   __  ")
     print(r"| _ \/  \ | | | |(_  | | /  | ")
     print(r"| v / /\ || 'V' | / /| |_`7 | ")
     print(r"|_|_\_||_|!_/ \_!|___|___||_| ")
-    print(r"")
+    print()
     print(r"version: " + __version__)
     print(r"SIRTA IPSL/CNRS/EP 2014-2024")
     print(r"--------------------------------------------------")
-    print(r"")
+    print()
 
-    return None
+    return
 
 
-def raw2l1(argv):
+def raw2l1(
+    date: dt.datetime,
+    conf_file: io.TextIOWrapper,
+    input_files: list[str],
+    output_file: str,
+    ancillary: list[str] = [],
+    file_min_size: int = 0,
+    check_timeliness: bool = False,
+    file_max_age: int = 2,
+    filter_day: bool = False,
+    log_file: str = "logs/raw2l1.log",
+    log_file_level: str = "info",
+    verbose: str = "info",
+):
     """
     Main module of raw2l1
     """
-
     welcome_msg()
-
-    # Read imput arguments
-    # -------------------------------------------------------------------------
-    input_args = ag.get_input_args(argv)
 
     # Start logger
     # -------------------------------------------------------------------------
-    logger = log.init(input_args, "raw2l1")
-    logger.info("logs are saved in {!s}".format(input_args["log"]))
+    logger = log.init(log_file, log_file_level, verbose, "raw2l1")
+    logger.info(f"logs are saved in {log_file!s}")
 
     # reading configuration file
     # -------------------------------------------------------------------------
-    logger.debug("reading configuration file " + input_args["conf"].name)
-    setting = conf.init(input_args, __version__, logger)
+    logger.debug("reading configuration file %s", conf_file.name)
+    setting = conf.init(
+        date,
+        conf_file,
+        input_files,
+        output_file,
+        ancillary,
+        file_min_size,
+        check_timeliness,
+        file_max_age,
+        filter_day,
+        log_file,
+        log_file_level,
+        verbose,
+        __version__,
+        logger,
+    )
     logger.info("reading configuration file: OK")
 
     # check configuration file
@@ -78,8 +96,8 @@ def raw2l1(argv):
 
     # checking read data if needed
     # -------------------------------------------------------------------------
-    if input_args["input_check_time"]:
-        time_ok = lidar_data.timeliness_ok(input_args["input_max_age"], logger)
+    if check_timeliness:
+        time_ok = lidar_data.timeliness_ok(file_max_age, logger)
 
         if not time_ok:
             logger.critical("104 Data timeliness Error. Quitting raw2l1")
@@ -93,8 +111,28 @@ def raw2l1(argv):
     # end of the program
     # -------------------------------------------------------------------------
     logger.info("end of processing")
+
+    return 0
+
+
+def cli():
+    # Read imput arguments
+    # -------------------------------------------------------------------------
+    input_args = ag.get_input_args(sys.argv)
+
+    raw2l1(
+        input_args.date,
+        input_args.conf_file,
+        input_args.input,
+        input_args.output,
+        ancillary=input_args.ancillary,
+        file_min_size=input_args.input_min_size,
+        check_timeliness=input_args.input_check_time,
+        file_max_age=input_args.input_max_age,
+        filter_day=input_args.filter_day,
+        log_file=input_args.log,
+        log_file_level=input_args.log_level,
+        verbose=input_args.verbose,
+    )
+
     sys.exit(0)
-
-
-if __name__ == "__main__":
-    raw2l1(sys.argv[1:])

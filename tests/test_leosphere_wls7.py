@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-
 import os
 import subprocess
 import unittest
@@ -18,8 +16,7 @@ class TestRunWLS710Min(unittest.TestCase):
     IN_DIR = os.path.join(TEST_IN_DIR, "wls7_10min")
 
     def test_leosphere_wls7_102(self):
-        """test file version V1.0.2"""
-
+        """Test file version V1.0.2"""
         date = "20110103"
         test_ifile = os.path.join(
             self.IN_DIR,
@@ -43,8 +40,7 @@ class TestRunWLS710Min(unittest.TestCase):
         self.assertEqual(resp, 0)
 
     def test_leosphere_wls7_1022(self):
-        """test file version V1.0.2.2"""
-
+        """Test file version V1.0.2.2"""
         date = "20110110"
         test_ifile = os.path.join(
             self.IN_DIR,
@@ -68,8 +64,7 @@ class TestRunWLS710Min(unittest.TestCase):
         self.assertEqual(resp, 0)
 
     def test_leosphere_wls7_1024(self):
-        """test file version V1.0.2.4"""
-
+        """Test file version V1.0.2.4"""
         date = "20110929"
         test_ifile = os.path.join(
             self.IN_DIR,
@@ -93,8 +88,7 @@ class TestRunWLS710Min(unittest.TestCase):
         self.assertEqual(resp, 0)
 
     def test_leosphere_wls7_1112(self):
-        """test file version V1.1.12"""
-
+        """Test file version V1.1.12"""
         date = "20150119"
         test_ifile = os.path.join(
             self.IN_DIR,
@@ -118,8 +112,7 @@ class TestRunWLS710Min(unittest.TestCase):
         self.assertEqual(resp, 0)
 
     def test_leosphere_wls7_1113(self):
-        """test file version V1.1.13"""
-
+        """Test file version V1.1.13"""
         date = "20150602"
         test_ifile = os.path.join(
             self.IN_DIR,
@@ -143,8 +136,7 @@ class TestRunWLS710Min(unittest.TestCase):
         self.assertEqual(resp, 0)
 
     def test_leosphere_wls7_1113a(self):
-        """test file version V1.1.13a"""
-
+        """Test file version V1.1.13a"""
         date = "20120726"
         test_ifile = os.path.join(
             self.IN_DIR,
@@ -168,8 +160,7 @@ class TestRunWLS710Min(unittest.TestCase):
         self.assertEqual(resp, 0)
 
     def test_leosphere_wls7_1115(self):
-        """test file version V1.1.15"""
-
+        """Test file version V1.1.15"""
         date = "20160719"
         test_ifile = os.path.join(
             self.IN_DIR,
@@ -193,8 +184,7 @@ class TestRunWLS710Min(unittest.TestCase):
         self.assertEqual(resp, 0)
 
     def test_leosphere_wls7_1116(self):
-        """test file version V1.1.16"""
-
+        """Test file version V1.1.16"""
         date = "20130426"
         test_ifile = os.path.join(
             self.IN_DIR,
@@ -218,8 +208,7 @@ class TestRunWLS710Min(unittest.TestCase):
         self.assertEqual(resp, 0)
 
     def test_leosphere_wls7_119(self):
-        """test file version V1.1.9"""
-
+        """Test file version V1.1.9"""
         date = "20140603"
         test_ifile = os.path.join(
             self.IN_DIR,
@@ -249,8 +238,7 @@ class TestRunWLS71S(unittest.TestCase):
     IN_DIR = os.path.join(TEST_IN_DIR, "wls7_1s")
 
     def test_leosphere_wls7_102(self):
-        """test file version V1.0.2"""
-
+        """Test file version V1.0.2"""
         date = "20110103"
         test_ifile = os.path.join(
             self.IN_DIR,
@@ -274,8 +262,7 @@ class TestRunWLS71S(unittest.TestCase):
         self.assertEqual(resp, 0)
 
     def test_leosphere_wls7_1022(self):
-        """test file version V1.0.2.2"""
-
+        """Test file version V1.0.2.2"""
         date = "20110110"
         test_ifile = os.path.join(
             self.IN_DIR,
@@ -299,8 +286,7 @@ class TestRunWLS71S(unittest.TestCase):
         self.assertEqual(resp, 0)
 
     def test_leosphere_wls7_1024(self):
-        """test file version V1.0.2.4"""
-
+        """Test file version V1.0.2.4"""
         date = "20110929"
         test_ifile = os.path.join(
             self.IN_DIR,
@@ -324,8 +310,7 @@ class TestRunWLS71S(unittest.TestCase):
         self.assertEqual(resp, 0)
 
     def test_leosphere_wls7_1112(self):
-        """test file version V1.1.12"""
-
+        """Test file version V1.1.12"""
         date = "20150119"
         test_ifile = os.path.join(
             self.IN_DIR,
@@ -349,8 +334,7 @@ class TestRunWLS71S(unittest.TestCase):
         self.assertEqual(resp, 0)
 
     def test_leosphere_wls7_1113(self):
-        """test file version V1.1.13"""
-
+        """Test file version V1.1.13"""
         date = "20150602"
         test_ifile = os.path.join(
             self.IN_DIR,
@@ -374,8 +358,7 @@ class TestRunWLS71S(unittest.TestCase):
         self.assertEqual(resp, 0)
 
     def test_leosphere_wls7_1113a(self):
-        """test file version V1.1.13a"""
-
+        """Test file version V1.1.13a"""
         date = "20120726"
         test_ifile = os.path.join(
             self.IN_DIR,
@@ -399,8 +382,7 @@ class TestRunWLS71S(unittest.TestCase):
         self.assertEqual(resp, 0)
 
     def test_leosphere_wls7_1115(self):
-        """test file version V1.1.15"""
-
+        """Test file version V1.1.15"""
         date = "20160719"
         test_ifile = os.path.join(
             self.IN_DIR,
@@ -424,8 +406,7 @@ class TestRunWLS71S(unittest.TestCase):
         self.assertEqual(resp, 0)
 
     def test_leosphere_wls7_1116(self):
-        """test file version V1.1.16"""
-
+        """Test file version V1.1.16"""
         date = "20130426"
         test_ifile = os.path.join(
             self.IN_DIR,
@@ -449,8 +430,7 @@ class TestRunWLS71S(unittest.TestCase):
         self.assertEqual(resp, 0)
 
     def test_leosphere_wls7_119(self):
-        """test file version V1.1.9"""
-
+        """Test file version V1.1.9"""
         date = "20140603"
         test_ifile = os.path.join(
             self.IN_DIR,

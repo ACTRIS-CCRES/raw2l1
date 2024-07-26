@@ -613,10 +613,10 @@ def read_clh_msg(data, ind, msg, logger):
     # get cloud amount
     for level, octa in enumerate(octas):
         if 1 <= octa <= 8:
-            data["cloud_amount"][ind, level] = np.int(octa)
+            data["cloud_amount"][ind, level] = int(octa)
             data["clh"][ind, level] = float(clh_str[level]) * coeff
         elif octa == 0:
-            data["cloud_amount"][ind, level] = np.int(octa)
+            data["cloud_amount"][ind, level] = int(octa)
 
     return data
 

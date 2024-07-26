@@ -1,6 +1,3 @@
-#!/usr/bin/env python
-
-
 import ast
 import datetime as dt
 import os
@@ -56,10 +53,9 @@ VAR_2D = [
 
 
 def merge_structured_arrays(list_arr):
-    """merge structure array
+    """Merge structure array
     based on https://gist.github.com/astrofrog/2552867
     """
-
     # if list has only one element return array
     if len(list_arr) == 1:
         return list_arr[0]
@@ -76,8 +72,7 @@ def merge_structured_arrays(list_arr):
 
 
 def convert_time_str(str_):
-    """convert LEOSPHERE date format into datetime"""
-
+    """Convert LEOSPHERE date format into datetime"""
     if "." in str_:
         tmp_date, millisec = str_.split(".")
         micro_sec = int(millisec) * 10000
@@ -108,8 +103,7 @@ def convert_wiper(str_):
 
 
 def norm_value_name(name):
-    """normalize name of values"""
-
+    """Normalize name of values"""
     # remove multiple blank and replace by one
     name = re.sub(r"\s+", " ", name).strip()
     # remove unwanted caracters in name
@@ -124,8 +118,7 @@ def norm_value_name(name):
 
 
 def get_localization(value_str, conf, logger):
-    """extract latitude and longitude"""
-
+    """Extract latitude and longitude"""
     # check if value available
     if len(value_str) == 0:
         logger.warning("localization data unavailable")
@@ -146,8 +139,7 @@ def get_localization(value_str, conf, logger):
 
 
 def get_altitude(value_str, logger):
-    """extract list of alitudes"""
-
+    """Extract list of alitudes"""
     alt = [float(val) for val in value_str.split()]
 
     logger.debug(f"list of altitudes: {alt}")
@@ -156,8 +148,7 @@ def get_altitude(value_str, logger):
 
 
 def read_file(file_, conf, logger):
-    """read one file and return a list without newline character"""
-
+    """Read one file and return a list without newline character"""
     logger.debug(f"reading {os.path.basename(file_)}")
     with open(file_, encoding=conf["file_encoding"]) as f_id:
         raw_lines = f_id.readlines()
@@ -170,7 +161,6 @@ def read_file(file_, conf, logger):
 
 def get_header_size(lines, logger):
     """Extract value from header by identifying line with equal sign"""
-
     header_found = False
     for line in lines:
         # search for header marker
@@ -186,8 +176,7 @@ def get_header_size(lines, logger):
 
 
 def read_header_data(file_, conf, data, logger):
-    """read data store in the header"""
-
+    """Read data store in the header"""
     # read file
     raw_lines = read_file(file_, conf, logger)
     header_size = get_header_size(raw_lines, logger)
@@ -233,7 +222,7 @@ def read_header_data(file_, conf, data, logger):
 
 
 def read_columns(file_, data, conf, logger):
-    """read the data store as columns"""
+    """Read the data store as columns"""
     # get the number of columns to fix types
     with open(file_, encoding=conf["file_encoding"]) as f_id:
         try:
@@ -271,8 +260,7 @@ def read_columns(file_, data, conf, logger):
 
 
 def create_1d_var(raw_data, data, var_names, conf, logger):
-    """extract 1d var to store them into dict"""
-
+    """Extract 1d var to store them into dict"""
     logger.debug("reading 1d variables")
 
     for var in var_names:
@@ -298,8 +286,7 @@ def create_1d_var(raw_data, data, var_names, conf, logger):
 
 
 def create_2d_var(raw_data, data, list_vars, conf, logger):
-    """merge several columns of the ndarray into a 2d variable"""
-
+    """Merge several columns of the ndarray into a 2d variable"""
     # get list of column names
     column_names = [col[0] for col in raw_data.dtype.descr]
 
@@ -345,7 +332,6 @@ def create_2d_var(raw_data, data, list_vars, conf, logger):
 
 def extract_time(raw_data, logger):
     """As the name of the time column could vary we search for the right one"""
-
     for time_var in VAR_TIME:
         try:
             data = raw_data[time_var]
@@ -362,8 +348,7 @@ def extract_time(raw_data, logger):
 
 
 def read_data(list_files, conf, logger):
-    """main function"""
-
+    """Main function"""
     data = {}
 
     # get specific configuration

@@ -1,6 +1,3 @@
-#!/usr/bin/env python
-
-
 def abc(data):
     data[2] = 2
     data[3] = 3

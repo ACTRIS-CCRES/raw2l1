@@ -400,7 +400,7 @@ def read_timedep_vars(data, nc_id, time_ind, logger):
         data["cloud_layer_height"][ind_b:ind_e, :] = nc_id.variables["sky_condition_cloud_layer_heights"][:]  # noqa
     if data["float_fw_version"] >= 1.2:
         data["cloud_penetration_depth"][ind_b:ind_e, :] = nc_id.variables["cloud_penetration_depth"][:]  # noqa
-        data["cloud_thickness"][ind_b:ind_e, :] = nc_id.variables["cloud_thickness"][:]  # noqa
+        data["cloud_thickness"][ind_b:ind_e, :] = nc_id.variables["cloud_thickness"][:]
     # fmt: off
 
     # Time, range dependent variables
@@ -487,7 +487,7 @@ def read_timedep_vars(data, nc_id, time_ind, logger):
         data["status_measurement_status"][ind_b:ind_e] = status.variables["Measurement_status"][:]  # noqa
         data["status_datacom_overall"][ind_b:ind_e] = status.variables["Datacom_overall"][:]  # noqa
         data["status_measurement_data_destination_not_set"][ind_b:ind_e] = status.variables["Measurement_data_destination_not_set"][:]  # noqa
-        data["status_inside_heater"][ind_b:ind_e] = status.variables["Inside_heater"][:]  # noqa
+        data["status_inside_heater"][ind_b:ind_e] = status.variables["Inside_heater"][:]
         data["status_data_generation_status"][ind_b:ind_e] = status.variables["Data_generation_status"][:]  # noqa
 
         # fmt: on
