@@ -5,7 +5,7 @@ import netCDF4 as nc
 import numpy as np
 
 # brand and model of the LIDAR
-BRAND = "jenoptik"
+BRAND = "lufft"
 MODEL = "CHM15K nimbus"
 
 NN2_FACTOR = 3e-5
@@ -266,7 +266,7 @@ ERR_HEX_MSG = [
 ]
 
 
-def get_error_index(err_msg, firmware, logger):
+def get_error_index(err_msg, firmware, logger):  # noqa: ARG001
     """
     Based on error error message read in file.
 
@@ -286,7 +286,7 @@ def get_error_index(err_msg, firmware, logger):
 
 
 def store_error(data, err_msg, logger):
-    """Store errors msg and their count by type"""
+    """Store errors msg and their count by type."""
     err_ind = get_error_index(err_msg, data["firmware_version"], logger)
 
     for i in err_ind:
@@ -317,31 +317,29 @@ def log_error_msg(data, logger):
             logger.error(msg_format.format(msg, data["list_errors"][msg]["count"]))
 
 
-def read_overlap(overlap_file, missing_float, logger):
-    """Read overlap from lufft TUB*.cfg file"""
+def read_overlap(overlap_file, logger):
+    """Read overlap from lufft TUB*.cfg file."""
     try:
-        with open(overlap_file) as f_ovl:
+        with open(overlap_file) as f_ovl:  # noqa: PTH123
             f_ovl.readline()
             raw_ovl = f_ovl.readline()
-    except OSError as err:
-        logger.error("impossible to read %s", overlap_file)
-        logger.error(err)
+    except OSError:
+        logger.exception("impossible to read %s", overlap_file)
         sys.exit(1)
 
     try:
         ovl = np.array([float(value) for value in raw_ovl.split()])
     except ValueError:
-        logger.error("Problem while reading overlap. overlap data are ignore")
-        logger.error("Check your TUB* file")
+        logger.exception(
+            "Problem while reading overlap. overlap data are ignore. Check your TUB* file"  # noqa: E501
+        )
         return None
 
     return ovl
 
 
 def get_soft_version(str_version):
-    """
-    function to get the number of acquisition software version as a float
-    """
+    """Extract the version of acquisition software version as a float."""
     if type(str_version) == np.int16:
         version_nb = float(str_version) / 1000.0
     else:
@@ -351,17 +349,12 @@ def get_soft_version(str_version):
 
 
 def date_to_dt(date_num, date_units):
-    """
-    convert date np.array from datenum to datetime.datetime
-    """
+    """Convert date np.array from datenum to datetime.datetime."""
     return nc.num2date(date_num, units=date_units, calendar="standard")
 
 
 def get_vars_dim(list_files, logger):
-    """
-    analyse the files to be read to determine the size of the final
-    time dimension
-    """
+    """Determine the size of the variable to read in files."""
     data_dim = {}
     data_dim["time"] = 0
     data_dim["range"] = 0
@@ -374,7 +367,7 @@ def get_vars_dim(list_files, logger):
             nc_id = nc.Dataset(ifile, "r")
             f_count += 1
         except OSError:
-            logger.error("109 error trying to open '%s'", ifile)
+            logger.exception("109 error trying to open '%s'", ifile)
             continue
 
         if f_count == 1:
@@ -387,23 +380,23 @@ def get_vars_dim(list_files, logger):
 
     logger.debug("size of dimensions")
     for key in list(data_dim.keys()):
-        logger.debug("%r : %d" % (key, data_dim[key]))
+        logger.debug("%r : %d", key, data_dim[key])
 
     return data_dim
 
 
 def get_temp(nc_obj, logger):
     """
-    convert temperature to Kelvin taking into account errors in files with
-    version lower than 0.7
+    Convert temperature into Kelvin.
 
+    Code takes into account errors in files with version lower than 0.7
     2 problems with temperature variables for software version < 0.7:
-    - the scale factor instead of being a float is a unicode string
+    * the scale factor instead of being a float is a unicode string
     (doing a ncdump -h on the file shows it, scale_factor is between
     double quote) which prevents netCDF4 module to do automatically
     the calculation. It has to be deactivate using
     set_auto_maskandscale(false)
-    - the scale factor is wrong. It has a value of 10 and should be 0.1
+    * the scale factor is wrong. It has a value of 10 and should be 0.1
     """
     try:
         tmp = nc_obj[:]
@@ -415,11 +408,8 @@ def get_temp(nc_obj, logger):
     return tmp
 
 
-def init_data(vars_dim, conf, logger):
-    """
-    based on the analysing of the file to read initialize the np.array of
-    the output data dictionnary
-    """
+def init_data(vars_dim, conf, logger):  # noqa: ARG001
+    """Initialize data structure."""
     missing_int = conf["missing_int"]
     missing_float = conf["missing_float"]
 
@@ -480,7 +470,7 @@ def init_data(vars_dim, conf, logger):
     # Time, layer dependent variables
     # -------------------------------------------------------------------------
     data["pbs"] = (
-        np.ones((vars_dim["time"], vars_dim["layer"]), dtype=np.int8) * missing_int
+        np.ones((vars_dim["time"], vars_dim["layer"]), dtype=np.int16) * missing_int
     )
     data["pbl"] = (
         np.ones((vars_dim["time"], vars_dim["layer"]), dtype=np.int16) * missing_int
@@ -518,9 +508,7 @@ def init_data(vars_dim, conf, logger):
 
 
 def read_time_var(data, nc_id, time_ind, logger):
-    """
-    Add data to the time variable dimension
-    """
+    """Add data to the time variable dimension."""
     logger.debug("convert time variable into datetime object")
     tmp = nc_id.variables["time"][:]
     time_size = len(tmp)
@@ -534,9 +522,7 @@ def read_time_var(data, nc_id, time_ind, logger):
 
 
 def read_dim_vars(data, nc_id, logger):
-    """
-    read dimension variables of the netCDf file
-    """
+    """Read dimension variables of the netCDf file."""
     # get time variable size
     tmp = nc_id.variables["time"][:]
     time_size = len(tmp)
@@ -554,9 +540,7 @@ def read_dim_vars(data, nc_id, logger):
 
 
 def read_scalar_vars(data, nc_id, soft_vers, logger):
-    """
-    read scalar variables of the netCDF file
-    """
+    """Read scalar variables of the netCDF file."""
     logger.debug("reading zenith")
     data["zenith"] = nc_id.variables["zenith"][:]
     logger.debug("reading wavelength as l0_wavelength")
@@ -582,9 +566,7 @@ def read_scalar_vars(data, nc_id, soft_vers, logger):
 
 
 def read_timedep_vars(data, nc_id, soft_vers, time_ind, time_size, logger):
-    """
-    read time depedant variables in the netCDf files
-    """
+    """Read time depedant variables in the netCDf files."""
     ind_b = time_ind
     ind_e = time_ind + time_size
 
@@ -707,9 +689,7 @@ def read_timedep_vars(data, nc_id, soft_vers, time_ind, time_size, logger):
 
 
 def calc_pr2(data, soft_vers, logger):
-    """
-    Do the calculation of the Pr² according to the sofware version of the LIDAR
-    """
+    """Calculate Pr² according to the sofware version of the LIDAR."""
     # Pr²
     logger.debug("calculing Pr2 using:")
     if soft_vers < 0.7:
@@ -727,14 +707,13 @@ def calc_pr2(data, soft_vers, logger):
                     data["p_calc"] = CONSTANT_P_CALC
 
         logger.debug("P = (beta_raw*stddev)*p_calc")
-        print("0 value P_CALC :", np.any(data["p_calc"] == 0))
         data["rcs_0"] = (
             (data["beta_raw"].T * data["stddev"]) / data["p_calc"]
         ).T * np.square(data["range"])
     else:
         # find a way to pass the overlap
         logger.debug(
-            "P = (beta_raw/r2*ovl*p_calc*scaling+base)" + "*laser_pulses*range_scale"
+            "P = (beta_raw/r2*ovl*p_calc*scaling+base)*laser_pulses*range_scale"
         )
         # Warning: For this type of file we do not correct the overlap function
         # as it is not available in the netCDf file
@@ -744,25 +723,23 @@ def calc_pr2(data, soft_vers, logger):
 
 
 def read_data(list_files, conf, logger):
-    """
-    Raw2L1 plugin to read raw data of Jenoptik CHM15K
-    """
-    logger.debug("Start reading of data using reader for " + BRAND + " " + MODEL)
+    """Read jeanoptik/lufft chm15k data."""
+    logger.debug("Start reading of data using reader for %s %s", BRAND, MODEL)
 
     # check if overlap file available and read it if available
     # ------------------------------------------------------------------------
     overlap = None
-    if "ancillary" in conf and len(conf["ancillary"]) != 0:
-        overlap = read_overlap(conf["ancillary"][0][0], conf["missing_float"], logger)
+    if "ancillary" in conf and conf["ancillary"] is not None:
+        overlap = read_overlap(conf["ancillary"][0][0], logger)
     elif "overlap_file" in conf:
-        overlap = read_overlap(conf["overlap_file"], conf["missing_float"], logger)
+        overlap = read_overlap(conf["overlap_file"], logger)
 
     # analyse the files to read to get the complete size of data
     # ------------------------------------------------------------------------
     logger.info("determining size of var to read")
     vars_dim = get_vars_dim(list_files, logger)
     for dim, size in list(vars_dim.items()):
-        logger.debug(dim + ": " + str(size))
+        logger.debug("%s : %d", dim, size)
     logger.info("initializing data output array")
     data = init_data(vars_dim, conf, logger)
 
@@ -776,10 +753,10 @@ def read_data(list_files, conf, logger):
             raw_data = nc.Dataset(ifile, "r")
             nb_files_read += 1
         except RuntimeError:
-            logger.error("109 unable to load " + ifile + " trying next one")
+            logger.exception("109 unable to load %d trying next one", ifile)
 
         nb_files += 1
-        logger.debug("reading %02d: " % (nb_files) + ifile)
+        logger.debug("reading %02d: %s", nb_files, ifile)
 
         # Data which only need to be read in one file
         if nb_files_read == 1:
@@ -814,7 +791,7 @@ def read_data(list_files, conf, logger):
 
         # Time dependant variables
         # --------------------------------------------------------------------
-        logger.info("reading time dependant variables for file %02d" % nb_files_read)
+        logger.info("reading time dependant variables for file %02d", nb_files_read)
         if nb_files_read > 1:
             time_size, data = read_time_var(data, raw_data, time_ind, logger)
         data = read_timedep_vars(data, raw_data, soft_vers, time_ind, time_size, logger)
@@ -858,7 +835,7 @@ def read_data(list_files, conf, logger):
 
     if nb_files_read == 0:
         for file_ in list_files:
-            logger.critical(f"109 Tried to read '{file_}'. No file could be read")
+            logger.critical("109 Tried to read %s. No file could be read", file_)
         sys.exit(1)
 
     return data

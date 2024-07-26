@@ -66,8 +66,3 @@ def tmp_dir(data_dir):
 @pytest.fixture()
 def instr_dir_hatpro(input_dir):
     return input_dir / "rpg_hatpro"
-
-
-@pytest.fixture()
-def instr_dir_chm15k(input_dir):
-    return input_dir / "lufft_chm15k"
