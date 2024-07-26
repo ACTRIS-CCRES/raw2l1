@@ -12,25 +12,29 @@ default_stages:
     post-rewrite,
   ]
 repos:
-  - repo: local
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.6.0
     hooks:
-      - id: pip-to-conda
-        name: Generate pip dependency from conda
-        language: python
-        entry: python scripts/generate_pip_deps_from_conda.py environments/environment.yml requirements/requirements.txt
-        files: ^(environments/environment.yml|requirements/requirements.txt)$
-        pass_filenames: false
-        additional_dependencies: [tomli, pyyaml]
-      - id: pip-to-conda-dev
-        name: Generate pip dependency from conda for dev
-        language: python
-        entry: python scripts/generate_pip_deps_from_conda.py environments/environment-dev.yml requirements/requirements-dev.txt
-        files: ^(environments/environment-dev.yml|requirements/requirements-dev.txt)$
-        pass_filenames: false
-        additional_dependencies: [tomli, pyyaml]
+      - id: check-case-conflict
+      - id: check-docstring-first
+      - id: check-executables-have-shebangs
+      - id: check-merge-conflict
+      - id: check-shebang-scripts-are-executable
+      - id: end-of-file-fixer
+        exclude: CHANGELOG.md
+      - id: fix-byte-order-marker
+      - id: mixed-line-ending
+        args: ["--fix", "lf"]
+      - id: trailing-whitespace
+        exclude: CHANGELOG.md
+      - id: check-json
+      - id: check-toml
+      - id: check-yaml
+      - id: detect-private-key
+      - id: requirements-txt-fixer
   - repo: https://github.com/astral-sh/ruff-pre-commit
     # Ruff version.
-    rev: v0.3.2
+    rev: v0.5.4
     hooks:
       # Run the linter.
       - id: ruff
@@ -39,3 +43,8 @@ repos:
       # Run the formatter.
       - id: ruff-format
         types_or: [python, pyi, jupyter]
+
+exclude: |
+  (?x)(
+      ^tests/data/
+  )

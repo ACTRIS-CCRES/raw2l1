@@ -68,7 +68,7 @@ filterwarnings = [
     "ignore::RuntimeWarning",
     "ignore::DeprecationWarning",
     "ignore::FutureWarning",
-    "default:::ccres_disdrometer_processing.*",
+    "default:::raw2l1.*",
 ]
 
 [tool.coverage.run]
@@ -99,17 +99,40 @@ ignore_errors = true
 line-length = 88
 indent-width = 4
 
-target-version = "py311"
+target-version = "py312"
+
+exclude = ["docs"]
 
 [tool.ruff.lint]
-select = [
-    "E", # pycodestyle errors
-    "W", # pycodestyle warnings
-    "F", # pyflakes. "E" + "W" + "F" + "C90" (mccabe complexity) is equivalent to flake8
-    "I", # isort
+select = ["ALL"]
+ignore = [
+    "ANN",    # missing types, use mypy for this
+    "C9",     # too complex, fix me later
+    "COM812", # Formatting
+    "D100",   # allow missing documentation
+    "D101",   # allow missing documentation
+    "D102",   # allow missing documentation
+    "D103",   # allow missing documentation
+    "D104",   # allow missing documentation
+    "D105",   # allow missing documentation
+    "D106",   # allow missing documentation
+    "D107",   # allow missing documentation
+    "D205",   # allow long multi-line summary
+    "D211",   # conflicting documentation rule
+    "D213",   # conflicting documentation rule
+    "DTZ00",  # do not check timezone info
+    "FBT001", # Boolean default positional argument in function
+    "FBT002", # Boolean default positional argument in function
+    "FIX002", # TODOs
+    "ISC001", # Formatter wants me
+    "N8",     # uppercase variable names
+    "PERF",   # try except in loop
+    "PLR",    # too many arguments etc.
+    "RUF002", # unicode in doc string
+    "TD002",  # TODOs
+    "TD003",  # TODOs
+    "PGH003", # rule for type ignore
 ]
-ignore = []
-
 fixable = ["ALL"]
 unfixable = []
 
@@ -121,5 +144,52 @@ max-complexity = 10
 [tool.ruff.lint.pydocstyle]
 convention = "numpy"
 
-[tool.ruff.isort]
+[tool.ruff.lint.isort]
 known-first-party = ["raw2l1"]
+
+[tool.ruff.lint.extend-per-file-ignores]
+"tests/**/*.py" = [
+    "S101",   # asserts allowed in tests...
+    "ARG",    # Unused function args -> fixtures nevertheless are functionally relevant...
+    "FBT",    # Don't care about booleans as positional arguments in tests, e.g. via @pytest.mark.parametrize()
+    "INP001", # implicit namespace
+    # The below are debateable
+    "PLR2004", # Magic value used in comparison, ...
+    "S311",    # Standard pseudo-random generators are not suitable for cryptographic purposes
+]
+
+[tool.mypy]
+check_untyped_defs = true
+
+[[tool.mypy.overrides]]
+module = ["matplotlib.*", "mpl_toolkits.*", "netCDF4.*", "scipy.*", "xarray.*"]
+ignore_missing_imports = true
+
+[tool.bumpversion]
+current_version = "3.2.0"
+parse = "(?P<major>\\d+)\\.(?P<minor>\\d+)\\.(?P<patch>\\d+)"
+serialize = ["{major}.{minor}.{patch}"]
+tag = true
+sign_tags = false
+tag_name = "v{new_version}"
+tag_message = "Bump version: {current_version} → {new_version}"
+allow_dirty = true
+commit = true
+message = "build(bump version): {current_version} → {new_version}"
+commit_args = ""
+
+[[tool.bumpversion.files]]
+filename = "src/raw2l1/version.py"
+
+[[tool.bumpversion.files]]
+filename = "docs/source/conf.py"
+
+[[tool.bumpversion.files]]
+filename = "CHANGELOG.md"
+search = "Unreleased"
+
+[[tool.bumpversion.files]]
+filename = "CHANGELOG.md"
+search = "{current_version}...HEAD"
+replace = "{current_version}...{new_version}"
+ignore_missing_version = true
