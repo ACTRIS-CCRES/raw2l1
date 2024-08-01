@@ -13,14 +13,12 @@ LOG_LEVEL = ["debug", "info", "warning", "error", "critical"]
 
 
 def check_date_format(input_date):
-    """
-    Check the format of the date argument
-    """
+    """Check the format of the date argument."""
     try:
         dt_date = dt.datetime.strptime(input_date, DATE_FMT)
-    except ValueError:
+    except ValueError as err:
         msg = f"{input_date} has not the required format (YYYYMMDD)"
-        raise argparse.ArgumentTypeError(msg)
+        raise argparse.ArgumentTypeError(msg) from err
 
     return dt_date
 
@@ -40,17 +38,12 @@ def check_anc_lists_files(input_files):
         The list of list of input files
 
     """
-    # check if files exist
-    input_list = check_input_files(input_files)
-
-    return input_list
+    return check_input_files(input_files)
 
 
 def check_input_files(input_files):
-    """
-    check if the input files exist and return a list of the input files found
-    """
-    list_files = glob.glob(input_files)
+    """Check if the input files exist and return a list of the input files found."""
+    list_files = glob.glob(input_files)  # noqa: PTH207
 
     if len(list_files) == 0:
         msg = "No input files found corresponding to the file pattern "
@@ -61,32 +54,27 @@ def check_input_files(input_files):
 
 
 def check_output_dir(output_file):
-    """
-    check if the directory provided for the output file is writable
-    """
-    output_file = os.path.abspath(output_file)
-    out_dir = os.path.dirname(output_file)
+    """Check if the directory provided for the output file is writable."""
+    output_file = os.path.abspath(output_file)  # noqa: PTH100
+    out_dir = os.path.dirname(output_file)  # noqa: PTH120
 
     if not check_dir(out_dir):
-        msg = "output directory " + out_dir
-        msg += " doesn't exist or is not writable"
+        msg = "output directory doesn't exist or is not writable"
         raise argparse.ArgumentTypeError(msg)
 
     return output_file
 
 
 def check_input_file_size(list_files, size_limit):
-    """
-    check size of input files. If files have a lower size they are rejected
-    """
+    """Check size of input files. If files have a lower size they are rejected."""
     err_msg = "WARNING -102 No Usable data in the input file '{}'"
 
     final_list = []
     for f in list_files:
-        if os.path.getsize(f) > size_limit:
+        if os.path.getsize(f) > size_limit:  # noqa: PTH202
             final_list.append(f)
         else:
-            print(err_msg.format(f))
+            print(err_msg.format(f))  # noqa: T201
 
     return final_list
 
@@ -94,7 +82,7 @@ def check_input_file_size(list_files, size_limit):
 def init_args_parser():
     """
     Configure the argument parser to read and do basic check on input
-    arguments
+    arguments.
     """
     parser = argparse.ArgumentParser(description=PROG_DESC)
 
@@ -126,6 +114,7 @@ def init_args_parser():
         type=check_anc_lists_files,
         action="append",
         nargs="*",
+        default=None,
         dest="ancillary",
         help="Name or pattern of the ancillary file(s) needed to do the conversion",
     )
@@ -136,7 +125,7 @@ def init_args_parser():
         required=False,
         type=int,
         default=0,
-        help="Minimum size of input files in bytes. Files with lower size will be rejected",  # NOQA
+        help="Minimum size of input files in bytes. Files with lower size will be rejected",  # noqa: E501
     )
     parser.add_argument(
         "--check_timeliness",
@@ -152,8 +141,7 @@ def init_args_parser():
         required=False,
         type=int,
         default=2,
-        help="Maximum age of data in input files. Warning will be logged if older data are found."  # NOQA
-        "Default value is 2 hours. Option only for realtime processing",
+        help="Maximum age of data in input files. Warning will be logged if older data are found. Default value is 2 hours. Option only for realtime processing",  # noqa: E501
     )
 
     # reprocessing filter dates
@@ -191,35 +179,34 @@ def init_args_parser():
 
 
 def get_input_args(argv):
-    """
-    return input arguments into a dictionnary
-    """
+    """Return input arguments as a dictionnary."""
     # init argument parser
     parser = init_args_parser()
 
     try:
         parse_args = parser.parse_args(argv)
     except argparse.ArgumentError as exc:
-        print("\n", exc.argument)
+        print("\n", exc.argument_name)  # noqa: T201
         sys.exit(1)
 
     # check input file
     list_input = check_input_file_size(
-        [f for f in chain.from_iterable(parse_args.input_file)],
+        list(chain.from_iterable(parse_args.input_files)),
         parse_args.file_min_size,
     )
 
     if len(list_input) == 0:
         err_msg = "CRITICAL - 102 No Usable data in any file. Quitting raw2l1"
-        print(err_msg)
+        print(err_msg)  # noqa: T201
         sys.exit(1)
 
     # check ancillary files
-    print("parse : ", parse_args.ancillary)
     list_anc = []
-    if parse_args.ancillary:
+    if parse_args.ancillary is not None:
         for anc_list in parse_args.ancillary:
-            list_anc.append([f for f in chain.from_iterable(anc_list)])
+            list_anc.append(list(chain.from_iterable(anc_list)))
+    else:
+        list_anc = None
 
     input_args = {}
     input_args["date"] = parse_args.date

@@ -14,21 +14,19 @@ NAME = "raw2l1"
 
 
 def welcome_msg():
-    """
-    print a welcome message in the terminal
-    """
-    print()
-    print(r"--------------------------------------------------")
-    print(NAME)
-    print(r" ___  __   _   _  ___ _   __  ")
-    print(r"| _ \/  \ | | | |(_  | | /  | ")
-    print(r"| v / /\ || 'V' | / /| |_`7 | ")
-    print(r"|_|_\_||_|!_/ \_!|___|___||_| ")
-    print()
-    print(r"version: " + __version__)
-    print(r"SIRTA IPSL/CNRS/EP 2014-2024")
-    print(r"--------------------------------------------------")
-    print()
+    """Print a welcome message in the terminal."""
+    print()  # noqa: T201
+    print(r"--------------------------------------------------")  # noqa: T201
+    print(NAME)  # noqa: T201
+    print(r" ___  __   _   _  ___ _   __  ")  # noqa: T201
+    print(r"| _ \/  \ | | | |(_  | | /  | ")  # noqa: T201
+    print(r"| v / /\ || 'V' | / /| |_`7 | ")  # noqa: T201
+    print(r"|_|_\_||_|!_/ \_!|___|___||_| ")  # noqa: T201
+    print()  # noqa: T201
+    print(r"version: " + __version__)  # noqa: T201
+    print(r"SIRTA IPSL/CNRS/EP 2014-2024")  # noqa: T201
+    print(r"--------------------------------------------------")  # noqa: T201
+    print()  # noqa: T201
 
     return
 
@@ -38,7 +36,7 @@ def raw2l1(
     conf_file: io.TextIOWrapper,
     input_files: list[str],
     output_file: str,
-    ancillary: list[str] = [],
+    ancillary: list[list[str]] | None = None,
     file_min_size: int = 0,
     check_timeliness: bool = False,
     file_max_age: int = 2,
@@ -47,15 +45,13 @@ def raw2l1(
     log_file_level: str = "info",
     verbose: str = "info",
 ):
-    """
-    Main module of raw2l1
-    """
+    """Run raw2l1 processing."""
     welcome_msg()
 
     # Start logger
     # -------------------------------------------------------------------------
     logger = log.init(log_file, log_file_level, verbose, "raw2l1")
-    logger.info(f"logs are saved in {log_file!s}")
+    logger.info("logs are saved in %s", log_file)
 
     # reading configuration file
     # -------------------------------------------------------------------------
@@ -84,7 +80,7 @@ def raw2l1(
 
     # Add directory containing reader to path
     # -------------------------------------------------------------------------
-    logger.debug("adding " + setting.get("conf", "reader_dir") + " to path")
+    logger.debug("adding %s to path", setting.get("conf", "reader_dir"))
     sys.path.append(setting.get("conf", "reader_dir"))
 
     # Reading lidar data using user defined reader
@@ -118,21 +114,21 @@ def raw2l1(
 def cli():
     # Read imput arguments
     # -------------------------------------------------------------------------
-    input_args = ag.get_input_args(sys.argv)
+    input_args = ag.get_input_args(sys.argv[1:])
 
     raw2l1(
-        input_args.date,
-        input_args.conf_file,
-        input_args.input,
-        input_args.output,
-        ancillary=input_args.ancillary,
-        file_min_size=input_args.input_min_size,
-        check_timeliness=input_args.input_check_time,
-        file_max_age=input_args.input_max_age,
-        filter_day=input_args.filter_day,
-        log_file=input_args.log,
-        log_file_level=input_args.log_level,
-        verbose=input_args.verbose,
+        input_args["date"],
+        input_args["conf"],
+        input_args["input"],
+        input_args["output"],
+        ancillary=input_args["ancillary"],
+        file_min_size=input_args["input_min_size"],
+        check_timeliness=input_args["input_check_time"],
+        file_max_age=input_args["input_max_age"],
+        filter_day=input_args["filter_day"],
+        log_file=input_args["log"],
+        log_file_level=input_args["log_level"],
+        verbose=input_args["verbose"],
     )
 
     sys.exit(0)

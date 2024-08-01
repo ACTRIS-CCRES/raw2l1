@@ -5,13 +5,12 @@ import logging
 
 
 def add(conf, input_args, version, logger):
-    """
-    Allow to add parameters in conf section of conf object
-    """
+    """Allow to add parameters in conf section of conf object."""
     # Warning: for configuration file, we do not use the filename but the
     # filehandler
     #   to access filename use, conf_file.name
     for key, value in list(input_args.items()):
+        logger.debug("adding %s : %s to conf", key, value)
         conf.set("conf", key, value)
 
     # add version in conf
@@ -36,9 +35,7 @@ def init(
     version: str,
     logger: logging.Logger,
 ):
-    """
-    Load and check the INI configuration file
-    """
+    """Load and check the INI configuration file."""
     conf = configparser.RawConfigParser()
     conf.optionxform = str
     conf.read(conf_file.name)
@@ -66,7 +63,7 @@ def init(
         logger.debug("raw2l1 configuration")
         for section in conf.sections():
             for key, value in conf.items(section):
-                logger.debug("[" + section + "] " + key + " : " + repr(value))
+                logger.debug("[%s] %s : %s", section, key, repr(value))
         logger.debug("end of configuration")
 
     return conf
