@@ -1,3 +1,5 @@
+from pathlib import Path
+
 import netCDF4 as nc
 import numpy as np
 import pytest
@@ -162,7 +164,7 @@ def test_conversion(
     (
         "date",
         "chm15k_conf_dir",
-        "conf_file",
+        "chm15k_conf_file",
         "chm15k_input_dir",
         "input_file_chm15k",
         "overlap_file",
@@ -174,10 +176,10 @@ def test_conversion(
         "test_msg",
     ),
     [
-        # overlap ile provided with `and` option
+        # overlap file provided with `anc` option
         (
             "20120306",
-            "conf_dir",
+            "chm15k_conf_dir",
             "conf_lufft_chm15k_eprofile.ini",
             "chm15k_input_dir",
             "20150427_SIRTA_CHM150101_000.nc",
@@ -191,18 +193,48 @@ def test_conversion(
         ),
         # overlap file defined in conf file
         (
-            "20150427_SIRTA_CHM150101_000.nc",
+            "20150427",
             "chm15k_conf_dir",
-            "conf_lufft_chm15k_eprofile.ini",
+            "conf_lufft_chm15k-ovl_eprofile.ini",
             "chm15k_input_dir",
             "20150427_SIRTA_CHM150101_000.nc",
-            "",
+            "TUB140013_20150211_4096.cfg",
             True,
             "chm15k_output_dir",
             "chm15k_ovl-in-conf.nc",
             "tmp_dir",
             0,
             "good overlap in conf",
+        ),
+        # bad overlap
+        (
+            "20150427_SIRTA_CHM150101_000.nc",
+            "chm15k_conf_dir",
+            "conf_lufft_chm15k_eprofile.ini",
+            "chm15k_input_dir",
+            "20150427_SIRTA_CHM150101_000.nc",
+            "jenoptik_chm15k_overlap.txt",
+            False,
+            "chm15k_output_dir",
+            "chm15k_ovl-bad.nc",
+            "tmp_dir",
+            0,
+            "bad overlap",
+        ),
+        # empty overlap
+        (
+            "20150427_SIRTA_CHM150101_000.nc",
+            "chm15k_conf_dir",
+            "conf_lufft_chm15k_eprofile.ini",
+            "chm15k_input_dir",
+            "20150427_SIRTA_CHM150101_000.nc",
+            "empty_overlap.txt",
+            False,
+            "chm15k_output_dir",
+            "chm15k_ovl-empty.nc",
+            "tmp_dir",
+            0,
+            "empty overlap",
         ),
     ],
     indirect=[
@@ -213,20 +245,34 @@ def test_conversion(
     ],  # variables in fixtures
 )
 def test_overlap(
-    date,
-    chm15k_conf_dir,
-    conf_file,
-    chm15k_input_dir,
-    input_file_chm15k,
-    overlap_file,
-    overlap_in_conf,
-    chm15k_output_dir,
-    output_file_chm15k,
-    tmp_dir,
-    expected_ret_code,
-    test_msg,
+    date: str,
+    chm15k_conf_dir: Path,
+    chm15k_conf_file: str,
+    chm15k_input_dir: Path,
+    input_file_chm15k: str,
+    overlap_file: str,
+    overlap_in_conf: bool,
+    chm15k_output_dir: Path,
+    output_file_chm15k: str,
+    tmp_dir: Path,
+    expected_ret_code: int,
+    test_msg: str,
 ):
-    conf_file = open(chm15k_conf_dir / conf_file)  # noqa: SIM115 PTH123
+    if not overlap_in_conf:
+        conf_file = (chm15k_conf_dir / chm15k_conf_file).open()
+    else:
+        # create the config file with full path to overlap file
+        tmp_conf_file = tmp_dir / chm15k_conf_file
+        tag_ovl = "{overlap_file}"
+        with (chm15k_conf_dir / chm15k_conf_file).open() as fin:
+            lines = fin.readlines()
+        with tmp_conf_file.open("w") as fout:
+            for line in lines:
+                if tag_ovl in line:
+                    line = line.replace(tag_ovl, str(chm15k_input_dir / overlap_file))  # noqa: PLW2901
+                fout.write(line)
+        conf_file = tmp_conf_file.open()
+
     input_file = str(chm15k_input_dir / input_file_chm15k)
     ovl_file = [[str(chm15k_input_dir / overlap_file)]]
     output_file = str(chm15k_output_dir / output_file_chm15k)
@@ -245,164 +291,42 @@ def test_overlap(
     assert ret_code == expected_ret_code, f"{test_msg} failed"
 
 
-# class TestChm15kOverlap(unittest.TestCase):
-#     IN_DIR = os.path.join(TEST_IN_DIR, "jenoptik_chm15k")
-#     conf_file = os.path.join(CONF_DIR, "conf_lufft_chm15k_eprofile.ini")
+def test_cho_substraction(
+    chm15k_conf_dir, chm15k_input_dir, chm15k_output_dir, tmp_path
+):
+    """Test CHO substraction is working."""
+    missing_cbh_prod = -9
+    missing_cbh_orig = -1
 
-#     def test_chm15k_overlap_good(self):
-#         date = "20150427"
-#         test_ifile = os.path.join(self.IN_DIR, "20150427_SIRTA_CHM150101_000.nc")
-#         test_ovl_file = os.path.join(self.IN_DIR, "TUB140013_20150211_4096.cfg")
-#         test_ofile = os.path.join(
-#             TEST_OUT_DIR, "test_chm15k_20150427_sirta_good-ovl.nc"
-#         )
-#         test_cfile = os.path.join(CONF_DIR, "conf_lufft_chm15k_eprofile.ini")
+    date = "20161113"
+    conf_file = (chm15k_conf_dir / "conf_lufft_chm15k_eprofile.ini").open()
+    input_file = str(
+        chm15k_input_dir
+        / "ceilometer-eprofile_20161113193414_06610_A201611131920_CHM15k.nc"
+    )
+    output_file = str(chm15k_output_dir / "validation_cho.nc")
+    log_file = str(tmp_path / "raw2l1.log")
 
-#         resp = subprocess.check_call(
-#             [
-#                 MAIN_DIR + PRGM,
-#                 date,
-#                 test_cfile,
-#                 test_ifile,
-#                 test_ofile,
-#                 "-anc",
-#                 test_ovl_file,
-#                 "-log_level",
-#                 "debug",
-#                 "-v",
-#                 "debug",
-#             ]
-#         )
+    ret_code = raw2l1(
+        date, conf_file, [input_file], output_file, verbose="debug", log_file=log_file
+    )
 
-#         self.assertEqual(resp, 0, "reading overlap")
+    assert ret_code == 0, "Conversion failed"
 
-#     def test_chm15k_overlap_good_conf(self):
-#         """
-#         test that the reading of overlap TUB file defined in conf file goes well
-#         """
+    # read cbh from created file
+    nc_prod = nc.Dataset(output_file)
+    cbh_prod = nc_prod.variables["cloud_base_height"][:]
+    cbh_prod = np.ma.filled(cbh_prod)
+    cbh_prod = cbh_prod.astype(int)
+    nc_prod.close()
 
-#         date = "20150427"
-#         test_ifile = os.path.join(self.IN_DIR, "20150427_SIRTA_CHM150101_000.nc")
-#         test_ofile = os.path.join(
-#             TEST_OUT_DIR, "test_chm15k_20150427_sirta_good-ovl-conf-file.nc"
-#         )
-#         test_cfile = os.path.join(CONF_DIR, "conf_lufft_chm15k_eprofile.ini")
+    # read cbh from original file
+    nc_orig = nc.Dataset(input_file)
+    cbh_orig = nc_orig.variables["cbh"][:]
+    cho_orig = nc_orig.variables["cho"][:]
+    cbh_orig[cbh_orig != missing_cbh_orig] = (
+        cbh_orig[cbh_orig != missing_cbh_orig] - cho_orig
+    )
+    cbh_orig[cbh_orig == missing_cbh_orig] = missing_cbh_prod
 
-#         resp = subprocess.check_call(
-#             [
-#                 MAIN_DIR + PRGM,
-#                 date,
-#                 test_cfile,
-#                 test_ifile,
-#                 test_ofile,
-#                 "-log_level",
-#                 "debug",
-#                 "-v",
-#                 "debug",
-#             ]
-#         )
-
-#         self.assertEqual(resp, 0, "reading overlap define conf file")
-
-#     def test_chm15k_overlap_bad(self):
-#         date = "20150427"
-#         test_ifile = os.path.join(self.IN_DIR, "20150427_SIRTA_CHM150101_000.nc")
-#         test_ovl_file = os.path.join(self.IN_DIR, "jenoptik_chm15k_overlap.txt")
-#         test_ofile = os.path.join(TEST_OUT_DIR, "test_chm15k_20150427_sirta_bad-ovl.nc")
-#         test_cfile = os.path.join(CONF_DIR, "conf_lufft_chm15k_eprofile.ini")
-
-#         resp = subprocess.check_call(
-#             [
-#                 MAIN_DIR + PRGM,
-#                 date,
-#                 test_cfile,
-#                 test_ifile,
-#                 test_ofile,
-#                 "-anc",
-#                 test_ovl_file,
-#                 "-log_level",
-#                 "debug",
-#                 "-v",
-#                 "debug",
-#             ]
-#         )
-
-#         self.assertEqual(resp, 0, "bad overlap file but readable")
-
-#     def test_chm15k_overlap_empty(self):
-#         date = "20150427"
-#         test_ifile = os.path.join(self.IN_DIR, "20150427_SIRTA_CHM150101_000.nc")
-#         test_ovl_file = os.path.join(self.IN_DIR, "empty_overlap.txt")
-#         test_ofile = os.path.join(
-#             TEST_OUT_DIR, "test_chm15k_20150427_sirta_empty-ovl.nc"
-#         )
-#         test_cfile = os.path.join(CONF_DIR, "conf_lufft_chm15k_eprofile.ini")
-
-#         resp = subprocess.check_call(
-#             [
-#                 MAIN_DIR + PRGM,
-#                 date,
-#                 test_cfile,
-#                 test_ifile,
-#                 test_ofile,
-#                 "-anc",
-#                 test_ovl_file,
-#                 "-log_level",
-#                 "debug",
-#                 "-v",
-#                 "debug",
-#             ]
-#         )
-
-#         self.assertEqual(resp, 0, "bad overlap file but readable")
-
-#     def test_cho_substraction(self):
-#         """test that the cho value is substracted from cbh"""
-
-#         missing_cbh_prod = -9
-#         missing_cbh_orig = -1
-
-#         date = "20161113"
-#         test_ifile = os.path.join(
-#             self.IN_DIR,
-#             "ceilometer-eprofile_20161113193414_06610_A201611131920_CHM15k.nc",
-#         )
-#         test_ofile = os.path.join(TEST_OUT_DIR, "validation_cho.nc")
-#         test_cfile = os.path.join(CONF_DIR, "conf_lufft_chm15k_eprofile.ini")
-
-#         # create file using raw2l1
-#         subprocess.check_call(
-#             [
-#                 MAIN_DIR + PRGM,
-#                 date,
-#                 test_cfile,
-#                 test_ifile,
-#                 test_ofile,
-#                 "-log_level",
-#                 "debug",
-#                 "-v",
-#                 "debug",
-#             ]
-#         )
-
-#         # read cbh from created file
-#         nc_prod = nc.Dataset(test_ofile)
-#         cbh_prod = nc_prod.variables["cloud_base_height"][:]
-#         cbh_prod = np.ma.filled(cbh_prod)
-#         cbh_prod = cbh_prod.astype(int)
-#         nc_prod.close()
-
-#         # read cbh from original file
-#         nc_orig = nc.Dataset(test_ifile)
-#         cbh_orig = nc_orig.variables["cbh"][:]
-#         cho_orig = nc_orig.variables["cho"][:]
-#         cbh_orig[cbh_orig != missing_cbh_orig] = (
-#             cbh_orig[cbh_orig != missing_cbh_orig] - cho_orig
-#         )
-#         cbh_orig[cbh_orig == missing_cbh_orig] = missing_cbh_prod
-
-#         self.assertEqual(cbh_orig.tolist(), cbh_prod.tolist(), "")
-
-
-# if __name__ == "__main__":
-#     unittest.main()
+    assert cbh_orig.tolist() == cbh_prod.tolist()
