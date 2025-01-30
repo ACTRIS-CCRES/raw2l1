@@ -344,7 +344,7 @@ def get_soft_version(str_version):
     function to get the number of acquisition software version as a float
     """
 
-    if type(str_version) == np.int16:  # noqa: E721
+    if isinstance(str_version, np.int16):
         version_nb = float(str_version) / 1000.0
     else:
         version_nb = float(str_version.split(" ")[2])
