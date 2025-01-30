@@ -8,7 +8,11 @@ target-version = "py311"
 ["lint"]
 # Enable pycodestyle (`E`) and Pyflakes (`F`) codes by default.
 select = ["E", "F", "UP", "I"]
-ignore = []
+ignore = [
+    "UP031",
+    "COM812",
+    "ISC001", # incompatible rules
+]
 
 # Allow autofix for all enabled rules (when `--fix`) is provided.
 fixable = [

@@ -1,3 +1,7 @@
+- v3.2.1
+  - SigmaSpace MiniMPL
+    - Correct missing value for `cloud_base_height` variable in config file.
+
 - v3.2.0
   - core
     - Update to make raw2l1 compatible with python > 3.7 and numpy < 2.0.0
