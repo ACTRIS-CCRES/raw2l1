@@ -472,7 +472,7 @@ def init_data(data, data_dim, conf, logger):
     # Time, layer dependant variables
     # -------------------------------------------------------------------------
     data["cbh"] = np.ones((data_dim["time"], CBH_DIM), dtype=np.int32) * missing_int
-    data["clh"] = np.ones((data_dim["time"], CLH_DIM), dtype=np.int32) * missing_int
+    data["clh"] = np.ones((data_dim["time"], CLH_DIM), dtype=np.float32) * missing_float
     data["cloud_amount"] = (
         np.ones((data_dim["time"], CLH_DIM), dtype=np.int16) * missing_int
     )
