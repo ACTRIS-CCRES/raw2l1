@@ -12,6 +12,9 @@ import sys
 import netCDF4 as nc
 import numpy as np
 
+LIST_LASER_TYPE = ["spectra", "brilliant", "qsmart"]
+
+
 # brand and model of the LIDAR
 BRAND = "Gordien Stratos"
 MODEL = "IPRAL"
@@ -154,7 +157,7 @@ def get_channel_index(file_id, n_chan, chan_conf, logger):
 
     if len(uniq_index) == 1 and list(uniq_index) == [None]:
         logger.critical(
-            "No requested channels in conf file could be identified." "stopping code"
+            "No requested channels in conf file could be identified.stopping code"
         )
         sys.exit(1)
 
@@ -351,7 +354,7 @@ def read_header(file_id, data, data_dim, index, logger, date_only=False):
     # channels description
     # ------------------------------------------------------------------------
     for i_chan in range(data_dim["n_chan"]):
-        f"rcs_{i_chan:02d}"
+        var_name = f"rcs_{i_chan:02d}"  # noqa: F841
 
         line = file_id.readline().decode(DEFAULT_ENCODING)
         logger.debug("parsing : %s", line.strip())
@@ -402,13 +405,45 @@ def read_header(file_id, data, data_dim, index, logger, date_only=False):
     return data
 
 
-def read_profiles(file_id, data, data_dim, index, logger):
+def read_profiles(file_id, data, data_dim, index, laser_type, logger):
     """read profile for each channel"""
 
     # skip header and channels descriptions
-    for i in range(N_HEADER_LINE + data_dim["n_chan"] + 1):
+    active = {i_chan: True for i_chan in range(data_dim["n_chan"])}
+    for i in range(N_HEADER_LINE):
         line = file_id.readline()
-        logger.debug("%2d %s", i, line.strip())
+
+    for i in range(data_dim["n_chan"]):
+        line = file_id.readline().decode(DEFAULT_ENCODING).strip()
+        logger.debug("%2d %s", i, line)
+
+        # check if some channel should be ignored
+        if laser_type == "spectra" and "BT3 " in line:
+            wheel_position = int(line.split()[8])
+            if wheel_position != 6:  # noqa: PLR2004
+                active[1] = False
+                active[6] = False
+                active[7] = False
+                active[8] = False
+                active[9] = False
+        elif laser_type == "qsmart":
+            # check if voltage is 0 meaning inactive channel
+            voltage = int(line.split()[5])
+            if voltage == 0:
+                active[i] = False
+        elif laser_type == "brilliant":
+            active[1] = False
+            active[4] = False
+            active[5] = False
+            active[6] = False
+            active[7] = False
+            active[8] = False
+            active[9] = False
+            active[12] = False
+            active[13] = False
+
+    # skip empty line
+    _ = file_id.readline()
 
     for i_chan in range(data_dim["n_chan"]):
         # check of channel is active
@@ -416,6 +451,9 @@ def read_profiles(file_id, data, data_dim, index, logger):
             continue
 
         tmp_data = np.fromfile(file_id, dtype="i4", count=data_dim["range"])
+
+        if active[i_chan] is False:
+            continue
 
         shots = data["n_shots"][i_chan]
 
@@ -425,20 +463,20 @@ def read_profiles(file_id, data, data_dim, index, logger):
             data[f"rcs_{i_chan:02d}"][index, :] = (
                 tmp_data / shots * max_range * 1000 / (2**adc - 1)
             )
-            data[f"units_{i_chan:02d}"] = "mV"
+            data["units_{i_chan:02d}"] = "mV"
         else:
             # It coincides with the ASCII converted by the Advanced Licel.exe
             # but it has no sense.
             # See Licel programming manual.pdf. Bins-per-microseconds number
             # from technical specifications 20 bins/microsec.
             reduction_factor = data["range_resol"] / DEFAULT_RESOLUTION
-            data[f"rcs_{i_chan:02d}"][index, :] = tmp_data / (
+            data["rcs_{i_chan:02d}"][index, :] = tmp_data / (
                 shots / (20 / reduction_factor)
             )
-            data[f"units_{i_chan:02d}"] = "MHz"
+            data["units_{i_chan:02d}"] = "MHz"
 
         # jump over space between profiles
-        file_id.seek(file_id.tell() + 2)
+        _ = file_id.seek(file_id.tell() + 2)
 
     return data
 
@@ -450,8 +488,16 @@ def read_data(list_files, conf, logger):
 
     # get conf parameters
     # ------------------------------------------------------------------------
-    conf["missing_float"]
-    conf["missing_int"]
+    missing_flt = conf["missing_float"]
+    missing_int = conf["missing_int"]
+    laser_type = conf["laser_type"]
+    remove_bckgrd = False
+    if "remove_bckgrd" in conf:
+        remove_bckgrd = conf["remove_bckgrd"]
+
+    # check type of laser
+    if laser_type not in LIST_LASER_TYPE:
+        logger.warning("unknown laser type %s", laser_type)
 
     # min and max alt for background signal calculation
     bck_min_alt, bck_max_alt = get_bck_alt(conf, logger)
@@ -468,7 +514,7 @@ def read_data(list_files, conf, logger):
         try:
             f_id = open(file_, "rb")
         except OSError:
-            logger.error("error trying to open " + file_)
+            logger.error("error trying to open %s", file_)
             continue
 
         # identify line of channel in file
@@ -482,10 +528,9 @@ def read_data(list_files, conf, logger):
 
         # read header
         # --------------------------------------------------------------------
+        date_only = False
         if ind != 0:
             date_only = True
-        else:
-            date_only = False
 
         data = read_header(f_id, data, data_dim, ind, logger, date_only=date_only)
 
@@ -497,7 +542,7 @@ def read_data(list_files, conf, logger):
         f_id.seek(0)
 
         # read profiles
-        data = read_profiles(f_id, data, data_dim, ind, logger)
+        data = read_profiles(f_id, data, data_dim, ind, laser_type, logger)
 
         # end of reading
         # --------------------------------------------------------------------
@@ -526,7 +571,11 @@ def read_data(list_files, conf, logger):
         square = np.square(data["range"])
 
         data[f"bckgrd_rcs_{i_chan:02d}"] = np.mean(profiles[:, bck_filter], axis=1)
+        # remove background is needed
+        if remove_bckgrd:
+            profiles = profiles - data[f"bckgrd_rcs_{i_chan:02d}"]
+
         data[f"rcs_{i_chan:02d}"] = profiles * square
-        data[f"units_rcs_{i_chan:02d}"] = data[f"units_{i_chan:02d}"] + ".m^2"
+        data["units_rcs_{i_chan:02d}"] = data["units_{i_chan:02d}"] + ".m^2"
 
     return data
