@@ -573,7 +573,7 @@ def read_data(list_files, conf, logger):
         data[f"bckgrd_rcs_{i_chan:02d}"] = np.mean(profiles[:, bck_filter], axis=1)
         # remove background is needed
         if remove_bckgrd:
-            profiles = profiles - data[f"bckgrd_rcs_{i_chan:02d}"]
+            profiles = (profiles.T - data[f"bckgrd_rcs_{i_chan:02d}"]).T
 
         data[f"rcs_{i_chan:02d}"] = profiles * square
         data["units_rcs_{i_chan:02d}"] = data["units_{i_chan:02d}"] + ".m^2"
