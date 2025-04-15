@@ -463,17 +463,17 @@ def read_profiles(file_id, data, data_dim, index, laser_type, logger):
             data[f"rcs_{i_chan:02d}"][index, :] = (
                 tmp_data / shots * max_range * 1000 / (2**adc - 1)
             )
-            data["units_{i_chan:02d}"] = "mV"
+            data[f"units_{i_chan:02d}"] = "mV"
         else:
             # It coincides with the ASCII converted by the Advanced Licel.exe
             # but it has no sense.
             # See Licel programming manual.pdf. Bins-per-microseconds number
             # from technical specifications 20 bins/microsec.
             reduction_factor = data["range_resol"] / DEFAULT_RESOLUTION
-            data["rcs_{i_chan:02d}"][index, :] = tmp_data / (
+            data[f"rcs_{i_chan:02d}"][index, :] = tmp_data / (
                 shots / (20 / reduction_factor)
             )
-            data["units_{i_chan:02d}"] = "MHz"
+            data[f"units_{i_chan:02d}"] = "MHz"
 
         # jump over space between profiles
         _ = file_id.seek(file_id.tell() + 2)
