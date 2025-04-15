@@ -576,6 +576,6 @@ def read_data(list_files, conf, logger):
             profiles = (profiles.T - data[f"bckgrd_rcs_{i_chan:02d}"]).T
 
         data[f"rcs_{i_chan:02d}"] = profiles * square
-        data["units_rcs_{i_chan:02d}"] = data["units_{i_chan:02d}"] + ".m^2"
+        data[f"units_rcs_{i_chan:02d}"] = data[f"units_{i_chan:02d}"] + ".m^2"
 
     return data
