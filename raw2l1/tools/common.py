@@ -8,7 +8,6 @@ SPEC_SECTIONS = []
 RESERV_ATTR = ["name", "dim", "value", "type", "value", "size", "_FillValue"]
 
 STRING_ATTR = [
-    "units",
     "comments",
     "long_name",
     "standard_name",
