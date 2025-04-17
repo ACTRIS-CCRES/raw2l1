@@ -493,7 +493,10 @@ def read_data(list_files, conf, logger):
     laser_type = conf["laser_type"]
     remove_bckgrd = False
     if "remove_bckgrd" in conf:
-        remove_bckgrd = conf["remove_bckgrd"]
+        if conf["remove_bckgrd"].lower() in ("true", "t", "yes", "y", "1"):
+            remove_bckgrd = True
+        else:
+            remove_bckgrd = False
 
     # check type of laser
     if laser_type not in LIST_LASER_TYPE:
@@ -573,6 +576,7 @@ def read_data(list_files, conf, logger):
         data[f"bckgrd_rcs_{i_chan:02d}"] = np.mean(profiles[:, bck_filter], axis=1)
         # remove background is needed
         if remove_bckgrd:
+            logger.debug("removing bckgrd for chan %d", i_chan)
             profiles = (profiles.T - data[f"bckgrd_rcs_{i_chan:02d}"]).T
 
         data[f"rcs_{i_chan:02d}"] = profiles * square
