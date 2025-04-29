@@ -432,7 +432,8 @@ def read_profiles(file_id, data, data_dim, index, laser_type, logger):
             if voltage == 0:
                 active[i] = False
         elif laser_type == "brilliant":
-            active[1] = False
+            active[2] = False
+            active[3] = False
             active[4] = False
             active[5] = False
             active[6] = False
@@ -441,6 +442,12 @@ def read_profiles(file_id, data, data_dim, index, laser_type, logger):
             active[9] = False
             active[12] = False
             active[13] = False
+            active[14] = False
+            active[15] = False
+
+            voltage = int(line.split()[5])
+            if voltage == 0:
+                active[i] = False
 
     # skip empty line
     _ = file_id.readline()
