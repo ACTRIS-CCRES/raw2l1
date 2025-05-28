@@ -357,7 +357,13 @@ def date_to_dt(date_num, date_units):
     convert date np.array from datenum to datetime.datetime
     """
 
-    return nc.num2date(date_num, units=date_units, calendar="standard")
+    return nc.num2date(
+        date_num,
+        units=date_units,
+        calendar="standard",
+        only_use_cftime_datetimes=False,
+        only_use_python_datetimes=True,
+    )
 
 
 def get_vars_dim(list_files, logger):
@@ -479,7 +485,9 @@ def init_data(vars_dim, conf, logger):
     data["bckgrd_rcs_0"] = (
         np.ones((vars_dim["time"],), dtype=np.float32) * missing_float
     )
-    data["average_time"] = np.ones((vars_dim["time"],), dtype=np.int32) * missing_int
+    data["average_time"] = (
+        np.ones((vars_dim["time"],), dtype=np.float32) * missing_float
+    )
     data["p_calc"] = np.ones((vars_dim["time"],), dtype=np.float32) * missing_int
     data["overlap"] = np.ones((vars_dim["range"],), dtype=np.float32) * missing_float
 
@@ -572,6 +580,8 @@ def read_scalar_vars(data, nc_id, soft_vers, logger):
     data["l0_wavelength"] = nc_id.variables["wavelength"][:]
     logger.debug("reading range_gate as range_resol")
     data["range_resol"] = nc_id.variables["range_gate"][:]
+    logger.debug("reading time resolution")
+    data["time_resol"] = nc_id.variables["average_time"][0] / 1000.0  # convert ms to s
     logger.debug("reading longitude")
     data["longitude"] = nc_id.variables["longitude"][:]
     logger.debug("reading latitude")
@@ -616,6 +626,10 @@ def read_timedep_vars(data, nc_id, soft_vers, time_ind, time_size, logger):
     data["sci"][ind_b:ind_e] = nc_id.variables["sci"][:]
     logger.debug("reading nn1")
     data["nn1"][ind_b:ind_e] = nc_id.variables["nn1"][:]
+    logger.debug("reading average time")
+    data["average_time"][ind_b:ind_e] = (
+        nc_id.variables["average_time"][:] / 1000.0
+    )  # convert ms to s
 
     logger.debug("reading nn2")
     try:
@@ -853,7 +867,7 @@ def read_data(list_files, conf, logger):
 
     # convert average__time into timedelta object
     tmp = np.array(
-        [dt.timedelta(seconds=value / 1000) for value in data["average_time"]]
+        [dt.timedelta(seconds=value.item()) for value in data["average_time"]]
     )
 
     data["start_time"] = data["time"] - tmp
