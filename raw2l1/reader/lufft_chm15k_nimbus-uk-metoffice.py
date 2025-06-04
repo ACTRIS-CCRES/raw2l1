@@ -443,6 +443,7 @@ def init_data(vars_dim, conf, logger):
     # scalar variables
     # -------------------------------------------------------------------------
     data["latitude"] = missing_float
+    data["time_resol"] = missing_float
     data["longitude"] = missing_float
     data["l0_wavelength"] = missing_float
     data["nominal_pulse_energy"] = missing_float
@@ -450,6 +451,9 @@ def init_data(vars_dim, conf, logger):
 
     # Time dependent variables
     # -------------------------------------------------------------------------
+    data["average_time"] = (
+        np.ones((vars_dim["time"],), dtype=np.float32) * missing_float
+    )
     data["vor"] = np.ones((vars_dim["time"],), dtype=np.int16) * missing_int
     data["voe"] = np.ones((vars_dim["time"],), dtype=np.int16) * missing_int
     data["tcc"] = np.ones((vars_dim["time"],), dtype=np.int8) * missing_int
@@ -474,7 +478,6 @@ def init_data(vars_dim, conf, logger):
     data["bckgrd_rcs_0"] = (
         np.ones((vars_dim["time"],), dtype=np.float32) * missing_float
     )
-    data["average_time"] = np.ones((vars_dim["time"],), dtype=np.int32) * missing_int
     data["p_calc"] = np.ones((vars_dim["time"],), dtype=np.float32) * missing_int
     data["overlap"] = np.ones((vars_dim["range"],), dtype=np.float32) * missing_float
 
@@ -565,6 +568,8 @@ def read_scalar_vars(data, nc_id, soft_vers, logger):
     data["zenith"] = nc_id.variables["zenith"][:]
     logger.debug("reading wavelength as l0_wavelength")
     data["l0_wavelength"] = nc_id.variables["wavelength"][:]
+    logger.debug("reading time resolution")
+    data["time_resol"] = nc_id.variables["average_time"][0] / 1000.0  # convert ms to s
     logger.debug("reading longitude")
     data["longitude"] = nc_id.variables["longitude"][:]
     logger.debug("reading latitude")
@@ -604,6 +609,9 @@ def read_timedep_vars(data, nc_id, soft_vers, time_ind, time_size, logger):
     data["error_ext"][ind_b:ind_e] = nc_id.variables["message_bits"][:]
     logger.debug("reading base cloud cover (bcc)")
     data["bcc"][ind_b:ind_e] = nc_id.variables["BCC"][:]
+    data["average_time"][ind_b:ind_e] = (
+        nc_id.variables["average_time"][:] / 1000.0
+    )  # convert ms to s
 
     # 2d time dependent variables
     # ---------------------------------------------------------------------
@@ -735,7 +743,7 @@ def read_data(list_files, conf, logger):
 
     # convert average__time into timedelta object
     tmp = np.array(
-        [dt.timedelta(seconds=value / 1000) for value in data["average_time"]]
+        [dt.timedelta(seconds=value.item()) for value in data["average_time"]]
     )
 
     data["start_time"] = data["time"] - tmp
