@@ -12,7 +12,7 @@ from tools import lidar_reader as lr
 from tools.check_conf import check_conf
 
 __author__ = "Marc-Antoine Drouin"
-__version__ = "3.2.3"
+__version__ = "3.2.4"
 
 NAME = "raw2l1"
 
