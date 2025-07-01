@@ -495,8 +495,6 @@ def read_data(list_files, conf, logger):
 
     # get conf parameters
     # ------------------------------------------------------------------------
-    missing_flt = conf["missing_float"]
-    missing_int = conf["missing_int"]
     laser_type = conf["laser_type"]
     remove_bckgrd = False
     if "remove_bckgrd" in conf:
