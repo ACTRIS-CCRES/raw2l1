@@ -1,3 +1,12 @@
+- v3.2.3
+  - vaisala CL61
+    - fix metadata in configuration file examples
+      - `photocunting` -> `analog`
+      - fix variable name for firmware version
+  - Lufft CHM15k
+    - time resolution ca now be read (first value value of `average_time`)
+    - `start_time` is now calculated properly
+
 - v3.2.2
   - vaisala CL31/CL51 and CL61
     - CL61 (configuration file example)
