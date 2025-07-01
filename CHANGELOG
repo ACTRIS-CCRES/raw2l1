@@ -1,3 +1,7 @@
+- v3.2.4
+  - ipral
+    - remove unused variables fom reader
+
 - v3.2.3
   - vaisala CL61
     - fix metadata in configuration file examples
