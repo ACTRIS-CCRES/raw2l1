@@ -23,6 +23,7 @@ def init(opt, name):
 
     # Check the logs directory
     log_dir = os.path.dirname(os.path.abspath(opt["log"]))
+    os.makedirs(log_dir, exist_ok=True)
     log_file = os.path.basename(opt["log"])
     dir_ok = utils.check_dir(log_dir)
     if not dir_ok:

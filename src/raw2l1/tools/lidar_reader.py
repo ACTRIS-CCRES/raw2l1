@@ -28,10 +28,25 @@ class RawDataReader:
         reader_name = self.conf.get("conf", "reader")
 
         self.logger.info("loading lidar data reader module: " + reader_name)
+        module_candidates = [f"{reader_dir}.{reader_name}"]
+        # Backward compatibility: old configs often set `reader_dir = reader`.
+        if "." not in reader_dir:
+            module_candidates.append(f"raw2l1.{reader_dir}.{reader_name}")
+
         try:
-            reader_mod = import_module(
-                reader_dir + "." + self.conf.get("conf", "reader")
-            )
+            reader_mod = None
+            for module_name in module_candidates:
+                try:
+                    reader_mod = import_module(module_name)
+                    break
+                except ImportError:
+                    continue
+
+            if reader_mod is None:
+                raise ImportError(
+                    "Unable to import any reader module from: "
+                    + ", ".join(module_candidates)
+                )
         except ImportError as err:
             msg = "107 unable to load lidar data reader "
             self.logger.critical(msg + str(err))
