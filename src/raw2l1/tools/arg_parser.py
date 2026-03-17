@@ -83,6 +83,21 @@ def check_output_dir(output_file):
     return output_file
 
 
+def check_conf_file(conf_file):
+    """Validate that the configuration file exists and is readable."""
+
+    conf_file = os.path.abspath(conf_file)
+    if not os.path.isfile(conf_file):
+        raise argparse.ArgumentTypeError(f"configuration file '{conf_file}' not found")
+
+    if not os.access(conf_file, os.R_OK):
+        raise argparse.ArgumentTypeError(
+            f"configuration file '{conf_file}' is not readable"
+        )
+
+    return conf_file
+
+
 def check_input_file_size(list_files, size_limit):
     """
     check size of input files. If files have a lower size they are rejected
@@ -114,7 +129,7 @@ def init_args_parser():
     )
     parser.add_argument(
         "conf_file",
-        type=argparse.FileType("r"),
+        type=check_conf_file,
         help="Name of the INI configuration file to use",
     )
     parser.add_argument(
@@ -235,7 +250,7 @@ def get_input_args(argv):
 
     input_args = {}
     input_args["date"] = parse_args.date
-    input_args["conf"] = parse_args.conf_file
+    input_args["conf"] = open(parse_args.conf_file)
     input_args["input"] = list_input
     input_args["output"] = parse_args.output_file
     input_args["ancillary"] = list_anc
