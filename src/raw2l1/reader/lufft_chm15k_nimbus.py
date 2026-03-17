@@ -274,7 +274,8 @@ def get_error_index(err_msg, firmware, logger):
 
     """
     err_ind = []
-    err_int = err_msg
+    # NumPy 2 raises on `np.int32 & 0x80000000`; normalize to unsigned int.
+    err_int = int(np.uint32(err_msg))
     for i, d in enumerate(ERR_HEX_MSG):
         # check if firmware known or if unknow still show the latest message
         if bool(err_int & d["hex"]) and (

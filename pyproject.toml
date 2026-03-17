@@ -9,7 +9,7 @@ description = "Convert raw lidar/radiometer files to level-1 NetCDF products"
 readme = "README.md"
 requires-python = ">=3.10"
 dependencies = [
-    "numpy<2",
+    "numpy",
     "netCDF4>=1.6",
     "gitpython",
     "xarray",
