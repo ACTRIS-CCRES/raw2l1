@@ -1,16 +1,16 @@
 """Test for VAISALA CL61 ceilometer."""
 
-import subprocess
 from pathlib import Path
 
 import pytest
+
+from raw2l1.raw2l1 import raw2l1
 
 MAIN_DIR = Path(__file__).resolve().parent.parent
 TEST_DIR = MAIN_DIR / "test"
 TEST_IN_DIR = TEST_DIR / "input" / "vaisala_cl61"
 CONF_DIR = TEST_IN_DIR / "conf"
 TEST_OUT_DIR = TEST_DIR / "output"
-PRGM = MAIN_DIR / "raw2l1.py"
 
 
 @pytest.mark.parametrize(
@@ -72,13 +72,12 @@ def test_vaisala_cl61(date, input_file, conf_file, test_msg):
     out_file = TEST_OUT_DIR / input_file.replace("*", "")
     conf_file = CONF_DIR / conf_file
 
-    resp = subprocess.check_call(
+    resp = raw2l1(
         [
-            PRGM,
             date,
-            conf_file,
-            in_file,
-            out_file,
+            str(conf_file),
+            str(in_file),
+            str(out_file),
             "-log_level",
             "debug",
             "-v",

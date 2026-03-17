@@ -1,13 +1,13 @@
 import os
-import subprocess
 import unittest
+
+from raw2l1.raw2l1 import raw2l1
 
 MAIN_DIR = os.path.dirname(os.path.dirname(__file__)) + os.sep
 TEST_DIR = os.path.join(MAIN_DIR, "test")
 CONF_DIR = os.path.join(TEST_DIR, "conf")
 TEST_IN_DIR = os.path.join(TEST_DIR, "input")
 TEST_OUT_DIR = os.path.join(TEST_DIR, "output")
-PRGM = "raw2l1.py"
 
 
 class TestCampbellScientificCS135NetCDF4(unittest.TestCase):
@@ -22,9 +22,8 @@ class TestCampbellScientificCS135NetCDF4(unittest.TestCase):
             "conf_campbell_cs135-cl_eprofile.initest_cs135-nc4_20150213_000000.nc",
         )
 
-        resp = subprocess.check_call(
+        resp = raw2l1(
             [
-                MAIN_DIR + PRGM,
                 date,
                 self.conf_file,
                 test_ifile,

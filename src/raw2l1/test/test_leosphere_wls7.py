@@ -1,15 +1,15 @@
 #!/usr/bin/env python
 
 import os
-import subprocess
 import unittest
+
+from raw2l1.raw2l1 import raw2l1
 
 MAIN_DIR = os.path.dirname(os.path.dirname(__file__)) + os.sep
 TEST_DIR = os.path.join(MAIN_DIR, "test")
 TEST_IN_DIR = os.path.join(TEST_DIR, "input", "leosphere_wls")
 CONF_DIR = os.path.join(TEST_IN_DIR, "conf")
 TEST_OUT_DIR = os.path.join(TEST_DIR, "output")
-PRGM = "raw2l1.py"
 
 
 class TestRunWLS710Min(unittest.TestCase):
@@ -28,9 +28,8 @@ class TestRunWLS710Min(unittest.TestCase):
         test_ofile = os.path.join(TEST_OUT_DIR, "Wls7-10-v1.0.2.nc")
         test_cfile = os.path.join(CONF_DIR, "conf_leosphere_wls7_10min.ini")
 
-        resp = subprocess.call(
+        resp = raw2l1(
             [
-                os.path.join(MAIN_DIR, PRGM),
                 date,
                 test_cfile,
                 test_ifile,
@@ -53,9 +52,8 @@ class TestRunWLS710Min(unittest.TestCase):
         test_ofile = os.path.join(TEST_OUT_DIR, "Wls7-10-v1.0.2.2.nc")
         test_cfile = os.path.join(CONF_DIR, "conf_leosphere_wls7_10min.ini")
 
-        resp = subprocess.call(
+        resp = raw2l1(
             [
-                os.path.join(MAIN_DIR, PRGM),
                 date,
                 test_cfile,
                 test_ifile,
@@ -78,9 +76,8 @@ class TestRunWLS710Min(unittest.TestCase):
         test_ofile = os.path.join(TEST_OUT_DIR, "Wls7-111-v1.0.2.4.nc")
         test_cfile = os.path.join(CONF_DIR, "conf_leosphere_wls7_10min.ini")
 
-        resp = subprocess.call(
+        resp = raw2l1(
             [
-                os.path.join(MAIN_DIR, PRGM),
                 date,
                 test_cfile,
                 test_ifile,
@@ -103,9 +100,8 @@ class TestRunWLS710Min(unittest.TestCase):
         test_ofile = os.path.join(TEST_OUT_DIR, "Wls7-111-v1.1.12.nc")
         test_cfile = os.path.join(CONF_DIR, "conf_leosphere_wls7_10min.ini")
 
-        resp = subprocess.call(
+        resp = raw2l1(
             [
-                os.path.join(MAIN_DIR, PRGM),
                 date,
                 test_cfile,
                 test_ifile,
@@ -128,9 +124,8 @@ class TestRunWLS710Min(unittest.TestCase):
         test_ofile = os.path.join(TEST_OUT_DIR, "Wls7-111-v1.1.13.nc")
         test_cfile = os.path.join(CONF_DIR, "conf_leosphere_wls7_10min.ini")
 
-        resp = subprocess.call(
+        resp = raw2l1(
             [
-                os.path.join(MAIN_DIR, PRGM),
                 date,
                 test_cfile,
                 test_ifile,
@@ -153,9 +148,8 @@ class TestRunWLS710Min(unittest.TestCase):
         test_ofile = os.path.join(TEST_OUT_DIR, "Wls7-111-v1.1.3.a.nc")
         test_cfile = os.path.join(CONF_DIR, "conf_leosphere_wls7_10min.ini")
 
-        resp = subprocess.call(
+        resp = raw2l1(
             [
-                os.path.join(MAIN_DIR, PRGM),
                 date,
                 test_cfile,
                 test_ifile,
@@ -178,9 +172,8 @@ class TestRunWLS710Min(unittest.TestCase):
         test_ofile = os.path.join(TEST_OUT_DIR, "Wls7-111-v1.1.15.nc")
         test_cfile = os.path.join(CONF_DIR, "conf_leosphere_wls7_10min.ini")
 
-        resp = subprocess.call(
+        resp = raw2l1(
             [
-                os.path.join(MAIN_DIR, PRGM),
                 date,
                 test_cfile,
                 test_ifile,
@@ -203,9 +196,8 @@ class TestRunWLS710Min(unittest.TestCase):
         test_ofile = os.path.join(TEST_OUT_DIR, "Wls7-111-v1.1.6.nc")
         test_cfile = os.path.join(CONF_DIR, "conf_leosphere_wls7_10min.ini")
 
-        resp = subprocess.call(
+        resp = raw2l1(
             [
-                os.path.join(MAIN_DIR, PRGM),
                 date,
                 test_cfile,
                 test_ifile,
@@ -228,9 +220,8 @@ class TestRunWLS710Min(unittest.TestCase):
         test_ofile = os.path.join(TEST_OUT_DIR, "Wls7-111-v1.1.9.nc")
         test_cfile = os.path.join(CONF_DIR, "conf_leosphere_wls7_10min.ini")
 
-        resp = subprocess.call(
+        resp = raw2l1(
             [
-                os.path.join(MAIN_DIR, PRGM),
                 date,
                 test_cfile,
                 test_ifile,
@@ -259,9 +250,8 @@ class TestRunWLS71S(unittest.TestCase):
         test_ofile = os.path.join(TEST_OUT_DIR, "Wls7-1s-10-v1.0.2.nc")
         test_cfile = os.path.join(CONF_DIR, "conf_leosphere_wls7_1s.ini")
 
-        resp = subprocess.call(
+        resp = raw2l1(
             [
-                os.path.join(MAIN_DIR, PRGM),
                 date,
                 test_cfile,
                 test_ifile,
@@ -284,9 +274,8 @@ class TestRunWLS71S(unittest.TestCase):
         test_ofile = os.path.join(TEST_OUT_DIR, "Wls7-1s-v1.0.2.2.nc")
         test_cfile = os.path.join(CONF_DIR, "conf_leosphere_wls7_1s.ini")
 
-        resp = subprocess.call(
+        resp = raw2l1(
             [
-                os.path.join(MAIN_DIR, PRGM),
                 date,
                 test_cfile,
                 test_ifile,
@@ -309,9 +298,8 @@ class TestRunWLS71S(unittest.TestCase):
         test_ofile = os.path.join(TEST_OUT_DIR, "Wls7-1s-111-v1.0.2.4.nc")
         test_cfile = os.path.join(CONF_DIR, "conf_leosphere_wls7_1s.ini")
 
-        resp = subprocess.call(
+        resp = raw2l1(
             [
-                os.path.join(MAIN_DIR, PRGM),
                 date,
                 test_cfile,
                 test_ifile,
@@ -334,9 +322,8 @@ class TestRunWLS71S(unittest.TestCase):
         test_ofile = os.path.join(TEST_OUT_DIR, "Wls7-1s-111-v1.1.12.nc")
         test_cfile = os.path.join(CONF_DIR, "conf_leosphere_wls7_1s.ini")
 
-        resp = subprocess.call(
+        resp = raw2l1(
             [
-                os.path.join(MAIN_DIR, PRGM),
                 date,
                 test_cfile,
                 test_ifile,
@@ -359,9 +346,8 @@ class TestRunWLS71S(unittest.TestCase):
         test_ofile = os.path.join(TEST_OUT_DIR, "Wls7-1s-111-v1.1.13.nc")
         test_cfile = os.path.join(CONF_DIR, "conf_leosphere_wls7_1s.ini")
 
-        resp = subprocess.call(
+        resp = raw2l1(
             [
-                os.path.join(MAIN_DIR, PRGM),
                 date,
                 test_cfile,
                 test_ifile,
@@ -384,9 +370,8 @@ class TestRunWLS71S(unittest.TestCase):
         test_ofile = os.path.join(TEST_OUT_DIR, "Wls7-1s-111-v1.1.3.a.nc")
         test_cfile = os.path.join(CONF_DIR, "conf_leosphere_wls7_1s.ini")
 
-        resp = subprocess.call(
+        resp = raw2l1(
             [
-                os.path.join(MAIN_DIR, PRGM),
                 date,
                 test_cfile,
                 test_ifile,
@@ -409,9 +394,8 @@ class TestRunWLS71S(unittest.TestCase):
         test_ofile = os.path.join(TEST_OUT_DIR, "Wls7-1s-111-v1.1.15.nc")
         test_cfile = os.path.join(CONF_DIR, "conf_leosphere_wls7_1s.ini")
 
-        resp = subprocess.call(
+        resp = raw2l1(
             [
-                os.path.join(MAIN_DIR, PRGM),
                 date,
                 test_cfile,
                 test_ifile,
@@ -434,9 +418,8 @@ class TestRunWLS71S(unittest.TestCase):
         test_ofile = os.path.join(TEST_OUT_DIR, "Wls7-1s-111-v1.1.6.nc")
         test_cfile = os.path.join(CONF_DIR, "conf_leosphere_wls7_1s.ini")
 
-        resp = subprocess.call(
+        resp = raw2l1(
             [
-                os.path.join(MAIN_DIR, PRGM),
                 date,
                 test_cfile,
                 test_ifile,
@@ -459,9 +442,8 @@ class TestRunWLS71S(unittest.TestCase):
         test_ofile = os.path.join(TEST_OUT_DIR, "Wls7-1s-111-v1.1.9.nc")
         test_cfile = os.path.join(CONF_DIR, "conf_leosphere_wls7_1s.ini")
 
-        resp = subprocess.call(
+        resp = raw2l1(
             [
-                os.path.join(MAIN_DIR, PRGM),
                 date,
                 test_cfile,
                 test_ifile,

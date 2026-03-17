@@ -1,15 +1,17 @@
 #!/usr/bin/env python
 
 import os
-import subprocess
 import unittest
+
+import pytest
+
+from raw2l1.raw2l1 import raw2l1
 
 MAIN_DIR = os.path.dirname(os.path.dirname(__file__))
 TEST_DIR = os.path.join(MAIN_DIR, "test")
 CONF_DIR = os.path.join(TEST_DIR, "conf")
 TEST_IN_DIR = os.path.join(TEST_DIR, "input")
 TEST_OUT_DIR = os.path.join(TEST_DIR, "output")
-PRGM = "raw2l1.py"
 
 
 class TestVaisalaCL31MissingCBE(unittest.TestCase):
@@ -21,9 +23,8 @@ class TestVaisalaCL31MissingCBE(unittest.TestCase):
         test_ifile = os.path.join(self.IN_DIR, "ceilometer_20160523005942_c6052300.DAT")
         test_ofile = os.path.join(TEST_OUT_DIR, "ceilometer_20160523005942_c6052300.nc")
 
-        resp = subprocess.check_call(
+        resp = raw2l1(
             [
-                os.path.join(MAIN_DIR, PRGM),
                 date,
                 self.conf_file,
                 test_ifile,
@@ -40,9 +41,8 @@ class TestVaisalaCL31MissingCBE(unittest.TestCase):
         test_ifile = os.path.join(self.IN_DIR, "ceilometer_20160523010011_P6052300.DAT")
         test_ofile = os.path.join(TEST_OUT_DIR, "ceilometer_20160523010011_P6052300.nc")
 
-        resp = subprocess.check_call(
+        resp = raw2l1(
             [
-                os.path.join(MAIN_DIR, PRGM),
                 date,
                 self.conf_file,
                 test_ifile,
@@ -59,9 +59,8 @@ class TestVaisalaCL31MissingCBE(unittest.TestCase):
         test_ifile = os.path.join(self.IN_DIR, "ceilometer_20160523010012_Q6052300.DAT")
         test_ofile = os.path.join(TEST_OUT_DIR, "ceilometer_20160523010012_Q6052300.nc")
 
-        resp = subprocess.check_call(
+        resp = raw2l1(
             [
-                os.path.join(MAIN_DIR, PRGM),
                 date,
                 self.conf_file,
                 test_ifile,
@@ -78,9 +77,8 @@ class TestVaisalaCL31MissingCBE(unittest.TestCase):
         test_ifile = os.path.join(self.IN_DIR, "ceilometer_20160523010012_T6052300.DAT")
         test_ofile = os.path.join(TEST_OUT_DIR, "ceilometer_20160523010012_T6052300.nc")
 
-        resp = subprocess.check_call(
+        resp = raw2l1(
             [
-                os.path.join(MAIN_DIR, PRGM),
                 date,
                 self.conf_file,
                 test_ifile,
@@ -97,9 +95,8 @@ class TestVaisalaCL31MissingCBE(unittest.TestCase):
         test_ifile = os.path.join(self.IN_DIR, "ceilometer_20160523100012_P6052309.DAT")
         test_ofile = os.path.join(TEST_OUT_DIR, "ceilometer_20160523100012_P6052309.nc")
 
-        resp = subprocess.check_call(
+        resp = raw2l1(
             [
-                os.path.join(MAIN_DIR, PRGM),
                 date,
                 self.conf_file,
                 test_ifile,
@@ -127,9 +124,8 @@ class TestVaisalaCL51MissingCBE(unittest.TestCase):
             "ceilometer-eprofile_20160523160107_06472_A201605231500_cl51.nc",
         )
 
-        resp = subprocess.check_call(
+        resp = raw2l1(
             [
-                os.path.join(MAIN_DIR, PRGM),
                 date,
                 self.conf_file,
                 test_ifile,
@@ -153,38 +149,36 @@ class TestVaisalaCL31EmptyFile(unittest.TestCase):
         test_ifile = os.path.join(self.IN_DIR, "ceilometer_20160427230032_h6042722.DAT")
         test_ofile = os.path.join(TEST_OUT_DIR, "ceilometer_20160427230032_h6042722.nc")
 
-        resp = subprocess.call(
-            [
-                os.path.join(MAIN_DIR, PRGM),
-                date,
-                self.conf_file,
-                test_ifile,
-                test_ofile,
-                "-log_level",
-                "debug",
-            ]
-        )
-
-        self.assertEqual(resp, 1, "CL31 empty log file h6042722")
+        with pytest.raises(SystemExit) as excinfo:
+            raw2l1(
+                [
+                    date,
+                    self.conf_file,
+                    test_ifile,
+                    test_ofile,
+                    "-log_level",
+                    "debug",
+                ]
+            )
+        assert excinfo.value.code == 1, "CL31 empty log file h6042722"
 
     def test_20160428200020_h6042819(self):
         date = "20160428"
         test_ifile = os.path.join(self.IN_DIR, "ceilometer_20160428200020_h6042819.DAT")
         test_ofile = os.path.join(TEST_OUT_DIR, "ceilometer_20160428200020_h6042819.nc")
 
-        resp = subprocess.call(
-            [
-                os.path.join(MAIN_DIR, PRGM),
-                date,
-                self.conf_file,
-                test_ifile,
-                test_ofile,
-                "-log_level",
-                "debug",
-            ]
-        )
-
-        self.assertEqual(resp, 1, "CL31 empty log file h6042819")
+        with pytest.raises(SystemExit) as excinfo:
+            raw2l1(
+                [
+                    date,
+                    self.conf_file,
+                    test_ifile,
+                    test_ofile,
+                    "-log_level",
+                    "debug",
+                ]
+            )
+        assert excinfo.value.code == 1, "CL31 empty log file h6042819"
 
 
 class TestVaisalaCL51EmptyFile(unittest.TestCase):
@@ -202,19 +196,18 @@ class TestVaisalaCL51EmptyFile(unittest.TestCase):
             "ceilometer-eprofile_20160517070311_06447_A201605170600_cl51.nc",
         )
 
-        resp = subprocess.call(
-            [
-                os.path.join(MAIN_DIR, PRGM),
-                date,
-                self.conf_file,
-                test_ifile,
-                test_ofile,
-                "-log_level",
-                "debug",
-            ]
-        )
-
-        self.assertEqual(resp, 1, "CL51 empty log file")
+        with pytest.raises(SystemExit) as excinfo:
+            raw2l1(
+                [
+                    date,
+                    self.conf_file,
+                    test_ifile,
+                    test_ofile,
+                    "-log_level",
+                    "debug",
+                ]
+            )
+        assert excinfo.value.code == 1, "CL51 empty log file"
 
 
 class TestVaisalaCL51IncompleteFile(unittest.TestCase):
@@ -232,9 +225,8 @@ class TestVaisalaCL51IncompleteFile(unittest.TestCase):
             "ceilometer-eprofile_20160517120306_06447_A201605171100_cl51.nc",
         )
 
-        resp = subprocess.call(
+        resp = raw2l1(
             [
-                os.path.join(MAIN_DIR, PRGM),
                 date,
                 self.conf_file,
                 test_ifile,
@@ -259,9 +251,8 @@ class TestVaisalaCL51IncompleteFile(unittest.TestCase):
             "ceilometer-eprofile_20160426210111_06418_A201604262000_cl51.nc",
         )
 
-        resp = subprocess.call(
+        resp = raw2l1(
             [
-                os.path.join(MAIN_DIR, PRGM),
                 date,
                 self.conf_file,
                 test_ifile,

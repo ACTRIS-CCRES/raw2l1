@@ -384,7 +384,7 @@ def get_acq_conf(filename, data, data_dim, conf, logger):
     logger.debug(n_lines)
 
     conf_msg = None
-    while i_line <= n_lines:
+    while i_line < n_lines:
         try:
             dt.datetime.strptime(lines[i_line], FMT_DATE)
         except ValueError:

@@ -23,31 +23,31 @@ class TestArgParserDate(unittest.TestCase):
 
 class TestArgParser(unittest.TestCase):
     def test_ancillary(self):
+        conf_file = "src/raw2l1/test/conf/conf_dummy.ini"
+        in_pattern = "src/raw2l1/test/input/rpg_hatpro/hatpro_0a_z1Imwrad-TPB_v01_*.nc"
+        out_file = "src/raw2l1/test/output/dummy.nc"
+
         argv = [
             "20160101",
-            "test/conf/conf_dummy.ini",
-            "test/input/rpg_hatpro/hatpro_0a_z1Imwrad-TPB_v01_*.nc",
-            "test/output/dummy.nc",
+            conf_file,
+            in_pattern,
+            out_file,
             "-anc",
-            "test/input/rpg_hatpro/hatpro_0a_z1Imwrad-TPB_v01_*.nc",
+            in_pattern,
+        ]
+
+        expected_inputs = [
+            "src/raw2l1/test/input/rpg_hatpro/hatpro_0a_z1Imwrad-TPB_v01_20150901_000412_712.nc",
+            "src/raw2l1/test/input/rpg_hatpro/hatpro_0a_z1Imwrad-TPB_v01_20150901_120108_716.nc",
+            "src/raw2l1/test/input/rpg_hatpro/hatpro_0a_z1Imwrad-TPB_v01_20150930_000020_1436.nc",
         ]
 
         ref_inputs = {
             "date": dt.datetime(2016, 1, 1),
-            "conf": open("test/conf/conf_dummy.ini"),
-            "input": [
-                "test/input/rpg_hatpro/hatpro_0a_z1Imwrad-TPB_v01_20150901_000412_712.nc",
-                "test/input/rpg_hatpro/hatpro_0a_z1Imwrad-TPB_v01_20150901_120108_716.nc",
-                "test/input/rpg_hatpro/hatpro_0a_z1Imwrad-TPB_v01_20150930_000020_1436.nc",
-            ],
-            "output": os.path.abspath("test/output/dummy.nc"),
-            "ancillary": [
-                [
-                    "test/input/rpg_hatpro/hatpro_0a_z1Imwrad-TPB_v01_20150901_000412_712.nc",
-                    "test/input/rpg_hatpro/hatpro_0a_z1Imwrad-TPB_v01_20150901_120108_716.nc",
-                    "test/input/rpg_hatpro/hatpro_0a_z1Imwrad-TPB_v01_20150930_000020_1436.nc",
-                ]
-            ],
+            "conf": open(conf_file),
+            "input": expected_inputs,
+            "output": os.path.abspath(out_file),
+            "ancillary": [expected_inputs],
             "log_level": "info",
             "log": "logs/raw2l1.log",
             "verbose": "info",

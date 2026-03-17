@@ -1,15 +1,15 @@
 #!/usr/bin/env python
 
 import os
-import subprocess
 import unittest
+
+from raw2l1.raw2l1 import raw2l1
 
 MAIN_DIR = os.path.dirname(os.path.dirname(__file__)) + os.sep
 CONF_DIR = MAIN_DIR + "conf" + os.sep
 TEST_DIR = MAIN_DIR + "test" + os.sep
 TEST_IN_DIR = TEST_DIR + os.sep + "input" + os.sep
 TEST_OUT_DIR = TEST_DIR + os.sep + "output" + os.sep
-PRGM = "raw2l1.py"
 
 
 class TestRunHatPro(unittest.TestCase):
@@ -23,9 +23,8 @@ class TestRunHatPro(unittest.TestCase):
         test_ofile = TEST_OUT_DIR + "sups_sir_mwrBL00_l2_ta_v01_201509300000020.nc"
         test_cfile = CONF_DIR + "conf_rpg_hatpro_bl00-l2-ta_toprof_netcdf4.ini"
 
-        resp = subprocess.check_call(
+        resp = raw2l1(
             [
-                MAIN_DIR + PRGM,
                 date,
                 test_cfile,
                 test_ifile,
@@ -43,9 +42,8 @@ class TestRunHatPro(unittest.TestCase):
         test_ofile = TEST_OUT_DIR + "sups_sir_mwrBL00_l2_ta_v01_20150901000412.nc"
         test_cfile = CONF_DIR + "conf_rpg_hatpro_bl00-l2-ta_toprof_netcdf4.ini"
 
-        resp = subprocess.check_call(
+        resp = raw2l1(
             [
-                MAIN_DIR + PRGM,
                 date,
                 test_cfile,
                 test_ifile,
@@ -63,9 +61,8 @@ class TestRunHatPro(unittest.TestCase):
         test_ofile = TEST_OUT_DIR + "sups_sir_mwr00_l2_ta_v01_20150930000542.nc"
         test_cfile = CONF_DIR + "conf_rpg_hatpro_l2-ta_toprof_netcdf4.ini"
 
-        resp = subprocess.check_call(
+        resp = raw2l1(
             [
-                MAIN_DIR + PRGM,
                 date,
                 test_cfile,
                 test_ifile,
@@ -83,9 +80,8 @@ class TestRunHatPro(unittest.TestCase):
         test_ofile = TEST_OUT_DIR + "sups_sir_mwr00_l2_hua_v01_20150930000542.nc"
         test_cfile = CONF_DIR + "conf_rpg_hatpro_l2-hua_toprof_netcdf4.ini"
 
-        resp = subprocess.check_call(
+        resp = raw2l1(
             [
-                MAIN_DIR + PRGM,
                 date,
                 test_cfile,
                 test_ifile,
@@ -103,9 +99,8 @@ class TestRunHatPro(unittest.TestCase):
         test_ofile = TEST_OUT_DIR + "sups_sir_mwr00_l2_clwvi_v01_20130901000307.nc"
         test_cfile = CONF_DIR + "conf_rpg_hatpro_l2-clwvi_toprof_netcdf4.ini"
 
-        resp = subprocess.check_call(
+        resp = raw2l1(
             [
-                MAIN_DIR + PRGM,
                 date,
                 test_cfile,
                 test_ifile,
@@ -123,9 +118,8 @@ class TestRunHatPro(unittest.TestCase):
         test_ofile = TEST_OUT_DIR + "sups_sir_mwr00_l2_prw_v01_20130930000307.nc"
         test_cfile = CONF_DIR + "conf_rpg_hatpro_l2-prw_toprof_netcdf4.ini"
 
-        resp = subprocess.check_call(
+        resp = raw2l1(
             [
-                MAIN_DIR + PRGM,
                 date,
                 test_cfile,
                 test_ifile,
@@ -145,9 +139,8 @@ class TestRunHatPro(unittest.TestCase):
         test_ofile = TEST_OUT_DIR + "sups_sir_mwr00_l1_tb_v01_20150901000307.nc"
         test_cfile = CONF_DIR + "conf_rpg_hatpro_l1-tb_toprof_netcdf4.ini"
 
-        resp = subprocess.check_call(
+        resp = raw2l1(
             [
-                MAIN_DIR + PRGM,
                 date,
                 test_cfile,
                 test_ifile,
@@ -172,9 +165,8 @@ class TestRunHatPro(unittest.TestCase):
         test_ofile = TEST_OUT_DIR + "sups_sir_mwrBL00_l1_tb_v01_20150901000307.nc"
         test_cfile = CONF_DIR + "conf_rpg_hatpro_bl00-l1-tb_toprof_netcdf4.ini"
 
-        resp = subprocess.check_call(
+        resp = raw2l1(
             [
-                MAIN_DIR + PRGM,
                 date,
                 test_cfile,
                 test_ifile,

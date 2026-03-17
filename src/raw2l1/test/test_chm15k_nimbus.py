@@ -1,18 +1,17 @@
 import os
-import subprocess
 import unittest
 
 import netCDF4 as nc
 import numpy as np
 
 import raw2l1.reader.lufft_chm15k_nimbus as reader
+from raw2l1.raw2l1 import raw2l1
 
 MAIN_DIR = os.path.dirname(os.path.dirname(__file__)) + os.sep
 TEST_DIR = os.path.join(MAIN_DIR, "test")
 CONF_DIR = os.path.join(TEST_DIR, "conf")
 TEST_IN_DIR = os.path.join(TEST_DIR, "input")
 TEST_OUT_DIR = os.path.join(TEST_DIR, "output")
-PRGM = "raw2l1.py"
 
 
 def get_scaling(file):
@@ -63,9 +62,8 @@ class TestChm15k(unittest.TestCase):
         )
         test_ofile = os.path.join(TEST_OUT_DIR, "test_chm15k_v0536_20120306.nc")
 
-        resp = subprocess.check_call(
+        resp = raw2l1(
             [
-                MAIN_DIR + PRGM,
                 date,
                 self.conf_file,
                 test_ifile,
@@ -86,9 +84,8 @@ class TestChm15k(unittest.TestCase):
         )
         test_ofile = os.path.join(TEST_OUT_DIR, "test_chm15k_v0556_20130110.nc")
 
-        resp = subprocess.check_call(
+        resp = raw2l1(
             [
-                MAIN_DIR + PRGM,
                 date,
                 self.conf_file,
                 test_ifile,
@@ -107,9 +104,8 @@ class TestChm15k(unittest.TestCase):
         )
         test_ofile = os.path.join(TEST_OUT_DIR, "test_chm15k_v0559_20130718.nc")
 
-        resp = subprocess.check_call(
+        resp = raw2l1(
             [
-                MAIN_DIR + PRGM,
                 date,
                 self.conf_file,
                 test_ifile,
@@ -128,9 +124,8 @@ class TestChm15k(unittest.TestCase):
         )
         test_ofile = os.path.join(TEST_OUT_DIR, "test_chm15k_v0719_20131212.nc")
 
-        resp = subprocess.check_call(
+        resp = raw2l1(
             [
-                MAIN_DIR + PRGM,
                 date,
                 self.conf_file,
                 test_ifile,
@@ -154,9 +149,8 @@ class TestChm15k(unittest.TestCase):
         )
         test_ofile = os.path.join(TEST_OUT_DIR, "test_chm15k_20120327_probtime.nc")
 
-        resp = subprocess.check_call(
+        resp = raw2l1(
             [
-                MAIN_DIR + PRGM,
                 date,
                 self.conf_file,
                 test_ifile,
@@ -174,9 +168,8 @@ class TestChm15k(unittest.TestCase):
         test_ofile = os.path.join(TEST_OUT_DIR, "test_chm15k_20150427_sirta.nc")
         test_cfile = os.path.join(CONF_DIR, "conf_lufft_chm15k_eprofile.ini")
 
-        resp = subprocess.check_call(
+        resp = raw2l1(
             [
-                MAIN_DIR + PRGM,
                 date,
                 test_cfile,
                 test_ifile,
@@ -199,9 +192,8 @@ class TestChm15k(unittest.TestCase):
         test_ofile = os.path.join(TEST_OUT_DIR, "test_chm15k_v0235_20151001.nc")
         test_cfile = os.path.join(CONF_DIR, "conf_lufft_chm15k_eprofile.ini")
 
-        resp = subprocess.check_call(
+        resp = raw2l1(
             [
-                MAIN_DIR + PRGM,
                 date,
                 test_cfile,
                 test_ifile,
@@ -224,9 +216,8 @@ class TestChm15k(unittest.TestCase):
         )
         test_cfile = os.path.join(CONF_DIR, "conf_lufft_chm15k_eprofile.ini")
 
-        resp = subprocess.call(
+        resp = raw2l1(
             [
-                MAIN_DIR + PRGM,
                 date,
                 test_cfile,
                 test_ifile,
@@ -247,9 +238,8 @@ class TestChm15k(unittest.TestCase):
         test_ofile = os.path.join(TEST_OUT_DIR, "chm15k_beta-att.nc")
         test_cfile = os.path.join(CONF_DIR, "conf_lufft_chm15k_eprofile.ini")
 
-        resp = subprocess.call(
+        resp = raw2l1(
             [
-                MAIN_DIR + PRGM,
                 date,
                 test_cfile,
                 test_ifile,
@@ -275,9 +265,8 @@ class TestChm15kOverlap(unittest.TestCase):
         )
         test_cfile = os.path.join(CONF_DIR, "conf_lufft_chm15k_eprofile.ini")
 
-        resp = subprocess.check_call(
+        resp = raw2l1(
             [
-                MAIN_DIR + PRGM,
                 date,
                 test_cfile,
                 test_ifile,
@@ -305,9 +294,8 @@ class TestChm15kOverlap(unittest.TestCase):
         )
         test_cfile = os.path.join(CONF_DIR, "conf_lufft_chm15k_eprofile.ini")
 
-        resp = subprocess.check_call(
+        resp = raw2l1(
             [
-                MAIN_DIR + PRGM,
                 date,
                 test_cfile,
                 test_ifile,
@@ -328,9 +316,8 @@ class TestChm15kOverlap(unittest.TestCase):
         test_ofile = os.path.join(TEST_OUT_DIR, "test_chm15k_20150427_sirta_bad-ovl.nc")
         test_cfile = os.path.join(CONF_DIR, "conf_lufft_chm15k_eprofile.ini")
 
-        resp = subprocess.check_call(
+        resp = raw2l1(
             [
-                MAIN_DIR + PRGM,
                 date,
                 test_cfile,
                 test_ifile,
@@ -355,9 +342,8 @@ class TestChm15kOverlap(unittest.TestCase):
         )
         test_cfile = os.path.join(CONF_DIR, "conf_lufft_chm15k_eprofile.ini")
 
-        resp = subprocess.check_call(
+        resp = raw2l1(
             [
-                MAIN_DIR + PRGM,
                 date,
                 test_cfile,
                 test_ifile,
@@ -388,9 +374,8 @@ class TestChm15kOverlap(unittest.TestCase):
         test_cfile = os.path.join(CONF_DIR, "conf_lufft_chm15k_eprofile.ini")
 
         # create file using raw2l1
-        subprocess.check_call(
+        raw2l1(
             [
-                MAIN_DIR + PRGM,
                 date,
                 test_cfile,
                 test_ifile,

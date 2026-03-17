@@ -1,13 +1,13 @@
 import os
-import subprocess
 import unittest
+
+from raw2l1.raw2l1 import raw2l1
 
 MAIN_DIR = os.path.dirname(os.path.dirname(__file__))
 CONF_DIR = os.path.join(MAIN_DIR, "conf")
 TEST_DIR = os.path.join(MAIN_DIR, "test")
 TEST_IN_DIR = os.path.join(TEST_DIR, "input")
 TEST_OUT_DIR = os.path.join(TEST_DIR, "output")
-PRGM = "raw2l1.py"
 
 
 class TestVaisalaBugSIRTA(unittest.TestCase):
@@ -19,9 +19,8 @@ class TestVaisalaBugSIRTA(unittest.TestCase):
         test_ifile = os.path.join(self.IN_DIR, "cl31_0a_z1R5mF3s_v02_20150911_*.asc")
         test_ofile = os.path.join(TEST_OUT_DIR, "test_cl-sirta_20150911.nc")
 
-        resp = subprocess.check_call(
+        resp = raw2l1(
             [
-                os.path.join(MAIN_DIR, PRGM),
                 date,
                 self.conf_file,
                 test_ifile,
@@ -40,9 +39,8 @@ class TestVaisalaBugSIRTA(unittest.TestCase):
         test_ifile = os.path.join(self.IN_DIR, "cl31_0a_z1R5mF3s_v02_20150603_*.asc")
         test_ofile = os.path.join(TEST_OUT_DIR, "test_cl-sirta_20150521.nc")
 
-        resp = subprocess.check_call(
+        resp = raw2l1(
             [
-                os.path.join(MAIN_DIR, PRGM),
                 date,
                 self.conf_file,
                 test_ifile,
@@ -63,9 +61,8 @@ class TestVaisalaBugSIRTA(unittest.TestCase):
         )
         test_ofile = os.path.join(TEST_OUT_DIR, "test_cl-sirta_20200831.nc")
 
-        resp = subprocess.check_call(
+        resp = raw2l1(
             [
-                os.path.join(MAIN_DIR, PRGM),
                 date,
                 self.conf_file,
                 test_ifile,
@@ -84,9 +81,8 @@ class TestVaisalaBugSIRTA(unittest.TestCase):
         test_ifile = os.path.join(self.IN_DIR, "07157_A202007210103_CL31-Roissy.dat")
         test_ofile = os.path.join(TEST_OUT_DIR, "test_cl-sirta_20200721.nc")
 
-        resp = subprocess.check_call(
+        resp = raw2l1(
             [
-                os.path.join(MAIN_DIR, PRGM),
                 date,
                 self.conf_file,
                 test_ifile,
@@ -105,9 +101,8 @@ class TestVaisalaBugSIRTA(unittest.TestCase):
         test_ifile = os.path.join(self.IN_DIR, "07157_A202008300054_CL31-Roissy.dat")
         test_ofile = os.path.join(TEST_OUT_DIR, "test_cl-roissy_20200830.nc")
 
-        resp = subprocess.check_call(
+        resp = raw2l1(
             [
-                os.path.join(MAIN_DIR, PRGM),
                 date,
                 self.conf_file,
                 test_ifile,

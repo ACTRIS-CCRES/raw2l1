@@ -1,15 +1,15 @@
 #!/usr/bin/env python
 
 import os
-import subprocess
 import unittest
+
+from raw2l1.raw2l1 import raw2l1
 
 MAIN_DIR = os.path.dirname(os.path.dirname(__file__)) + os.sep
 CONF_DIR = os.path.join(MAIN_DIR, "conf")
 TEST_DIR = os.path.join(MAIN_DIR, "test")
 TEST_IN_DIR = os.path.join(TEST_DIR, "input", "sirta_ipral")
 TEST_OUT_DIR = os.path.join(TEST_DIR, "output")
-PRGM = "raw2l1.py"
 
 
 class TestRunIpral(unittest.TestCase):
@@ -25,9 +25,8 @@ class TestRunIpral(unittest.TestCase):
         test_ifile = os.path.join(self.IN_DIR, "RM1762107.030037")
         test_ofile = os.path.join(TEST_OUT_DIR, "test_ipral_one_file.nc")
 
-        resp = subprocess.check_call(
+        resp = raw2l1(
             [
-                MAIN_DIR + PRGM,
                 date,
                 self.conf_file,
                 test_ifile,
@@ -48,9 +47,8 @@ class TestRunIpral(unittest.TestCase):
         test_ifile = os.path.join(self.IN_DIR, "RM17621*")
         test_ofile = os.path.join(TEST_OUT_DIR, "test_ipral_several_files.nc")
 
-        resp = subprocess.check_call(
+        resp = raw2l1(
             [
-                MAIN_DIR + PRGM,
                 date,
                 self.conf_file,
                 test_ifile,

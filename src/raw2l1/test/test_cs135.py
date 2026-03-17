@@ -1,13 +1,13 @@
 import os
-import subprocess
 import unittest
+
+from raw2l1.raw2l1 import raw2l1
 
 MAIN_DIR = os.path.dirname(os.path.dirname(__file__)) + os.sep
 TEST_DIR = os.path.join(MAIN_DIR, "test")
 CONF_DIR = os.path.join(TEST_DIR, "conf")
 TEST_IN_DIR = os.path.join(TEST_DIR, "input")
 TEST_OUT_DIR = os.path.join(TEST_DIR, "output")
-PRGM = "raw2l1.py"
 
 
 class TestCampbellScientificCS135(unittest.TestCase):
@@ -21,9 +21,8 @@ class TestCampbellScientificCS135(unittest.TestCase):
         test_ifile = os.path.join(self.IN_DIR, "cs135-20150213-message006.txt")
         test_ofile = os.path.join(TEST_OUT_DIR, "test_cs135_20150213_000000.nc")
 
-        resp = subprocess.check_call(
+        resp = raw2l1(
             [
-                MAIN_DIR + PRGM,
                 date,
                 self.conf_file,
                 test_ifile,
@@ -47,9 +46,8 @@ class TestCampbellScientificCS135ModeCL31(unittest.TestCase):
         test_ifile = os.path.join(self.IN_DIR, "15070300.DAT")
         test_ofile = os.path.join(TEST_OUT_DIR, "test_cs135_20150703_000000.nc")
 
-        resp = subprocess.check_call(
+        resp = raw2l1(
             [
-                MAIN_DIR + PRGM,
                 date,
                 self.conf_file,
                 test_ifile,

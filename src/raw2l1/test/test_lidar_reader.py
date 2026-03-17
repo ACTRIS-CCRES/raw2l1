@@ -25,7 +25,7 @@ class TestLidarReader(unittest.TestCase):
 
         conf = configparser.RawConfigParser()
         conf.optionxform = str
-        conf.read("test/conf/readerconf_no_missing.ini")
+        conf.read("src/raw2l1/test/conf/readerconf_no_missing.ini")
         conf = add_arg_options(conf)
 
         reader = lr.RawDataReader(conf, logger)
@@ -40,7 +40,7 @@ class TestLidarReader(unittest.TestCase):
 
         conf = configparser.RawConfigParser()
         conf.optionxform = str
-        conf.read("test/conf/readerconf_no_missing_int.ini")
+        conf.read("src/raw2l1/test/conf/readerconf_no_missing_int.ini")
         conf = add_arg_options(conf)
 
         reader = lr.RawDataReader(conf, logger)
@@ -55,7 +55,7 @@ class TestLidarReader(unittest.TestCase):
 
         conf = configparser.RawConfigParser()
         conf.optionxform = str
-        conf.read("test/conf/readerconf_no_missing_float.ini")
+        conf.read("src/raw2l1/test/conf/readerconf_no_missing_float.ini")
         conf = add_arg_options(conf)
 
         reader = lr.RawDataReader(conf, logger)
@@ -70,7 +70,7 @@ class TestLidarReader(unittest.TestCase):
 
         conf = configparser.RawConfigParser()
         conf.optionxform = str
-        conf.read("test/conf/readerconf_missing_float_nan.ini")
+        conf.read("src/raw2l1/test/conf/readerconf_missing_float_nan.ini")
         conf = add_arg_options(conf)
 
         reader = lr.RawDataReader(conf, logger)
