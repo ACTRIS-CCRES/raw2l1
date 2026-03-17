@@ -83,7 +83,7 @@ def raw2l1(argv):
 
         if not time_ok:
             logger.critical("104 Data timeliness Error. Quitting raw2l1")
-            sys.exit(1)
+            return 1
 
     # write netCDF file
     # -------------------------------------------------------------------------
@@ -93,8 +93,8 @@ def raw2l1(argv):
     # end of the program
     # -------------------------------------------------------------------------
     logger.info("end of processing")
-    sys.exit(0)
+    return 0
 
 
 if __name__ == "__main__":
-    raw2l1(sys.argv[1:])
+    raise SystemExit(raw2l1(sys.argv[1:]))
