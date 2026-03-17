@@ -5,11 +5,11 @@
 
 import sys
 
-from tools import arg_parser as ag
-from tools import conf, log
-from tools import create_netcdf as cnc
-from tools import lidar_reader as lr
-from tools.check_conf import check_conf
+from raw2l1.tools import arg_parser as ag
+from raw2l1.tools import conf, log
+from raw2l1.tools import create_netcdf as cnc
+from raw2l1.tools import lidar_reader as lr
+from raw2l1.tools.check_conf import check_conf
 
 __author__ = "Marc-Antoine Drouin"
 __version__ = "3.2.4"

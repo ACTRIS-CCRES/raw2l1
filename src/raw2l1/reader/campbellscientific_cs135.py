@@ -5,7 +5,7 @@ import sys
 
 import numpy as np
 
-from tools.utils import chomp
+from raw2l1.tools.utils import chomp
 
 # brand and model of the LIDAR
 BRAND = "campbell scientific"

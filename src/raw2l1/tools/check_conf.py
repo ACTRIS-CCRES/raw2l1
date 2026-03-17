@@ -2,7 +2,7 @@
 
 import sys
 
-from tools import common
+from raw2l1.tools import common
 
 
 def check_list_options(conf, section, list_opts, logger):

@@ -11,8 +11,8 @@ import netCDF4 as nc
 import numpy as np
 import xarray as xr
 
-from tools import common
-from tools.read_overlap import read_overlap
+from raw2l1.tools import common
+from raw2l1.tools.read_overlap import read_overlap
 
 KEY_READERDATA = "$reader_data$"
 KEY_OVERLAP = "$overlap$"
@@ -86,8 +86,9 @@ def filter_conf_sections(conf, logger):
             list_sec.remove(elt)
         except ValueError as err:
             logger.warning(
-                "107 Unable to remove section "
-                "whilst creating netCDF file '{}'".format(conf.get("conf", "output"))
+                "107 Unable to remove section whilst creating netCDF file '{}'".format(
+                    conf.get("conf", "output")
+                )
                 + repr(elt)
                 + " "
                 + repr(err)
@@ -108,7 +109,7 @@ def get_var_type(type_str, conf, logger):
         msg = (
             "107 Type of data '"
             + type_str
-            + "' unknown using default. " "Check your configuration file '{}'".format(
+            + "' unknown using default. Check your configuration file '{}'".format(
                 conf.get("conf", "conf")
             )
         )
@@ -200,8 +201,9 @@ def create_netcdf_dim(conf, data, nc_id, logger):
             name = section
         except configparser.NoSectionError as err:
             logger.warning(
-                "107 Unable to process section"
-                " whilst creating netCDF file '{}'".format(conf.get("conf", "output"))
+                "107 Unable to process section whilst creating netCDF file '{}'".format(
+                    conf.get("conf", "output")
+                )
                 + repr(err)
             )
             continue

@@ -5,7 +5,7 @@ import datetime as dt
 import os
 import unittest
 
-import tools.arg_parser as ag
+import raw2l1.tools.arg_parser as ag
 
 
 class TestArgParserDate(unittest.TestCase):

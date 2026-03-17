@@ -7,7 +7,7 @@ import unittest
 
 import numpy as np
 
-import tools.lidar_reader as lr
+import raw2l1.tools.lidar_reader as lr
 
 
 def add_arg_options(conf):

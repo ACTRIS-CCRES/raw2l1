@@ -3,7 +3,7 @@ import datetime as dt
 import netCDF4 as nc
 import numpy as np
 
-from .libhatpro import correct_time_units
+from raw2l1.reader.libhatpro import correct_time_units
 
 # brand and model of the LIDAR
 BRAND = "RPG"

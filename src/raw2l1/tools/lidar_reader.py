@@ -7,7 +7,7 @@ from importlib import import_module
 
 import numpy as np
 
-from . import common
+from raw2l1.tools import common
 
 READER_CONF = "reader_conf"
 MISSING_FLOAT_KEY = "missing_float"

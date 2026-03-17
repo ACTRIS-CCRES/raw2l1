@@ -8,7 +8,7 @@ import logging.config
 import os
 import sys
 
-from tools import utils
+from raw2l1.tools import utils
 
 LOG_FMT = "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
 LOG_DATE_FMT = "%Y-%m-%d %H:%M:%S"

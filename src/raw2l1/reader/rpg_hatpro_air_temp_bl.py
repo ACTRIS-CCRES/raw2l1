@@ -3,7 +3,7 @@ import datetime as dt
 import netCDF4 as nc
 import numpy as np
 
-from .libhatpro import correct_time_units
+from raw2l1.reader.libhatpro import correct_time_units
 
 # brand and model of the LIDAR
 BRAND = "RPG"
@@ -11,7 +11,8 @@ MODEL = "HATPRO boundary layer temperature"
 
 TIME_DIM = "time"
 TIME_VAR = "time"
-
+ALT_DIM = "number_altitude_layers"
+ALT_VAR = "altitude_layers"
 
 FLT_MISSING_VALUE = -999.0
 INT_MISSING_VALUE = -9
@@ -20,15 +21,21 @@ INT_MISSING_VALUE = -9
 def get_data_size(list_files, logger):
     """based on all files to read determine the size of the data"""
 
+    logger.debug("Determining dimensions of data")
+
     dim = {}
     dim["time"] = 0
+    dim["alt"] = 0
     for i, f in enumerate(list_files):
         nc_id = nc.Dataset(f, "r")
+        if i == 0:
+            dim["alt"] = len(nc_id.dimensions[ALT_DIM])
 
         dim["time"] += len(nc_id.dimensions[TIME_DIM])
 
         nc_id.close()
 
+    logger.debug("altitudes size = {}".format(dim["alt"]))
     logger.debug("time size = {}".format(dim["time"]))
 
     return dim
@@ -41,19 +48,13 @@ def init_data(vars_dim, logger):
 
     data["time"] = np.empty((vars_dim["time"],), dtype=np.dtype(dt.datetime))
     data["time_bnds"] = np.empty((vars_dim["time"], 2), dtype=np.dtype(dt.datetime))
-    data["azi"] = np.ones((vars_dim["time"],), dtype=np.float32) * FLT_MISSING_VALUE
-    data["ele"] = np.ones((vars_dim["time"],), dtype=np.float32) * FLT_MISSING_VALUE
-    data["prw"] = np.ones((vars_dim["time"],), dtype=np.float32) * FLT_MISSING_VALUE
-    data["prw_offset"] = (
-        np.ones((vars_dim["time"],), dtype=np.float32) * FLT_MISSING_VALUE
+    data["height"] = np.ones((vars_dim["alt"],), dtype=np.float32)
+    data["ta"] = (
+        np.ones((vars_dim["time"], vars_dim["alt"]), dtype=np.float32)
+        * FLT_MISSING_VALUE
     )
-    data["prw_off_zenith"] = (
-        np.ones((vars_dim["time"],), dtype=np.float32) * FLT_MISSING_VALUE
-    )
-    data["prw_err"] = (
-        np.ones((vars_dim["n_ret"],), dtype=np.float32) * FLT_MISSING_VALUE
-    )
-
+    data["ta_offset"] = np.ones((vars_dim["time"], vars_dim["alt"]), dtype=np.float32)
+    data["ta_err"] = np.ones((vars_dim["alt"],), dtype=np.float32) * FLT_MISSING_VALUE
     data["flag"] = np.zeros((vars_dim["time"],), dtype=np.int16)
     data["rain_flag"] = np.zeros((vars_dim["time"],), dtype=np.int16)
 
@@ -79,7 +80,6 @@ def read_data(list_files, conf, logger):
 
     # get variables size
     vars_dim = get_data_size(list_files, logger)
-    vars_dim["n_ret"] = int(conf["n_ret"])
 
     # Initialize data
     data = init_data(vars_dim, logger)
@@ -87,6 +87,8 @@ def read_data(list_files, conf, logger):
     # read data
     time_ind = 0
     for i, f in enumerate(list_files):
+        logger.debug(f"reading file : {f}")
+
         nc_id = nc.Dataset(f, "r")
 
         time_size, time = read_time(nc_id, logger)
@@ -95,10 +97,13 @@ def read_data(list_files, conf, logger):
         ind_s = time_ind
         ind_e = time_ind + time_size
 
+        logger.debug(f"storing data from index {ind_s} to {ind_e}")
+
+        if i == 0:
+            data["height"] = nc_id.variables[ALT_VAR][:]
+
         data["time"][ind_s:ind_e] = time
-        data["ele"][ind_s:ind_e] = nc_id.variables["elevation_angle"][:]
-        data["azi"][ind_s:ind_e] = nc_id.variables["azimuth_angle"][:]
-        data["prw"][ind_s:ind_e] = nc_id.variables["IWV_data"][:]
+        data["ta"][ind_s:ind_e, :] = nc_id.variables["temperature_profiles"][:]
         data["rain_flag"][ind_s:ind_e] = nc_id.variables["rain_flag"][:]
 
         nc_id.close()

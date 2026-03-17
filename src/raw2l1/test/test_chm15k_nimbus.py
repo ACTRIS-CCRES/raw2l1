@@ -5,7 +5,7 @@ import unittest
 import netCDF4 as nc
 import numpy as np
 
-import reader.lufft_chm15k_nimbus as reader
+import raw2l1.reader.lufft_chm15k_nimbus as reader
 
 MAIN_DIR = os.path.dirname(os.path.dirname(__file__)) + os.sep
 TEST_DIR = os.path.join(MAIN_DIR, "test")

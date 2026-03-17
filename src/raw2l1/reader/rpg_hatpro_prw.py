@@ -3,7 +3,7 @@ import datetime as dt
 import netCDF4 as nc
 import numpy as np
 
-from .libhatpro import correct_time_units
+from raw2l1.reader.libhatpro import correct_time_units
 
 # brand and model of the LIDAR
 BRAND = "RPG"
@@ -15,7 +15,6 @@ TIME_VAR = "time"
 
 FLT_MISSING_VALUE = -999.0
 INT_MISSING_VALUE = -9
-UNIT_CONVERT_FACTOR = 1.0e-3
 
 
 def get_data_size(list_files, logger):
@@ -44,23 +43,17 @@ def init_data(vars_dim, logger):
     data["time_bnds"] = np.empty((vars_dim["time"], 2), dtype=np.dtype(dt.datetime))
     data["azi"] = np.ones((vars_dim["time"],), dtype=np.float32) * FLT_MISSING_VALUE
     data["ele"] = np.ones((vars_dim["time"],), dtype=np.float32) * FLT_MISSING_VALUE
-    data["clwvi"] = np.ones((vars_dim["time"],), dtype=np.float32) * FLT_MISSING_VALUE
-    data["clwvi_off_zenith"] = (
+    data["prw"] = np.ones((vars_dim["time"],), dtype=np.float32) * FLT_MISSING_VALUE
+    data["prw_offset"] = (
         np.ones((vars_dim["time"],), dtype=np.float32) * FLT_MISSING_VALUE
     )
-    data["clwvi_err"] = (
+    data["prw_off_zenith"] = (
+        np.ones((vars_dim["time"],), dtype=np.float32) * FLT_MISSING_VALUE
+    )
+    data["prw_err"] = (
         np.ones((vars_dim["n_ret"],), dtype=np.float32) * FLT_MISSING_VALUE
     )
 
-    data["clwvi_offset_zeroing"] = (
-        np.ones((vars_dim["time"],), dtype=np.float32) * FLT_MISSING_VALUE
-    )
-    data["clwvi_offset"] = (
-        np.ones((vars_dim["time"],), dtype=np.float32) * FLT_MISSING_VALUE
-    )
-    data["clwvi_off_zenith_offset"] = (
-        np.ones((vars_dim["time"],), dtype=np.float32) * FLT_MISSING_VALUE
-    )
     data["flag"] = np.zeros((vars_dim["time"],), dtype=np.int16)
     data["rain_flag"] = np.zeros((vars_dim["time"],), dtype=np.int16)
 
@@ -105,7 +98,7 @@ def read_data(list_files, conf, logger):
         data["time"][ind_s:ind_e] = time
         data["ele"][ind_s:ind_e] = nc_id.variables["elevation_angle"][:]
         data["azi"][ind_s:ind_e] = nc_id.variables["azimuth_angle"][:]
-        data["clwvi"][ind_s:ind_e] = nc_id.variables["LWP_data"][:]
+        data["prw"][ind_s:ind_e] = nc_id.variables["IWV_data"][:]
         data["rain_flag"][ind_s:ind_e] = nc_id.variables["rain_flag"][:]
 
         nc_id.close()
@@ -118,9 +111,6 @@ def read_data(list_files, conf, logger):
     data["time_bnds"][:, 0] = nc.date2num(data["time"], units=time_units)
     tmp = data["time"] + dt.timedelta(seconds=float(integ_time))
     data["time_bnds"][:, 1] = nc.date2num(tmp, units=time_units)
-
-    # convert units of data
-    data["clwvi"] = data["clwvi"] * UNIT_CONVERT_FACTOR
 
     # quality flags
     rain_filter = data["rain_flag"] == 1

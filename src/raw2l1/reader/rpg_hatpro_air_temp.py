@@ -3,7 +3,7 @@ import datetime as dt
 import netCDF4 as nc
 import numpy as np
 
-from .libhatpro import correct_time_units
+from raw2l1.reader.libhatpro import correct_time_units
 
 # brand and model of the LIDAR
 BRAND = "RPG"
@@ -47,12 +47,12 @@ def init_data(vars_dim, logger):
     data["time"] = np.empty((vars_dim["time"],), dtype=np.dtype(dt.datetime))
     data["time_bnds"] = np.empty((vars_dim["time"], 2), dtype=np.dtype(dt.datetime))
     data["height"] = np.ones((vars_dim["alt"],), dtype=np.float32)
-    data["hua"] = (
+    data["ta"] = (
         np.ones((vars_dim["time"], vars_dim["alt"]), dtype=np.float32)
         * FLT_MISSING_VALUE
     )
-    data["hua_offset"] = np.ones((vars_dim["time"], vars_dim["alt"]), dtype=np.float32)
-    data["hua_err"] = (
+    data["ta_offset"] = np.ones((vars_dim["time"], vars_dim["alt"]), dtype=np.float32)
+    data["ta_err"] = (
         np.ones((vars_dim["alt"], vars_dim["n_ret"]), dtype=np.float32)
         * FLT_MISSING_VALUE
     )
@@ -102,7 +102,7 @@ def read_data(list_files, conf, logger):
             data["height"] = nc_id.variables[ALT_VAR][:]
 
         data["time"][ind_s:ind_e] = time
-        data["hua"][ind_s:ind_e, :] = nc_id.variables["Absolute_Humidity_Profiles"][:]
+        data["ta"][ind_s:ind_e, :] = nc_id.variables["temperature_profiles"][:]
         data["rain_flag"][ind_s:ind_e] = nc_id.variables["rain_flag"][:]
 
         nc_id.close()
@@ -115,9 +115,6 @@ def read_data(list_files, conf, logger):
     data["time_bnds"][:, 0] = nc.date2num(data["time"], units=time_units)
     tmp = data["time"] + dt.timedelta(seconds=float(integ_time))
     data["time_bnds"][:, 1] = nc.date2num(tmp, units=time_units)
-
-    # convert units of abolute humidity from g.m-3 to kg.m-3
-    data["hua"] = data["hua"] / 1000.0
 
     # quality flags
     rain_filter = data["rain_flag"] == 1

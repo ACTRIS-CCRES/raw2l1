@@ -5,7 +5,7 @@ from os.path import basename
 
 import numpy as np
 
-from tools.utils import chomp, to_bool
+from raw2l1.tools.utils import chomp, to_bool
 
 # brand and model of the LIDAR
 BRAND = "vaisala"

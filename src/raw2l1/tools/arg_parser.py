@@ -10,7 +10,7 @@ import os
 import sys
 from itertools import chain
 
-from .utils import check_dir
+from raw2l1.tools.utils import check_dir
 
 PROG_DESC = "Raw LIDAR data to netCDF converter"
 DATE_FMT = "%Y%m%d"

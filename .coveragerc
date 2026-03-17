@@ -1,6 +1,6 @@
 [run]
 omit=
-    raw2l1/test/*
+    src/raw2l1/test/*
     test/*
     setup.py
 [report]
