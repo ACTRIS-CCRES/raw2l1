@@ -96,5 +96,10 @@ def raw2l1(argv):
     return 0
 
 
+def main():
+    """Console-script entry point."""
+    return raw2l1(sys.argv[1:])
+
+
 if __name__ == "__main__":
-    raise SystemExit(raw2l1(sys.argv[1:]))
+    raise SystemExit(main())

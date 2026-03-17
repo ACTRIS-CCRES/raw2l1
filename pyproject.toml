@@ -15,6 +15,9 @@ dependencies = [
     "xarray",
 ]
 
+[project.scripts]
+raw2l1 = "raw2l1.raw2l1:main"
+
 [tool.setuptools]
 package-dir = {"" = "src"}
 include-package-data = true
