@@ -3,9 +3,11 @@
 
 import configparser
 import datetime as dt
+import os
 import sys
 import tempfile
 from ast import literal_eval
+from contextlib import nullcontext
 
 import netCDF4 as nc
 import numpy as np
@@ -506,55 +508,63 @@ def create_netcdf(conf, data, logger):
     Create and write in the netCDf file
     """
     # check if we need to filter data
-    if conf.get("conf", "filter_day"):
-        output_file = tempfile.NamedTemporaryFile().name
+    filter_day = conf.get("conf", "filter_day")
+    if filter_day:
         date_start = conf.get("conf", "date")
         date_end = date_start + ALMOST_ONE_dAY
-    else:
-        output_file = conf.get("conf", "output")
 
     status = 0
 
-    # open netCDF file
-    # -------------------------------------------------------------------------
-    logger.info("create netCDF file %s", output_file)
-    try:
-        nc_id = nc.Dataset(output_file, "w", format=conf.get("conf", "netcdf_format"))
-    except OSError as err:
-        logger.critical("107 Error trying to create the netCDF file '%s'", output_file)
-        logger.critical(err)
-        logger.critical("quitting raw2l1")
-        sys.exit(1)
+    tmp_dir_context = tempfile.TemporaryDirectory() if filter_day else nullcontext(None)
+    with tmp_dir_context as tmp_dir:
+        if filter_day:
+            output_file = os.path.join(tmp_dir, "raw2l1_filter_day.nc")
+        else:
+            output_file = conf.get("conf", "output")
 
-    # write global attributes in netCDF file
-    # -------------------------------------------------------------------------
-    logger.info("adding global attributes")
-    create_netcdf_global(conf, nc_id, data, logger)
+        # open netCDF file
+        # ---------------------------------------------------------------------
+        logger.info("create netCDF file %s", output_file)
+        nc_id = None
+        try:
+            nc_id = nc.Dataset(
+                output_file, "w", format=conf.get("conf", "netcdf_format")
+            )
+        except OSError as err:
+            logger.critical(
+                "107 Error trying to create the netCDF file '%s'", output_file
+            )
+            logger.critical(err)
+            logger.critical("quitting raw2l1")
+            sys.exit(1)
 
-    # write dimension of the netCDF file
-    # -------------------------------------------------------------------------
-    logger.info("creating dimensions")
-    create_netcdf_dim(conf, data, nc_id, logger)
+        try:
+            # write global attributes in netCDF file
+            # -----------------------------------------------------------------
+            logger.info("adding global attributes")
+            create_netcdf_global(conf, nc_id, data, logger)
 
-    # write variables in netCDf file
-    # -------------------------------------------------------------------------
-    logger.info("creating variables")
-    logger.debug("creating time variable")
-    create_netcdf_variables(conf, data, nc_id, logger)
+            # write dimension of the netCDF file
+            # -----------------------------------------------------------------
+            logger.info("creating dimensions")
+            create_netcdf_dim(conf, data, nc_id, logger)
 
-    nc_id.close()
+            # write variables in netCDf file
+            # -----------------------------------------------------------------
+            logger.info("creating variables")
+            logger.debug("creating time variable")
+            create_netcdf_variables(conf, data, nc_id, logger)
+        finally:
+            if nc_id is not None:
+                nc_id.close()
 
-    # filter data if needed
-    # -------------------------------------------------------------------------
-    if conf.get("conf", "filter_day"):
-        logger.info("filtering data for %s", date_start.strftime(DATE_FMT))
-        output_final = conf.get("conf", "output")
-
-        data = xr.open_dataset(output_file)
-        data = data.sel(time=slice(date_start, date_end))
-
-        data.to_netcdf(output_final)
-
-        data.close()
+        # filter data if needed
+        # ---------------------------------------------------------------------
+        if filter_day:
+            logger.info("filtering data for %s", date_start.strftime(DATE_FMT))
+            output_final = conf.get("conf", "output")
+            with xr.open_dataset(output_file) as filtered_data:
+                filtered_data = filtered_data.sel(time=slice(date_start, date_end))
+                filtered_data.to_netcdf(output_final)
 
     return status
