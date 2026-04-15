@@ -647,6 +647,12 @@ def read_data(list_files, conf, logger):
     data["cloud_layer_height"] = np.where(
         cc_filter, data["cloud_layer_height"], MISSING_FLOAT
     )
+    # fix infinite values that sometimes occur
+    data["beta"] = np.where(np.isfinite(data["beta"]), data["beta"], MISSING_FLOAT)
+    # fix missing vlues for rcs
+    data["rcs_0"] = np.where(np.isfinite(data["rcs_0"]), data["rcs_0"], MISSING_FLOAT)
+    data["rcs_1"] = np.where(np.isfinite(data["rcs_1"]), data["rcs_1"], MISSING_FLOAT)
+    data["rcs_2"] = np.where(np.isfinite(data["rcs_2"]), data["rcs_2"], MISSING_FLOAT)
 
     # print status (only for fw >= 1.2)
     print_status_message(data, logger)
