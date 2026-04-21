@@ -12,48 +12,23 @@
 
 Code to convert raw LIDAR data into normalized netCDF files
 
-## Get code
-
-### Using ssh
-
-```bash
-git@github.com:ACTRIS-CCRES/raw2l1.git
-```
-
-### Using https
-
-```bash
-https://github.com/ACTRIS-CCRES/raw2l1.git
-```
-
 ## Dependencies install
 
-### Using conda
+### Install package using pip
+
+via https
 
 ```bash
-conda env create -f environements/environment.yml
+pip install git+https://github.com/RUBclim/raw2li
 ```
 
-It will create a `raw2l1` environment. Activate before using raw2l1
+via ssh
 
 ```bash
-conda activate raw2l1
+pip install git+ssh://git@github.com/RUBclim/raw2li
 ```
 
-### Using pip
-
-We recommand creating a virtual environment before installing the dependencies with
-
-```bash
-python -m venv path/env/raw2l1
-source activate path/env/raw2l1/bin/activate
-```
-
-Then install the dependencies with
-
-```bash
-python -m pip install -r requirements/requirements.txt
-```
+This installs the `raw2l1` command.
 
 ## Instruments compatibility
 
@@ -88,21 +63,20 @@ the repository contains some example files allowing you to test the code
 - you can get the list of input arguments using the command:
 
 ```
-cd raw2l1
-python raw2l1.py -h
+raw2l1 --help
 ```
 
 
 - to convert a LUFFT CHM15k file
 
 ```
-python '20150427' raw2l1 conf/conf_lufft_chm15k_eprofile.ini test/input/Jenoptik_chm15k/20150427_SIRTA_CHM150101_000.nc test/output/test_lufft_sirta.nc
+raw2l1 '20150427' conf/conf_lufft_chm15k_eprofile.ini test/input/Jenoptik_chm15k/20150427_SIRTA_CHM150101_000.nc test/output/test_lufft_sirta.nc
 ```
 
 - to convert a VAISALA CL31 or CL51 file
 
 ```
- python raw2l1 '20141030' conf/conf_vaisala_cl31_eprofile.ini 'test/input/vaisala_cl31/cl31_0a_z1R5mF3s_v01_20141030_*.asc' test/output/test_cl31.nc
+raw2l1 '20141030' conf/conf_vaisala_cl31_eprofile.ini 'test/input/vaisala_cl31/cl31_0a_z1R5mF3s_v01_20141030_*.asc' test/output/test_cl31.nc
 ```
 
 ### Filtering data
