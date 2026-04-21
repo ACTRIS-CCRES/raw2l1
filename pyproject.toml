@@ -27,3 +27,13 @@ where = ["src"]
 
 [tool.setuptools.package-data]
 raw2l1 = ["conf/*.ini"]
+
+[dependency-groups]
+dev = [
+    "commitizen>=4.13.10",
+    "pre-commit>=4.5.1",
+    "pytest>=9.0.3",
+    "pytest-cov>=7.1.0",
+    "ruff>=0.15.11",
+    "ty>=0.0.32",
+]
