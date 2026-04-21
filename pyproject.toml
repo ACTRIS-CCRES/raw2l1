@@ -6,20 +6,38 @@ build-backend = "setuptools.build_meta"
 name = "raw2l1"
 version = "3.2.4"
 description = "Convert raw lidar/radiometer files to level-1 NetCDF products"
+authors = [{ name = "ACTRIS-CCRES", email = "ccres-dev@listes.ipsl.fr" }]
 readme = "README.md"
-requires-python = ">=3.10"
-dependencies = [
-    "numpy",
-    "netCDF4>=1.6",
-    "gitpython",
-    "xarray",
+classifiers = [
+    'Development Status :: 5 - Production/Stable',
+    'Intended Audience :: Developers',
+    'License :: OSI Approved :: GNU Affero General Public License v3',
+    'Natural Language :: English',
+    'Programming Language :: Python :: Implementation :: CPython',
+    'Programming Language :: Python :: 3',
+    'Programming Language :: Python :: 3.10',
+    'Programming Language :: Python :: 3.11',
+    'Programming Language :: Python :: 3.12',
+    'Programming Language :: Python :: 3.13',
+    'Programming Language :: Python :: 3.14',
 ]
+requires-python = ">=3.10"
+dependencies = ["numpy", "netCDF4>=1.6", "gitpython", "xarray"]
 
 [project.scripts]
 raw2l1 = "raw2l1.raw2l1:main"
 
+[project.license]
+file = "LICENSE"
+
+[project.urls]
+homepage = "https://github.com/ACTRIS-CCRES/raw2l1"
+repository = "https://github.com/ACTRIS-CCRES/raw2l1"
+changelog = "https://github.com/ACTRIS-CCRES/raw2l1/blob/main/CHANGELOG.md"
+"Bug Tracker" = "https://github.com/ACTRIS-CCRES/raw2l1/issues"
+
 [tool.setuptools]
-package-dir = {"" = "src"}
+package-dir = { "" = "src" }
 include-package-data = true
 
 [tool.setuptools.packages.find]
