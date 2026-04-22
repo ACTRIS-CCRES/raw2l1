@@ -7,7 +7,7 @@ from raw2l1.raw2l1 import raw2l1
 
 MAIN_DIR = os.path.dirname(os.path.dirname(__file__)) + os.sep
 CONF_DIR = MAIN_DIR + "conf" + os.sep
-TEST_DIR = MAIN_DIR + "test" + os.sep
+TEST_DIR = MAIN_DIR + "tests" + os.sep
 TEST_IN_DIR = TEST_DIR + os.sep + "input" + os.sep
 TEST_OUT_DIR = TEST_DIR + os.sep + "output" + os.sep
 

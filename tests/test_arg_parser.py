@@ -7,6 +7,9 @@ import unittest
 
 import raw2l1.tools.arg_parser as ag
 
+MAIN_DIR = os.path.dirname(os.path.dirname(__file__)) + os.sep
+TEST_DIR = os.path.join(MAIN_DIR, "tests")
+
 
 class TestArgParserDate(unittest.TestCase):
     def test_date_error(self):
@@ -23,9 +26,11 @@ class TestArgParserDate(unittest.TestCase):
 
 class TestArgParser(unittest.TestCase):
     def test_ancillary(self):
-        conf_file = "src/raw2l1/test/conf/conf_dummy.ini"
-        in_pattern = "src/raw2l1/test/input/rpg_hatpro/hatpro_0a_z1Imwrad-TPB_v01_*.nc"
-        out_file = "src/raw2l1/test/output/dummy.nc"
+        conf_file = os.path.join(TEST_DIR, "conf", "conf_dummy.ini")
+        in_pattern = os.path.join(
+            TEST_DIR, "input", "rpg_hatpro", "hatpro_0a_z1Imwrad-TPB_v01_*.nc"
+        )
+        out_file = os.path.join(TEST_DIR, "output", "dummy.nc")
 
         argv = [
             "20160101",
@@ -37,9 +42,24 @@ class TestArgParser(unittest.TestCase):
         ]
 
         expected_inputs = [
-            "src/raw2l1/test/input/rpg_hatpro/hatpro_0a_z1Imwrad-TPB_v01_20150901_000412_712.nc",
-            "src/raw2l1/test/input/rpg_hatpro/hatpro_0a_z1Imwrad-TPB_v01_20150901_120108_716.nc",
-            "src/raw2l1/test/input/rpg_hatpro/hatpro_0a_z1Imwrad-TPB_v01_20150930_000020_1436.nc",
+            os.path.join(
+                TEST_DIR,
+                "input",
+                "rpg_hatpro",
+                "hatpro_0a_z1Imwrad-TPB_v01_20150901_000412_712.nc",
+            ),
+            os.path.join(
+                TEST_DIR,
+                "input",
+                "rpg_hatpro",
+                "hatpro_0a_z1Imwrad-TPB_v01_20150901_120108_716.nc",
+            ),
+            os.path.join(
+                TEST_DIR,
+                "input",
+                "rpg_hatpro",
+                "hatpro_0a_z1Imwrad-TPB_v01_20150930_000020_1436.nc",
+            ),
         ]
 
         ref_inputs = {

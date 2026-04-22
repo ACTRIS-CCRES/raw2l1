@@ -7,7 +7,7 @@ import pytest
 from raw2l1.raw2l1 import raw2l1
 
 MAIN_DIR = Path(__file__).resolve().parent.parent
-TEST_DIR = MAIN_DIR / "test"
+TEST_DIR = MAIN_DIR / "tests"
 TEST_IN_DIR = TEST_DIR / "input" / "vaisala_ct25k"
 CONF_DIR = TEST_IN_DIR / "conf"
 TEST_OUT_DIR = TEST_DIR / "output"

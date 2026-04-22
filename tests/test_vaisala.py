@@ -3,11 +3,10 @@ import unittest
 
 import netCDF4 as nc
 import numpy as np
-
 from raw2l1.raw2l1 import raw2l1
 
 MAIN_DIR = os.path.dirname(os.path.dirname(__file__)) + os.sep
-TEST_DIR = os.path.join(MAIN_DIR, "test")
+TEST_DIR = os.path.join(MAIN_DIR, "tests")
 CONF_DIR = os.path.join(TEST_DIR, "conf")
 TEST_IN_DIR = os.path.join(TEST_DIR, "input")
 TEST_OUT_DIR = os.path.join(TEST_DIR, "output")
