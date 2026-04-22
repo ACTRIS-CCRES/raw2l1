@@ -55,3 +55,14 @@ dev = [
     "ruff>=0.15.11",
     "ty>=0.0.32",
 ]
+
+[tool.commitizen]
+version = "3.2.4"
+version_files = ["pyproject.toml:version"]
+tag_format = "v$version"
+changelog_file = "CHANGELOG.md"
+update_changelog_on_bump = true
+bump_message = "chore: bump version $current_version → $new_version"
+pre_bump_hooks = []
+post_bump_hooks = []
+retry_after_failure = true

@@ -5,6 +5,7 @@
 
 import sys
 
+from raw2l1 import __version__
 from raw2l1.tools import arg_parser as ag
 from raw2l1.tools import conf, log
 from raw2l1.tools import create_netcdf as cnc
@@ -12,7 +13,6 @@ from raw2l1.tools import lidar_reader as lr
 from raw2l1.tools.check_conf import check_conf
 
 __author__ = "Marc-Antoine Drouin"
-__version__ = "3.2.4"
 
 NAME = "raw2l1"
 
