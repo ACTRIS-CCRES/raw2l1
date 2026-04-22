@@ -3,7 +3,7 @@ name: CI
 on:
   pull_request:
   push:
-    branches: [main, develop]
+    branches: [ main, develop ]
     paths-ignore:
       - "docs/**"
       - "*.md"
@@ -14,7 +14,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: ["3.10", "3.11", "3.12", "3.13", "3.14"]
+        python-version: [ "3.10", "3.11", "3.12", "3.13", "3.14" ]
 
     steps:
       - name: Checkout code
@@ -29,7 +29,8 @@ jobs:
         uses: actions/cache@v3
         with:
           path: ~/.cache/pip
-          key: ${{ runner.os }}-python-${{ matrix.python-version }}-pip-${{ hashFiles('requirements/requirements-dev.txt') }}
+          key: ${{ runner.os }}-python-${{ matrix.python-version }}-pip-${{
+            hashFiles('requirements/requirements-dev.txt') }}
 
       - name: Install dependencies
         run: |
@@ -38,7 +39,7 @@ jobs:
 
       - name: Run tests
         run: |
-          python -m pytest -c pytest.ini --cov-config=.coveragerc
+          python -m pytest
 
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v4
