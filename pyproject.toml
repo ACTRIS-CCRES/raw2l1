@@ -1,6 +1,6 @@
 [build-system]
-requires = ["setuptools>=68", "wheel"]
-build-backend = "setuptools.build_meta"
+requires = ["hatchling"]
+build-backend = "hatchling.build"
 
 [project]
 name = "raw2l1"
@@ -15,13 +15,11 @@ classifiers = [
     'Natural Language :: English',
     'Programming Language :: Python :: Implementation :: CPython',
     'Programming Language :: Python :: 3',
-    'Programming Language :: Python :: 3.10',
-    'Programming Language :: Python :: 3.11',
     'Programming Language :: Python :: 3.12',
     'Programming Language :: Python :: 3.13',
     'Programming Language :: Python :: 3.14',
 ]
-requires-python = ">=3.10"
+requires-python = ">=3.12"
 dependencies = ["numpy", "netCDF4>=1.6", "gitpython", "xarray"]
 
 [project.scripts]
@@ -36,12 +34,11 @@ repository = "https://github.com/ACTRIS-CCRES/raw2l1"
 changelog = "https://github.com/ACTRIS-CCRES/raw2l1/blob/main/CHANGELOG.md"
 "Bug Tracker" = "https://github.com/ACTRIS-CCRES/raw2l1/issues"
 
-[tool.setuptools]
-package-dir = { "" = "src" }
-include-package-data = true
+[tool.hatch.build]
+source = "src"
 
-[tool.setuptools.packages.find]
-where = ["src"]
+[tool.hatch.build.targets.wheel]
+packages = ["src/raw2l1"]
 
 [tool.setuptools.package-data]
 raw2l1 = ["conf/*.ini"]
@@ -49,6 +46,7 @@ raw2l1 = ["conf/*.ini"]
 [dependency-groups]
 dev = [
     "commitizen>=4.13.10",
+    "hatch>=1.17.1",
     "pre-commit>=4.5.1",
     "pytest>=9.0.3",
     "pytest-cov>=7.1.0",
@@ -72,8 +70,8 @@ src = ["src/raw2l1"]
 
 # Same as Black.
 line-length = 88
-# Assume Python 3.11.
-target-version = "py311"
+# Assume Python 3.12.
+target-version = "py312"
 
 [tool.ruff.lint]
 # Enable pycodestyle (`E`) and Pyflakes (`F`) codes by default.
