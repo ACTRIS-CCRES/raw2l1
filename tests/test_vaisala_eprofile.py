@@ -4,7 +4,6 @@ import os
 import unittest
 
 import pytest
-
 from raw2l1.raw2l1 import raw2l1
 
 MAIN_DIR = os.path.dirname(os.path.dirname(__file__))

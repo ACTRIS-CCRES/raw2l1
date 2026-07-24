@@ -3,7 +3,6 @@
 from pathlib import Path
 
 import pytest
-
 from raw2l1.raw2l1 import raw2l1
 
 MAIN_DIR = Path(__file__).resolve().parent.parent

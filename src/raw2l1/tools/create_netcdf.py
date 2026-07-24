@@ -30,7 +30,7 @@ KEYS_VALTYPE = {
     "default": np.float64,
 }
 
-ALMOST_ONE_dAY = dt.timedelta(hours=23, minutes=59, seconds=59)
+ALMOST_ONE_DAY = dt.timedelta(hours=23, minutes=59, seconds=59)
 DATE_FMT = "%Y-%m-%d"
 
 
@@ -511,7 +511,7 @@ def create_netcdf(conf, data, logger):
     filter_day = conf.get("conf", "filter_day")
     if filter_day:
         date_start = conf.get("conf", "date")
-        date_end = date_start + ALMOST_ONE_dAY
+        date_end = date_start + ALMOST_ONE_DAY
 
     status = 0
 
