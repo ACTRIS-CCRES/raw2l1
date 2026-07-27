@@ -34,7 +34,7 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
           enable-cache: true
-      - run: uv sync --locked --all-extras --all-groups
+      - run: uv sync --all-extras --all-groups
       - run: uv run pytest
 
       - name: Upload coverage reports to Codecov
