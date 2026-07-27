@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "raw2l1"
-version = "3.2.4"
+version = "4.0.0"
 description = "Convert raw lidar/radiometer files to level-1 NetCDF products"
 authors = [{ name = "ACTRIS-CCRES", email = "ccres-dev@listes.ipsl.fr" }]
 readme = "README.md"
@@ -56,7 +56,7 @@ source = "src"
 packages = ["src/raw2l1"]
 
 [tool.commitizen]
-version = "3.2.4"
+version = "4.0.0"
 version_files = ["pyproject.toml:version"]
 tag_format = "v$version"
 changelog_file = "CHANGELOG.md"
