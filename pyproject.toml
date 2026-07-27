@@ -34,15 +34,6 @@ repository = "https://github.com/ACTRIS-CCRES/raw2l1"
 changelog = "https://github.com/ACTRIS-CCRES/raw2l1/blob/main/CHANGELOG.md"
 "Bug Tracker" = "https://github.com/ACTRIS-CCRES/raw2l1/issues"
 
-[tool.hatch.build]
-source = "src"
-
-[tool.hatch.build.targets.wheel]
-packages = ["src/raw2l1"]
-
-[tool.setuptools.package-data]
-raw2l1 = ["conf/*.ini"]
-
 [dependency-groups]
 dev = [
     "commitizen>=4.13.10",
@@ -53,6 +44,12 @@ dev = [
     "ruff>=0.15.11",
     "ty>=0.0.32",
 ]
+
+[tool.hatch.build]
+source = "src"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/raw2l1"]
 
 [tool.commitizen]
 version = "3.2.4"
