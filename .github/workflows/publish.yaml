@@ -8,6 +8,9 @@ on:
 jobs:
   publish-PyPi:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      id-token: write
     steps:
       - name: Checkout code
         uses: actions/checkout@v7
@@ -28,3 +31,16 @@ jobs:
           HATCH_INDEX_USER: __token__
           HATCH_INDEX_AUTH: ${{ secrets.PYPI_TOKEN }}
         run: hatch publish
+
+      - name: Generate changelog
+        run: |
+          version=${GITHUB_REF#refs/tags/v}
+          awk '/^## /{n++} n==1' CHANGELOG.md > ${{ github.workspace }}-CHANGELOG.txt
+          echo "name=raw2l1 $version" >> $GITHUB_OUTPUT
+        id: changelog
+
+      - name: Create release
+        uses: softprops/action-gh-release@v3
+        with:
+          name: ${{ steps.changelog.outputs.name }}
+          body_path: ${{ github.workspace }}-CHANGELOG.txt
