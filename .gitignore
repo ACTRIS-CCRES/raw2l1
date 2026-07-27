@@ -118,3 +118,18 @@ dmypy.json
 # vscode
 .vscode
 
+*input
+*daily_files
+*output
+
+# Local processing scripts and notebooks
+process_*.py
+processs_*.py
+*.ipynb
+
+# Runtime data directories
+logs/*
+src/raw2l1/input/
+src/raw2l1/daily_files/
+src/raw2l1/output/
+station/*

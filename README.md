@@ -12,50 +12,19 @@
 
 Code to convert raw LIDAR data into normalized netCDF files
 
-## Get code
-
-### Using ssh
-
-```bash
-git@github.com:ACTRIS-CCRES/raw2l1.git
-```
-
-### Using https
-
-```bash
-https://github.com/ACTRIS-CCRES/raw2l1.git
-```
-
 ## Dependencies install
 
-### Using conda
+### Install package using pip
 
 ```bash
-conda env create -f environements/environment.yml
+pip install raw2l1
 ```
 
-It will create a `raw2l1` environment. Activate before using raw2l1
-
-```bash
-conda activate raw2l1
-```
-
-### Using pip
-
-We recommand creating a virtual environment before installing the dependencies with
-
-```bash
-python -m venv path/env/raw2l1
-source activate path/env/raw2l1/bin/activate
-```
-
-Then install the dependencies with
-
-```bash
-python -m pip install -r requirements/requirements.txt
-```
+This installs the `raw2l1` command.
 
 ## Instruments compatibility
+
+Example of configuration files for instruments are provided in the [raw2l1-config](https://github.com/ACTRIS-CCRES/raw2l1-config) repository.
 
 ### VAISALA ceilometers
 
@@ -88,21 +57,20 @@ the repository contains some example files allowing you to test the code
 - you can get the list of input arguments using the command:
 
 ```
-cd raw2l1
-python raw2l1.py -h
+raw2l1 --help
 ```
 
 
 - to convert a LUFFT CHM15k file
 
 ```
-python '20150427' raw2l1 conf/conf_lufft_chm15k_eprofile.ini test/input/Jenoptik_chm15k/20150427_SIRTA_CHM150101_000.nc test/output/test_lufft_sirta.nc
+raw2l1 '20150427' conf/conf_lufft_chm15k_eprofile.ini test/input/Jenoptik_chm15k/20150427_SIRTA_CHM150101_000.nc test/output/test_lufft_sirta.nc
 ```
 
 - to convert a VAISALA CL31 or CL51 file
 
 ```
- python raw2l1 '20141030' conf/conf_vaisala_cl31_eprofile.ini 'test/input/vaisala_cl31/cl31_0a_z1R5mF3s_v01_20141030_*.asc' test/output/test_cl31.nc
+raw2l1 '20141030' conf/conf_vaisala_cl31_eprofile.ini 'test/input/vaisala_cl31/cl31_0a_z1R5mF3s_v01_20141030_*.asc' test/output/test_cl31.nc
 ```
 
 ### Filtering data
@@ -121,9 +89,7 @@ Options are available for the use of raw2l1 in near-realtime processing
 
 ## Get sources
 
-You will first need to create an account on gitlab.in2p3.fr (see [here](https://doc.cc.in2p3.fr/en/Collaborative-tools/tools/gitlab.html#account-registration)).
-
-Then you can clone the repository
+Clone the repository
 
 ```bash
 git clone git@github.com:ACTRIS-CCRES/raw2l1.git
@@ -131,16 +97,23 @@ git clone git@github.com:ACTRIS-CCRES/raw2l1.git
 
 ## Install
 
-### Using conda
+### Using uv (recommended)
+
+Install [uv](https://docs.astral.sh/uv/getting-started/installation/)
 
 ```bash
-conda env create -f environements/environment-dev.yml
-conda activate raw2l1-dev
+uv sync --all-groups
 ```
 
-### Using pip
+### Using conda or pixie
 
-We recommand creating a virtual environment before installing the dependencies with
+```bash
+conda create -n raw2l1 python=3.13 pip
+conda activate raw2l1
+pip install . --group dev
+```
+
+### Using venv
 
 ```bash
 python -m venv path/env/raw2l1-dev
@@ -150,51 +123,35 @@ source activate path/env/raw2l1-dev/bin/activate
 Then install the dependencies with
 
 ```bash
-pip install -r requirements/requirements-dev.txt
+pip install . --group dev
 ```
 
 ## Install pre-commit
 
+Pre-commit is used to check code before commit. It is recommended to install it in your development environment.
+
+```bash
+uv run pre-commit install
+uv run pre-commit install --hook-type commit-msg
+```
+
+or with conda, pixie or venv
+
 ```bash
 pre-commit install
+pre-commit install --hook-type commit-msg
 ```
 
 ## Run the test suite
 
-To run the tests you will need more python modules see requirements.txt file
-
-- go to raw2l1 directory
-- run
-
-```
-ce raw2l1
-python -m pytest
+```bash
+uv run pytest
 ```
 
-## Run the linter and code formatter
-
-raw2l1 use [ruff](https://astral.sh/ruff) for linting and code formatting.
-
-### Check code
+or with conda, pixie or venv
 
 ```bash
-ruff check raw2l1
-```
-
-### Fix code
-
-You can also try to make ruff fix some of the issues it detected.
-
-```bash
-ruff check --fix raw2l1
-```
-
-### Format code
-
-When your `ruff check` is ok, you can user the formatter.
-
-```bash
-ruff format raw2l1
+python -m  pytest
 ```
 
 # Thanks
@@ -204,4 +161,4 @@ Thanks to F.Wagner, I. Mattis, R. Leinweber for testing the software, providing 
 
 # Copyright
 
-2014-2024 CNRS/Ecole polytechnique
+2014-2026 CNRS/Ecole polytechnique

@@ -1,0 +1,190 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "raw2l1"
+version = "3.2.4"
+description = "Convert raw lidar/radiometer files to level-1 NetCDF products"
+authors = [{ name = "ACTRIS-CCRES", email = "ccres-dev@listes.ipsl.fr" }]
+readme = "README.md"
+classifiers = [
+    'Development Status :: 5 - Production/Stable',
+    'Intended Audience :: Developers',
+    'License :: OSI Approved :: GNU Affero General Public License v3',
+    'Natural Language :: English',
+    'Programming Language :: Python :: Implementation :: CPython',
+    'Programming Language :: Python :: 3',
+    'Programming Language :: Python :: 3.12',
+    'Programming Language :: Python :: 3.13',
+    'Programming Language :: Python :: 3.14',
+]
+requires-python = ">=3.12"
+dependencies = [
+    "numpy",
+    "netCDF4>=1.6",
+    "xarray",
+]
+
+[project.scripts]
+raw2l1 = "raw2l1.raw2l1:main"
+
+[project.license]
+file = "LICENSE"
+
+[project.urls]
+homepage = "https://github.com/ACTRIS-CCRES/raw2l1"
+repository = "https://github.com/ACTRIS-CCRES/raw2l1"
+changelog = "https://github.com/ACTRIS-CCRES/raw2l1/blob/main/CHANGELOG.md"
+"Bug Tracker" = "https://github.com/ACTRIS-CCRES/raw2l1/issues"
+
+[dependency-groups]
+dev = [
+    "commitizen>=4.13.10",
+    "hatch>=1.17.1",
+    "pre-commit>=4.5.1",
+    "pytest>=9.0.3",
+    "pytest-cov>=7.1.0",
+    "ruff>=0.15.11",
+    "ty>=0.0.32",
+]
+
+[tool.hatch.build]
+source = "src"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/raw2l1"]
+
+[tool.commitizen]
+version = "3.2.4"
+version_files = ["pyproject.toml:version"]
+tag_format = "v$version"
+changelog_file = "CHANGELOG.md"
+update_changelog_on_bump = true
+bump_message = "chore: bump version $current_version → $new_version"
+pre_bump_hooks = []
+post_bump_hooks = []
+retry_after_failure = true
+
+[tool.ruff]
+src = ["src/raw2l1"]
+
+# Same as Black.
+line-length = 88
+# Assume Python 3.12.
+target-version = "py312"
+
+[tool.ruff.lint]
+# Enable pycodestyle (`E`) and Pyflakes (`F`) codes by default.
+select = ["E", "F", "UP", "I"]
+ignore = [
+    "UP031",
+    "COM812",
+    "ISC001", # incompatible rules
+]
+
+# Allow autofix for all enabled rules (when `--fix`) is provided.
+fixable = [
+    "A",
+    "B",
+    "C",
+    "D",
+    "E",
+    "F",
+    "I",
+    "N",
+    "Q",
+    "S",
+    "T",
+    "W",
+    "ANN",
+    "ARG",
+    "BLE",
+    "DTZ",
+    "EM",
+    "ERA",
+    "FBT",
+    "ICN",
+    "ISC",
+    "PD",
+    "PGH",
+    "PIE",
+    "PT",
+    "RET",
+    "RUF",
+    "SIM",
+    "TID",
+    "UP",
+    "YTT",
+]
+unfixable = []
+
+# Exclude a variety of commonly ignored directories.
+exclude = [
+    ".bzr",
+    ".direnv",
+    ".eggs",
+    ".git",
+    ".git-rewrite",
+    ".hg",
+    ".mypy_cache",
+    ".nox",
+    ".pants.d",
+    ".pytype",
+    ".ruff_cache",
+    ".svn",
+    ".tox",
+    ".venv",
+    "__pypackages__",
+    "_build",
+    "buck-out",
+    "build",
+    "dist",
+    "node_modules",
+    "venv",
+    ".nc",
+    ".DAT",
+    ".dat",
+]
+per-file-ignores = {}
+
+# Allow unused variables when underscore-prefixed.
+dummy-variable-rgx = "^(_+|(_+[a-zA-Z0-9_]*[a-zA-Z0-9]+?))$"
+
+[tool.ruff.lint.mccabe]
+# Unlike Flake8, default to a complexity level of 10.
+max-complexity = 10
+
+[tool.ruff.lint.pydocstyle]
+convention = "numpy"
+
+[tool.pytest.ini_options]
+addopts = [
+    "-vv",
+    "--cov-report=xml:coverage/coverage.xml",
+    "--cov-report=term",
+    "--cov=.",
+]
+testpaths = ["tests"]
+filterwarnings = [
+    "ignore::DeprecationWarning",
+    "default:::ccres_disdrometer_processing.*",
+]
+
+[tool.coverage.run]
+omit = ["tests/*", "setup.py"]
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "def __repr__",
+    "if self.debug:",
+    "if settings.DEBUG",
+    "raise AssertionError",
+    "raise NotImplementedError",
+    "if 0:",
+    "if __name__ == .__main__.:",
+    "class .*\\bProtocol\\):",
+    "@(abc\\.)?abstractmethod",
+    "except ImportError:",
+]
