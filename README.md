@@ -16,21 +16,15 @@ Code to convert raw LIDAR data into normalized netCDF files
 
 ### Install package using pip
 
-via https
-
 ```bash
-pip install git+https://github.com/RUBclim/raw2li
-```
-
-via ssh
-
-```bash
-pip install git+ssh://git@github.com/RUBclim/raw2li
+pip install raw2l1
 ```
 
 This installs the `raw2l1` command.
 
 ## Instruments compatibility
+
+Example of configuration files for instruments are provided in the [raw2l1-config](https://github.com/ACTRIS-CCRES/raw2l1-config) repository.
 
 ### VAISALA ceilometers
 
@@ -95,9 +89,7 @@ Options are available for the use of raw2l1 in near-realtime processing
 
 ## Get sources
 
-You will first need to create an account on gitlab.in2p3.fr (see [here](https://doc.cc.in2p3.fr/en/Collaborative-tools/tools/gitlab.html#account-registration)).
-
-Then you can clone the repository
+Clone the repository
 
 ```bash
 git clone git@github.com:ACTRIS-CCRES/raw2l1.git
@@ -105,16 +97,23 @@ git clone git@github.com:ACTRIS-CCRES/raw2l1.git
 
 ## Install
 
-### Using conda
+### Using uv (recommended)
+
+Install [uv](https://docs.astral.sh/uv/getting-started/installation/)
 
 ```bash
-conda env create -f environements/environment-dev.yml
-conda activate raw2l1-dev
+uv sync --all-groups
 ```
 
-### Using pip
+### Using conda or pixie
 
-We recommand creating a virtual environment before installing the dependencies with
+```bash
+conda create -n raw2l1 python=3.13 pip
+conda activate raw2l1
+pip install . --group dev
+```
+
+### Using venv
 
 ```bash
 python -m venv path/env/raw2l1-dev
@@ -124,51 +123,35 @@ source activate path/env/raw2l1-dev/bin/activate
 Then install the dependencies with
 
 ```bash
-pip install -r requirements/requirements-dev.txt
+pip install . --group dev
 ```
 
 ## Install pre-commit
 
+Pre-commit is used to check code before commit. It is recommended to install it in your development environment.
+
+```bash
+uv run pre-commit install
+uv run pre-commit install --hook-type commit-msg
+```
+
+or with conda, pixie or venv
+
 ```bash
 pre-commit install
+pre-commit install --hook-type commit-msg
 ```
 
 ## Run the test suite
 
-To run the tests you will need more python modules see requirements.txt file
-
-- go to raw2l1 directory
-- run
-
-```
-ce raw2l1
-python -m pytest
+```bash
+uv run pytest
 ```
 
-## Run the linter and code formatter
-
-raw2l1 use [ruff](https://astral.sh/ruff) for linting and code formatting.
-
-### Check code
+or with conda, pixie or venv
 
 ```bash
-ruff check raw2l1
-```
-
-### Fix code
-
-You can also try to make ruff fix some of the issues it detected.
-
-```bash
-ruff check --fix raw2l1
-```
-
-### Format code
-
-When your `ruff check` is ok, you can user the formatter.
-
-```bash
-ruff format raw2l1
+python -m  pytest
 ```
 
 # Thanks
@@ -178,4 +161,4 @@ Thanks to F.Wagner, I. Mattis, R. Leinweber for testing the software, providing 
 
 # Copyright
 
-2014-2024 CNRS/Ecole polytechnique
+2014-2026 CNRS/Ecole polytechnique
