@@ -14,9 +14,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: chartboost/ruff-action@v1
+      - uses: astral-sh/ruff-action@v4.1.0
         with:
-          src: "./src"
+          version: "latest"
+      - run: ruff check --fix
+      - run: ruff format --check --diff
 
   test:
     runs-on: ubuntu-latest
