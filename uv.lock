@@ -1156,7 +1156,7 @@ wheels = [
 
 [[package]]
 name = "raw2l1"
-version = "3.2.4"
+version = "4.0.0"
 source = { editable = "." }
 dependencies = [
     { name = "netcdf4" },
